@@ -162,7 +162,7 @@ steps:
             command:
             - --app=build/rn0.60.apk
             - --farm=bb
-            - --device=ANDROID_11
+            - --device=ANDROID_10|ANDROID_11|ANDROID_12
             - --a11y-locator
             - --fail-fast
             - --no-tunnel
@@ -187,7 +187,7 @@ steps:
             command:
             - --app=build/rn0.66.apk
             - --farm=bb
-            - --device=ANDROID_11
+            - --device=ANDROID_10|ANDROID_11|ANDROID_12
             - --a11y-locator
             - --fail-fast
             - --no-tunnel
@@ -212,7 +212,7 @@ steps:
             command:
               - --app=build/rn0.67.apk
               - --farm=bb
-              - --device=ANDROID_11
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
               - --fail-fast
               - --no-tunnel
@@ -238,7 +238,7 @@ steps:
             command:
               - --app=build/rn0.69.apk
               - --farm=bb
-              - --device=ANDROID_11
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
               - --fail-fast
               - --no-tunnel
@@ -264,7 +264,7 @@ steps:
             command:
               - --app=build/rn0.68-hermes.apk
               - --farm=bb
-              - --device=ANDROID_12
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
               - --fail-fast
               - --no-tunnel
@@ -290,7 +290,7 @@ steps:
             command:
             - --app=build/r_navigation_0.60.apk
             - --farm=bb
-            - --device=ANDROID_11
+            - --device=ANDROID_10|ANDROID_11|ANDROID_12
             - --a11y-locator
             - --fail-fast
             - --no-tunnel
@@ -314,7 +314,7 @@ steps:
             command:
             - --app=build/r_navigation_0.66.apk
             - --farm=bb
-            - --device=ANDROID_11
+            - --device=ANDROID_10|ANDROID_11|ANDROID_12
             - --a11y-locator
             - --fail-fast
             - --no-tunnel
@@ -338,7 +338,7 @@ steps:
             command:
             - --app=build/r_native_navigation_0.60.apk
             - --farm=bb
-            - --device=ANDROID_11
+            - --device=ANDROID_10|ANDROID_11|ANDROID_12
             - --a11y-locator
             - --fail-fast
             - --no-tunnel
@@ -362,7 +362,7 @@ steps:
             command:
             - --app=build/r_native_navigation_0.66.apk
             - --farm=bb
-            - --device=ANDROID_11
+            - --device=ANDROID_10|ANDROID_11|ANDROID_12
             - --a11y-locator
             - --fail-fast
             - --no-tunnel
