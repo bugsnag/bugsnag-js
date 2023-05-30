@@ -71,6 +71,20 @@ steps:
         commands:
           - npm run test:build-react-native-ios
 
+      - label: ":ios: Build RN 0.71 ipa"
+        key: "rn-0-71-ipa"
+        timeout_in_minutes: 60
+        agents:
+          queue: "opensource-arm-mac-cocoa-12"
+        env:
+          REACT_NATIVE_VERSION: "rn0.71-new-arch"
+          LANG: "en_US.UTF-8"
+          DEVELOPER_DIR: "/Applications/Xcode13.app"
+          RCT_NEW_ARCH_ENABLED: "1"
+        artifact_paths: build/rn0.71.ipa
+        commands:
+          - npm run test:build-react-native-ios
+
       # See: PLAT-5173
       - label: ":ios: Build react-navigation 0.60 ipa"
         skip: "See PLAT-5173"
