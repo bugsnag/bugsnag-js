@@ -1,4 +1,28 @@
 version: '3.6'
+
+x-common-environment: &common-environment
+  BUILDKITE:
+  BUILDKITE_BRANCH:
+  BUILDKITE_BUILD_CREATOR:
+  BUILDKITE_BUILD_NUMBER:
+  BUILDKITE_BUILD_URL:
+  BUILDKITE_LABEL:
+  BUILDKITE_MESSAGE:
+  BUILDKITE_PIPELINE_NAME:
+  BUILDKITE_PIPELINE_SLUG:
+  BUILDKITE_REPO:
+  BUILDKITE_RETRY_COUNT:
+  BUILDKITE_STEP_KEY:
+  MAZE_BUGSNAG_API_KEY:
+  DEBUG:
+  BROWSER_STACK_USERNAME:
+  BROWSER_STACK_ACCESS_KEY:
+  BROWSER_STACK_BROWSERS_USERNAME:
+  BROWSER_STACK_BROWSERS_ACCESS_KEY:
+  BROWSER_STACK_DEVICES_USERNAME:
+  BROWSER_STACK_DEVICES_ACCESS_KEY:
+  SKIP_NAVIGATION_SCENARIOS:
+
 services:
   minimal-packager:
     build:
@@ -69,18 +93,7 @@ services:
       target: node-maze-runner
     command: --fail-fast --retry 2
     environment:
-      BUILDKITE:
-      BUILDKITE_BRANCH:
-      BUILDKITE_BUILD_CREATOR:
-      BUILDKITE_BUILD_NUMBER:
-      BUILDKITE_BUILD_URL:
-      BUILDKITE_LABEL:
-      BUILDKITE_MESSAGE:
-      BUILDKITE_PIPELINE_NAME:
-      BUILDKITE_REPO:
-      BUILDKITE_RETRY_COUNT:
-      BUILDKITE_STEP_KEY:
-      MAZE_BUGSNAG_API_KEY:
+      <<: *common-environment
       NODE_VERSION: "${NODE_VERSION:-10}"
       COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-js-maze-runner}"
@@ -129,19 +142,7 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.react-native-cli-tool
     environment:
-      BUILDKITE:
-      BUILDKITE_BRANCH:
-      BUILDKITE_BUILD_CREATOR:
-      BUILDKITE_BUILD_NUMBER:
-      BUILDKITE_BUILD_URL:
-      BUILDKITE_LABEL:
-      BUILDKITE_MESSAGE:
-      BUILDKITE_PIPELINE_NAME:
-      BUILDKITE_REPO:
-      BUILDKITE_RETRY_COUNT:
-      BUILDKITE_STEP_KEY:
-      MAZE_BUGSNAG_API_KEY:
-      DEBUG:
+      <<: *common-environment
       REACT_NATIVE_VERSION:
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-react-native-cli-maze-runner}"
     networks:
@@ -182,27 +183,12 @@ services:
   react-native-maze-runner:
     image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli
     environment:
-      BUILDKITE:
-      BUILDKITE_BRANCH:
-      BUILDKITE_BUILD_CREATOR:
-      BUILDKITE_BUILD_NUMBER:
-      BUILDKITE_BUILD_URL:
-      BUILDKITE_LABEL:
-      BUILDKITE_MESSAGE:
-      BUILDKITE_PIPELINE_NAME:
-      BUILDKITE_REPO:
-      BUILDKITE_RETRY_COUNT:
-      BUILDKITE_STEP_KEY:
-      MAZE_BUGSNAG_API_KEY:
-      DEBUG:
-      BROWSER_STACK_USERNAME:
-      BROWSER_STACK_ACCESS_KEY:
-      BROWSER_STACK_BROWSERS_USERNAME:
-      BROWSER_STACK_BROWSERS_ACCESS_KEY:
-      BROWSER_STACK_DEVICES_USERNAME:
-      BROWSER_STACK_DEVICES_ACCESS_KEY:
-      SKIP_NAVIGATION_SCENARIOS:
+      <<: *common-environment
+      BITBAR_USERNAME:
+      BITBAR_ACCESS_KEY:
       HERMES:
+    ports:
+      - "9000-9499:9339"
     networks:
       default:
         aliases:
@@ -211,29 +197,12 @@ services:
       - ./build:/app/build
       - ./test/react-native/features/:/app/features
       - ./test/react-native/maze_output:/app/maze_output
+      - /var/run/docker.sock:/var/run/docker.sock
 
   react-native-cli-maze-runner:
     image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli
     environment:
-      BUILDKITE:
-      BUILDKITE_BRANCH:
-      BUILDKITE_BUILD_CREATOR:
-      BUILDKITE_BUILD_NUMBER:
-      BUILDKITE_BUILD_URL:
-      BUILDKITE_LABEL:
-      BUILDKITE_MESSAGE:
-      BUILDKITE_PIPELINE_NAME:
-      BUILDKITE_REPO:
-      BUILDKITE_RETRY_COUNT:
-      BUILDKITE_STEP_KEY:
-      MAZE_BUGSNAG_API_KEY:
-      DEBUG:
-      BROWSER_STACK_USERNAME:
-      BROWSER_STACK_ACCESS_KEY:
-      BROWSER_STACK_BROWSERS_USERNAME:
-      BROWSER_STACK_BROWSERS_ACCESS_KEY:
-      BROWSER_STACK_DEVICES_USERNAME:
-      BROWSER_STACK_DEVICES_ACCESS_KEY:
+      <<: *common-environment
     volumes:
       - ./build:/app/build
       - ./test/react-native-cli/features/:/app/features/
