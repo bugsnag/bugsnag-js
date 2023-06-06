@@ -9,11 +9,11 @@ steps:
         key: "android-builder-image"
         timeout_in_minutes: 30
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               build: react-native-android-builder
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
               cache-from:  react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               push: react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
 
       #
@@ -28,7 +28,7 @@ steps:
           REACT_NATIVE_VERSION: "rn0.60"
           LANG: "en_US.UTF-8"
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.60.apk
@@ -41,7 +41,7 @@ steps:
         env:
           REACT_NATIVE_VERSION: "rn0.66"
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.66.apk
@@ -54,7 +54,7 @@ steps:
         env:
           REACT_NATIVE_VERSION: "rn0.67"
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.67.apk
@@ -67,7 +67,7 @@ steps:
         env:
           REACT_NATIVE_VERSION: "rn0.68-hermes"
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.68-hermes.apk
@@ -80,7 +80,7 @@ steps:
         env:
           REACT_NATIVE_VERSION: "rn0.69"
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.69.apk
@@ -95,7 +95,7 @@ steps:
           JS_SOURCE_DIR: "react_navigation_js"
           ARTEFACT_NAME: "r_navigation_0.60"
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-android-builder
         artifact_paths:
           - build/r_navigation_0.60.apk
@@ -110,7 +110,7 @@ steps:
           JS_SOURCE_DIR: "react_navigation_js"
           ARTEFACT_NAME: "r_navigation_0.66"
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-android-builder
         artifact_paths:
           - build/r_navigation_0.66.apk
@@ -125,7 +125,7 @@ steps:
           JS_SOURCE_DIR: "react_native_navigation_js"
           ARTEFACT_NAME: "r_native_navigation_0.60"
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-android-builder
         artifact_paths:
           - build/r_native_navigation_0.60.apk
@@ -140,7 +140,7 @@ steps:
           JS_SOURCE_DIR: "react_native_navigation_js"
           ARTEFACT_NAME: "r_native_navigation_0.66"
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-android-builder
         artifact_paths:
           - build/r_native_navigation_0.66.apk
