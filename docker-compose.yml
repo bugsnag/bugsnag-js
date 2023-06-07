@@ -209,10 +209,20 @@ services:
     image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli
     environment:
       <<: *common-environment
+      BITBAR_USERNAME:
+      BITBAR_ACCESS_KEY:
+      HERMES:
+    ports:
+      - "9000-9499:9339"
+    networks:
+      default:
+        aliases:
+          - maze-runner
     volumes:
       - ./build:/app/build
       - ./test/react-native-cli/features/:/app/features/
       - ./test/react-native-cli/maze_output:/app/maze_output
+      - /var/run/docker.sock:/var/run/docker.sock
 
   release:
     build:
