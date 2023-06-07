@@ -1,10 +1,22 @@
 require 'yaml'
 
+Maze.hooks.before_all do
+  Maze.config.document_server_root = File.realpath("#{__dir__}/../fixtures/packages")
+end
+
 def get_test_url(path)
-  host = ENV['HOST']
-  notify = "http://#{ENV['API_HOST']}:#{Maze.config.port}/notify"
-  sessions = "http://#{ENV['API_HOST']}:#{Maze.config.port}/sessions"
-  logs = "http://#{ENV['API_HOST']}:#{Maze.config.port}/logs"
+
+  if Maze.config.aws_public_ip
+    host = Maze.public_document_server_address
+    api_host = Maze.public_address
+  else
+    host = "#{ENV['HOST']}:#{Maze.config.document_server_port}"
+    api_host = "#{ENV['API_HOST']}:#{Maze.config.port}"
+  end
+
+  notify = "http://#{api_host}/notify"
+  sessions = "http://#{api_host}/sessions"
+  logs = "http://#{api_host}/logs"
   config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}"
 
   uri = URI("http://#{host}:#{FIXTURES_SERVER_PORT}#{path}")
