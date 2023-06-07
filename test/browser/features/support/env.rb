@@ -1,7 +1,7 @@
 require 'yaml'
 
 Maze.hooks.before_all do
-  Maze.config.document_server_root = File.realpath("#{__dir__}/../fixtures/packages")
+  Maze.config.document_server_root = File.realpath("#{__dir__}/../fixtures")
 end
 
 def get_test_url(path)
@@ -19,7 +19,7 @@ def get_test_url(path)
   logs = "http://#{api_host}/logs"
   config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}"
 
-  uri = URI("http://#{host}:#{FIXTURES_SERVER_PORT}#{path}")
+  uri = URI("http://#{host}#{path}")
 
   if uri.query
     uri.query += "&#{config_query_string}"
@@ -51,21 +51,6 @@ end
 BeforeAll do
   Maze.config.receive_no_requests_wait = 15
   Maze.config.enforce_bugsnag_integrity = false
-
-  FIXTURES_SERVER_PORT = '9020'
-
-  # start a web server to serve fixtures
-  if ENV['DEBUG']
-    pid = Process.spawn({"PORT"=>FIXTURES_SERVER_PORT},
-                        'ruby features/lib/server.rb')
-  else
-    DEV_NULL = Gem.win_platform? ? 'NUL' : '/dev/null'
-    pid = Process.spawn({"PORT"=>FIXTURES_SERVER_PORT},
-                        'ruby features/lib/server.rb',
-                        :out => DEV_NULL,
-                        :err => DEV_NULL)
-  end
-  Process.detach(pid)
 end
 
 at_exit do
