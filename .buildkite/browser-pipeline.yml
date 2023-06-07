@@ -42,6 +42,7 @@ steps:
           - firefox_latest
           - chrome_latest
           - edge_latest
+        depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
         plugins:
           docker-compose#v4.12.0:
@@ -51,6 +52,8 @@ steps:
             command:
               - --farm=bb
               - --browser={{matrix}}
+              - --no-tunnel
+              - --aws-public-ip
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
@@ -70,6 +73,8 @@ steps:
             command:
               - --farm=bb
               - --browser=ie_11
+              - --no-tunnel
+              - --aws-public-ip
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
