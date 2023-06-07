@@ -1,4 +1,4 @@
-package com.bugsnag.rn0_63_expo_ejected;
+package com.rn0_63_expo_ejected;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
