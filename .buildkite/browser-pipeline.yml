@@ -67,8 +67,8 @@ steps:
         timeout_in_minutes: 30
         plugins:
           docker-compose#v4.12.0:
-            pull: browser-maze-runner-bs
-            run: browser-maze-runner-bs
+            pull: browser-maze-runner-bb
+            run: browser-maze-runner-bb
             service-ports: true
             use-aliases: true
             command:
