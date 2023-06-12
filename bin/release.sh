@@ -24,7 +24,6 @@ cd /app/bugsnag-js
 
 # "ci" rather than "install" ensures the process doesn't make the work tree dirty by modifying lockfiles
 npm ci
-npm run bootstrap -- --ci
 
 npx lerna run build \
   --scope @bugsnag/node \

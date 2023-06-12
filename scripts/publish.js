@@ -19,7 +19,6 @@ function publish (publishUrl) {
     console.log(`Publishing as '${version}'`)
 
     common.run('npm install', true)
-    common.run('npm run bootstrap', true)
     common.run('npm run build', true)
     common.run('git checkout .')
     common.run(`./node_modules/.bin/lerna publish ${version} --dist-tag ${distTag} --exact --yes --force-publish --no-push --no-git-tag-version --registry ${publishUrl}`, true)

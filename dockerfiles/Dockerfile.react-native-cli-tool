@@ -10,8 +10,6 @@ COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconf
 COPY bin ./bin
 COPY packages ./packages
 
-RUN npm run bootstrap
-
 RUN npx lerna run build --scope @bugsnag/react-native-cli
 RUN npm pack --verbose packages/react-native-cli/
 

@@ -45,7 +45,7 @@ end
 # Bootstrap and build Bugsnag packages so they're ready to install
 def bootstrap
   Dir.chdir(ROOT) do
-    system("npm run bootstrap")
+    system("npm install")
     system("npm run build")
   end
 end

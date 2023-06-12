@@ -26,7 +26,6 @@ steps:
       - echo "Running on Node `node -v`"
       - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
       - npm ci --no-audit --progress=false
-      - npx lerna bootstrap
       - npm run build:electron
       - defaults write com.apple.CrashReporter DialogType none
       - npm run test:unit:electron-runner

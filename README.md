@@ -75,9 +75,6 @@ cd bugsnag-js
 # Install top-level dependencies
 npm i
 
-# Bootstrap all of the packages
-npm run bootstrap
-
 # Build the standalone notifiers and plugins
 npm run build
 
