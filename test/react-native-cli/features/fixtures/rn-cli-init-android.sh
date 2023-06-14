@@ -46,7 +46,7 @@ send -- \r
 expect "Do you want to automatically upload JavaScript source maps as part of the Gradle build?"
 send -- y
 
-expect "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
+expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
 send -- latest\r
 
 expect eof
