@@ -64,8 +64,8 @@ steps:
 
       - label: ":bitbar: {{matrix}} Browser tests (EU hub)"
         matrix:
-          - chrome_43
-          - chrome_72
+#          - chrome_43
+#          - chrome_72
           - firefox_78
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
@@ -125,6 +125,9 @@ steps:
           - iphone_7   # iOS 10
           - iphone_13
           - android_s8 # Android 7
+          # TODO: Move these to BitBar
+          - chrome_43
+          - chrome_72
         depends_on: "browser-maze-runner-bs"
         timeout_in_minutes: 30
         plugins:
