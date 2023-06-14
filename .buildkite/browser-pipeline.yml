@@ -37,11 +37,33 @@ steps:
       #
       # BitBar tests
       #
-      - label: ":bitbar: {{matrix}} Browser tests"
+      - label: ":bitbar: {{matrix}} Browser tests (US hub)"
         matrix:
           - firefox_latest
           - chrome_latest
           - edge_latest
+        depends_on: "browser-maze-runner-bb"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v4.12.0:
+            pull: browser-maze-runner-bb
+            run: browser-maze-runner-bb
+            service-ports: true
+            use-aliases: true
+            command:
+              - "--farm=bb"
+              - "--browser={{matrix}}"
+              - "--no-tunnel"
+              - "--aws-public-ip"
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
+        concurrency: 5
+        concurrency_group: "bitbar-web"
+        concurrency_method: eager
+
+      - label: ":bitbar: {{matrix}} Browser tests (EU hub)"
+        matrix:
           - chrome_43
           - chrome_72
           - firefox_78
@@ -54,10 +76,11 @@ steps:
             service-ports: true
             use-aliases: true
             command:
-              - --farm=bb
-              - --browser={{matrix}}
-              - --no-tunnel
-              - --aws-public-ip
+              - "--farm=bb"
+              - "--browser={{matrix}}"
+              - "--no-tunnel"
+              - "--aws-public-ip"
+              - "--selenium-server=https://eu-desktop-hub.bitbar.com/wd/hub"
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
@@ -75,10 +98,10 @@ steps:
             service-ports: true
             use-aliases: true
             command:
-              - --farm=bb
-              - --browser=ie_11
-              - --no-tunnel
-              - --aws-public-ip
+              - "--farm=bb"
+              - "--browser=ie_11"
+              - "--no-tunnel"
+              - "--aws-public-ip"
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
@@ -110,8 +133,8 @@ steps:
             run: browser-maze-runner-bs
             use-aliases: true
             command:
-              - --farm=bs
-              - --browser={{matrix}}
+              - "--farm=bs"
+              - "--browser={{matrix}}"
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
