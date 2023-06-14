@@ -2,41 +2,59 @@ steps:
 
   - group: "Browser Tests"
     steps:
-      - label:  ":docker: Build browser maze runner image"
-        key: "browser-maze-runner"
+      - label:  ":docker: Maze Runner image - BitBar browsers"
+        key: "browser-maze-runner-bb"
         timeout_in_minutes: 20
         plugins:
           - artifacts#v1.5.0:
               download: min_packages.tar
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               build:
-                - browser-maze-runner
+                - browser-maze-runner-bb
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
               cache-from:
-                - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
-          - docker-compose#v3.9.0:
+                - browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+          - docker-compose#v4.12.0:
               push:
-                - browser-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+                - browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+
+      - label:  ":docker: Maze Runner image - BrowserStack browsers"
+        key: "browser-maze-runner-bs"
+        timeout_in_minutes: 20
+        plugins:
+          - artifacts#v1.5.0:
+              download: min_packages.tar
+          - docker-compose#v4.12.0:
+              build:
+                - browser-maze-runner-bs
+              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+              cache-from:
+                - browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+          - docker-compose#v4.12.0:
+              push:
+                - browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
 
       #
       # BitBar tests
       #
       - label: ":bitbar: {{matrix}} Browser tests"
-        skip: Skipped pending PLAT-10093
-        depends_on: "browser-maze-runner"
         matrix:
           - firefox_latest
           - chrome_latest
           - edge_latest
+        depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
         plugins:
-          docker-compose#v3.9.0:
-            pull: browser-maze-runner
-            run: browser-maze-runner
+          docker-compose#v4.12.0:
+            pull: browser-maze-runner-bb
+            run: browser-maze-runner-bb
+            service-ports: true
             use-aliases: true
             command:
               - --farm=bb
               - --browser={{matrix}}
+              - --no-tunnel
+              - --aws-public-ip
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
@@ -45,17 +63,19 @@ steps:
         concurrency_method: eager
 
       - label: ":bitbar: ie_11 Browser tests"
-        skip: Skipped pending PLAT-10093
-        depends_on: "browser-maze-runner"
+        depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
         plugins:
-          docker-compose#v3.9.0:
-            pull: browser-maze-runner
-            run: browser-maze-runner
+          docker-compose#v4.12.0:
+            pull: browser-maze-runner-bb
+            run: browser-maze-runner-bb
+            service-ports: true
             use-aliases: true
             command:
               - --farm=bb
               - --browser=ie_11
+              - --no-tunnel
+              - --aws-public-ip
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
@@ -82,16 +102,12 @@ steps:
           - iphone_13
           - android_s8 # Android 7
           - firefox_78
-          # TODO: Remove these as part of PLAT-10093
-          - chrome_latest
-          - firefox_latest
-          - edge_latest
-        depends_on: "browser-maze-runner"
+        depends_on: "browser-maze-runner-bs"
         timeout_in_minutes: 30
         plugins:
-          docker-compose#v3.9.0:
-            pull: browser-maze-runner
-            run: browser-maze-runner
+          docker-compose#v4.12.0:
+            pull: browser-maze-runner-bs
+            run: browser-maze-runner-bs
             use-aliases: true
             command:
               - --farm=bs
@@ -102,24 +118,3 @@ steps:
         concurrency: 2
         concurrency_group: "browserstack"
         concurrency_method: eager
-
-      # TODO: Remove this as part of PLAT-10093
-      - label: ":browserstack: ie_11 tests"
-        depends_on: "browser-maze-runner"
-        timeout_in_minutes: 30
-        plugins:
-          docker-compose#v3.9.0:
-            pull: browser-maze-runner
-            run: browser-maze-runner
-            use-aliases: true
-            command:
-              - --farm=bs
-              - --browser=ie_11
-          artifacts#v1.5.0:
-            upload:
-              - "./test/browser/maze_output/failed/**/*"
-        concurrency: 2
-        concurrency_group: "browserstack"
-        concurrency_method: eager
-        env:
-          HOST: "localhost" # IE11 needs the host set to localhost for some reason
