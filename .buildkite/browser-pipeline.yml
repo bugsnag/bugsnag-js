@@ -122,9 +122,9 @@ steps:
           - edge_17
           - safari_10
           - safari_16
-          - iphone_7   # iOS 10
-          - iphone_13
-          - android_s8 # Android 7
+          - ios_10
+          - ios_15
+          - android_7
           # TODO: Move these to BitBar
           - chrome_43
           - chrome_72
