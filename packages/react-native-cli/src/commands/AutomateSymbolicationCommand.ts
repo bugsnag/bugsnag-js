@@ -57,25 +57,25 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
 }
 
 async function installJavaScriptPackage (projectRoot: string): Promise<void> {
-  const alreadyInstalled = await detectInstalled('@bugsnag/source-maps', projectRoot)
+  const alreadyInstalled = await detectInstalled('@bugsnag/cli', projectRoot)
 
   if (alreadyInstalled) {
-    logger.warn('@bugsnag/source-maps is already installed, skipping')
+    logger.warn('@bugsnag/cli is already installed, skipping')
     return
   }
 
-  logger.info('Adding @bugsnag/source-maps dependency')
+  logger.info('Adding @bugsnag/cli dependency')
 
   const packageManager = await guessPackageManager(projectRoot)
 
   const { version } = await prompts({
     type: 'text',
     name: 'version',
-    message: 'If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want',
+    message: 'If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want',
     initial: 'latest'
   }, { onCancel })
 
-  await install(packageManager, '@bugsnag/source-maps', version, true, projectRoot)
+  await install(packageManager, '@bugsnag/cli', version, true, projectRoot)
 
-  logger.success('@bugsnag/source-maps dependency is installed')
+  logger.success('@bugsnag/cli dependency is installed')
 }
