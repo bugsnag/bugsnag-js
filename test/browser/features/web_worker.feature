@@ -2,7 +2,7 @@
 @skip_ie_8 @skip_ie_9
 
 # browsers that currently throw errors in our test fixtures 
-@skip_ie_10 @skip_ie_11 @skip_chrome_43 @skip_edge_17 @skip_safari_10 @skip_iphone_7
+@skip_ie_10 @skip_ie_11 @skip_chrome_43 @skip_edge_17 @skip_safari_10 @skip_ios_10
 
 Feature: worker notifier
 
@@ -46,4 +46,3 @@ Feature: worker notifier
     When I navigate to the test URL "/web_worker/auto_track_sessions"
     And I wait to receive a session
     Then the session is a valid browser payload for the session tracking API
-    

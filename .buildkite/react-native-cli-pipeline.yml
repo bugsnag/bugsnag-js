@@ -9,11 +9,11 @@ steps:
         key: "cli-maze-image"
         timeout_in_minutes: 30
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               build: react-native-cli-tool-maze-runner
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
               cache-from:  react-native-cli-tool-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:cli-maze-${BRANCH_NAME}
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               push: react-native-cli-tool-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:cli-maze-${BRANCH_NAME}
 
       #
@@ -25,7 +25,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-tool-maze-runner
             run: react-native-cli-tool-maze-runner
             use-aliases: true
@@ -42,7 +42,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-tool-maze-runner
             run: react-native-cli-tool-maze-runner
             use-aliases: true
@@ -59,7 +59,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-tool-maze-runner
             run: react-native-cli-tool-maze-runner
             use-aliases: true
@@ -76,7 +76,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-tool-maze-runner
             run: react-native-cli-tool-maze-runner
             use-aliases: true
@@ -93,7 +93,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-tool-maze-runner
             run: react-native-cli-tool-maze-runner
             use-aliases: true
@@ -110,7 +110,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-tool-maze-runner
             run: react-native-cli-tool-maze-runner
             use-aliases: true
@@ -127,7 +127,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-tool-maze-runner
             run: react-native-cli-tool-maze-runner
             use-aliases: true
@@ -144,7 +144,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-tool-maze-runner
             run: react-native-cli-tool-maze-runner
             use-aliases: true
@@ -161,7 +161,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-tool-maze-runner
             run: react-native-cli-tool-maze-runner
             use-aliases: true
@@ -178,7 +178,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-tool-maze-runner
             run: react-native-cli-tool-maze-runner
             use-aliases: true
@@ -197,11 +197,11 @@ steps:
         key: "android-builder-cli-image"
         timeout_in_minutes: 30
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               build: react-native-cli-android-builder
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
               cache-from:  react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               push: react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
 
       - label: ":android: Init and build RN 0.60 apk"
@@ -213,7 +213,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_60
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -228,7 +228,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_61
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -243,7 +243,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_62
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -258,7 +258,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_63
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -273,7 +273,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_63_expo_ejected
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -288,7 +288,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_64
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -303,7 +303,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_65
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -318,7 +318,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_66
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -333,7 +333,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_67
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -348,7 +348,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_67_hermes
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -364,7 +364,7 @@ steps:
           DEBUG: true
           REACT_NATIVE_VERSION: rn0_69
         plugins:
-          - docker-compose#v3.9.0:
+          - docker-compose#v4.12.0:
               run: react-native-cli-android-builder
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
@@ -526,7 +526,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_60.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -547,7 +547,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_61.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -568,7 +568,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_62.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -589,7 +589,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_63.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -610,7 +610,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_63_expo_ejected.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -631,7 +631,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_64.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -652,7 +652,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_65.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -673,7 +673,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_66.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -694,7 +694,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_67.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -715,7 +715,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_67_hermes.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -736,7 +736,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_69.apk"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -760,7 +760,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_60.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -781,7 +781,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_61.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -802,7 +802,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_62.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -823,7 +823,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_63.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -844,7 +844,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_63_expo_ejected.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -865,7 +865,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_64.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -886,7 +886,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_65.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -907,7 +907,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_66.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -928,7 +928,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_67.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -949,7 +949,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_67_hermes.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
@@ -970,7 +970,7 @@ steps:
           artifacts#v1.5.0:
             download: "build/rn0_69.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v3.9.0:
+          docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
             use-aliases: true
