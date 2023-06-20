@@ -37,6 +37,7 @@ module.exports = {
       // Native layer
       common.changeDir(`${destFixtures}/${rnVersion}/android`)
       common.run('./gradlew assembleRelease', true)
+      common.run('npm run bugsnagUpload')
 
       // Finally, copy the APK back to the host
       common.run(`mkdir -p ${baseDir}/build`)
