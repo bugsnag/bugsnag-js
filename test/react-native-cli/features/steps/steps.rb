@@ -109,6 +109,15 @@ Then('bugsnag source maps library version {string} is in the package.json file')
   Maze.check.equal(json['devDependencies']['@bugsnag/source-maps'], expected)
 end
 
+Then('bugsnag cli library version {string} is in the package.json file') do |expected|
+  json = parse_package_json
+
+  Maze.check.include(json, 'devDependencies')
+  Maze.check.include(json['devDependencies'], '@bugsnag/cli')
+  Maze.check.equal(json['devDependencies']['@bugsnag/cli'], expected)
+end
+
+
 Then('bugsnag source maps library is not in the package.json file') do
   json = parse_package_json
 

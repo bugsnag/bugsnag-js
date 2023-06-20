@@ -64,10 +64,10 @@ Scenario: successfully modify project, choosing source-maps version
     And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
-    When I input "1.0.0-beta.1" interactively
+    When I input "1.1.7" interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     Then the last interactive command exited successfully
-    And bugsnag source maps library version "^1.0.0-beta.1" is in the package.json file
+    And bugsnag source maps library version "^1.1.7" is in the package.json file
     And the iOS build has been modified to upload source maps
     And the Bugsnag Android Gradle plugin is not installed
     And the Android build has been modified to upload source maps
