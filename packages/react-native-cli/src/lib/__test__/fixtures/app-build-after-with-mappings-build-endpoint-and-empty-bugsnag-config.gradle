@@ -220,7 +220,7 @@ apply from: file("../../node_modules/@react-native-community/cli-platform-androi
 
 bugsnag {
 
-  uploadReactNativeMappings = true
+  uploadReactNativeMappings = false
 
   releasesEndpoint = "https://build.example.com"
 }

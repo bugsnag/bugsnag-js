@@ -222,5 +222,5 @@ bugsnag {
   config = yes
   options = set to things
 
-  uploadReactNativeMappings = true
+  uploadReactNativeMappings = false
 }
