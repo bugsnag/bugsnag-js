@@ -129,7 +129,7 @@ export async function enableReactNativeMappings (
       await insertValueAfterPattern(
         appBuildGradlePath,
         /^\s*bugsnag {[^}]*?(?=})/m,
-        '  uploadReactNativeMappings = true\n',
+        '  uploadReactNativeMappings = false\n',
         ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
         logger
       )
