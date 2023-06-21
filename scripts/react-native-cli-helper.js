@@ -37,7 +37,7 @@ module.exports = {
       // Native layer
       common.changeDir(`${destFixtures}/${rnVersion}/android`)
       common.run('./gradlew assembleRelease', true)
-      const bugsnagCliCommand = 'npm run bugsnagUpload'
+      const bugsnagCliCommand = 'npm run bugsnagUpload -- --upload-api-root-url=http://localhost:9339/'
       common.run(bugsnagCliCommand, true)
 
       // Finally, copy the APK back to the host
