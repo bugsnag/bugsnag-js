@@ -33,7 +33,7 @@ module.exports = {
       common.changeDir(`${destFixtures}`)
       const initCommand = `./rn-cli-init-android.sh ${version} ${rnVersion}`
       common.run(initCommand, true)
-      const bugsnagCliCommand = `npm run bugsnagUpload`
+      const bugsnagCliCommand = 'npm run bugsnagUpload'
       common.run(bugsnagCliCommand, true)
 
       // Native layer
