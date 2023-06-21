@@ -2,11 +2,10 @@ Feature: Tests for building a React Native app (for Android only) that was initi
 
   Scenario: A CLI initialized React Native Android app invokes a source map upload
     When I build the Android app
-    And I wait to receive 2 sourcemaps
+    And I wait to receive 1 sourcemaps
 
     Then the sourcemap is valid for the Build API
-    And I discard the oldest sourcemap
-
+    
     Then the Content-Type header is valid multipart form-data
     And the sourcemap payload field "apiKey" equals "1234567890ABCDEF1234567890ABCDEF"
     And the sourcemap payload field "platform" equals "android"
