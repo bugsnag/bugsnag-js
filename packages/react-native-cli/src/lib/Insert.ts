@@ -50,6 +50,7 @@ export async function insertIos (projectRoot: string, logger: Logger): Promise<v
 
   try {
     console.log('start')
+    console.log(fs.readdir((projectRoot)))
     const xcodeprojDir = (await fs.readdir(iosDir)).find(p => p.endsWith('.xcodeproj'))
     console.log('xcodeprojDir' + xcodeprojDir )
 
