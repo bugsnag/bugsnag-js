@@ -444,3 +444,9 @@ Then('the Content-Type header is valid multipart form-data') do
   actual = Maze::Server.builds.current[:request]['content-type']
   Maze.check.match(expected, actual)
 end
+
+Then('the sourcemaps Content-Type header is valid multipart form-data') do
+  expected = /^multipart\/form-data; boundary=--------------------------\d+$/
+  actual = Maze::Server.sourcemaps.current[:request]['content-type']
+  Maze.check.match(expected, actual)
+end
