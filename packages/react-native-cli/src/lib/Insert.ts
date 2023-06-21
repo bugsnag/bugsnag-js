@@ -49,12 +49,7 @@ export async function insertIos (projectRoot: string, logger: Logger): Promise<v
   let appDelegatePath
 
   try {
-    console.log('start')
-    const dirList = (await fs.readdir((projectRoot)))
-    console.log(dirList)
-
     const xcodeprojDir = (await fs.readdir(iosDir)).find(p => p.endsWith('.xcodeproj'))
-    console.log('xcodeprojDir' + xcodeprojDir )
 
     if (!xcodeprojDir) {
       logger.warn(FAIL_MSG('AppDelegate'))
@@ -62,11 +57,9 @@ export async function insertIos (projectRoot: string, logger: Logger): Promise<v
     }
 
     const appDelegateDirectory = path.join(iosDir, xcodeprojDir.replace(/\.xcodeproj$/, ''))
-    console.log('appDelegateDirectory' + appDelegateDirectory )
 
     // handle both AppDelegate.m and AppDelegate.mm (RN 0.68+)
     const appDelegateFile = (await fs.readdir(appDelegateDirectory)).find(p => p.startsWith('AppDelegate.m'))
-    console.log('appDelegateFile' + appDelegateFile )
 
     if (!appDelegateFile) {
       logger.warn(FAIL_MSG('AppDelegate'))
