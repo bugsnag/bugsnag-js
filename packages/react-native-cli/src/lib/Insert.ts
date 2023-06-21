@@ -68,6 +68,7 @@ export async function insertIos (projectRoot: string, logger: Logger): Promise<v
 
     appDelegatePath = path.join(iosDir, xcodeprojDir.replace(/\.xcodeproj$/, ''), appDelegateFile)
   } catch (e) {
+    console.log("i got here")
     logger.error(FAIL_MSG('AppDelegate'))
     return
   }

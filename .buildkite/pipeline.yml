@@ -116,18 +116,18 @@ steps:
 #    commands:
 #      - buildkite-agent pipeline upload .buildkite/node-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on:
-      - "publish-js"
-      - "android-builder-base"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/react-native-android-pipeline.yml
-
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on:
-      - "publish-js"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/react-native-ios-pipeline.yml
+#  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+#    depends_on:
+#      - "publish-js"
+#      - "android-builder-base"
+#    commands:
+#      - buildkite-agent pipeline upload .buildkite/react-native-android-pipeline.yml
+#
+#  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+#    depends_on:
+#      - "publish-js"
+#    commands:
+#      - buildkite-agent pipeline upload .buildkite/react-native-ios-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE CLI STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
