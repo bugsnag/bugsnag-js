@@ -580,7 +580,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.fixtures.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/reactnative.app/reactnative";
 			};
@@ -605,7 +605,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.fixtures.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/reactnative.app/reactnative";
 			};
@@ -630,7 +630,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.fixtures.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = reactnative;
 				SWIFT_OBJC_BRIDGING_HEADER = "../../ios-module/Scenarios/Scenario.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -657,7 +657,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.fixtures.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = reactnative;
 				SWIFT_OBJC_BRIDGING_HEADER = "../../ios-module/Scenarios/Scenario.h";
 				SWIFT_VERSION = 5.0;
