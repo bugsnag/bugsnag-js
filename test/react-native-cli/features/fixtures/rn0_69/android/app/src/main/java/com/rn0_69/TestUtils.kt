@@ -16,7 +16,7 @@ const val ENDPOINT_SESSIONS = "$BUGSNAG_NS.ENDPOINT_SESSIONS"
 class TestUtils {
 
     fun getMazeRunnerAddress(context: Context): String {
-        val externalFilesDir = File("/sdcard/Android/data/com.rn0_69/files")
+        val externalFilesDir = context.getExternalFilesDir(null)
         val configFile = File(externalFilesDir, "fixture_config.json")
         var mazeAddress: String? = null
         Log.i("Bugsnag", "Attempting to read Maze Runner address from config file ${configFile.path}")
