@@ -25,7 +25,7 @@ Scenario: successfully modify project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -61,7 +61,7 @@ Scenario: successfully modify project, choosing source-maps version
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input "1.1.7" interactively
@@ -101,7 +101,7 @@ Scenario: successfully modify project with custom endpoints
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -138,7 +138,7 @@ Scenario: opt not to modify the Android project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input "n" interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -174,7 +174,7 @@ Scenario: opt not to modify the iOS project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -210,7 +210,7 @@ Scenario: opt not to modify either project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input "n" interactively
     And I wait for the current stdout line to match the regex "\/app #"
     Then the last interactive command exited successfully

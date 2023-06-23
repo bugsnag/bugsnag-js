@@ -38,7 +38,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     const { androidIntegration } = await prompts({
       type: 'confirm',
       name: 'androidIntegration',
-      message: 'Do you want to automatically upload JavaScript source maps as part of the Gradle build?',
+      message: 'Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps?',
       initial: true
     }, { onCancel })
 
