@@ -148,7 +148,7 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":android: RN 0.60 Android 11 end-to-end tests"
+      - label: ":bitbar: :android: RN 0.60 Android 11 end-to-end tests"
         depends_on: "rn-0-60-apk"
         timeout_in_minutes: 60
         plugins:
@@ -173,7 +173,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":android: RN 0.66 Android 11 end-to-end tests"
+      - label: ":bitbar: :android: RN 0.66 Android 11 end-to-end tests"
         depends_on: "rn-0-66-apk"
         timeout_in_minutes: 60
         plugins:
@@ -198,7 +198,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":android: RN 0.67 Android 11 end-to-end tests"
+      - label: ":bitbar: :android: RN 0.67 Android 11 end-to-end tests"
         depends_on: "rn-0-67-apk"
         timeout_in_minutes: 60
         plugins:
@@ -224,7 +224,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":android: RN 0.69 Android 11 end-to-end tests"
+      - label: ":bitbar: :android: RN 0.69 Android 11 end-to-end tests"
         depends_on: "rn-0-69-apk"
         timeout_in_minutes: 60
         plugins:
@@ -250,7 +250,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":android: RN 0.68 (Hermes) Android 12 end-to-end tests"
+      - label: ":bitbar: :android: RN 0.68 (Hermes) Android 12 end-to-end tests"
         depends_on: "rn-0-68-hermes-apk"
         timeout_in_minutes: 60
         plugins:
@@ -276,7 +276,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":android: react-navigation 0.60 Android 11 end-to-end tests"
+      - label: ":bitbar: :android: react-navigation 0.60 Android 11 end-to-end tests"
         depends_on: "react-navigation-0-60-apk"
         timeout_in_minutes: 60
         plugins:
@@ -300,7 +300,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":android: react-navigation 0.66 Android 11 end-to-end tests"
+      - label: ":bitbar: :android: react-navigation 0.66 Android 11 end-to-end tests"
         depends_on: "react-navigation-0-66-apk"
         timeout_in_minutes: 60
         plugins:
@@ -324,7 +324,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":android: react-native-navigation 0.60 Android 11 end-to-end tests"
+      - label: ":bitbar: :android: react-native-navigation 0.60 Android 11 end-to-end tests"
         depends_on: "react-native-navigation-0-60-apk"
         timeout_in_minutes: 60
         plugins:
@@ -348,7 +348,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":android: react-native-navigation 0.66 Android 11 end-to-end tests"
+      - label: ":bitbar: :android: react-native-navigation 0.66 Android 11 end-to-end tests"
         depends_on: "react-native-navigation-0-66-apk"
         timeout_in_minutes: 60
         plugins:

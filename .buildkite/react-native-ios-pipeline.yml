@@ -140,7 +140,7 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":ios: RN 0.60 iOS 12 end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.60 iOS 12 end-to-end tests"
         depends_on: "rn-0-60-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -164,7 +164,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":ios: RN 0.66 iOS 14 end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.66 iOS 14 end-to-end tests"
         depends_on: "rn-0-66-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -188,7 +188,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":ios: RN 0.67 iOS 14 end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.67 iOS 14 end-to-end tests"
         depends_on: "rn-0-67-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -213,7 +213,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":ios: RN 0.69 iOS 14 end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.69 iOS 14 end-to-end tests"
         depends_on: "rn-0-69-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -238,7 +238,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
       #
-      - label: ":ios: RN 0.68 (hermes) iOS 14 end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.68 (hermes) iOS 14 end-to-end tests"
         depends_on: "rn-0-68-hermes-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -264,7 +264,7 @@ steps:
         concurrency_method: eager
 
       # See: PLAT-5173
-      - label: ":ios: react-navigation 0.60 iOS 13 end-to-end tests"
+      - label: ":browserstack: :ios: react-navigation 0.60 iOS 13 end-to-end tests"
         skip: "See PLAT-5173"
         depends_on: "react-navigation-0-60-ipa"
         timeout_in_minutes: 60
@@ -288,7 +288,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":ios: react-navigation 0.66 iOS 14 end-to-end tests"
+      - label: ":browserstack: :ios: react-navigation 0.66 iOS 14 end-to-end tests"
         depends_on: "react-navigation-0-66-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -312,7 +312,7 @@ steps:
         concurrency_method: eager
 
       # See: PLAT-5173
-      - label: ":ios: react-native-navigation 0.60 iOS 13 end-to-end tests"
+      - label: ":browserstack: :ios: react-native-navigation 0.60 iOS 13 end-to-end tests"
         skip: "See PLAT-5173"
         depends_on: "react-native-navigation-0-60-ipa"
         timeout_in_minutes: 60
@@ -337,7 +337,7 @@ steps:
         concurrency_method: eager
 
       # See: PLAT-5173
-      - label: ":ios: react-native-navigation 0.66 iOS 13 end-to-end tests"
+      - label: ":browserstack: :ios: react-native-navigation 0.66 iOS 13 end-to-end tests"
         skip: "See PLAT-5173"
         depends_on: "react-native-navigation-0-66-ipa"
         timeout_in_minutes: 60
