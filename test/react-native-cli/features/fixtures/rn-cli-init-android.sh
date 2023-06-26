@@ -49,4 +49,7 @@ send -- y
 expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
 send -- latest\r
 
+expect "or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')"
+send -- \r
+
 expect eof
