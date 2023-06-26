@@ -4,6 +4,14 @@ set timeout -1
 set notifierVersion [lindex $argv 0];
 set rnVersion [lindex $argv 1];
 
+rnVersionInt="${rnVersion:2}"
+
+rnVersionInt=$(echo "$rnVersionInt" | sed 's/_/./g')
+
+rnVersionInt=$(echo "$rnVersionInt" | bc)
+
+rnVersionInt=$(echo "$rnVersionInt < 0.68" | bc -l)
+
 puts "Using notifier version: $notifierVersion"
 puts "Using React Native version: $rnVersion"
 
@@ -49,7 +57,9 @@ send -- y
 expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
 send -- latest\r
 
-expect "or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')"
-send -- \r
+if [[ $rnVersionInt -eq 1 ]]; then
+   expect "or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')"
+   send -- \r
+fi
 
 expect eof
