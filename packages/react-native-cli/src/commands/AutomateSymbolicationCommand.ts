@@ -1,7 +1,7 @@
 import prompts from 'prompts'
 import logger from '../Logger'
 import { updateXcodeProject } from '../lib/Xcode'
-import { install, detectInstalled, guessPackageManager } from '../lib/Npm'
+import { install, detectInstalledVersion, detectInstalled, guessPackageManager } from '../lib/Npm'
 import onCancel from '../lib/OnCancel'
 import { enableReactNativeMappings } from '../lib/Gradle'
 import { UrlType, OnPremiseUrls } from '../lib/OnPremise'
@@ -54,14 +54,14 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       await enableReactNativeMappings(projectRoot, urls[UrlType.UPLOAD], urls[UrlType.BUILD], logger)
       await installBugsnagCliPackage(projectRoot)
 
-      const reactNativeInstalled = await detectInstalled('react-native', projectRoot)
+      const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
 
-      logger.info('REACTNATIVEOUTPUT ' + reactNativeInstalled)
+      logger.info('REACTNATIVEOUTPUT ' + reactNativeVersion)
 
       await prompts({
         type: 'text',
         name: 'hermesInstructions',
-        message: HERMES_INSTRUCTIONS,
+        message: reactNativeVersion,
         initial: 'Hit enter to continue …'
       }, { onCancel })
     }
