@@ -3,6 +3,19 @@
 set timeout -1
 set notifierVersion [lindex $argv 0];
 set rnVersion [lindex $argv 1];
+set rnVersionInt ""
+
+# Extract the substring starting from the third character
+set rnVersionInt [string range $rnVersion 2 end]
+
+# Replace underscore (_) with a period (.)
+set rnVersionInt [string map {_ .} $rnVersionInt]
+
+# Convert float string to float value using bc
+set rnVersionInt [exec echo "$rnVersionInt" | bc]
+
+# Compare float value with 0.68 using bc
+set rnVersionResult [exec echo "$rnVersionInt < 0.68" | bc -l]
 
 puts "Using notifier version: $notifierVersion"
 puts "Using React Native version: $rnVersion"
@@ -49,17 +62,9 @@ send -- y
 expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
 send -- latest\r
 
-rnVersionInt="${rnVersion:2}"
-
-rnVersionInt=$(echo "$rnVersionInt" | sed 's/_/./g')
-
-rnVersionInt=$(echo "$rnVersionInt" | bc)
-
-rnVersionInt=$(echo "$rnVersionInt < 0.68" | bc -l)
-
-if [[ $rnVersionInt -eq 1 ]]; then
+if { $rnVersionResult == "1"} {
    expect "or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')"
    send -- \r
-fi
+}
 
 expect eof
