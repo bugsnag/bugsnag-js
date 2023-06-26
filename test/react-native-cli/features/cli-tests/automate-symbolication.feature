@@ -28,6 +28,7 @@ Scenario: successfully modify project
     And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
+    When I input a return interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
         You are running a version of React Native that we cannot automatically integrate with due to known issues with the build when Hermes is enabled.
@@ -37,7 +38,6 @@ Scenario: successfully modify project
         or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
-    When I input a return interactively
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     Then the last interactive command exited successfully
