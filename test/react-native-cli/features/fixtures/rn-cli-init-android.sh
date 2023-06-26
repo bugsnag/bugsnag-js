@@ -4,6 +4,7 @@ set timeout -1
 set notifierVersion [lindex $argv 0];
 set rnVersion [lindex $argv 1];
 set rnVersionInt ""
+set substringToTrim ".expo.ejected"
 
 # Extract the substring starting from the third character
 set rnVersionInt [string range $rnVersion 2 end]
@@ -11,10 +12,10 @@ set rnVersionInt [string range $rnVersion 2 end]
 # Replace underscore (_) with a period (.)
 set rnVersionInt2 [string map {_ .} $rnVersionInt]
 
-regsub -all [regexp_quote ".expo.ejected"] $rnVersionInt2 "" rnVersionInt3
+regsub -all [regexp_quote $substringToTrim] $rnVersionInt2 "" rnVersionInt3
 
 # Convert float string to float value using bc
-regsub -all {^0+} $rnVersionInt3 "" $rnVersionInt3
+regsub -all {^0+} $rnVersionInt2 "" $rnVersionInt2
 
 puts "Using notifier version: $notifierVersion"
 puts "Using React Native version: $rnVersion"
