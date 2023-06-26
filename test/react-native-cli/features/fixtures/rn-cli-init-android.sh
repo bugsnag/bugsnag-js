@@ -9,13 +9,10 @@ set rnVersionInt ""
 set rnVersionInt [string range $rnVersion 2 end]
 
 # Replace underscore (_) with a period (.)
-set rnVersionInt [string map {_ .} $rnVersionInt]
+set rnVersionInt2 [string map {_ .} $rnVersionInt]
 
 # Convert float string to float value using bc
-set rnVersionInt [exec echo "$rnVersionInt" | bc]
-
-# Compare float value with 0.68 using bc
-set rnVersionResult [exec echo "$rnVersionInt < 0.68" | bc -l]
+regsub -all {^0+} $rnVersionInt2 "" $rnVersionInt2
 
 puts "Using notifier version: $notifierVersion"
 puts "Using React Native version: $rnVersion"
@@ -62,7 +59,7 @@ send -- y
 expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
 send -- latest\r
 
-if { $rnVersionResult == "1"} {
+if {[expr $rnVersionInt2 < 0.68]} {
    expect "or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')"
    send -- \r
 }
