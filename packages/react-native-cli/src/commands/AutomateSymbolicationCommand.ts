@@ -14,13 +14,13 @@ const DSYM_INSTRUCTIONS = `To configure your project to upload dSYMs, follow the
 
 `
 
-// const HERMES_INSTRUCTIONS = `You are running a version of React Native that we cannot automatically integrate with due to known issues with the build when Hermes is enabled.
-//
-//     If you cannot upgrade to a later version of React Native (version 0.68 or above), you can use an older version of this CLI (version 7.20.x or earlier)
-//
-//   or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')
-//
-// `
+const HERMES_INSTRUCTIONS = `You are running a version of React Native that we cannot automatically integrate with due to known issues with the build when Hermes is enabled.
+
+    If you cannot upgrade to a later version of React Native (version 0.68 or above), you can use an older version of this CLI (version 7.20.x or earlier)
+
+  or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')
+
+`
 
 export default async function run (projectRoot: string, urls: OnPremiseUrls): Promise<boolean> {
   try {
@@ -53,17 +53,19 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     if (androidIntegration) {
       await enableReactNativeMappings(projectRoot, urls[UrlType.UPLOAD], urls[UrlType.BUILD], logger)
       await installBugsnagCliPackage(projectRoot)
-
       const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
 
-      logger.info('REACTNATIVEOUTPUT ' + reactNativeVersion)
-
-      await prompts({
-        type: 'text',
-        name: 'hermesInstructions',
-        message: reactNativeVersion,
-        initial: 'Hit enter to continue …'
-      }, { onCancel })
+      if (reactNativeVersion) {
+        var floatNumber = parseFloat(reactNativeVersion)
+        if (floatNumber < 0.68) {
+          await prompts({
+            type: 'text',
+            name: 'hermesInstructions',
+            message: HERMES_INSTRUCTIONS,
+            initial: 'Hit enter to continue …'
+          }, { onCancel })
+        }
+      }
     }
 
     if (iosIntegration) {
