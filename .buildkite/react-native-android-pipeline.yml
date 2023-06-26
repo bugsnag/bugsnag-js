@@ -101,6 +101,7 @@ steps:
           - build/r_navigation_0.60.apk
 
       - label: ":android: Build react-navigation 0.66 apk"
+        skip: Pending PLAT-10343
         key: "react-navigation-0-66-apk"
         depends_on:
           - "android-builder-image"
@@ -301,6 +302,7 @@ steps:
         concurrency_method: eager
 
       - label: ":android: react-navigation 0.66 Android 11 end-to-end tests"
+        skip: Pending PLAT-10343
         depends_on: "react-navigation-0-66-apk"
         timeout_in_minutes: 60
         plugins:
