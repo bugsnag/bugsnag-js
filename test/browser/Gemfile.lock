@@ -10,7 +10,7 @@ GEM
       selenium-webdriver (~> 4.2, < 4.6)
     bugsnag (6.25.2)
       concurrent-ruby (~> 1.0)
-    bugsnag-maze-runner (7.33.0)
+    bugsnag-maze-runner (8.0.0)
       appium_lib (~> 12.0.0)
       appium_lib_core (~> 5.4.0)
       bugsnag (~> 6.24)
@@ -89,10 +89,10 @@ GEM
     optimist (3.0.1)
     os (1.0.1)
     power_assert (2.0.3)
-    racc (1.6.2)
+    racc (1.7.1)
     rack (2.2.7)
     rake (12.3.3)
-    regexp_parser (2.8.0)
+    regexp_parser (2.8.1)
     rexml (3.2.5)
     rubyzip (2.3.2)
     selenium-webdriver (4.5.0)
@@ -121,7 +121,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bugsnag-maze-runner (~> 7.0)
+  bugsnag-maze-runner (~> 8.0)
 
 BUNDLED WITH
-   2.2.20
+   2.3.0
