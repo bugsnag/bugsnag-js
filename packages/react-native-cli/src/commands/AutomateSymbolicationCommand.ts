@@ -54,6 +54,10 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       await enableReactNativeMappings(projectRoot, urls[UrlType.UPLOAD], urls[UrlType.BUILD], logger)
       await installBugsnagCliPackage(projectRoot)
 
+      const reactNativeInstalled = await detectInstalled('react-native', projectRoot)
+
+      logger.info('REACTNATIVEOUTPUT ' + reactNativeInstalled)
+
       await prompts({
         type: 'text',
         name: 'hermesInstructions',
