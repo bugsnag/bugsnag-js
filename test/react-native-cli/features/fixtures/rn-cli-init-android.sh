@@ -12,10 +12,10 @@ set rnVersionInt [string range $rnVersion 2 end]
 # Replace underscore (_) with a period (.)
 set rnVersionInt2 [string map {_ .} $rnVersionInt]
 
-regsub -all [regexp_quote $substringToTrim] $rnVersionInt2 "" rnVersionInt3
+set rnVersionInt3 [string map [list $substringToTrim ""] $rnVersionInt2]
 
 # Convert float string to float value using bc
-regsub -all {^0+} $rnVersionInt2 "" $rnVersionInt2
+regsub -all {^0+} $rnVersionInt3 "" $rnVersionInt3
 
 puts "Using notifier version: $notifierVersion"
 puts "Using React Native version: $rnVersion"
