@@ -519,7 +519,7 @@ steps:
       #
       # Init, build and notify end-to-end tests - Android
       #
-      - label: ":runner: RN 0.60 Android end-to-end tests"
+      - label: ":bitbar: :android: RN 0.60 Android end-to-end tests"
         depends_on: "rn-cli-0-60-apk"
         timeout_in_minutes: 10
         plugins:
@@ -542,7 +542,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.61 Android end-to-end tests"
+      - label: ":bitbar: :android: RN 0.61 Android end-to-end tests"
         depends_on: "rn-cli-0-61-apk"
         timeout_in_minutes: 10
         plugins:
@@ -565,7 +565,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.62 Android end-to-end tests"
+      - label: ":bitbar: :android: RN 0.62 Android end-to-end tests"
         depends_on: "rn-cli-0-62-apk"
         timeout_in_minutes: 10
         plugins:
@@ -588,7 +588,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.63 Android end-to-end tests"
+      - label: ":bitbar: :android: RN 0.63 Android end-to-end tests"
         depends_on: "rn-cli-0-63-apk"
         timeout_in_minutes: 10
         plugins:
@@ -611,7 +611,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.63 Expo (ejected) Android end-to-end tests"
+      - label: ":bitbar: :android: RN 0.63 Expo (ejected) Android end-to-end tests"
         depends_on: "rn-cli-0-63-expo-ejected-apk"
         timeout_in_minutes: 10
         plugins:
@@ -634,7 +634,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.64 Android end-to-end tests"
+      - label: ":bitbar: :android: RN 0.64 Android end-to-end tests"
         depends_on: "rn-cli-0-64-apk"
         timeout_in_minutes: 10
         plugins:
@@ -657,7 +657,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.65 Android end-to-end tests"
+      - label: ":bitbar: :android: RN 0.65 Android end-to-end tests"
         depends_on: "rn-cli-0-65-apk"
         timeout_in_minutes: 10
         plugins:
@@ -680,7 +680,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.66 Android end-to-end tests"
+      - label: ":bitbar: :android: RN 0.66 Android end-to-end tests"
         depends_on: "rn-cli-0-66-apk"
         timeout_in_minutes: 10
         plugins:
@@ -703,7 +703,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.67 Android end-to-end tests (Non-hermes)"
+      - label: ":bitbar: :android: RN 0.67 Android end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-67-apk"
         timeout_in_minutes: 10
         plugins:
@@ -726,7 +726,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.67 Android end-to-end tests (Hermes)"
+      - label: ":bitbar: :android: RN 0.67 Android end-to-end tests (Hermes)"
         depends_on: "rn-cli-0-67-hermes-apk"
         timeout_in_minutes: 10
         plugins:
@@ -749,7 +749,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":bitbar: RN 0.69 Android end-to-end tests (Non-hermes)"
+      - label: ":bitbar: :android: RN 0.69 Android end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-69-apk"
         timeout_in_minutes: 10
         plugins:
@@ -775,7 +775,7 @@ steps:
       #
       # Init, build and notify end-to-end tests - iOS
       #
-      - label: ":runner: RN 0.60 iOS end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.60 iOS end-to-end tests"
         depends_on: "rn-cli-0-60-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -796,7 +796,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":runner: RN 0.61 iOS end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.61 iOS end-to-end tests"
         depends_on: "rn-cli-0-61-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -817,7 +817,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":runner: RN 0.62 iOS end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.62 iOS end-to-end tests"
         depends_on: "rn-cli-0-62-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -838,7 +838,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":runner: RN 0.63 iOS end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.63 iOS end-to-end tests"
         depends_on: "rn-cli-0-63-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -859,7 +859,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":runner: RN 0.63 Expo (ejected) iOS end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.63 Expo (ejected) iOS end-to-end tests"
         depends_on: "rn-cli-0-63-expo-ejected-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -880,7 +880,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":runner: RN 0.64 iOS end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.64 iOS end-to-end tests"
         depends_on: "rn-cli-0-64-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -901,7 +901,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":runner: RN 0.65 iOS end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.65 iOS end-to-end tests"
         depends_on: "rn-cli-0-65-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -922,7 +922,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":runner: RN 0.66 iOS end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.66 iOS end-to-end tests"
         depends_on: "rn-cli-0-66-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -943,7 +943,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":runner: RN 0.67 iOS end-to-end tests (Non-hermes)"
+      - label: ":browserstack: :ios: RN 0.67 iOS end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-67-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -964,7 +964,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":runner: RN 0.67 iOS end-to-end tests (Hermes)"
+      - label: ":browserstack: :ios: RN 0.67 iOS end-to-end tests (Hermes)"
         depends_on: "rn-cli-0-67-hermes-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -985,7 +985,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":runner: RN 0.69 iOS end-to-end tests (Non-hermes)"
+      - label: ":browserstack: :ios: RN 0.69 iOS end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-69-ipa"
         timeout_in_minutes: 10
         plugins:
