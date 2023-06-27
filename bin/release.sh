@@ -26,8 +26,12 @@ cd /app/bugsnag-js
 npm ci
 npm run bootstrap -- --ci
 
+# check if CDN packages changed – if they didn't we don't need to upload to the CDN
+BROWSER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/js$ || test $? = 1;)
+WORKER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/web-worker$ || test $? = 1;)
+
 # increment package version numbers
-if [ -z "$RETRY_PUBLISH" ]; then
+if [ -z "${RETRY_PUBLISH:-}" ]; then
   case $VERSION in
     "prerelease" | "prepatch" | "preminor" | "premajor")
       npx lerna version "$VERSION" --dist-tag next --no-push
@@ -50,19 +54,15 @@ npx lerna run build \
   --ignore @bugsnag/plugin-electron-app \
   --ignore @bugsnag/plugin-electron-client-state-persistence
 
-# push git tags
-git push origin --tags
+# push local changes and tags
+git push origin --follow-tags
 
 # publish
-if [ -z "$RETRY_PUBLISH" ]; then
+if [ -z "${RETRY_PUBLISH:-}" ]; then
   npx lerna publish from-git
 else
   npx lerna publish from-package
 fi
-
-# check if CDN packages changed – if they didn't we don't need to upload to the CDN
-BROWSER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/js$ || test $? = 1;)
-WORKER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/web-worker$ || test $? = 1;)
 
 if [ "$BROWSER_PACKAGE_CHANGED" -eq 1 ] || [  -v FORCE_CDN_UPLOAD ]; then
   npx lerna run cdn-upload --stream --scope @bugsnag/browser
