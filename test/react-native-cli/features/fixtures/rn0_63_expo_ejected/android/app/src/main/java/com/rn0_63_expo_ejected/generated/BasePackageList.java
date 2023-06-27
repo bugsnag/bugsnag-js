@@ -1,4 +1,4 @@
-package com.bugsnag.rn0_63_expo_ejected.generated;
+package com.rn0_63_expo_ejected.generated;
 
 import java.util.Arrays;
 import java.util.List;

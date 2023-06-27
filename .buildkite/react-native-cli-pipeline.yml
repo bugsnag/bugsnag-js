@@ -523,231 +523,253 @@ steps:
         depends_on: "rn-cli-0-60-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_60.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_60.apk
-              - --farm=bs
-              - --device=ANDROID_11_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       - label: ":runner: RN 0.61 Android end-to-end tests"
         depends_on: "rn-cli-0-61-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_61.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_61.apk
-              - --farm=bs
-              - --device=ANDROID_11_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       - label: ":runner: RN 0.62 Android end-to-end tests"
         depends_on: "rn-cli-0-62-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_62.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_62.apk
-              - --farm=bs
-              - --device=ANDROID_11_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       - label: ":runner: RN 0.63 Android end-to-end tests"
         depends_on: "rn-cli-0-63-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_63.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_63.apk
-              - --farm=bs
-              - --device=ANDROID_11_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       - label: ":runner: RN 0.63 Expo (ejected) Android end-to-end tests"
         depends_on: "rn-cli-0-63-expo-ejected-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_63_expo_ejected.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_63_expo_ejected.apk
-              - --farm=bs
-              - --device=ANDROID_11_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       - label: ":runner: RN 0.64 Android end-to-end tests"
         depends_on: "rn-cli-0-64-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_64.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_64.apk
-              - --farm=bs
-              - --device=ANDROID_11_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       - label: ":runner: RN 0.65 Android end-to-end tests"
         depends_on: "rn-cli-0-65-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_65.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_65.apk
-              - --farm=bs
-              - --device=ANDROID_11_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       - label: ":runner: RN 0.66 Android end-to-end tests"
         depends_on: "rn-cli-0-66-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_66.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_66.apk
-              - --farm=bs
-              - --device=ANDROID_11_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       - label: ":runner: RN 0.67 Android end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-67-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_67.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_67.apk
-              - --farm=bs
-              - --device=ANDROID_11_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       - label: ":runner: RN 0.67 Android end-to-end tests (Hermes)"
         depends_on: "rn-cli-0-67-hermes-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_67_hermes.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_67_hermes.apk
-              - --farm=bs
-              - --device=ANDROID_12_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.69 Android end-to-end tests (Non-hermes)"
+      - label: ":bitbar: RN 0.69 Android end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-69-apk"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_69.apk"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_69.apk
-              - --farm=bs
-              - --device=ANDROID_11_0
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       #
