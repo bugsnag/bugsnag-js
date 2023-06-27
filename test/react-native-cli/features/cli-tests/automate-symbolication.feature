@@ -15,6 +15,9 @@ Scenario: successfully modify project
     When I input a return interactively
     And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input a return interactively
+    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
+    When I input a return interactively
+    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
     And I wait for the interactive shell to output the following lines in stdout
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
@@ -61,6 +64,9 @@ Scenario: successfully modify project, choosing source-maps version
     When I input a return interactively
     And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input a return interactively
+    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
+    When I input a return interactively
+    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
     And I wait for the interactive shell to output the following lines in stdout
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
@@ -111,6 +117,9 @@ Scenario: successfully modify project with custom endpoints
     When I input "https://build.example.com" interactively
     And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input a return interactively
+    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
+    When I input a return interactively
+    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
     And I wait for the interactive shell to output the following lines in stdout
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
@@ -158,6 +167,10 @@ Scenario: opt not to modify the Android project
     When I input a return interactively
     And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input a return interactively
+    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
+    When I input a return interactively
+    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
+    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
     And I wait for the interactive shell to output the following lines in stdout
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
@@ -170,9 +183,6 @@ Scenario: opt not to modify the Android project
     When I input a return interactively
     And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input "n" interactively
-    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
-    When I input a return interactively
-    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
     Then the last interactive command exited successfully
     And bugsnag source maps library is in the package.json file
     And the iOS build has been modified to upload source maps
