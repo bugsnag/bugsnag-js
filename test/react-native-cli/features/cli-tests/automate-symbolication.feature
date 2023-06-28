@@ -32,6 +32,7 @@ Scenario: successfully modify project
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
+    When RN version is 0.68 or lower
     And I wait for the interactive shell to output the following lines in stdout
         """
         You are running a version of React Native that we cannot automatically integrate with due to known issues with the build when Hermes is enabled.
@@ -219,6 +220,7 @@ Scenario: opt not to modify the iOS project
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
+    When RN version is 0.68 or lower
     And I wait for the interactive shell to output the following lines in stdout
         """
         You are running a version of React Native that we cannot automatically integrate with due to known issues with the build when Hermes is enabled.
