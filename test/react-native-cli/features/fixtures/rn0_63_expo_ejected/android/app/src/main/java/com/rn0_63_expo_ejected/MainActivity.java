@@ -1,4 +1,4 @@
-package com.bugsnag.rn0_63_expo_ejected;
+package com.rn0_63_expo_ejected;
 
 import android.content.Intent;
 import android.os.Bundle;

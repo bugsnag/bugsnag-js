@@ -1,8 +1,10 @@
-package com.bugsnag.rn0_63_expo_ejected;
+package com.rn0_63_expo_ejected;
 
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
+import java.util.Map;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -11,7 +13,9 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.bugsnag.rn0_63_expo_ejected.generated.BasePackageList;
+import com.rn0_63_expo_ejected.generated.BasePackageList;
+import com.bugsnag.android.Configuration;
+import com.bugsnag.android.EndpointConfiguration;
 
 import org.unimodules.adapters.react.ReactAdapterPackage;
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
@@ -92,5 +96,17 @@ public class MainApplication extends Application implements ReactApplication {
     if (!BuildConfig.DEBUG) {
       UpdatesController.initialize(this);
     }
+  }
+
+  private Configuration createConfiguration() {
+    TestUtils testUtils = new TestUtils();
+    Map<String, String> defaultParams = testUtils.loadDefaultParams(this);
+    Configuration config = new Configuration(defaultParams.get("apiKey"));
+    String mazeAddress = testUtils.getMazeRunnerAddress(this);
+    String notifyEndpoint = "http://" + mazeAddress + "/notify";
+    String sessionEndpoint = "http://" + mazeAddress + "/sessions";
+    config.setEndpoints(new EndpointConfiguration(notifyEndpoint, sessionEndpoint));
+    config.addMetadata("default", defaultParams);
+    return config;
   }
 }
