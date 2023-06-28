@@ -28,7 +28,7 @@ Scenario: successfully modify project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    And I wait for the current stdout line to match the regex "Do you want to add an upload task for JavaScript source maps for Android\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -78,7 +78,7 @@ Scenario: successfully modify project, choosing source-maps version
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    And I wait for the current stdout line to match the regex "Do you want to add an upload task for JavaScript source maps for Android\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input "1.1.8" interactively
@@ -131,7 +131,7 @@ Scenario: successfully modify project with custom endpoints
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    And I wait for the current stdout line to match the regex "Do you want to add an upload task for JavaScript source maps for Android\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -182,7 +182,7 @@ Scenario: opt not to modify the Android project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    And I wait for the current stdout line to match the regex "Do you want to add an upload task for JavaScript source maps for Android\?"
     When I input "n" interactively
     Then the last interactive command exited successfully
     And bugsnag source maps library is in the package.json file
@@ -215,7 +215,7 @@ Scenario: opt not to modify the iOS project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    And I wait for the current stdout line to match the regex "Do you want to add an upload task for JavaScript source maps for Android\?"
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -262,7 +262,7 @@ Scenario: opt not to modify either project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    And I wait for the current stdout line to match the regex "Do you want to add an upload task for JavaScript source maps for Android\?"
     When I input "n" interactively
     And I wait for the current stdout line to match the regex "\/app #"
     Then the last interactive command exited successfully
