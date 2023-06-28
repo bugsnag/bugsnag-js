@@ -139,6 +139,14 @@ Please remove this line or disable it in your builds to prevent duplicate upload
         ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
         logger
       )
+    } else {
+      await insertValueAfterPattern(
+        appBuildGradlePath,
+        /$/,
+        ENABLE_REACT_NATIVE_MAPPINGS,
+        ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
+        logger
+      )
     }
   } catch (e) {
     if (e.message === 'Pattern not found') {
