@@ -455,6 +455,18 @@ def version_less_than(string_value, float_value)
   return float_value < converted_float
 end
 
-When('RN version is 0.68 or lower') do
+When('RN version is 0.68 or lower dismiss warning message') do
   next if version_less_than(ENV['REACT_NATIVE_VERSION'], 0.69)
+  steps %Q{
+    And I wait for the interactive shell to output the following lines in stdout
+        """
+        You are running a version of React Native that we cannot automatically integrate with due to known issues with the build when Hermes is enabled.
+
+        If you cannot upgrade to a later version of React Native (version 0.68 or above), you can use an older version of this CLI (version 7.20.x or earlier)
+
+        or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')
+        """
+    And I wait for the current stdout line to match the regex "Hit enter to continue"
+    When I input a return interactively
+  }
 end
