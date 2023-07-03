@@ -447,14 +447,14 @@ Then('the sourcemaps Content-Type header is valid multipart form-data') do
   Maze.check.match(expected, actual)
 end
 
-# def version_less_than(string_value, float_value)
-#   stripped_string = string_value[2..-1]
-#   replaced_string = stripped_string.gsub("_", ".")
-#   converted_float = replaced_string.to_f
-#
-#   return float_value < converted_float
-# end
-#
-# When('RN version is 0.68 or lower') do
-#   next if version_less_than(ENV['REACT_NATIVE_VERSION'], 0.69)
-# end
+def version_less_than(string_value, float_value)
+  stripped_string = string_value[2..-1]
+  replaced_string = stripped_string.gsub("_", ".")
+  converted_float = replaced_string.to_f
+
+  return float_value < converted_float
+end
+
+When('RN version is 0.68 or lower') do
+  next if version_less_than(ENV['REACT_NATIVE_VERSION'], 0.69)
+end
