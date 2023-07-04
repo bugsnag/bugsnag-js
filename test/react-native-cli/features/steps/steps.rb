@@ -451,11 +451,10 @@ def version_less_than(string_value, float_value)
   stripped_string = string_value[2..-1]
   replaced_string = stripped_string.gsub("_", ".")
   converted_float = replaced_string.to_f
-
-  return float_value < converted_float
+  return converted_float < float_value
 end
 
-When('RN version is 0.68 or lower dismiss warning message') do
+When('RN version is 0.68 or lower dismiss the warning message') do
   next if version_less_than(ENV['REACT_NATIVE_VERSION'], 0.69)
   steps %Q{
     And I wait for the interactive shell to output the following lines in stdout
