@@ -14,7 +14,6 @@ def get_test_url(path)
     api_host = "#{ENV['API_HOST']}:#{Maze.config.port}"
   end
 
-  uri = URI("http://#{host}:#{FIXTURES_SERVER_PORT}#{path}")
   notify = "http://#{api_host}/notify"
   sessions = "http://#{api_host}/sessions"
   logs = "http://#{api_host}/logs"
