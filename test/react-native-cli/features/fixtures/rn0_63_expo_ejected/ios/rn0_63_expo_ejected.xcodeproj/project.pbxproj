@@ -340,7 +340,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.rn0-63-expo-ejected";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rn0-63-expo-ejected";
 				PRODUCT_NAME = rn0_63_expo_ejected;
 				SWIFT_OBJC_BRIDGING_HEADER = "rn0_63_expo_ejected/rn0_63_expo_ejected-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -368,7 +368,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.rn0-63-expo-ejected";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rn0-63-expo-ejected";
 				PRODUCT_NAME = rn0_63_expo_ejected;
 				SWIFT_OBJC_BRIDGING_HEADER = "rn0_63_expo_ejected/rn0_63_expo_ejected-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

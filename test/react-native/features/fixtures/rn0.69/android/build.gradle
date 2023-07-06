@@ -53,3 +53,9 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
+
+subprojects { subproject ->
+    if(project['name'] == 'react-native-reanimated'){
+        project.configurations { compile { } }
+    }
+}

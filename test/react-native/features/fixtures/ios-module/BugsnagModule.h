@@ -17,5 +17,4 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options);
 
 @end
 
-
 #endif /* BugsnagModule_h */

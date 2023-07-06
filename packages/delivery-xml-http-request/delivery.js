@@ -15,14 +15,18 @@ module.exports = (client, win = window) => ({
         if (req.readyState === win.XMLHttpRequest.DONE) {
           const status = req.status
           if (status === 0 || status >= 400) {
-            client._logger.error('Event failed to send…')
+            const err = new Error(`Request failed with status ${status}`)
+            client._logger.error('Event failed to send…', err)
             if (body.length > 10e5) {
               client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
             }
+            cb(err)
+          } else {
+            cb(null)
           }
-          cb(null)
         }
       }
+
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
       req.setRequestHeader('Bugsnag-Api-Key', event.apiKey || client._config.apiKey)
@@ -41,9 +45,20 @@ module.exports = (client, win = window) => ({
         return cb(err)
       }
       const req = new win.XMLHttpRequest()
+
       req.onreadystatechange = function () {
-        if (req.readyState === win.XMLHttpRequest.DONE) cb(null)
+        if (req.readyState === win.XMLHttpRequest.DONE) {
+          const status = req.status
+          if (status === 0 || status >= 400) {
+            const err = new Error(`Request failed with status ${status}`)
+            client._logger.error('Session failed to send…', err)
+            cb(err)
+          } else {
+            cb(null)
+          }
+        }
       }
+
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
       req.setRequestHeader('Bugsnag-Api-Key', client._config.apiKey)
