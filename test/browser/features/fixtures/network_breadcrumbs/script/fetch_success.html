@@ -8,15 +8,13 @@
       var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
       var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
       var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-      var REFLECT = decodeURIComponent(window.location.search.match(/REFLECT=([^&]+)/)[1])
-      var url = `${REFLECT}?status=200&delay_ms=0`
 
       Bugsnag.start({
         apiKey: API_KEY,
         endpoints: { notify: NOTIFY, sessions: SESSIONS },
       })
 
-      fetch(url).then(function () {
+      fetch("fetch_success.html").then(function () {
         Bugsnag.notify(new Error("This error should have network breadcrumbs attached"))
       })
     

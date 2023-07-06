@@ -28,8 +28,8 @@ module.exports = (_ignoredUrls = [], win = window) => {
         win.XMLHttpRequest.prototype.open = function open (method, url) {
           let requestSetupKey = false
 
-          const error = () => handleXHRError(method, url, getDuration(requestStart), requestContentLength)
-          const load = () => handleXHRLoad(method, url, this.status, getDuration(requestStart), requestContentLength)
+          const error = () => handleXHRError(method, url, getDuration(requestStart))
+          const load = () => handleXHRLoad(method, url, this.status, getDuration(requestStart))
 
           // if we have already setup listeners, it means open() was called twice, we need to remove
           // the listeners and recreate them
@@ -47,11 +47,9 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
           const oldSend = this.send
           let requestStart
-          let requestContentLength
 
           // override send() for this XMLHttpRequest instance
-          this.send = function send (body) {
-            requestContentLength = getByteLength(body)
+          this.send = function send () {
             requestStart = new Date()
             oldSend.apply(this, arguments)
           }
@@ -66,7 +64,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
       }
 
-      function handleXHRLoad (method, url, status, duration, requestContentLength) {
+      function handleXHRLoad (method, url, status, duration) {
         if (url === undefined) {
           client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
           return
@@ -81,8 +79,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
         const metadata = {
           status: status,
           request: `${method} ${url}`,
-          duration: duration,
-          requestContentLength: requestContentLength
+          duration: duration
         }
         if (status >= 400) {
           // contacted server but got an error response
@@ -92,7 +89,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
       }
 
-      function handleXHRError (method, url, duration, requestContentLength) {
+      function handleXHRError (method, url, duration) {
         if (url === undefined) {
           client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
           return
@@ -106,8 +103,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
         // failed to contact server
         client.leaveBreadcrumb('XMLHttpRequest error', {
           request: `${method} ${url}`,
-          duration: duration,
-          requestContentLength: requestContentLength
+          duration: duration
         }, BREADCRUMB_TYPE)
       }
 
@@ -125,7 +121,6 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
           let method
           let url = null
-          let requestContentLength
 
           if (urlOrRequest && typeof urlOrRequest === 'object') {
             url = urlOrRequest.url
@@ -145,21 +140,17 @@ module.exports = (_ignoredUrls = [], win = window) => {
             method = 'GET'
           }
 
-          if (options && 'body' in options) {
-            requestContentLength = getByteLength(options.body)
-          }
-
           return new Promise((resolve, reject) => {
             const requestStart = new Date()
 
             // pass through to native fetch
             oldFetch(...arguments)
               .then(response => {
-                handleFetchSuccess(response, method, url, getDuration(requestStart), requestContentLength)
+                handleFetchSuccess(response, method, url, getDuration(requestStart))
                 resolve(response)
               })
               .catch(error => {
-                handleFetchError(method, url, getDuration(requestStart), requestContentLength)
+                handleFetchError(method, url, getDuration(requestStart))
                 reject(error)
               })
           })
@@ -172,12 +163,11 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
       }
 
-      const handleFetchSuccess = (response, method, url, duration, requestContentLength) => {
+      const handleFetchSuccess = (response, method, url, duration) => {
         const metadata = {
           status: response.status,
           request: `${method} ${url}`,
-          duration: duration,
-          requestContentLength: requestContentLength
+          duration: duration
         }
         if (response.status >= 400) {
           // when the request comes back with a 4xx or 5xx status it does not reject the fetch promise,
@@ -187,12 +177,8 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
       }
 
-      const handleFetchError = (method, url, duration, requestContentLength) => {
-        client.leaveBreadcrumb('fetch() error', {
-          request: `${method} ${url}`,
-          duration: duration,
-          requestContentLength: requestContentLength
-        }, BREADCRUMB_TYPE)
+      const handleFetchError = (method, url, duration) => {
+        client.leaveBreadcrumb('fetch() error', { request: `${method} ${url}`, duration: duration }, BREADCRUMB_TYPE)
       }
     }
   }
@@ -201,35 +187,6 @@ module.exports = (_ignoredUrls = [], win = window) => {
     plugin.destroy = () => {
       restoreFunctions.forEach(fn => fn())
       restoreFunctions = []
-    }
-  }
-
-  const getByteLength = (body) => {
-    // body could be any of the types listed here: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send#parameters
-    // ReadableStreams cannot be read safely and it's difficult to get an accurate byte length for FormData and Document inputs
-    if ((body === null || typeof body === 'undefined') ||
-      (win.ReadableStream && body instanceof win.ReadableStream) ||
-      (win.FormData && body instanceof win.FormData) ||
-      (win.Document && body instanceof win.Document)) return undefined
-
-    // Try to read the byte length directly
-    if (typeof body.byteLength === 'number') {
-      // ArrayBuffer, DataView, TypedArray
-      return body.byteLength
-    } else if (win.Blob && body instanceof win.Blob) {
-      return body.size
-    } else if (!win.Blob) {
-      return undefined
-    }
-
-    try {
-      // do a simple stringification - this may fail if the input object has no prototype or a broken toString
-      const stringified = String(body)
-
-      // use a Blob to get the utf-8 encoded byte length
-      return new win.Blob([stringified]).size
-    } catch (e) {
-      return undefined
     }
   }
 
