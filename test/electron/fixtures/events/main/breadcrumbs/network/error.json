@@ -60,7 +60,8 @@
           "name": "net.request error",
           "timestamp": "{TIMESTAMP}",
           "metaData": {
-            "request": "GET http://locahost:65536/",
+            "method": "GET",
+            "url": "http://locahost:65536/",
             "status": "{TYPE:undefined}",
             "duration": "{TYPE:number}"
           }
