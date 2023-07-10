@@ -47,8 +47,8 @@ def find_cli_helper_script
   # Handle both Dockerized and local Maze Runner executions
   script = 'react-native-cli-helper.js'
   possible_locations = %W[
-    #{__dir__}/../../scripts/#{script}
-    #{__dir__}/../../../../scripts/#{script}
+  #{__dir__}/../../scripts/#{script}
+  #{__dir__}/../../../../scripts/#{script}
   ]
   path = possible_locations.find { |path| File.exist?(path) }
   if path.nil?
@@ -445,4 +445,27 @@ Then('the sourcemaps Content-Type header is valid multipart form-data') do
   expected = /^multipart\/form-data; boundary=([^;]+)/
   actual = Maze::Server.sourcemaps.current[:request]['content-type']
   Maze.check.match(expected, actual)
+end
+
+def version_less_than(string_value, float_value)
+  stripped_string = string_value[2..-1]
+  replaced_string = stripped_string.gsub("_", ".")
+  converted_float = replaced_string.to_f
+  return converted_float < float_value
+end
+
+When('RN version is 0.68 or lower dismiss the warning message') do
+  next if version_less_than(ENV['REACT_NATIVE_VERSION'], 0.69)
+  steps %Q{
+    And I wait for the interactive shell to output the following lines in stdout
+        """
+        You are running a version of React Native that we cannot automatically integrate with due to known issues with the build when Hermes is enabled.
+
+        If you cannot upgrade to a later version of React Native (version 0.68 or above), you can use an older version of this CLI (version 7.20.x or earlier)
+
+        or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')
+        """
+    And I wait for the current stdout line to match the regex "Hit enter to continue"
+    When I input a return interactively
+  }
 end
