@@ -123,15 +123,9 @@ export async function enableReactNativeMappings (
   try {
     const fileContents = await fs.readFile(appBuildGradlePath, 'utf8')
 
-    if (/^\s*uploadReactNativeMappings\s*=\s*true/m.test(fileContents)) {
-      logger.warn(
-        `The uploadReactNativeMappings option for the Bugsnag Gradle plugin is currently enabled in ${appBuildGradlePath}.
-
-This is no longer required as mappings will be uploaded by the BugSnag CLI.
-
-Please remove this line or disable it in your builds to prevent duplicate uploads.`
-      )
-    } else if (/^\s*bugsnag {/m.test(fileContents)) {
+    // If the file contains a 'bugsnag' configuration section already, add the
+    // 'uploadReactNativeMappings' flag to it
+    if (/^\s*bugsnag {/m.test(fileContents)) {
       await insertValueAfterPattern(
         appBuildGradlePath,
         /^\s*bugsnag {[^}]*?(?=})/m,
@@ -140,6 +134,7 @@ Please remove this line or disable it in your builds to prevent duplicate upload
         logger
       )
     } else {
+      // If the file doesn't contain bugsnag config already, add it now
       await insertValueAfterPattern(
         appBuildGradlePath,
         /$/,

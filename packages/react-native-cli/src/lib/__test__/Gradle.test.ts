@@ -230,11 +230,7 @@ test('enableReactNativeMappings(): failure mappings already enabled', async () =
 
   expect(readFileMock).toHaveBeenCalledWith('/random/path/android/app/build.gradle', 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
-  expect(logger.warn).toHaveBeenCalledWith(`The uploadReactNativeMappings option for the Bugsnag Gradle plugin is currently enabled in /random/path/android/app/build.gradle.
-
-This is no longer required as mappings will be uploaded by the BugSnag CLI.
-
-Please remove this line or disable it in your builds to prevent duplicate uploads.`)
+  expect(logger.warn).toHaveBeenCalledWith('Value already found in file, skipping.')
 })
 
 test('enableReactNativeMappings(): failure gradle file not found', async () => {

@@ -34,7 +34,6 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     if (iosIntegration) {
       logger.info('Modifying the Xcode project')
       await updateXcodeProject(projectRoot, urls[UrlType.UPLOAD], logger)
-      await installJavaScriptPackage(projectRoot)
     }
 
     await prompts({
@@ -47,7 +46,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     const { androidIntegration } = await prompts({
       type: 'confirm',
       name: 'androidIntegration',
-      message: 'Do you want to add an upload task for JavaScript source maps for Android?',
+      message: 'Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps?',
       initial: true
     }, { onCancel })
 
@@ -69,6 +68,9 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       }
     }
 
+    if (iosIntegration) {
+      await installJavaScriptPackage(projectRoot)
+    }
     return true
   } catch (e) {
     logger.error(e)
