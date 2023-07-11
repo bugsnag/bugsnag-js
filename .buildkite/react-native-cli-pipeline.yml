@@ -726,29 +726,6 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":bitbar: :android: RN 0.67 Android end-to-end tests (Hermes)"
-        depends_on: "rn-cli-0-67-hermes-apk"
-        timeout_in_minutes: 10
-        plugins:
-          artifacts#v1.9.0:
-            download: "build/rn0_67_hermes.apk"
-            upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v4.12.0:
-            pull: react-native-cli-maze-runner
-            run: react-native-cli-maze-runner
-            service-ports: true
-            command:
-              - --app=build/rn0_67_hermes.apk
-              - --farm=bb
-              - --device=ANDROID_10|ANDROID_11|ANDROID_12
-              - --a11y-locator
-              - --no-tunnel
-              - --aws-public-ip
-              - features/run-app-tests
-        concurrency: 25
-        concurrency_group: 'bitbar-app'
-        concurrency_method: eager
-
       - label: ":bitbar: :android: RN 0.69 Android end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-69-apk"
         timeout_in_minutes: 10
