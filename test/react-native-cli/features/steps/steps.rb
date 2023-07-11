@@ -456,9 +456,8 @@ end
 
 When('RN version is 0.68 or lower dismiss the warning message') do
   rn_version_lower = rn_version_less_than(ENV['REACT_NATIVE_VERSION'], 0.69)
-  $logger.info "rn_version_lower is #{rn_version_lower}"
-  next if rn_version_lower
-  steps %Q{
+  if rn_version_lower
+    steps %Q{
     And I wait for the interactive shell to output the following lines in stdout
         """
         You are running a version of React Native that we cannot automatically integrate with due to known issues with the build when Hermes is enabled.
@@ -470,4 +469,5 @@ When('RN version is 0.68 or lower dismiss the warning message') do
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
   }
+  end
 end
