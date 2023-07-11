@@ -456,7 +456,8 @@ end
 
 When('RN version is 0.68 or lower dismiss the warning message') do
   rn_version_lower = rn_version_less_than(ENV['REACT_NATIVE_VERSION'], 0.69)
-  if rn_version_lower
+  case rn_version_lower
+  when true
     steps %Q{
     And I wait for the interactive shell to output the following lines in stdout
         """
