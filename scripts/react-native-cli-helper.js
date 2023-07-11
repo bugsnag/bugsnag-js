@@ -34,7 +34,7 @@ module.exports = {
       const initCommand = `./rn-cli-init-android.sh ${version} ${rnVersion}`
       common.run(initCommand, true)
 
-      Use Perl to replace the Bugsnag start command to use a loaded configuration
+      // Use Perl to replace the Bugsnag start command to use a loaded configuration
       const applicationPath = `android/app/src/main/java/com/${rnVersion}/`
       common.changeDir(`${destFixtures}/${rnVersion}/${applicationPath}`)
       const perlCommand = 'perl -pi -e "s/Bugsnag.start\\(this\\);/Bugsnag.start\\(this, createConfiguration\\(\\)\\);/g" MainApplication.java'
