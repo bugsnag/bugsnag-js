@@ -77,7 +77,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       }, { onCancel })
 
       if (writeToPackageJson) {
-        writeToPackageJson(path.join(projectRoot, 'package.json'))
+        await writeToPackageJson(path.join(projectRoot, 'package.json'))
       }
     }
 
@@ -141,7 +141,7 @@ async function installJavaScriptPackage (projectRoot: string): Promise<void> {
   logger.success('@bugsnag/source-maps dependency is installed')
 }
 
-async function  writeToPackageJson (packageJsonPath: string): Promise<void> {
+async function writeToPackageJson (packageJsonPath: string): Promise<void> {
   fs.readFile(packageJsonPath, 'utf8', (err, data) => {
     if (err) {
       console.error(`Error reading package.json: ${err}`)
