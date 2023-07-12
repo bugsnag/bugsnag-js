@@ -67,4 +67,7 @@ if {[expr $rnVersionInt3 < 0.68]} {
    send -- \r
 }
 
+expect "Do you want to add an NPM task to your package.json to upload Android source maps?"
+send -- \r
+
 expect eof
