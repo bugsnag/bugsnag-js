@@ -68,17 +68,17 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
           }, { onCancel })
         }
       }
-    }
 
-    const { writeToPackageJson } = await prompts({
-      type: 'confirm',
-      name: 'writeToPackageJson',
-      message: 'Do you want to add an NPM task to your package.json to upload Android source maps?',
-      initial: true
-    }, { onCancel })
+      const { writeToPackageJson } = await prompts({
+        type: 'confirm',
+        name: 'writeToPackageJson',
+        message: 'Do you want to add an NPM task to your package.json to upload Android source maps?',
+        initial: true
+      }, { onCancel })
 
-    if (writeToPackageJson) {
-      writeToPackageJson(path.join(projectRoot, 'package.json'))
+      if (writeToPackageJson) {
+        writeToPackageJson(path.join(projectRoot, 'package.json'))
+      }
     }
 
     if (iosIntegration) {
