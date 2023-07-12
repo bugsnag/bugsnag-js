@@ -56,7 +56,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       await enableReactNativeMappings(projectRoot, urls[UrlType.UPLOAD], urls[UrlType.BUILD], logger)
       await installBugsnagCliPackage(projectRoot)
       const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
-      console.log('reactNativeVersion' + reactNativeVersion)
+
       if (reactNativeVersion) {
         var floatNumber = parseFloat(reactNativeVersion)
         if (floatNumber < 0.68) {
