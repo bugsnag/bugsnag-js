@@ -30,7 +30,7 @@ Scenario: successfully modify project
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
     When RN version is 0.68 or lower dismiss the warning message
-    Then I wait for the shell to output a match for the regec "Do you want to add an NPM task to your package.json to upload Android source maps?" to stdout
+    Then I wait for the shell to output a match for the regex "Do you want to add an NPM task to your package.json to upload Android source maps?" to stdout
     When I input "n" interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     Then the last interactive command exited successfully
@@ -70,7 +70,7 @@ Scenario: successfully modify project, choosing source-maps version
     When I input "1.1.8" interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     When RN version is 0.68 or lower dismiss the warning message
-    Then I wait for the shell to output a match for the regec "Do you want to add an NPM task to your package.json to upload Android source maps?" to stdout
+    Then I wait for the shell to output a match for the regex "Do you want to add an NPM task to your package.json to upload Android source maps?" to stdout
     When I input "n" interactively
     Then the last interactive command exited successfully
     And bugsnag cli library version "^1.1.8" is in the package.json file
@@ -113,7 +113,7 @@ Scenario: successfully modify project with custom endpoints
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     When RN version is 0.68 or lower dismiss the warning message
-    Then I wait for the shell to output a match for the regec "Do you want to add an NPM task to your package.json to upload Android source maps?" to stdout
+    Then I wait for the shell to output a match for the regex "Do you want to add an NPM task to your package.json to upload Android source maps?" to stdout
     When I input "n" interactively
     Then the last interactive command exited successfully
     And bugsnag cli library is in the package.json file
@@ -189,7 +189,7 @@ Scenario: opt not to modify the iOS project
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     When RN version is 0.68 or lower dismiss the warning message
-    Then I wait for the shell to output a match for the regec "Do you want to add an NPM task to your package.json to upload Android source maps?" to stdout
+    Then I wait for the shell to output a match for the regex "Do you want to add an NPM task to your package.json to upload Android source maps?" to stdout
     When I input "n" interactively
     Then the last interactive command exited successfully
     And bugsnag cli library is in the package.json file
