@@ -141,32 +141,31 @@ async function installJavaScriptPackage (projectRoot: string): Promise<void> {
   logger.success('@bugsnag/source-maps dependency is installed')
 }
 
-const writeToPackageJson = (packageJsonPath: string): void => {
+async function  writeToPackageJson (packageJsonPath: string): Promise<void> {
   fs.readFile(packageJsonPath, 'utf8', (err, data) => {
     if (err) {
-      console.error(`Error reading package.json: ${err}`);
-      return;
+      console.error(`Error reading package.json: ${err}`)
+      return
     }
 
     try {
-      const packageJson = JSON.parse(data);
+      const packageJson = JSON.parse(data)
 
       packageJson.scripts = {
         ...packageJson.scripts,
-        "bugsnag:create-build": "./node_modules/.bin/bugsnag-cli create-build",
-        "bugsnag:upload-android": "./node_modules/.bin/bugsnag-cli upload react-native-android"
-      };
+        'bugsnag:create-build': './node_modules/.bin/bugsnag-cli create-build',
+        'bugsnag:upload-android': './node_modules/.bin/bugsnag-cli upload react-native-android'
+      }
 
-      const updatedPackageJson = JSON.stringify(packageJson, null, 2);
+      const updatedPackageJson = JSON.stringify(packageJson, null, 2)
 
       fs.writeFile(packageJsonPath, updatedPackageJson, 'utf8', (err) => {
         if (err) {
-          console.error(`Error writing package.json: ${err}`);
-          return;
+          console.error(`Error writing package.json: ${err}`)
         }
-      });
+      })
     } catch (err) {
-      console.error(`Error parsing package.json: ${err}`);
+      console.error(`Error parsing package.json: ${err}`)
     }
-  });
-};
+  })
+}
