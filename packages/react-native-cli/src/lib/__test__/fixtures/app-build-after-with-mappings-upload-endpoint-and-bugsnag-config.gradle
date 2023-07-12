@@ -222,7 +222,5 @@ bugsnag {
   config = yes
   options = set to things
 
-  uploadReactNativeMappings = false
-
   endpoint = "https://upload.example.com"
 }

@@ -221,6 +221,4 @@ apply from: file("../../node_modules/@react-native-community/cli-platform-androi
 bugsnag {
   config = yes
   options = set to things
-
-  uploadReactNativeMappings = false
 }
