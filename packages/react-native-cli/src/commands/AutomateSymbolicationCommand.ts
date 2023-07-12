@@ -69,14 +69,14 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
         }
       }
 
-      const { writeToPackageJson } = await prompts({
+      const { packageJsonIntegration } = await prompts({
         type: 'confirm',
-        name: 'writeToPackageJson',
+        name: 'packageJsonIntegration',
         message: 'Do you want to add an NPM task to your package.json to upload Android source maps?',
         initial: true
       }, { onCancel })
 
-      if (writeToPackageJson) {
+      if (packageJsonIntegration) {
         await writeToPackageJson(path.join(projectRoot, 'package.json'))
       }
     }
