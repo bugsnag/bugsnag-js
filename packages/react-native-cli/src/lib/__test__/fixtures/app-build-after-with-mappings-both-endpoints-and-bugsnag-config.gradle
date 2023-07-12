@@ -222,6 +222,8 @@ bugsnag {
   config = yes
   options = set to things
 
+  uploadReactNativeMappings = false
+
   endpoint = "https://upload.example.com"
 
   releasesEndpoint = "https://build.example.com"
