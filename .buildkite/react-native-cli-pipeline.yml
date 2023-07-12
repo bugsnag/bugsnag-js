@@ -339,22 +339,6 @@ steps:
         artifact_paths:
           - build/rn0_67.apk
 
-#      - label: ":android: Init and build RN 0.67 apk (Hermes)"
-#        key: "rn-cli-0-67-hermes-apk"
-#        depends_on:
-#          - "android-builder-cli-image"
-#        timeout_in_minutes: 15
-#        env:
-#          DEBUG: true
-#          REACT_NATIVE_VERSION: rn0_67_hermes
-#        plugins:
-#          - docker-compose#v4.12.0:
-#              run: react-native-cli-android-builder
-#              command: ["features/build-app-tests/build-android-app.feature"]
-#        artifact_paths:
-#          - build/rn0_67_hermes.apk
-
-
       - label: ":android: Init and build RN 0.69 apk (Non-hermes)"
         key: "rn-cli-0-69-apk"
         depends_on:
@@ -489,19 +473,6 @@ steps:
         artifact_paths: build/rn0_67.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_67
-
-      - label: ":ios: Init and build RN 0.67 ipa (Hermes)"
-        key: "rn-cli-0-67-hermes-ipa"
-        timeout_in_minutes: 60
-        agents:
-          queue: "opensource-arm-mac-cocoa-12"
-        env:
-          DEBUG: true
-          LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode13.app"
-        artifact_paths: build/rn0_67_hermes.ipa
-        commands:
-          - test/react-native-cli/scripts/init-and-build-test.sh rn0_67_hermes
 
       - label: ":ios: Init and build RN 0.69 ipa (Non-hermes)"
         key: "rn-cli-0-69-ipa"
@@ -933,27 +904,6 @@ steps:
             use-aliases: true
             command:
               - --app=build/rn0_67.ipa
-              - --farm=bs
-              - --device=IOS_14
-              - --a11y-locator
-              - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
-        concurrency_method: eager
-
-      - label: ":browserstack: :ios: RN 0.67 iOS end-to-end tests (Hermes)"
-        depends_on: "rn-cli-0-67-hermes-ipa"
-        timeout_in_minutes: 10
-        plugins:
-          artifacts#v1.5.0:
-            download: "build/rn0_67_hermes.ipa"
-            upload: ./test/react-native-cli/maze_output/**/*
-          docker-compose#v4.12.0:
-            pull: react-native-cli-maze-runner
-            run: react-native-cli-maze-runner
-            use-aliases: true
-            command:
-              - --app=build/rn0_67_hermes.ipa
               - --farm=bs
               - --device=IOS_14
               - --a11y-locator

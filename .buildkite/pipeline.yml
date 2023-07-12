@@ -108,6 +108,7 @@ steps:
       - buildkite-agent pipeline upload .buildkite/browser-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    skip: Skipped pending PLAT-10345
     commands:
       - buildkite-agent pipeline upload .buildkite/electron-pipeline.yml
 
@@ -148,7 +149,7 @@ steps:
         # a branch name that's safe to use as a docker cache identifier
         BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
 
-  - label: "@bugsnag/expo v46-next"
+  - label: "@bugsnag/expo v47-next"
     depends_on: "publish-js"
     trigger: "bugsnag-expo"
     build:
@@ -159,7 +160,7 @@ steps:
         # a branch name that's safe to use as a docker cache identifier
         BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
 
-  - label: "@bugsnag/expo v45-next"
+  - label: "@bugsnag/expo v46-next"
     depends_on: "publish-js"
     trigger: "bugsnag-expo"
     build:
