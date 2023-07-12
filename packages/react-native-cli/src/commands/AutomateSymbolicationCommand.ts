@@ -1,4 +1,6 @@
 import prompts from 'prompts'
+import fs from 'fs'
+import path from 'path'
 import logger from '../Logger'
 import { updateXcodeProject } from '../lib/Xcode'
 import { install, detectInstalledVersion, detectInstalled, guessPackageManager } from '../lib/Npm'
@@ -68,6 +70,17 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       }
     }
 
+    const { writeToPackageJson } = await prompts({
+      type: 'confirm',
+      name: 'writeToPackageJson',
+      message: 'Do you want to add an NPM task to your package.json to upload Android source maps?',
+      initial: true
+    }, { onCancel })
+
+    if (writeToPackageJson) {
+      writeToPackageJson(path.join(projectRoot, 'package.json'))
+    }
+
     if (iosIntegration) {
       await installJavaScriptPackage(projectRoot)
     }
@@ -127,3 +140,33 @@ async function installJavaScriptPackage (projectRoot: string): Promise<void> {
 
   logger.success('@bugsnag/source-maps dependency is installed')
 }
+
+const writeToPackageJson = (packageJsonPath: string): void => {
+  fs.readFile(packageJsonPath, 'utf8', (err, data) => {
+    if (err) {
+      console.error(`Error reading package.json: ${err}`);
+      return;
+    }
+
+    try {
+      const packageJson = JSON.parse(data);
+
+      packageJson.scripts = {
+        ...packageJson.scripts,
+        "bugsnag:create-build": "./node_modules/.bin/bugsnag-cli create-build",
+        "bugsnag:upload-android": "./node_modules/.bin/bugsnag-cli upload react-native-android"
+      };
+
+      const updatedPackageJson = JSON.stringify(packageJson, null, 2);
+
+      fs.writeFile(packageJsonPath, updatedPackageJson, 'utf8', (err) => {
+        if (err) {
+          console.error(`Error writing package.json: ${err}`);
+          return;
+        }
+      });
+    } catch (err) {
+      console.error(`Error parsing package.json: ${err}`);
+    }
+  });
+};
