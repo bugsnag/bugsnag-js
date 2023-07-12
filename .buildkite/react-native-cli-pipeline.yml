@@ -697,7 +697,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":bitbar: :android: RN 0.69 Android end-to-end tests (Non-hermes)"
+      - label: ":runner: RN 0.69 Android end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-69-apk"
         timeout_in_minutes: 10
         plugins:

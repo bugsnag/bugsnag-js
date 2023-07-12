@@ -160,13 +160,13 @@ steps:
             run: react-native-maze-runner
             service-ports: true
             command:
-            - --app=build/rn0.60.apk
-            - --farm=bb
-            - --device=ANDROID_10|ANDROID_11|ANDROID_12
-            - --a11y-locator
-            - --fail-fast
-            - --no-tunnel
-            - --aws-public-ip
+              - --app=build/rn0.60.apk
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
         concurrency: 25
@@ -185,13 +185,13 @@ steps:
             run: react-native-maze-runner
             service-ports: true
             command:
-            - --app=build/rn0.66.apk
-            - --farm=bb
-            - --device=ANDROID_10|ANDROID_11|ANDROID_12
-            - --a11y-locator
-            - --fail-fast
-            - --no-tunnel
-            - --aws-public-ip
+              - --app=build/rn0.66.apk
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
         concurrency: 25
@@ -288,14 +288,14 @@ steps:
             run: react-native-maze-runner
             service-ports: true
             command:
-            - --app=build/r_navigation_0.60.apk
-            - --farm=bb
-            - --device=ANDROID_10|ANDROID_11|ANDROID_12
-            - --a11y-locator
-            - --fail-fast
-            - --no-tunnel
-            - --aws-public-ip
-            - features/navigation.feature
+              - --app=build/r_navigation_0.60.apk
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
+              - features/navigation.feature
         concurrency: 25
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
@@ -312,14 +312,14 @@ steps:
             run: react-native-maze-runner
             service-ports: true
             command:
-            - --app=build/r_navigation_0.69.apk
-            - --farm=bb
-            - --device=ANDROID_10|ANDROID_11|ANDROID_12
-            - --a11y-locator
-            - --fail-fast
-            - --no-tunnel
-            - --aws-public-ip
-            - features/navigation.feature
+              - --app=build/r_navigation_0.69.apk
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
+              - features/navigation.feature
         concurrency: 25
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
@@ -336,14 +336,14 @@ steps:
             run: react-native-maze-runner
             service-ports: true
             command:
-            - --app=build/r_native_navigation_0.60.apk
-            - --farm=bb
-            - --device=ANDROID_10|ANDROID_11|ANDROID_12
-            - --a11y-locator
-            - --fail-fast
-            - --no-tunnel
-            - --aws-public-ip
-            - features/navigation.feature
+              - --app=build/r_native_navigation_0.60.apk
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
+              - features/navigation.feature
         concurrency: 25
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
@@ -360,14 +360,14 @@ steps:
             run: react-native-maze-runner
             service-ports: true
             command:
-            - --app=build/r_native_navigation_0.66.apk
-            - --farm=bb
-            - --device=ANDROID_10|ANDROID_11|ANDROID_12
-            - --a11y-locator
-            - --fail-fast
-            - --no-tunnel
-            - --aws-public-ip
-            - features/navigation.feature
+              - --app=build/r_native_navigation_0.66.apk
+              - --farm=bb
+              - --device=ANDROID_10|ANDROID_11|ANDROID_12
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
+              - features/navigation.feature
         concurrency: 25
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
