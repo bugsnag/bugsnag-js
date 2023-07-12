@@ -1,6 +1,6 @@
 import prompts from 'prompts'
 import fs from 'fs'
-import path from 'path'
+import { join } from 'path'
 import logger from '../Logger'
 import { updateXcodeProject } from '../lib/Xcode'
 import { install, detectInstalledVersion, detectInstalled, guessPackageManager } from '../lib/Npm'
@@ -56,7 +56,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       await enableReactNativeMappings(projectRoot, urls[UrlType.UPLOAD], urls[UrlType.BUILD], logger)
       await installBugsnagCliPackage(projectRoot)
       const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
-
+      console.log('reactNativeVersion' + reactNativeVersion)
       if (reactNativeVersion) {
         var floatNumber = parseFloat(reactNativeVersion)
         if (floatNumber < 0.68) {
@@ -77,7 +77,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       }, { onCancel })
 
       if (packageJsonIntegration) {
-        await writeToPackageJson(path.join(projectRoot, 'package.json'))
+        await writeToPackageJson(join(projectRoot, 'package.json'))
       }
     }
 
