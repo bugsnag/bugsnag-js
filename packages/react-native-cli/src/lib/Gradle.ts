@@ -8,8 +8,8 @@ const GRADLE_PLUGIN_APPLY = 'apply plugin: "com.bugsnag.android.gradle"'
 const GRADLE_PLUGIN_APPLY_REGEX = /apply plugin: ["']com\.bugsnag\.android\.gradle["']/
 const GRADLE_ANDROID_PLUGIN_REGEX = /classpath\(["']com.android.tools.build:gradle:[^0-9]*([^'"]+)["']\)/
 const DOCS_LINK = 'https://docs.bugsnag.com/build-integrations/gradle/#installation'
-const ENABLE_REACT_NATIVE_MAPPINGS = 'bugsnag {\n  uploadReactNativeMappings = false\n}\n'
-const ENABLE_REACT_NATIVE_MAPPINGS_REGEX = /^\s*bugsnag {[^}]*uploadReactNativeMappings[^}]*?}/m
+const ENABLE_REACT_NATIVE_MAPPINGS = 'bugsnag {\n}\n'
+const ENABLE_REACT_NATIVE_MAPPINGS_REGEX = /^\s*bugsnag {[^}]*?}/m
 const UPLOAD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*endpoint[^}]*?}/m
 const BUILD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*releasesEndpoint[^}]*?}/m
 
@@ -131,15 +131,7 @@ This is no longer required as mappings will be uploaded by the BugSnag CLI.
 
 Please remove this line or disable it in your builds to prevent duplicate uploads.`
       )
-    } else if (/^\s*bugsnag {/m.test(fileContents)) {
-      await insertValueAfterPattern(
-        appBuildGradlePath,
-        /^\s*bugsnag {[^}]*?(?=})/m,
-        '  uploadReactNativeMappings = false\n',
-        ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
-        logger
-      )
-    } else {
+    } else if (!/^\s*bugsnag {/m.test(fileContents)) {
       await insertValueAfterPattern(
         appBuildGradlePath,
         /$/,

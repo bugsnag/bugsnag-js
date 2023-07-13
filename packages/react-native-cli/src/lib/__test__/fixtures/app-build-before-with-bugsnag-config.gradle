@@ -221,4 +221,8 @@ apply from: file("../../node_modules/@react-native-community/cli-platform-androi
 bugsnag {
   config = yes
   options = set to things
+
+  endpoint = "https://upload.example.com"
+
+  releasesEndpoint = "https://build.example.com"
 }

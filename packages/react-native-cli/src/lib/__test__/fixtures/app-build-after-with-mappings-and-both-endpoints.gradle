@@ -219,7 +219,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 
 bugsnag {
-  uploadReactNativeMappings = false
 
   endpoint = "https://upload.example.com"
 
