@@ -486,7 +486,6 @@ test('enableReactNativeMappings(): success with initial bugsnag config and custo
   // expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedUploadEndpoint, 'utf8')
   // expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedFinal, 'utf8')
   expect(buildGradle).toStrictEqual(expectedFinal)
-
 })
 
 test('enableReactNativeMappings(): success without initial bugsnag config and custom endpoints', async () => {
