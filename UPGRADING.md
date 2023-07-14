@@ -13,7 +13,7 @@ The minimum supported node version is now v12.17.0.
 
 When using `plugin-express`, `plugin-koa`, `plugin-restify`, or `plugin-contextualize` a clone of the top-level Bugsnag client is made so that any subsequent changes made to the client (such as attaching metadata) only affect the scope of the current web request. (Or a function call when using `plugin-contextualize`.)
 
-Prior to v8, calls made to the top-level `Bugsnag` static interface were not aware of this context so users had to ensure they were calling methods on the correct client instance, i.e. the cloned client that was made available on `req.bugsnag` (or `ctx.bugsnag` for koa). This wasn't ideal because if you wanted to interact with Bugsnag in some function deep in a call stack you would have to pass `req.bugsnag` all the way down, as calling `Bugsnag.notify` would not have contained the request metadata gathered by the plugin. With version 8 of the notifier top-level calls to `Bugsnag` are now context-aware. This means you can call `Bugsnag.notify` (or `Bugsnag.leaveBreadcrumb` etc.), and, if it was called within a context, the call will be forwarded to the correct cloned version of that client (i.e. for the particular request from which the call originated).
+Prior to `bugsnag-js` v8, calls made to the top-level `Bugsnag` static interface were not aware of this context so users had to ensure they were calling methods on the correct client instance, i.e. the cloned client that was made available on `req.bugsnag` (or `ctx.bugsnag` for koa). This wasn't ideal because if you wanted to interact with Bugsnag in some function deep in a call stack you would have to pass `req.bugsnag` all the way down, as calling `Bugsnag.notify` would not have contained the request metadata gathered by the plugin. With version 8 of the notifier top-level calls to `Bugsnag` are now context-aware. This means you can call `Bugsnag.notify` (or `Bugsnag.leaveBreadcrumb` etc.), and, if it was called within a context, the call will be forwarded to the correct cloned version of that client (i.e. for the particular request from which the call originated).
 
 Express
 
@@ -38,7 +38,7 @@ app.use(async (ctx, next) => {
 })
 ```
 
-Note: `req.bugsnag` (and `ctx.bugsnag` in koa) is still present in v8.
+Note: `req.bugsnag` (and `ctx.bugsnag` in koa) is still present in version 8 of `bugsnag-js`.
 
 #### breadcrumb support
 
