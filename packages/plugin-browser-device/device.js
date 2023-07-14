@@ -1,10 +1,9 @@
-const cuid = require('@bugsnag/cuid')
 const assign = require('@bugsnag/core/lib/es-utils/assign')
 const BUGSNAG_ANONYMOUS_ID_KEY = 'bugsnag-anonymous-id'
 
-const getDeviceId = () => {
+const getDeviceId = (win) => {
   try {
-    const storage = window.localStorage
+    const storage = win.localStorage
 
     let id = storage.getItem(BUGSNAG_ANONYMOUS_ID_KEY)
 
@@ -14,6 +13,7 @@ const getDeviceId = () => {
       return id
     }
 
+    const cuid = require('@bugsnag/cuid')
     id = cuid()
 
     storage.setItem(BUGSNAG_ANONYMOUS_ID_KEY, id)
@@ -27,24 +27,24 @@ const getDeviceId = () => {
 /*
  * Automatically detects browser device details
  */
-module.exports = (nav = navigator, screen = window.screen) => ({
+module.exports = (nav = navigator, win = window) => ({
   load: (client) => {
     const device = {
       locale: nav.browserLanguage || nav.systemLanguage || nav.userLanguage || nav.language,
       userAgent: nav.userAgent
     }
 
-    if (screen && screen.orientation && screen.orientation.type) {
-      device.orientation = screen.orientation.type
-    } else {
+    if (win && win.screen && win.screen.orientation && win.screen.orientation.type) {
+      device.orientation = win.screen.orientation.type
+    } else if (win && win.document) {
       device.orientation =
-        document.documentElement.clientWidth > document.documentElement.clientHeight
+        win.document.documentElement.clientWidth > win.document.documentElement.clientHeight
           ? 'landscape'
           : 'portrait'
     }
 
     if (client._config.generateAnonymousId) {
-      device.id = getDeviceId()
+      device.id = getDeviceId(win)
     }
 
     client.addOnSession(session => {

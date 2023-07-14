@@ -61,8 +61,8 @@ def find_cli_helper_script
 end
 
 When('I build the Android app') do
-  path = find_cli_helper_script
-  $logger.info `node -e 'require("#{path}").buildAndroid("./features/fixtures", "./local-build")'`
+  script_path = find_cli_helper_script
+  $logger.info `node -e 'require("#{script_path}").buildAndroid("./features/fixtures", "./local-build")'`
 end
 
 When('I build the iOS app') do
@@ -209,11 +209,7 @@ Then('the iOS app contains the bugsnag initialisation code') do
 end
 
 def get_android_main_application_path(current_fixture)
-  if current_fixture.include? 'expo_ejected'
-    "android/app/src/main/java/com/bugsnag/#{current_fixture}/MainApplication.java"
-  else
-    "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
-  end
+  "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
 end
 
 Then('the Android app contains the bugsnag initialisation code') do

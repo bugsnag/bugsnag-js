@@ -22,7 +22,7 @@ RCT_EXPORT_METHOD(configureAsync:(NSDictionary *)readableMap
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
     self.configSerializer = [BugsnagConfigSerializer new];
 
-    if (![Bugsnag bugsnagStarted]) {
+    if (![Bugsnag isStarted]) {
         [NSException raise:@"BugsnagException" format:@"Failed to initialise the Bugsnag Cocoa client, please check you have added [Bugsnag start] in the application:didFinishLaunchingWithOptions: method of your AppDelegate subclass"];
     }
     [self updateNotifierInfo:readableMap];

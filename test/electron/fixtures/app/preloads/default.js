@@ -21,6 +21,9 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   mainProcessNotify: () => {
     ipcRenderer.send('main-process-notify')
   },
+  mainProcessOversized: () => {
+    ipcRenderer.send('main-process-oversized')
+  },
   mainProcessLog: (...args) => {
     ipcRenderer.send('main-process-console-log', ...args)
   },

@@ -1,0 +1,10 @@
+{
+  "name": "web-worker",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "serve . -p 8066 -n"
+  },
+  "devDependencies": {
+    "serve": "^14.1.2"
+  }
+}

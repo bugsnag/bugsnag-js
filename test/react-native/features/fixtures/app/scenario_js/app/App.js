@@ -17,8 +17,8 @@ export default class App extends Component {
       currentScenario: '',
       scenarioMetaData: '',
       apiKey: '12312312312312312312312312312312',
-      notifyEndpoint: 'http://bs-local.com:9339/notify',
-      sessionsEndpoint: 'http://bs-local.com:9339/sessions'
+      notifyEndpoint: '',
+      sessionsEndpoint: ''
     }
   }
 
@@ -27,14 +27,18 @@ export default class App extends Component {
   }
 
   getConfiguration = () => {
-    return {
+    var config = {
       apiKey: this.state.apiKey,
-      endpoints: {
-        notify: this.state.notifyEndpoint,
-        sessions: this.state.sessionsEndpoint
-      },
       autoTrackSessions: false
     }
+
+    if (this.state.notifyEndpoint && this.state.sessionsEndpoint) {
+      config.endpoints = {
+        notify: this.state.notifyEndpoint,
+        sessions: this.state.sessionsEndpoint
+      }
+    }
+    return config
   }
 
   setScenario = newScenario => {
