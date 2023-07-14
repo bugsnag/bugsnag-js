@@ -580,7 +580,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.fixtures.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/reactnative.app/reactnative";
 			};
@@ -605,7 +605,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.fixtures.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/reactnative.app/reactnative";
 			};
@@ -618,7 +618,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 372ZUL2ZB7;
+				DEVELOPMENT_TEAM = 7W9PZ27Y5F;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = reactnative/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -630,7 +630,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.fixtures.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = reactnative;
 				SWIFT_OBJC_BRIDGING_HEADER = "../../ios-module/Scenarios/Scenario.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -646,7 +646,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 372ZUL2ZB7;
+				DEVELOPMENT_TEAM = 7W9PZ27Y5F;
 				INFOPLIST_FILE = reactnative/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -657,7 +657,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.fixtures.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = reactnative;
 				SWIFT_OBJC_BRIDGING_HEADER = "../../ios-module/Scenarios/Scenario.h";
 				SWIFT_VERSION = 5.0;
