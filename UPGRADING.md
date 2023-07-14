@@ -42,7 +42,7 @@ Note: `req.bugsnag` (and `ctx.bugsnag` in koa) is still present in v8.
 
 #### breadcrumb support
 
-Breadcrumb support has been enabled for node. This means you can call `Bugsnag.leaveBreacrumb` to attach short log statements to each error report to help diagnose what events led to the error.
+Breadcrumb support has been enabled for node. This means you can call `Bugsnag.leaveBreadcrumb` to attach short log statements to each error report to help diagnose what events led to the error.  
 
 Currently no breadcrumbs are automatically collected in node.
 
