@@ -81,7 +81,8 @@ describe('plugin: network breadcrumbs', () => {
       message: 'XMLHttpRequest succeeded',
       metadata: {
         status: 200,
-        request: 'GET /',
+        method: 'GET',
+        url: '/',
         duration: expect.any(Number)
       }
     }))
@@ -116,7 +117,8 @@ describe('plugin: network breadcrumbs', () => {
       message: 'XMLHttpRequest failed',
       metadata: {
         status: 404,
-        request: 'GET /this-does-not-exist',
+        method: 'GET',
+        url: '/this-does-not-exist',
         duration: expect.any(Number)
       }
     }))
@@ -138,7 +140,8 @@ describe('plugin: network breadcrumbs', () => {
       type: 'request',
       message: 'XMLHttpRequest error',
       metadata: {
-        request: 'GET https://another-domain.xyz/',
+        method: 'GET',
+        url: 'https://another-domain.xyz/',
         duration: expect.any(Number)
       }
     }))
@@ -192,7 +195,8 @@ describe('plugin: network breadcrumbs', () => {
       message: 'XMLHttpRequest succeeded',
       metadata: {
         status: 200,
-        request: 'GET https://example.com',
+        method: 'GET',
+        url: 'https://example.com',
         duration: expect.any(Number)
       }
     }))
@@ -220,7 +224,8 @@ describe('plugin: network breadcrumbs', () => {
       type: 'request',
       message: 'XMLHttpRequest error',
       metadata: {
-        request: 'GET https://example.com',
+        method: 'GET',
+        url: 'https://example.com',
         duration: expect.any(Number)
       }
     }))
@@ -240,7 +245,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'GET /',
+          method: 'GET',
+          url: '/',
           duration: expect.any(Number)
         }
       }))
@@ -262,7 +268,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() failed',
         metadata: {
           status: 405,
-          request: 'null /',
+          method: 'null',
+          url: '/',
           duration: expect.any(Number)
         }
       }))
@@ -286,7 +293,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'GET /',
+          method: 'GET',
+          url: '/',
           duration: expect.any(Number)
         }
       }))
@@ -310,7 +318,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'PUT /',
+          method: 'PUT',
+          url: '/',
           duration: expect.any(Number)
         }
       }))
@@ -332,7 +341,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() failed',
         metadata: {
           status: 404,
-          request: 'GET null',
+          method: 'GET',
+          url: 'null',
           duration: expect.any(Number)
         }
       }))
@@ -354,7 +364,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'GET /',
+          method: 'GET',
+          url: '/',
           duration: expect.any(Number)
         }
       }))
@@ -376,7 +387,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() failed',
         metadata: {
           status: 404,
-          request: 'GET undefined',
+          method: 'GET',
+          url: 'undefined',
           duration: expect.any(Number)
         }
       }))
@@ -398,7 +410,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'PUT /foo',
+          method: 'PUT',
+          url: '/foo',
           duration: expect.any(Number)
         }
       }))
@@ -420,7 +433,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() failed',
         metadata: {
           status: 405,
-          request: 'null /foo',
+          method: 'null',
+          url: '/foo',
           duration: expect.any(Number)
         }
       }))
@@ -442,7 +456,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'GET /foo',
+          method: 'GET',
+          url: '/foo',
           duration: expect.any(Number)
         }
       }))
@@ -464,7 +479,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() failed',
         metadata: {
           status: 404,
-          request: 'GET /does-not-exist',
+          method: 'GET',
+          url: '/does-not-exist',
           duration: expect.any(Number)
         }
       }))
@@ -485,7 +501,8 @@ describe('plugin: network breadcrumbs', () => {
         type: 'request',
         message: 'fetch() error',
         metadata: {
-          request: 'GET https://another-domain.xyz/foo/bar',
+          method: 'GET',
+          url: 'https://another-domain.xyz/foo/bar',
           duration: expect.any(Number)
         }
       }))

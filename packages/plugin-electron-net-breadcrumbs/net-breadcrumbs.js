@@ -53,7 +53,12 @@ module.exports = net => ({
 
         client.leaveBreadcrumb(
           `net.request ${success ? 'succeeded' : 'failed'}`,
-          { request: `${method} ${url}`, status: response.statusCode, duration: getDuration(requestStart) },
+          {
+            method: String(method),
+            url: String(url),
+            status: response.statusCode,
+            duration: getDuration(requestStart)
+          },
           BREADCRUMB_REQUEST
         )
       })
@@ -61,7 +66,11 @@ module.exports = net => ({
       request.on('abort', () => {
         client.leaveBreadcrumb(
           'net.request aborted',
-          { request: `${method} ${url}`, duration: getDuration(requestStart) },
+          {
+            method: String(method),
+            url: String(url),
+            duration: getDuration(requestStart)
+          },
           BREADCRUMB_REQUEST
         )
       })
@@ -69,7 +78,12 @@ module.exports = net => ({
       request.on('error', (error) => {
         client.leaveBreadcrumb(
           'net.request error',
-          { request: `${method} ${url}`, error: error.message, duration: getDuration(requestStart) },
+          {
+            method: String(method),
+            url: String(url),
+            error: error.message,
+            duration: getDuration(requestStart)
+          },
           BREADCRUMB_REQUEST
         )
       })

@@ -77,8 +77,9 @@ module.exports = (_ignoredUrls = [], win = window) => {
           return
         }
         const metadata = {
-          status: status,
-          request: `${method} ${url}`,
+          status,
+          method: String(method),
+          url: String(url),
           duration: duration
         }
         if (status >= 400) {
@@ -102,7 +103,8 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
         // failed to contact server
         client.leaveBreadcrumb('XMLHttpRequest error', {
-          request: `${method} ${url}`,
+          method: String(method),
+          url: String(url),
           duration: duration
         }, BREADCRUMB_TYPE)
       }
@@ -165,8 +167,9 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
       const handleFetchSuccess = (response, method, url, duration) => {
         const metadata = {
+          method: String(method),
           status: response.status,
-          request: `${method} ${url}`,
+          url: String(url),
           duration: duration
         }
         if (response.status >= 400) {
@@ -178,7 +181,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
       }
 
       const handleFetchError = (method, url, duration) => {
-        client.leaveBreadcrumb('fetch() error', { request: `${method} ${url}`, duration: duration }, BREADCRUMB_TYPE)
+        client.leaveBreadcrumb('fetch() error', { method: String(method), url: String(url), duration: duration }, BREADCRUMB_TYPE)
       }
     }
   }

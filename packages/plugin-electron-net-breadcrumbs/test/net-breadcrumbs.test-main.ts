@@ -42,9 +42,16 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
+    const expectedMetadata = expect.objectContaining({
+      method: 'GET',
+      url: `${url}/`,
+      status,
+      duration: expect.any(Number)
+    })
+
     const expected = new Breadcrumb(
       `net.request ${successOrFailure}`,
-      { request: `GET ${url}/`, status, duration: expect.any(Number) },
+      expectedMetadata,
       'request'
     )
 
@@ -72,9 +79,16 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
+    const expectedMetadata = expect.objectContaining({
+      method,
+      url,
+      status,
+      duration: expect.any(Number)
+    })
+
     const expected = new Breadcrumb(
       `net.request ${successOrFailure}`,
-      { request: `${method} ${url}`, status, duration: expect.any(Number) },
+      expectedMetadata,
       'request'
     )
 
@@ -105,9 +119,16 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
+    const expectedMetadata = expect.objectContaining({
+      method: 'GET',
+      url: `http://localhost:${currentServer.port}/`,
+      status,
+      duration: expect.any(Number)
+    })
+
     const expected = new Breadcrumb(
       `net.request ${successOrFailure}`,
-      { request: `GET http://localhost:${currentServer.port}/`, status, duration: expect.any(Number) },
+      expectedMetadata,
       'request'
     )
 
@@ -128,9 +149,11 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.abort()
     })
 
+    const expectedMetadata = expect.objectContaining({ url: `${url}/`, method: 'GET' })
+
     const expected = new Breadcrumb(
       'net.request aborted',
-      { request: `GET ${url}/` },
+      expectedMetadata,
       'request'
     )
 
@@ -151,9 +174,11 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.abort()
     })
 
+    const expectedMetadata = expect.objectContaining({ url: `${url}/`, method: 'GET' })
+
     const expected = new Breadcrumb(
       'net.request aborted',
-      { request: `GET ${url}/` },
+      expectedMetadata,
       'request'
     )
 
@@ -180,9 +205,16 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
+    const expectedMetadata = expect.objectContaining({
+      method: 'GET',
+      url,
+      error: "Attempted to redirect, but redirect policy was 'error'",
+      duration: expect.any(Number)
+    })
+
     const expected = new Breadcrumb(
       'net.request error',
-      { request: `GET ${url}`, error: "Attempted to redirect, but redirect policy was 'error'", duration: expect.any(Number) },
+      expectedMetadata,
       'request'
     )
 
@@ -302,9 +334,16 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       }, 500)
     })
 
+    const expectedMetadata = expect.objectContaining({
+      method: 'POST',
+      url,
+      status: 200,
+      duration: expect.any(Number)
+    })
+
     const expected = new Breadcrumb(
       'net.request succeeded',
-      { request: `POST ${url}`, status: 200, duration: expect.any(Number) },
+      expectedMetadata,
       'request'
     )
 
@@ -340,9 +379,16 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       }, 500)
     })
 
+    const expectedMetadata = expect.objectContaining({
+      method: 'POST',
+      url,
+      status: 200,
+      duration: expect.any(Number)
+    })
+
     const expected = new Breadcrumb(
       'net.request succeeded',
-      { request: `POST ${url}`, status: 200, duration: expect.any(Number) },
+      expectedMetadata,
       'request'
     )
 
