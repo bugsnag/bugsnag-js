@@ -22,9 +22,6 @@ declare module '@bugsnag/core' {
 declare global {
   namespace Express {
     export interface Request {
-      /**
-       * @deprecated use `Bugsnag` instead
-       */
       bugsnag?: Client
     }
   }
