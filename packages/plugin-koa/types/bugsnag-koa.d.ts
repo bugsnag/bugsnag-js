@@ -18,9 +18,6 @@ declare module '@bugsnag/core' {
 // define ctx.bugsnag for koa middleware by declaration merging
 declare module 'koa' {
   interface BaseContext {
-    /**
-     * @deprecated use `Bugsnag` instead
-     */
     bugsnag?: Client
   }
 }

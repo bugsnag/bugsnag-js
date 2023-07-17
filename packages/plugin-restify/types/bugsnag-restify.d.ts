@@ -18,9 +18,6 @@ declare module '@bugsnag/core' {
 
 declare module 'restify' {
   interface Request {
-    /**
-     * @deprecated use `Bugsnag` instead
-     */
     bugsnag?: Client
   }
 }
