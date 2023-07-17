@@ -9,8 +9,6 @@
         var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
         var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
         var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
-        var REFLECT = decodeURIComponent(window.location.search.match(/REFLECT=([^&]+)/)[1])
-        var url = REFLECT + "?status=200&delay_ms=0"
 
         Bugsnag.start({
             apiKey: API_KEY,
@@ -23,7 +21,7 @@
 
         var xhr = new XMLHttpRequest()
         xhr.onloadend = notify
-        xhr.open("GET", url)
+        xhr.open("GET", "xhr_success.html")
         xhr.send()
 
     </script>
