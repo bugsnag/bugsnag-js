@@ -193,3 +193,20 @@ Scenario: Breadcrumbs from one request do not appear in another
   And the event "request.url" equals "http://express/breadcrumbs_b"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
+
+
+Scenario: context loss
+  When I POST the data "some=body_data" to the URL "http://express/context-loss"
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "Error in /context-loss"
+  And the exception "type" equals "nodejs"
+  And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://express/context-loss"
+  And the event "request.httpMethod" equals "POST"
+  And the event "request.clientIp" is not null
+  And the event has 3 breadcrumbs
+  And the event has a "manual" breadcrumb named "About to parse request body"
+  And the event has a "manual" breadcrumb named "but this is fine"
+  And the event has a "manual" breadcrumb named "context is regained from here"

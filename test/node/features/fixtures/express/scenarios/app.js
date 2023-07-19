@@ -179,6 +179,42 @@ app.get('/breadcrumbs_b', function (req, res) {
   throw new Error('Error in /breadcrumbs_b')
 })
 
+app.post('/context-loss',
+(req, res, next) => {
+  // Context is lost in this middleware because next gets
+  // called in the request context without being bound to
+  // the async local storage context
+  Bugsnag.leaveBreadcrumb('About to parse request body')
+  req.rawBody = '';
+  req.setEncoding('utf8');
+
+  req.on('data', function(chunk) { 
+    req.rawBody += chunk;
+  });
+
+  // this event handler gets called without async local storage context
+  // the fix body parsing libraries have made is to effectviely wrap this
+  // event handler with AsyncResource.bind so that next does get called in
+  // the async local storage context. Here for this test we don't do that in order
+  // to show how contecty can be lost and re-gained
+  req.on('end', function() {
+    Bugsnag.leaveBreadcrumb('context is lost here')
+    // next gets called without being bound to the async local storage context
+    next();
+  });
+},
+(req, res, next) => {
+  Bugsnag.leaveBreadcrumb('so no context here either')
+  req.bugsnag.leaveBreadcrumb('but this is fine')
+  next();
+},
+// Explicitly bind the async local storage context to next using the helper middleware
+middleware.runInContext,
+(req, res, next) => {
+  Bugsnag.leaveBreadcrumb('context is regained from here')
+  throw new Error('Error in /context-loss')
+})
+
 app.use(middleware.errorHandler)
 
 app.listen(80)
