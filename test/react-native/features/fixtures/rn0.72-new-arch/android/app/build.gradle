@@ -70,10 +70,6 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
-def isNewArchitectureEnabled() {
-  project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
-}
-
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -106,10 +102,6 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
-    }
-
-    if (isNewArchitectureEnabled()) {
-        preBuild.dependsOn("generateCodegenArtifactsFromSchema")
     }
 }
 
