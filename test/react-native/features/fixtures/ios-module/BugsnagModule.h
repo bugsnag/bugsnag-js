@@ -14,6 +14,7 @@
 @interface BugsnagModule : NSObject <RCTBridgeModule>
 
 BugsnagConfiguration *createConfiguration(NSDictionary * options);
+NSString *loadMazeRunnerAddress(void);
 
 @end
 

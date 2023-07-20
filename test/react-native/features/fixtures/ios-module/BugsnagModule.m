@@ -62,7 +62,7 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
     notifyEndpoint = endpointsIn[@"notify"];
     sessionsEndpoint = endpointsIn[@"sessions"];
   } else {
-    NSString *baseAddress = @"bs-local.com:9339";
+    NSString *baseAddress = loadMazeRunnerAddress();
     notifyEndpoint = [NSString stringWithFormat:@"http://%@/notify", baseAddress];
     sessionsEndpoint = [NSString stringWithFormat:@"http://%@/sessions", baseAddress];
   }
@@ -120,3 +120,43 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
   }
   return config;
 }
+
+NSString *loadMazeRunnerAddress(void) {
+  static NSString *fieldName = @"maze_address";
+  NSString * bsAddress = @"http://bs-local.com:9339";
+  
+  // Only iOS 12 and above will run on BitBar for now
+  if (@available(macOS 12.0, *)) {
+    return bsAddress;
+  }
+  
+  for(int i = 0; i < 60; i++) {
+    NSURL *documentsUrl = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask][0];
+    NSLog(@"Reading Maze Runner address from fixture_config.json");
+    @try {
+      NSURL *fileUrl = [[NSURL fileURLWithPath:@"fixture_config" relativeToURL:documentsUrl] URLByAppendingPathExtension:@"json"];
+      NSData *savedData = [NSData dataWithContentsOfURL:fileUrl];
+      if (savedData != nil) {
+        NSError *error = nil;
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:savedData options:0 error:&error];
+        if ([json isKindOfClass:NSDictionary.class]) {
+          NSString *address = json[fieldName];
+          if (address != nil) {
+            return [NSString stringWithFormat:@"http://%@", address];
+          } else {
+            NSLog(@"Failed to read fixture_config.json: field %@ was not found", fieldName);
+          }
+        } else {
+          NSLog(@"Failed to read fixture_config.json: Expected contents to be a dictionary but got %@", json.class);
+        }
+      }
+    } @catch (NSException *exception) {
+      NSLog(@"Failed to read fixture_config.json: %@", exception);
+    }
+    NSLog(@"Waiting for fixture_config.json to appear");
+    sleep(1);
+  }
+  NSLog(@"Unable to read from fixture_config.json, defaulting to BrowserStack environment");
+  return bsAddress;
+}
+
