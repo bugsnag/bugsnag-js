@@ -233,7 +233,6 @@ steps:
               - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
         concurrency: 25
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
@@ -259,7 +258,6 @@ steps:
               - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
         concurrency: 25
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
