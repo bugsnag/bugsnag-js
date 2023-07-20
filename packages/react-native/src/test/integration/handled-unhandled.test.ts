@@ -1,5 +1,5 @@
 // @ts-ignore
-import { NativeModules } from 'react-native'
+import { NativeClient } from '../../native'
 
 jest.mock('react-native', () => {
   const events: any[] = []
@@ -63,15 +63,15 @@ beforeAll(() => {
 })
 
 // clear the https mock's record of requests between tests
-beforeEach(() => NativeModules.BugsnagReactNative._clear())
+beforeEach(() => NativeClient._clear())
 
 describe('@bugsnag/react-native: handled and unhandled errors', () => {
   it('should send a handled error', (done) => {
     Bugsnag.notify(new Error('oh no'), () => {}, (event) => {
-      expect(NativeModules.BugsnagReactNative._events.length).toBe(1)
-      expect(NativeModules.BugsnagReactNative._events[0].errors[0].errorMessage).toBe('oh no')
-      expect(NativeModules.BugsnagReactNative._events[0].unhandled).toBe(false)
-      expect(NativeModules.BugsnagReactNative._events[0].severityReason).toEqual({ type: 'handledException' })
+      expect(NativeClient._events.length).toBe(1)
+      expect(NativeClient._events[0].errors[0].errorMessage).toBe('oh no')
+      expect(NativeClient._events[0].unhandled).toBe(false)
+      expect(NativeClient._events[0].severityReason).toEqual({ type: 'handledException' })
       expect(event).toBeTruthy()
       done()
     })
@@ -82,10 +82,10 @@ describe('@bugsnag/react-native: handled and unhandled errors', () => {
     // send an error to the handler that Bugsnag has hooked into
     global.ErrorUtils.getGlobalHandler()(new Error('hi'))
     setTimeout(() => {
-      expect(NativeModules.BugsnagReactNative._events.length).toBe(1)
-      expect(NativeModules.BugsnagReactNative._events[0].errors[0].errorMessage).toBe('hi')
-      expect(NativeModules.BugsnagReactNative._events[0].unhandled).toBe(true)
-      expect(NativeModules.BugsnagReactNative._events[0].severityReason).toEqual({ type: 'unhandledException' })
+      expect(NativeClient._events.length).toBe(1)
+      expect(NativeClient._events[0].errors[0].errorMessage).toBe('hi')
+      expect(NativeClient._events[0].unhandled).toBe(true)
+      expect(NativeClient._events[0].severityReason).toEqual({ type: 'unhandledException' })
       done()
     }, 10)
   })
@@ -100,10 +100,10 @@ describe('@bugsnag/react-native: handled and unhandled errors', () => {
       rnPromise.reject(e)
     }
     setTimeout(() => {
-      expect(NativeModules.BugsnagReactNative._events.length).toBe(1)
-      expect(NativeModules.BugsnagReactNative._events[0].errors[0].errorMessage).toBe('"sdf".sdflkj is not a function')
-      expect(NativeModules.BugsnagReactNative._events[0].unhandled).toBe(true)
-      expect(NativeModules.BugsnagReactNative._events[0].severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+      expect(NativeClient._events.length).toBe(1)
+      expect(NativeClient._events[0].errors[0].errorMessage).toBe('"sdf".sdflkj is not a function')
+      expect(NativeClient._events[0].unhandled).toBe(true)
+      expect(NativeClient._events[0].severityReason).toEqual({ type: 'unhandledPromiseRejection' })
       done()
     }, 150)
   })

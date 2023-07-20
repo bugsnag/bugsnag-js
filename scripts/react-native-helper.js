@@ -46,7 +46,12 @@ module.exports = {
 
       // Native layer
       common.changeDir('android')
-      common.run('./gradlew assembleRelease', true)
+
+      if (process.env.RN_NEW_ARCH) {
+        common.run('./gradlew generateCodegenArtifactsFromSchema assembleRelease', true)
+      } else {
+        common.run('./gradlew assembleRelease', true)
+      }
 
       // Finally, copy the APK back to the host
       fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,
