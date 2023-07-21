@@ -71,30 +71,62 @@ steps:
         commands:
           - npm run test:build-react-native-ios
 
-      - label: ":ios: Build RN 0.71 (New Arch) ipa"
-        key: "rn-0-71-ipa"
+      - label: ":ios: Build RN 0.71 (Old Arch) ipa"
+        key: "rn-0-71-old-arch-ipa"
         timeout_in_minutes: 60
         agents:
           queue: "opensource-arm-mac-cocoa-12"
         env:
-          REACT_NATIVE_VERSION: "rn0.71-new-arch"
+          REACT_NATIVE_VERSION: "rn0.71"
+          LANG: "en_US.UTF-8"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          RCT_NEW_ARCH_ENABLED: "0"
+          ARTEFACT_NAME: "rn0.71-old-arch"
+        artifact_paths: build/rn0.71-old-arch.ipa
+        commands:
+          - npm run test:build-react-native-ios
+
+      - label: ":ios: Build RN 0.71 (New Arch) ipa"
+        key: "rn-0-71-new-arch-ipa"
+        timeout_in_minutes: 60
+        agents:
+          queue: "opensource-arm-mac-cocoa-12"
+        env:
+          REACT_NATIVE_VERSION: "rn0.71"
           LANG: "en_US.UTF-8"
           DEVELOPER_DIR: "/Applications/Xcode14.app"
           RCT_NEW_ARCH_ENABLED: "1"
+          ARTEFACT_NAME: "rn0.71-new-arch"
         artifact_paths: build/rn0.71-new-arch.ipa
         commands:
           - npm run test:build-react-native-ios
 
-      - label: ":ios: Build RN 0.72 (New Arch) ipa"
-        key: "rn-0-72-ipa"
+      - label: ":ios: Build RN 0.72 (Old Arch) ipa"
+        key: "rn-0-72-old-arch-ipa"
         timeout_in_minutes: 60
         agents:
           queue: "opensource-arm-mac-cocoa-12"
         env:
-          REACT_NATIVE_VERSION: "rn0.72-new-arch"
+          REACT_NATIVE_VERSION: "rn0.72"
+          LANG: "en_US.UTF-8"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          RCT_NEW_ARCH_ENABLED: "0"
+          ARTEFACT_NAME: "rn0.72-old-arch"
+        artifact_paths: build/rn0.72-old-arch.ipa
+        commands:
+          - npm run test:build-react-native-ios
+
+      - label: ":ios: Build RN 0.72 (New Arch) ipa"
+        key: "rn-0-72-new-arch-ipa"
+        timeout_in_minutes: 60
+        agents:
+          queue: "opensource-arm-mac-cocoa-12"
+        env:
+          REACT_NATIVE_VERSION: "rn0.72"
           LANG: "en_US.UTF-8"
           DEVELOPER_DIR: "/Applications/Xcode14.app"
           RCT_NEW_ARCH_ENABLED: "1"
+          ARTEFACT_NAME: "rn0.72-new-arch"
         artifact_paths: build/rn0.72-new-arch.ipa
         commands:
           - npm run test:build-react-native-ios
@@ -291,8 +323,33 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
+      - label: ":ios: RN 0.71 (Old Arch) iOS 14 end-to-end tests"
+        depends_on: "rn-0-71-old-arch-ipa"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.5.0:
+            download: "build/rn0.71-old-arch.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            use-aliases: true
+            command:
+              - --app=build/rn0.71-old-arch.ipa
+              - --farm=bs
+              - --device=IOS_14
+              - --a11y-locator
+              - --appium-version=1.18.0
+              - --fail-fast
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+          HERMES: "true"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+
       - label: ":ios: RN 0.71 (New Arch) iOS 14 end-to-end tests"
-        depends_on: "rn-0-71-ipa"
+        depends_on: "rn-0-71-new-arch-ipa"
         timeout_in_minutes: 60
         plugins:
           artifacts#v1.5.0:
@@ -316,8 +373,33 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
+      - label: ":ios: RN 0.72 (Old Arch) iOS 14 end-to-end tests"
+        depends_on: "rn-0-72-old-arch-ipa"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.5.0:
+            download: "build/rn0.72-old-arch.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            use-aliases: true
+            command:
+              - --app=build/rn0.72-old-arch.ipa
+              - --farm=bs
+              - --device=IOS_14
+              - --a11y-locator
+              - --appium-version=1.18.0
+              - --fail-fast
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+          HERMES: "true"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+
       - label: ":ios: RN 0.72 (New Arch) iOS 14 end-to-end tests"
-        depends_on: "rn-0-72-ipa"
+        depends_on: "rn-0-72-new-arch-ipa"
         timeout_in_minutes: 60
         plugins:
           artifacts#v1.5.0:
