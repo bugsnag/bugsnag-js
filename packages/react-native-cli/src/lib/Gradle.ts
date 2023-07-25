@@ -143,20 +143,6 @@ Please remove this line or disable it in your builds to prevent duplicate upload
       }
     }
   } catch (e) {
-    if (e.code === 'ENOENT') {
-      logger.warn(
-        `A gradle file was not found at the expected location and so couldn't be updated automatically.
-
-Enable React Native mappings to your app module's build.gradle:
-
-${ENABLE_REACT_NATIVE_MAPPINGS}
-
-See ${DOCS_LINK} for more information`
-      )
-
-      return
-    }
-
     throw e
   }
 
