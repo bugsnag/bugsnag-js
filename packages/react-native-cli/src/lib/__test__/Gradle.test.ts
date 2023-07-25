@@ -233,11 +233,6 @@ test('enableReactNativeMappings(): failure mappings already enabled', async () =
 
   expect(readFileMock).toHaveBeenCalledWith('/random/path/android/app/build.gradle', 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
-//   expect(logger.warn).toHaveBeenCalledWith(`The uploadReactNativeMappings option for the Bugsnag Gradle plugin is currently enabled in /random/path/android/app/build.gradle.
-//
-// This is no longer required as mappings will be uploaded by the BugSnag CLI.
-//
-// Please remove this line or disable it in your builds to prevent duplicate uploads.`)
 })
 
 test('enableReactNativeMappings(): failure gradle file not found', async () => {
@@ -377,7 +372,6 @@ test('enableReactNativeMappings(): success with initial bugsnag config and custo
   expect(readFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', 'utf8')
   expect(readFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', 'utf8')
 
-  // expect(writeFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', expectedMappings, 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
   expect(buildGradle).toStrictEqual(expectedMappings)
   expect(buildGradle).toStrictEqual(expectedBuildEndpoint)
@@ -479,12 +473,9 @@ test('enableReactNativeMappings(): success with initial bugsnag config and custo
   expect(readFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', 'utf8')
   expect(readFileMock).toHaveBeenNthCalledWith(3, '/random/path/android/app/build.gradle', 'utf8')
 
-  // expect(writeFileMock).toHaveBeenNthCalledWith(1, '/random/path/android/app/build.gradle', expectedMappings, 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
   expect(buildGradle).toStrictEqual(expectedMappings)
   expect(buildGradle).toStrictEqual(expectedUploadEndpoint)
-  // expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedUploadEndpoint, 'utf8')
-  // expect(writeFileMock).toHaveBeenNthCalledWith(2, '/random/path/android/app/build.gradle', expectedFinal, 'utf8')
   expect(buildGradle).toStrictEqual(expectedFinal)
 })
 
