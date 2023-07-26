@@ -129,7 +129,7 @@ NSString *loadMazeRunnerAddress(void) {
   NSString * bsAddress = @"http://bs-local.com:9339";
   
   // Only iOS 12 and above will run on BitBar for now
-  if (@available(macOS 12.0, *)) {
+  if (!@available(macOS 12.0, *)) {
     return bsAddress;
   }
   
