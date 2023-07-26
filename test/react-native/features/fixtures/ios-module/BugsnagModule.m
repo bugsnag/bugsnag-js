@@ -130,6 +130,7 @@ NSString *loadMazeRunnerAddress(void) {
   
   // Only iOS 12 and above will run on BitBar for now
   if (!@available(macOS 12.0, *)) {
+    NSLog(@"Using bs-local.com address on pre iOS 12 devices");
     return bsAddress;
   }
   
