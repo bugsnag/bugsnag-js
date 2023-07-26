@@ -1,4 +1,5 @@
 const { readFile } = require('fs').promises
+const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
 
 module.exports = class MinidumpDeliveryLoop {
   constructor (sendMinidump, onSendError, minidumpQueue, logger) {
@@ -36,12 +37,8 @@ module.exports = class MinidumpDeliveryLoop {
 
   async _deliverMinidump (minidump) {
     const event = await this._readEvent(minidump.eventPath)
-    const shouldSendMinidump = this._shouldSendMinidump(event)
 
-    if (shouldSendMinidump === false) {
-      this._minidumpQueue.remove(minidump)
-      this._scheduleSelf()
-    } else {
+    if (this._shouldSendMinidump(event)) {
       try {
         await this._sendMinidump(minidump.minidumpPath, event)
 
@@ -52,6 +49,9 @@ module.exports = class MinidumpDeliveryLoop {
       } finally {
         this._scheduleSelf()
       }
+    } else {
+      this._minidumpQueue.remove(minidump)
+      this._scheduleSelf()
     }
   }
 
@@ -82,13 +82,10 @@ module.exports = class MinidumpDeliveryLoop {
       return true
     }
 
-    for (let i = 0; i < this._onSendError.length; ++i) {
-      if (this._onSendError[i](event) === false) {
-        return false
-      }
-    }
+    const ignore = runSyncCallbacks(this._onSendError, event, 'onSendError', this._logger)
 
-    return true
+    // i.e. we SHOULD send the minidump if we SHOULD NOT ignore the event
+    return !ignore
   }
 
   start () {

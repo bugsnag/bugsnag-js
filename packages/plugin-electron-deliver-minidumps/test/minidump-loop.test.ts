@@ -99,10 +99,50 @@ describe('electron-minidump-delivery: minidump-loop', () => {
     expect(sendMinidump).toBeCalledTimes(0)
     expect(minidumpQueue.remove).toBeCalledTimes(2)
 
-    // the callbacks are called twice as there are two minidumps
-    expect(callbacks[0]).toHaveBeenCalledTimes(2)
+    // the callbacks are called twice as there are two minidumps and are called
+    // in order of most recently added -> least recently added
+    expect(callbacks[2]).toHaveBeenCalledTimes(2)
     expect(callbacks[1]).toHaveBeenCalledTimes(2)
-    expect(callbacks[2]).not.toHaveBeenCalled()
+    expect(callbacks[0]).not.toHaveBeenCalled()
+  })
+
+  it('handles callbacks that throw errors', async () => {
+    const sendMinidump = createSendMinidump()
+    const minidumpQueue = createQueue(
+      { minidumpPath: 'minidump-path1', eventPath: 'event-path1' },
+      { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
+    )
+    const error = new Error('oh no!')
+
+    const callbacks = [
+      jest.fn(() => true),
+      jest.fn(() => true),
+      jest.fn(() => { throw error }),
+      jest.fn(() => true)
+    ]
+
+    const logError = jest.fn()
+
+    const loop = new MinidumpDeliveryLoop(sendMinidump, callbacks, minidumpQueue, { error: logError })
+    loop.start()
+
+    await runDeliveryLoop(2)
+
+    expect(sendMinidump).toBeCalledTimes(2)
+    expect(minidumpQueue.remove).toBeCalledTimes(2)
+
+    expect(callbacks[3]).toHaveBeenCalledTimes(2)
+    expect(callbacks[2]).toHaveBeenCalledTimes(2)
+    expect(callbacks[1]).toHaveBeenCalledTimes(2)
+    expect(callbacks[0]).toHaveBeenCalledTimes(2)
+
+    // there are two minidumps so the error should be thrown & logged twice
+    // each thrown error results in two logs - one for an 'error occurred...'
+    // message and one for the error object itself
+    expect(logError).toHaveBeenNthCalledWith(1, 'Error occurred in onSendError callback, continuing anyway…')
+    expect(logError).toHaveBeenNthCalledWith(2, error)
+    expect(logError).toHaveBeenNthCalledWith(3, 'Error occurred in onSendError callback, continuing anyway…')
+    expect(logError).toHaveBeenNthCalledWith(4, error)
   })
 
   it('stops when the queue is exhausted', async () => {
