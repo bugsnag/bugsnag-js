@@ -59,10 +59,12 @@ BugsnagConfiguration *createConfiguration(NSDictionary * options) {
   NSString *notifyEndpoint;
   NSString *sessionsEndpoint;
   if (options[@"endpoints"] != nil && options[@"endpoints"][@"notify"] != nil && options[@"endpoints"][@"sessions"] != nil) {
+    NSLog(@"Using set endpoints");
     NSDictionary *endpointsIn = options[@"endpoints"];
     notifyEndpoint = endpointsIn[@"notify"];
     sessionsEndpoint = endpointsIn[@"sessions"];
   } else {
+    NSLog(@"Searching for endpoints");
     NSString *baseAddress = loadMazeRunnerAddress();
     notifyEndpoint = [NSString stringWithFormat:@"http://%@/notify", baseAddress];
     sessionsEndpoint = [NSString stringWithFormat:@"http://%@/sessions", baseAddress];
