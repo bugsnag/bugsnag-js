@@ -4,7 +4,8 @@
     "timestamp": "^\\d{4}\\-\\d{2}\\-\\d{2}T\\d{2}:\\d{2}:[\\d\\.]+Z?$",
     "metaData": {
         "status": 200,
-        "request": "GET http:\\/\\/.*:\\d{4}\\/reflect\\?status=200\\&delay_ms=0$",
+        "method": "GET",
+        "url": "fetch_success.html",
         "duration": "NUMBER"
     }
 }
