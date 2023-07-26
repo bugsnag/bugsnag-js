@@ -27,7 +27,7 @@ const runDeliveryLoop = async (times: number = 1) => {
 }
 
 describe('electron-minidump-delivery: minidump-loop', () => {
-  const onSend = () => true
+  const onSendCallbacks = []
   const logger = {
     error: () => {}
   }
@@ -40,7 +40,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
       loop.start()
 
       await runDeliveryLoop()
@@ -56,7 +56,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
       loop.start()
 
       await runDeliveryLoop()
@@ -66,7 +66,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
     })
   })
 
-  it('skips events blocked by onSend', async () => {
+  it('skips events blocked by an on send callback', async () => {
     const sendMinidump = createSendMinidump()
     const minidumpQueue = createQueue(
       { minidumpPath: 'minidump-path1', eventPath: 'event-path1' },
@@ -82,6 +82,29 @@ describe('electron-minidump-delivery: minidump-loop', () => {
     expect(minidumpQueue.remove).toBeCalledTimes(2)
   })
 
+  it('stops calling callbacks when an event is blocked by an earlier callback', async () => {
+    const sendMinidump = createSendMinidump()
+    const minidumpQueue = createQueue(
+      { minidumpPath: 'minidump-path1', eventPath: 'event-path1' },
+      { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
+    )
+
+    const callbacks = [jest.fn(() => true), jest.fn(() => false), jest.fn(() => true)]
+
+    const loop = new MinidumpDeliveryLoop(sendMinidump, callbacks, minidumpQueue, logger)
+    loop.start()
+
+    await runDeliveryLoop(2)
+
+    expect(sendMinidump).toBeCalledTimes(0)
+    expect(minidumpQueue.remove).toBeCalledTimes(2)
+
+    // the callbacks are called twice as there are two minidumps
+    expect(callbacks[0]).toHaveBeenCalledTimes(2)
+    expect(callbacks[1]).toHaveBeenCalledTimes(2)
+    expect(callbacks[2]).not.toHaveBeenCalled()
+  })
+
   it('stops when the queue is exhausted', async () => {
     const sendMinidump = createSendMinidump()
     const minidumpQueue = createQueue(
@@ -89,7 +112,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
     )
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+    const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
     loop.start()
 
     await runDeliveryLoop(3)
@@ -112,7 +135,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
     )
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+    const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
     loop.start()
 
     await runDeliveryLoop(2)
@@ -134,7 +157,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
       loop.watchNetworkStatus(statusWatcher)
 
       // ensure that nothing is delivered while disconnected
@@ -158,7 +181,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSend, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
       loop.watchNetworkStatus(statusWatcher)
 
       // ensure that the first minidump is delivered

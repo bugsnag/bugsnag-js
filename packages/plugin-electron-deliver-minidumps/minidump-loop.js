@@ -1,12 +1,16 @@
 const { readFile } = require('fs').promises
 
 module.exports = class MinidumpDeliveryLoop {
-  constructor (sendMinidump, onSend = () => true, minidumpQueue, logger) {
+  constructor (sendMinidump, onSendError, minidumpQueue, logger) {
     this._sendMinidump = sendMinidump
-    this._onSend = onSend
     this._minidumpQueue = minidumpQueue
     this._logger = logger
     this._running = false
+
+    // onSendError can be a function or an array of functions
+    this._onSendError = typeof onSendError === 'function'
+      ? [onSendError]
+      : onSendError
   }
 
   _onerror (err, minidump) {
@@ -32,7 +36,7 @@ module.exports = class MinidumpDeliveryLoop {
 
   async _deliverMinidump (minidump) {
     const event = await this._readEvent(minidump.eventPath)
-    const shouldSendMinidump = event && await this._onSend(event)
+    const shouldSendMinidump = this._shouldSendMinidump(event)
 
     if (shouldSendMinidump === false) {
       this._minidumpQueue.remove(minidump)
@@ -70,6 +74,21 @@ module.exports = class MinidumpDeliveryLoop {
     }
 
     this._timerId = setTimeout(() => this._deliverNextMinidump(), delay)
+  }
+
+  _shouldSendMinidump (event) {
+    // if there's no event then the minidump should always be sent
+    if (!event) {
+      return true
+    }
+
+    for (let i = 0; i < this._onSendError.length; ++i) {
+      if (this._onSendError[i](event) === false) {
+        return false
+      }
+    }
+
+    return true
   }
 
   start () {
