@@ -50,7 +50,6 @@ RCT_EXPORT_METHOD(startBugsnag:(NSDictionary *)options
 @end
 
 BugsnagConfiguration *createConfiguration(NSDictionary * options) {
-  NSLog(@"Test message:");
   NSLog(@"Received configuration options:");
   for (id key in options) {
       NSLog(@"key: %@, value: %@ \n", key, [options objectForKey:key]);
@@ -163,4 +162,3 @@ NSString *loadMazeRunnerAddress(void) {
   NSLog(@"Unable to read from fixture_config.json, defaulting to BrowserStack environment");
   return bsAddress;
 }
-
