@@ -1,5 +1,6 @@
 const { readFile } = require('fs').promises
 const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
+const { serialiseEvent, deserialiseEvent } = require('./event-serialisation')
 
 module.exports = class MinidumpDeliveryLoop {
   constructor (sendMinidump, onSendError, minidumpQueue, logger) {
@@ -36,11 +37,23 @@ module.exports = class MinidumpDeliveryLoop {
   }
 
   async _deliverMinidump (minidump) {
-    const event = await this._readEvent(minidump.eventPath)
+    let shouldSendMinidump = true
+    let eventJson = await this._readEvent(minidump.eventPath)
 
-    if (this._shouldSendMinidump(event)) {
+    if (eventJson && this._onSendError.length > 0) {
+      const event = deserialiseEvent(eventJson, minidump.minidumpPath)
+      const ignore = runSyncCallbacks(this._onSendError, event, 'onSendError', this._logger)
+
+      // i.e. we SHOULD send the minidump if we SHOULD NOT ignore the event
+      shouldSendMinidump = !ignore
+
+      // reserialise the event for sending in the form payload
+      eventJson = serialiseEvent(event)
+    }
+
+    if (shouldSendMinidump) {
       try {
-        await this._sendMinidump(minidump.minidumpPath, event)
+        await this._sendMinidump(minidump.minidumpPath, eventJson)
 
         // if we had a successful delivery - remove the minidump from the queue
         this._minidumpQueue.remove(minidump)
@@ -73,18 +86,6 @@ module.exports = class MinidumpDeliveryLoop {
     }
 
     this._timerId = setTimeout(() => this._deliverNextMinidump(), delay)
-  }
-
-  _shouldSendMinidump (event) {
-    // if there's no event then the minidump should always be sent
-    if (!event) {
-      return true
-    }
-
-    const ignore = runSyncCallbacks(this._onSendError, event, 'onSendError', this._logger)
-
-    // i.e. we SHOULD send the minidump if we SHOULD NOT ignore the event
-    return !ignore
   }
 
   start () {

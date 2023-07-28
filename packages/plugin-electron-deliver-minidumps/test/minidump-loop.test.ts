@@ -1,4 +1,6 @@
 import EventEmitter from 'events'
+import Session from '@bugsnag/core/session'
+import Breadcrumb from '@bugsnag/core/breadcrumb'
 import NetworkStatus from '@bugsnag/electron-network-status'
 import MinidumpDeliveryLoop from '../minidump-loop'
 
@@ -82,6 +84,85 @@ describe('electron-minidump-delivery: minidump-loop', () => {
     expect(minidumpQueue.remove).toBeCalledTimes(2)
   })
 
+  it('allows on send callback to mutate the event', async () => {
+    const sendMinidump = createSendMinidump()
+    const minidumpQueue = createQueue(
+      { minidumpPath: 'minidump-path', eventPath: 'event-path' }
+    )
+
+    let eventMinidumpPath
+    const onSendError = event => {
+      event.addMetadata('abc', { x: 1, y: 2 })
+      event.addMetadata('abc', 'z', 3)
+      event.addMetadata('minidump', { path: event.minidumpPath })
+
+      event.addFeatureFlag('a', 1)
+      event.context = 'contextual'
+      event.setUser('a', 'b', 'c')
+      event.breadcrumbs.push(new Breadcrumb('crumby', { a: 1 }, 'manual', new Date('2020-01-01T00:00:00Z')))
+
+      const session = new Session()
+      session.id = 'an session ID'
+      session.startedAt = new Date('2020-01-02T00:00:00Z')
+      session._handled = 0
+      session._unhandled = 1
+
+      event._session = session
+
+      event.groupingHash = 'grouper'
+      event.request = { food: 'please' }
+      event.severity = 'info'
+      event.unhandled = false
+
+      eventMinidumpPath = event.minidumpPath
+    }
+
+    const loop = new MinidumpDeliveryLoop(sendMinidump, onSendError, minidumpQueue, logger)
+    loop.start()
+
+    await runDeliveryLoop(1)
+
+    expect(sendMinidump).toBeCalledWith('minidump-path', {
+      breadcrumbs: [
+        {
+          name: 'crumby',
+          metaData: { a: 1 },
+          type: 'manual',
+          timestamp: new Date('2020-01-01T00:00:00Z')
+        }
+      ],
+      context: 'contextual',
+      featureFlags: [
+        { featureFlag: 'a', variant: '1' }
+      ],
+      groupingHash: 'grouper',
+      metadata: {
+        abc: { x: 1, y: 2, z: 3 },
+        minidump: { path: 'minidump-path' }
+      },
+      request: { food: 'please' },
+      session: {
+        events: { handled: 0, unhandled: 1 },
+        id: 'an session ID',
+        startedAt: new Date('2020-01-02T00:00:00Z')
+      },
+      severity: 'info',
+      severityReason: { type: 'userCallbackSetSeverity' },
+      user: {
+        email: 'b',
+        id: 'a',
+        name: 'c'
+      }
+    })
+
+    expect(eventMinidumpPath).toBe('minidump-path')
+
+    expect(minidumpQueue.remove).toBeCalledWith({
+      minidumpPath: 'minidump-path',
+      eventPath: 'event-path'
+    })
+  })
+
   it('stops calling callbacks when an event is blocked by an earlier callback', async () => {
     const sendMinidump = createSendMinidump()
     const minidumpQueue = createQueue(
@@ -163,7 +244,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
     expect(jest.getTimerCount()).toBe(0)
   })
 
-  it('attempts redlivery', async () => {
+  it('attempts redelivery', async () => {
     const retryError: any = new Error()
     retryError.isRetryable = true
     const sendMinidump = jest.fn()

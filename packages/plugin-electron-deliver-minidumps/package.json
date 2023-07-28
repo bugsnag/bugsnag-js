@@ -13,6 +13,7 @@
   },
   "files": [
     "deliver-minidumps.js",
+    "event-serialisation.js",
     "minidump-loop.js",
     "minidump-queue.js",
     "send-minidump.js"
