@@ -76,7 +76,7 @@ module.exports = {
 
       // Use Perl to replace the Bugsnag start command to use a loaded configuration
       const applicationPath = `ios/${rnVersion}/AppDelegate.m`
-      common.changeDir(`${destFixtures}/${rnVersion}/${applicationPath}`)
+      common.changeDir(`${targetDir}/${applicationPath}`)
       const perlCommand = 'perl -pi -e "s/[Bugsnag start];/[Bugsnag startWithConfiguration:config];/g" MainApplication.java'
       common.run(perlCommand, true)
 
