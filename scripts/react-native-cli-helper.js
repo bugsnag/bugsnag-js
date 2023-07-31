@@ -75,9 +75,9 @@ module.exports = {
       common.run(installCommand, true)
 
       // Use Perl to replace the Bugsnag start command to use a loaded configuration
-      const applicationPath = `ios/${rnVersion}/AppDelegate.m`
-      common.changeDir(`${targetDir}/${applicationPath}`)
-      const perlCommand = 'perl -pi -e "s/[Bugsnag start];/[Bugsnag startWithConfiguration:config];/g" MainApplication.java'
+      const applicationPath = `ios/${rnVersion}/`
+      common.changeDir(`${applicationPath}`)
+      const perlCommand = 'perl -pi -e "s/\[Bugsnag start\];/\[Bugsnag startWithConfiguration:config\];/g" AppDelegate.m'
       common.run(perlCommand, true)
 
       // Use Expect to run the init command interactively
