@@ -12,4 +12,6 @@
 
 @property (nonatomic, strong) UIWindow *window;
 
+BugsnagConfiguration *createConfiguration(void);
+NSString *loadMazeRunnerAddress(void);
 @end

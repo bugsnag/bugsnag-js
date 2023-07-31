@@ -775,25 +775,27 @@ steps:
       #
       # Init, build and notify end-to-end tests - iOS
       #
-      - label: ":browserstack: :ios: RN 0.60 iOS end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.60 iOS end-to-end tests"
         depends_on: "rn-cli-0-60-ipa"
         timeout_in_minutes: 10
         plugins:
-          artifacts#v1.5.0:
+          artifacts#v1.9.0:
             download: "build/rn0_60.ipa"
             upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_60.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
       - label: ":browserstack: :ios: RN 0.61 iOS end-to-end tests"
