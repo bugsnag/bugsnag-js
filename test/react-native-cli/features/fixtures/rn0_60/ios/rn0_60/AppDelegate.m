@@ -44,9 +44,8 @@ BugsnagConfiguration *createConfiguration(void) {
   sessionsEndpoint = [NSString stringWithFormat:@"%@/sessions", baseAddress];
   NSLog(@"Notify endpoint set to: %@\n", notifyEndpoint);
   NSLog(@"Sessions endpoint set to: %@\n", sessionsEndpoint);
-  BugsnagEndpointConfiguration *endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:notifyEndpoint sessions:sessionsEndpoint];
-
-  [config setEndpoints:endpoints];
+  config.endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:notifyEndpoint
+                                                               sessions:sessionsEndpoint];
   [config setAutoTrackSessions:[[options objectForKey:@"autoTrackSessions"]boolValue]];
   // config.enabledErrorTypes.ooms = NO; // Set by default, will add an override as required
   return config;
