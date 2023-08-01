@@ -1,3 +1,4 @@
+#import <Bugsnag/Bugsnag.h>
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -15,7 +16,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
+RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"rn0_60"
                                             initialProperties:nil];
@@ -32,8 +33,8 @@
 
 BugsnagConfiguration *createConfiguration(void) {
   NSDictionary *options = [[NSBundle mainBundle] infoDictionary][@"bugsnag"];
-  NSString *apiKey = PopValue(dict, BSG_KEYPATH(config, apiKey));
-  NSString *endpoints = PopValue(dict, BSG_KEYPATH(config, endpoints));
+  NSString *apiKey = options[@"apiKey"];
+  NSString *endpoints = options[@"apiKey"];
   BugsnagConfiguration *config = [[BugsnagConfiguration alloc] initWithApiKey:options[@"apiKey"]];
   NSString *notifyEndpoint;
   NSString *sessionsEndpoint;
