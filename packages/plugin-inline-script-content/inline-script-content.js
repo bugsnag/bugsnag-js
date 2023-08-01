@@ -66,8 +66,11 @@ module.exports = (doc = document, win = window) => ({
 
       const frame = event.errors[0].stacktrace[0]
 
+      // remove hash and query string from url
+      const cleanUrl = (url) => url.replace(/#.*$/, '').replace(/\?.*$/, '')
+
       // if frame.file exists and is not the original location of the page, this can't be an inline script
-      if (frame && frame.file && frame.file.replace(/#.*$/, '') !== originalLocation.replace(/#.*$/, '')) return
+      if (frame && frame.file && cleanUrl(frame.file) !== cleanUrl(originalLocation)) return
 
       // grab the last script known to have run
       const currentScript = getCurrentScript()
