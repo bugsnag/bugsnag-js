@@ -140,18 +140,15 @@ async function insertBugsnagConfig (
   logger: Logger
 ): Promise<void> {
   logger.debug('Inserting Bugsnag config')
-  const fileContents = await fs.readFile(appBuildGradlePath, 'utf8')
+  // const fileContents = await fs.readFile(appBuildGradlePath, 'utf8')
 
-  if (!/^\s*bugsnag {/m.test(fileContents)) {
-    await insertValueAfterPattern(
-      appBuildGradlePath,
-      /$/,
-      ENABLE_REACT_NATIVE_MAPPINGS,
-      ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
-      logger
-    )
-  }
-
+  await insertValueAfterPattern(
+    appBuildGradlePath,
+    /$/,
+    ENABLE_REACT_NATIVE_MAPPINGS,
+    ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
+    logger
+  )
   logger.success('Bugsnag config inserted into android/app/build.gradle')
 }
 
