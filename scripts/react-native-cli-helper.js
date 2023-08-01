@@ -79,6 +79,7 @@ module.exports = {
       common.changeDir(`${applicationPath}`)
       const perlCommand = 'perl -pi -e "s/\\[Bugsnag start\\];/\\[Bugsnag startWithConfiguration:createConfiguration\\(\\)\\];/g" AppDelegate.m'
       common.run(perlCommand, true)
+      console.log(common.run('cat AppDelegate.m', true))
 
       // Use Expect to run the init command interactively
       common.changeDir(`${initialDir}/${fixturesDir}`)
