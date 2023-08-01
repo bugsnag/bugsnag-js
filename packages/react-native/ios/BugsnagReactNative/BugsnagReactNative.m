@@ -5,6 +5,10 @@
 #import "BugsnagConfigSerializer.h"
 #import "BugsnagEventDeserializer.h"
 
+#ifdef RCT_NEW_ARCH_ENABLED
+#import <BugsnagReactNativeSpec/BugsnagReactNativeSpec.h>
+#endif
+
 @interface BugsnagReactNative ()
 @property (nonatomic) BugsnagConfigSerializer *configSerializer;
 @end
@@ -102,14 +106,14 @@ RCT_EXPORT_METHOD(addFeatureFlags:(NSArray *)readableArray) {
         for(NSDictionary *feature in readableArray) {
             NSString *name = feature[@"name"];
             NSString *variant = feature[@"variant"];
-            
+
             BugsnagFeatureFlag *featureFlag = [BugsnagFeatureFlag flagWithName:name variant:variant];
             if(featureFlag != nil) {
                 [array addObject:featureFlag];
             }
         }
     }
-    
+
     [Bugsnag addFeatureFlags:array];
 }
 
@@ -183,5 +187,13 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
     Bugsnag.client.notifier.url = @"https://github.com/bugsnag/bugsnag-js";
     Bugsnag.client.notifier.dependencies = @[[[BugsnagNotifier alloc] init]];
 }
+
+#ifdef RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
+  (const facebook::react::ObjCTurboModule::InitParams &)params
+{
+  return std::make_shared<facebook::react::NativeBugsnagSpecJSI>(params);
+}
+#endif
 
 @end

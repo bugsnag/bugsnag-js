@@ -42,7 +42,11 @@ module.exports = {
 
       // Native layer
       common.changeDir(`${destFixtures}/${rnVersion}/android`)
-      common.run('./gradlew assembleRelease', true)
+      if (process.env.RN_NEW_ARCH) {
+        common.run('./gradlew bugsnag_react-native:generateCodegenArtifactsFromSchema assembleRelease', true)
+      } else {
+        common.run('./gradlew assembleRelease', true)
+      }
 
       common.changeDir(`${destFixtures}/${rnVersion}`)
       const bugsnagCliCommand = './node_modules/.bin/bugsnag-cli upload react-native-android --upload-api-root-url=http://localhost:9339 --overwrite'

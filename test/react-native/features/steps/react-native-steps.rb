@@ -35,7 +35,7 @@ end
 def get_app_state
   case Maze::Helper.get_current_platform
   when 'ios'
-    Maze.driver.app_state('org.reactjs.native.example.reactnative')
+    Maze.driver.app_state('com.bugsnag.fixtures.reactnative')
   when 'android'
     Maze.driver.app_state('com.reactnative')
   end
