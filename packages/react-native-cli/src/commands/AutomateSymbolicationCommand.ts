@@ -5,7 +5,7 @@ import logger from '../Logger'
 import { updateXcodeProject } from '../lib/Xcode'
 import { install, detectInstalledVersion, detectInstalled, guessPackageManager } from '../lib/Npm'
 import onCancel from '../lib/OnCancel'
-import { enableReactNativeMappings } from '../lib/Gradle'
+import { checkReactNativeMappings, addUploadEndpoint, addBuildEndpoint } from '../lib/Gradle'
 import { UrlType, OnPremiseUrls } from '../lib/OnPremise'
 
 const DSYM_INSTRUCTIONS = `To configure your project to upload dSYMs, follow the iOS symbolication guide:
@@ -53,7 +53,16 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     }, { onCancel })
 
     if (androidIntegration) {
-      await enableReactNativeMappings(projectRoot, urls[UrlType.UPLOAD], urls[UrlType.BUILD], logger)
+      await checkReactNativeMappings(projectRoot, logger)
+
+      if (urls[UrlType.BUILD]) {
+        await addBuildEndpoint(projectRoot, urls[UrlType.BUILD], logger)
+      }
+
+      if (urls[UrlType.UPLOAD]) {
+        await addUploadEndpoint(projectRoot, urls[UrlType.UPLOAD], logger)
+      }
+
       await installBugsnagCliPackage(projectRoot)
       const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
 

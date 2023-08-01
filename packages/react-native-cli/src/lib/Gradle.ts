@@ -111,10 +111,8 @@ See ${DOCS_LINK} for more information`
   logger.success('Finished modifying android/app/build.gradle')
 }
 
-export async function enableReactNativeMappings (
+export async function checkReactNativeMappings (
   projectRoot: string,
-  uploadEndpoint: string|undefined,
-  buildEndpoint: string|undefined,
   logger: Logger
 ): Promise<void> {
   logger.debug('Enabling Bugsnag Android Gradle plugin React Native mappings')
@@ -131,35 +129,38 @@ This is no longer required as mappings will be uploaded by the BugSnag CLI.
 
 Please remove this line or disable it in your builds to prevent duplicate uploads.`
       )
-    } else if (!/^\s*bugsnag {/m.test(fileContents)) {
-      if (uploadEndpoint || buildEndpoint) {
-        await insertValueAfterPattern(
-          appBuildGradlePath,
-          /$/,
-          ENABLE_REACT_NATIVE_MAPPINGS,
-          ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
-          logger
-        )
-      }
     }
   } catch (e) {
-    throw e
+    // No action required
   }
-
-  if (uploadEndpoint) {
-    await addUploadEndpoint(appBuildGradlePath, uploadEndpoint, logger)
-  }
-
-  if (buildEndpoint) {
-    await addBuildEndpoint(appBuildGradlePath, buildEndpoint, logger)
-  }
-
-  logger.success('React Native mappings enabled in android/app/build.gradle')
 }
 
-async function addUploadEndpoint (appBuildGradlePath: string, uploadEndpoint: string, logger: Logger): Promise<void> {
+async function insertBugsnagConfig (
+  appBuildGradlePath: string,
+  logger: Logger
+): Promise<void> {
+  logger.debug('Inserting Bugsnag config')
+  const fileContents = await fs.readFile(appBuildGradlePath, 'utf8')
+
+  if (!/^\s*bugsnag {/m.test(fileContents)) {
+    await insertValueAfterPattern(
+      appBuildGradlePath,
+      /$/,
+      ENABLE_REACT_NATIVE_MAPPINGS,
+      ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
+      logger
+    )
+  }
+
+  logger.success('Bugsnag config inserted into android/app/build.gradle')
+}
+
+export async function addUploadEndpoint (projectRoot: string, uploadEndpoint: string, logger: Logger): Promise<void> {
   try {
-    // We know the 'bugsnag' section must exist after enabling RN mappings
+    const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
+
+    await insertBugsnagConfig(appBuildGradlePath, logger)
+
     await insertValueAfterPattern(
       appBuildGradlePath,
       /^\s*bugsnag {[^}]*?(?=})/m,
@@ -198,9 +199,12 @@ See ${DOCS_LINK} for more information`
   }
 }
 
-async function addBuildEndpoint (appBuildGradlePath: string, buildEndpoint: string, logger: Logger): Promise<void> {
+export async function addBuildEndpoint (projectRoot: string, buildEndpoint: string, logger: Logger): Promise<void> {
   try {
-    // We know the 'bugsnag' section must exist after enabling RN mappings
+    const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
+
+    await insertBugsnagConfig(appBuildGradlePath, logger)
+
     await insertValueAfterPattern(
       appBuildGradlePath,
       /^\s*bugsnag {[^}]*?(?=})/m,
