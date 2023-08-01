@@ -152,7 +152,7 @@ async function insertBugsnagConfig (
   logger.success('Bugsnag config inserted into android/app/build.gradle')
 }
 
-export async function addUploadEndpoint (projectRoot: string, uploadEndpoint: string, logger: Logger): Promise<void> {
+export async function addUploadEndpoint(projectRoot: string, uploadEndpoint: string | undefined, logger: Logger): Promise<void> {
   try {
     const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
 
@@ -196,7 +196,7 @@ See ${DOCS_LINK} for more information`
   }
 }
 
-export async function addBuildEndpoint (projectRoot: string, buildEndpoint: string, logger: Logger): Promise<void> {
+export async function addBuildEndpoint(projectRoot: string, buildEndpoint: string | undefined, logger: Logger): Promise<void> {
   try {
     const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
 
