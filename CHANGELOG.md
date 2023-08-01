@@ -11,6 +11,7 @@
 ### Fixed
 
 - (electron) Fix `onSendError` callbacks not being called [#1999](https://github.com/bugsnag/bugsnag-js/pull/1999)
+- (plugin-inline-script-content) Ensure script metadata is added in Safari 16 [#1998](https://github.com/bugsnag/bugsnag-js/pull/1998)
 
 ## 7.20.1 (2023-02-08)
 
