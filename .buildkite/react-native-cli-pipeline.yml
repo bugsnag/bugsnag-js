@@ -798,7 +798,7 @@ steps:
         concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.61 iOS end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.61 iOS end-to-end tests"
         depends_on: "rn-cli-0-61-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -808,18 +808,20 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_61.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.62 iOS end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.62 iOS end-to-end tests"
         depends_on: "rn-cli-0-62-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -829,18 +831,20 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_62.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.63 iOS end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.63 iOS end-to-end tests"
         depends_on: "rn-cli-0-63-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -850,18 +854,20 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_63.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.63 Expo (ejected) iOS end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.63 Expo (ejected) iOS end-to-end tests"
         depends_on: "rn-cli-0-63-expo-ejected-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -871,18 +877,20 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_63_expo_ejected.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.64 iOS end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.64 iOS end-to-end tests"
         depends_on: "rn-cli-0-64-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -892,18 +900,20 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_64.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.65 iOS end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.65 iOS end-to-end tests"
         depends_on: "rn-cli-0-65-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -913,18 +923,20 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_65.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.66 iOS end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.66 iOS end-to-end tests"
         depends_on: "rn-cli-0-66-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -934,18 +946,20 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_66.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.67 iOS end-to-end tests (Non-hermes)"
+      - label: ":bitbar: :ios: RN 0.67 iOS end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-67-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -955,18 +969,20 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_67.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.67 iOS end-to-end tests (Hermes)"
+      - label: ":bitbar: :ios: RN 0.67 iOS end-to-end tests (Hermes)"
         depends_on: "rn-cli-0-67-hermes-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -976,18 +992,20 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_67_hermes.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.69 iOS end-to-end tests (Non-hermes)"
+      - label: ":bitbar: :ios: RN 0.69 iOS end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-69-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -997,13 +1015,15 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            use-aliases: true
+            service-ports: true
             command:
               - --app=build/rn0_69.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_14
               - --a11y-locator
+              - --no-tunnel
+              - --aws-public-ip
               - features/run-app-tests
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: 'bitbar-app'
         concurrency_method: eager
