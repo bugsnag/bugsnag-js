@@ -86,7 +86,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       }, { onCancel })
 
       if (packageJsonIntegration) {
-        await writeToPackageJson(join(projectRoot, 'package.json'))
+        await writeToPackageJson(join(projectRoot, 'package.json'), urls[UrlType.UPLOAD], urls[UrlType.BUILD])
       }
     }
 
@@ -150,7 +150,7 @@ async function installJavaScriptPackage (projectRoot: string): Promise<void> {
   logger.success('@bugsnag/source-maps dependency is installed')
 }
 
-async function writeToPackageJson (packageJsonPath: string): Promise<void> {
+async function writeToPackageJson (packageJsonPath: string, uploadUrl: string | undefined, buildUrl: string | undefined): Promise<void> {
   fs.readFile(packageJsonPath, 'utf8', (err, data) => {
     if (err) {
       console.error(`Error reading package.json: ${err}`)
@@ -159,11 +159,21 @@ async function writeToPackageJson (packageJsonPath: string): Promise<void> {
 
     try {
       const packageJson = JSON.parse(data)
+      let uploadCommand = './node_modules/.bin/bugsnag-cli upload react-native-android'
+      let buildCommand = './node_modules/.bin/bugsnag-cli create-build'
+
+      if (uploadUrl) {
+        uploadCommand = './node_modules/.bin/bugsnag-cli upload react-native-android --upload-api-root-url=' + uploadUrl
+      }
+
+      if (buildCommand) {
+        buildCommand = './node_modules/.bin/bugsnag-cli create-build --build-api-root-url=' + buildUrl
+      }
 
       packageJson.scripts = {
         ...packageJson.scripts,
-        'bugsnag:create-build': './node_modules/.bin/bugsnag-cli create-build',
-        'bugsnag:upload-android': './node_modules/.bin/bugsnag-cli upload react-native-android'
+        'bugsnag:create-build': buildCommand,
+        'bugsnag:upload-android': uploadCommand
       }
 
       const updatedPackageJson = JSON.stringify(packageJson, null, 2)
