@@ -53,17 +53,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     }, { onCancel })
 
     if (androidIntegration) {
-      await checkReactNativeMappings(projectRoot, logger)
-
-      if (urls[UrlType.BUILD]) {
-        await addBuildEndpoint(projectRoot, urls[UrlType.BUILD], logger)
-      }
-
-      if (urls[UrlType.UPLOAD]) {
-        await addUploadEndpoint(projectRoot, urls[UrlType.UPLOAD], logger)
-      }
-
-      await installBugsnagCliPackage(projectRoot)
+      await installBugsnagCliPackage(projectRoot, urls)
       const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
 
       if (reactNativeVersion) {
@@ -100,7 +90,18 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
   }
 }
 
-async function installBugsnagCliPackage (projectRoot: string): Promise<void> {
+async function installBugsnagCliPackage (projectRoot: string, urls: OnPremiseUrls): Promise<void> {
+
+  await checkReactNativeMappings(projectRoot, logger)
+
+  if (urls[UrlType.BUILD]) {
+    await addBuildEndpoint(projectRoot, urls[UrlType.BUILD], logger)
+  }
+
+  if (urls[UrlType.UPLOAD]) {
+    await addUploadEndpoint(projectRoot, urls[UrlType.UPLOAD], logger)
+  }
+
   const alreadyInstalled = await detectInstalled('@bugsnag/cli', projectRoot)
 
   if (alreadyInstalled) {
