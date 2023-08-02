@@ -5,18 +5,18 @@ steps:
   #
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: FULL REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     commands:
-      - buildkite-agent pipeline upload .buildkite/react-native-android-pipeline.full.yml
+      - buildkite-agent pipeline upload .buildkite/full/react-native-android-pipeline.full.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: FULL REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     commands:
-      - buildkite-agent pipeline upload .buildkite/react-native-ios-pipeline.full.yml
+      - buildkite-agent pipeline upload .buildkite/full/react-native-ios-pipeline.full.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE CLI STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
       - "publish-js"
       - "android-builder-base"
     commands:
-      - buildkite-agent pipeline upload .buildkite/react-native-cli-pipeline.yml
+      - buildkite-agent pipeline upload .buildkite/full/react-native-cli-pipeline.full.yml
 
   #
   # Trigger Expo pipelines

@@ -4,4 +4,4 @@ steps:
 
   - label: 'Upload the full test pipeline'
     depends_on: 'trigger-full-build'
-    command: buildkite-agent pipeline upload .buildkite/pipeline.full.yml
+    command: buildkite-agent pipeline upload .buildkite/full/pipeline.full.yml
