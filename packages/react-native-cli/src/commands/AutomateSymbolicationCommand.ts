@@ -91,7 +91,6 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
 }
 
 async function installBugsnagCliPackage (projectRoot: string, urls: OnPremiseUrls): Promise<void> {
-
   await checkReactNativeMappings(projectRoot, logger)
 
   if (urls[UrlType.BUILD]) {
