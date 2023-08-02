@@ -84,6 +84,8 @@ module.exports = {
       const perlCommand = 'perl -pi -e "s/\\[Bugsnag start\\];/\\[Bugsnag startWithConfiguration:createConfiguration\\(\\)\\];/g" AppDelegate.m'
       common.run(perlCommand, true)
 
+      console.log(common.run('cat AppDelegate.m', true))
+
       // Clean and build the archive
       common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}/ios`)
       common.run(`rm -rf ../${rnVersion}.xcarchive`, true)
