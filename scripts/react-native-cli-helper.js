@@ -76,19 +76,21 @@ module.exports = {
 
       // Use Expect to run the init command interactively
       common.changeDir(`${initialDir}/${fixturesDir}`)
+      console.log('BEFORE INIT')
+      console.log(common.run(`cat ${initialDir}/${targetDir}/ios/${rnVersion}/AppDelegate.m`, true))
+      console.log(common.run(`cat ${initialDir}/${targetDir}/ios/${rnVersion}/AppDelegate.h`, true))
       common.run(`./rn-cli-init-ios.sh ${version} ${rnVersion}`, true)
 
       // Use Perl to replace the Bugsnag start command to use a loaded configuration
       const applicationPath = `ios/${rnVersion}/`
       common.changeDir(`${initialDir}/${targetDir}/${applicationPath}`)
 
-      console.log('INITIAL OUTPUT')
+      console.log('BEFORE PERL')
       console.log(common.run('cat AppDelegate.m', true))
       console.log(common.run('cat AppDelegate.h', true))
 
       const startWithConfigCommand = 'perl -pi -e "s/\\[Bugsnag start\\];/\\[Bugsnag startWithConfiguration:createConfiguration\\(\\)\\];/g" AppDelegate.m'
       common.run(startWithConfigCommand, true)
-      console.log(common.run('cat AppDelegate.m', true))
       const bugsnagImportCommand = 'perl -pi -e "s/\\[BUGSNAG_IMPORT_PLACEHOLDER\\]/#import <Bugsnag\\/Bugsnag.h>/g" AppDelegate.h'
       common.run(bugsnagImportCommand, true)
 
