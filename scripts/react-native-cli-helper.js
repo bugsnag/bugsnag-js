@@ -84,7 +84,7 @@ module.exports = {
       const startWithConfigCommand = 'perl -pi -e "s/\\[Bugsnag start\\];/\\[Bugsnag startWithConfiguration:createConfiguration\\(\\)\\];/g" AppDelegate.m'
       common.run(startWithConfigCommand, true)
       const bugsnagImportCommand = 'perl -pi -e "s/\\[BUGSNAG_IMPORT_PLACEHOLDER\\]/#import <Bugsnag\\/Bugsnag.h>/g" AppDelegate.h'
-      common.run(bugsnagImportCommandim, true)
+      common.run(bugsnagImportCommand, true)
 
       // Clean and build the archive
       common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}/ios`)
