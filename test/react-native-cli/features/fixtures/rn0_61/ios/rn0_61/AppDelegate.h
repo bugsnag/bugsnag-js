@@ -7,7 +7,7 @@
 
 #import <React/RCTBridgeDelegate.h>
 #import <UIKit/UIKit.h>
-#import <Bugsnag/Bugsnag.h>
+[BUGSNAG_IMPORT_PLACEHOLDER]
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
 

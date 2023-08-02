@@ -2,7 +2,7 @@
 #import <EXUpdates/EXUpdatesAppController.h>
 #import <React/RCTBridgeDelegate.h>
 #import <UIKit/UIKit.h>
-#import <Bugsnag/Bugsnag.h>
+[BUGSNAG_IMPORT_PLACEHOLDER]
 
 #import <UMCore/UMAppDelegateWrapper.h>
 

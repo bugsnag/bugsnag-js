@@ -81,10 +81,10 @@ module.exports = {
       // Use Perl to replace the Bugsnag start command to use a loaded configuration
       const applicationPath = `ios/${rnVersion}/`
       common.changeDir(`${initialDir}/${targetDir}/${applicationPath}`)
-      const perlCommand = 'perl -pi -e "s/\\[Bugsnag start\\];/\\[Bugsnag startWithConfiguration:createConfiguration\\(\\)\\];/g" AppDelegate.m'
-      common.run(perlCommand, true)
-
-      console.log(common.run('cat AppDelegate.m', true))
+      const startWithConfigCommand = 'perl -pi -e "s/\\[Bugsnag start\\];/\\[Bugsnag startWithConfiguration:createConfiguration\\(\\)\\];/g" AppDelegate.m'
+      common.run(startWithConfigCommand, true)
+      const bugsnagImportCommand = 'perl -pi -e "s/\\[BUGSNAG_IMPORT_PLACEHOLDER\\]/#import <Bugsnag\\/Bugsnag.h>/g" AppDelegate.h'
+      common.run(bugsnagImportCommandim, true)
 
       // Clean and build the archive
       common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}/ios`)
