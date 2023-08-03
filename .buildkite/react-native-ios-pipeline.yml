@@ -10,7 +10,7 @@ steps:
         key: "rn-0-60-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "ms-mac-10-15-5"
+          queue: "macos-10.15"
         env:
           REACT_NATIVE_VERSION: rn0.60
           LANG: "en_US.UTF-8"
@@ -91,7 +91,7 @@ steps:
         key: "react-navigation-0-60-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "ms-mac-10-15-5"
+          queue: "macos-10.15"
         env:
           REACT_NATIVE_VERSION: rn0.60
           JS_SOURCE_DIR: "react_navigation_js"
@@ -123,7 +123,7 @@ steps:
         key: "react-native-navigation-0-60-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "ms-mac-10-15-5"
+          queue: "macos-10.15"
         env:
           REACT_NATIVE_VERSION: rn0.60
           JS_SOURCE_DIR: "react_native_navigation_js"
