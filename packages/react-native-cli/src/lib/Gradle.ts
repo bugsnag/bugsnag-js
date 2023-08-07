@@ -135,7 +135,7 @@ Please remove this line or disable it in your builds to prevent duplicate upload
   }
 }
 
-async function insertBugsnagConfig (
+async function insertBugsnagConfigBlock (
   appBuildGradlePath: string,
   logger: Logger
 ): Promise<void> {
