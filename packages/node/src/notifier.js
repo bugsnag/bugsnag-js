@@ -16,9 +16,6 @@ const delivery = require('@bugsnag/delivery-node')
 // extend the base config schema with some node-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
-// remove enabledBreadcrumbTypes from the config schema
-delete schema.enabledBreadcrumbTypes
-
 const pluginApp = require('@bugsnag/plugin-app-duration')
 const pluginSurroundingCode = require('@bugsnag/plugin-node-surrounding-code')
 const pluginInProject = require('@bugsnag/plugin-node-in-project')
@@ -63,12 +60,6 @@ const Bugsnag = {
 
     bugsnag._logger.debug('Loaded!')
 
-    bugsnag.leaveBreadcrumb = function () {
-      bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
-    }
-
-    bugsnag._config.enabledBreadcrumbTypes = []
-
     return bugsnag
   },
   start: (opts) => {
@@ -87,10 +78,14 @@ const Bugsnag = {
 Object.keys(Client.prototype).forEach((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
-    if (!Bugsnag._client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
-    Bugsnag._client._depth += 1
-    const ret = Bugsnag._client[m].apply(Bugsnag._client, arguments)
-    Bugsnag._client._depth -= 1
+    // if we are in an async context, use the client from that context
+    const client = Bugsnag._client._clientContext.getStore() || Bugsnag._client
+
+    if (!client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
+
+    client._depth += 1
+    const ret = client[m].apply(client, arguments)
+    client._depth -= 1
     return ret
   }
 })

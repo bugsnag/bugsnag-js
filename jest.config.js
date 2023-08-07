@@ -93,6 +93,7 @@ module.exports = {
     ], {
       testEnvironment: 'node',
       testMatch: [
+        '<rootDir>/packages/node/test/**/*.test.[jt]s',
         '<rootDir>/packages/node/test/integration/**/*.test.[jt]s'
       ]
     }),

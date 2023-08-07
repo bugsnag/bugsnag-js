@@ -67,6 +67,12 @@ app.use(async (ctx, next) => {
       Promise.reject(new Error('unhandled rejection in async callback'))
     }, 100)
     ctx.body = 'ok'
+  } else if (ctx.path === '/breadcrumbs_a') {
+    Bugsnag.leaveBreadcrumb('For the first URL', { message: 'For the first URL' })
+    throw new Error('Error in /breadcrumbs_a')
+  } else if (ctx.path === '/breadcrumbs_b') {
+    Bugsnag.leaveBreadcrumb('For the second URL', { message: 'For the second URL' })
+    throw new Error('Error in /breadcrumbs_b')
   } else {
     await next()
   }

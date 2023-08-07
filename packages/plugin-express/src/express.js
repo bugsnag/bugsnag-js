@@ -55,7 +55,11 @@ module.exports = {
       next(err)
     }
 
-    return { requestHandler, errorHandler }
+    const runInContext = (req, res, next) => {
+      client._clientContext.run(req.bugsnag, next)
+    }
+
+    return { requestHandler, errorHandler, runInContext }
   }
 }
 
