@@ -163,11 +163,11 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl: string | 
       let buildCommand = './node_modules/.bin/bugsnag-cli create-build'
 
       if (uploadUrl) {
-        uploadCommand = './node_modules/.bin/bugsnag-cli upload react-native-android --upload-api-root-url=' + uploadUrl
+        uploadCommand += ' --upload-api-root-url=' + uploadUrl
       }
 
       if (buildCommand) {
-        buildCommand = './node_modules/.bin/bugsnag-cli create-build --build-api-root-url=' + buildUrl
+        buildCommand += ' --build-api-root-url=' + buildUrl
       }
 
       packageJson.scripts = {
