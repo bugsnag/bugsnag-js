@@ -139,7 +139,7 @@ async function insertBugsnagConfig (
   appBuildGradlePath: string,
   logger: Logger
 ): Promise<void> {
-  logger.debug('Inserting Bugsnag config')
+  logger.debug('Inserting Bugsnag config block')
   // const fileContents = await fs.readFile(appBuildGradlePath, 'utf8')
 
   await insertValueAfterPattern(
