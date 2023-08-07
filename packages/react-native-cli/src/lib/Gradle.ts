@@ -8,8 +8,8 @@ const GRADLE_PLUGIN_APPLY = 'apply plugin: "com.bugsnag.android.gradle"'
 const GRADLE_PLUGIN_APPLY_REGEX = /apply plugin: ["']com\.bugsnag\.android\.gradle["']/
 const GRADLE_ANDROID_PLUGIN_REGEX = /classpath\(["']com.android.tools.build:gradle:[^0-9]*([^'"]+)["']\)/
 const DOCS_LINK = 'https://docs.bugsnag.com/build-integrations/gradle/#installation'
-const ENABLE_REACT_NATIVE_MAPPINGS = 'bugsnag {\n}\n'
-const ENABLE_REACT_NATIVE_MAPPINGS_REGEX = /^\s*bugsnag {[^}]*?}/m
+const BUGSNAG_CONFIGURATION_BLOCK = 'bugsnag {\n}\n'
+const BUGSNAG_CONFIGURATION_BLOCK_REGEX = /^\s*bugsnag {[^}]*?}/m
 const UPLOAD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*endpoint[^}]*?}/m
 const BUILD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*releasesEndpoint[^}]*?}/m
 
