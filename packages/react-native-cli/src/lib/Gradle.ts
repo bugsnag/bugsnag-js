@@ -149,7 +149,7 @@ async function insertBugsnagConfig (
     ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
     logger
   )
-  logger.success('Bugsnag config inserted into android/app/build.gradle')
+  logger.success('Bugsnag config block inserted into android/app/build.gradle')
 }
 
 export async function addUploadEndpoint (projectRoot: string, uploadEndpoint: string | undefined, logger: Logger): Promise<void> {
