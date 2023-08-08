@@ -140,23 +140,22 @@ async function insertBugsnagConfigBlock (
   logger: Logger
 ): Promise<void> {
   logger.debug('Inserting Bugsnag config block')
-  // const fileContents = await fs.readFile(appBuildGradlePath, 'utf8')
 
   await insertValueAfterPattern(
     appBuildGradlePath,
     /$/,
-    ENABLE_REACT_NATIVE_MAPPINGS,
-    ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
+    BUGSNAG_CONFIGURATION_BLOCK,
+    BUGSNAG_CONFIGURATION_BLOCK_REGEX,
     logger
   )
   logger.success('Bugsnag config block inserted into android/app/build.gradle')
 }
 
-export async function addUploadEndpoint (projectRoot: string, uploadEndpoint: string | undefined, logger: Logger): Promise<void> {
+export async function addUploadEndpoint (projectRoot: string, uploadEndpoint: string, logger: Logger): Promise<void> {
   try {
     const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
 
-    await insertBugsnagConfig(appBuildGradlePath, logger)
+    await insertBugsnagConfigBlock(appBuildGradlePath, logger)
 
     await insertValueAfterPattern(
       appBuildGradlePath,
@@ -196,11 +195,11 @@ See ${DOCS_LINK} for more information`
   }
 }
 
-export async function addBuildEndpoint (projectRoot: string, buildEndpoint: string | undefined, logger: Logger): Promise<void> {
+export async function addBuildEndpoint (projectRoot: string, buildEndpoint: string, logger: Logger): Promise<void> {
   try {
     const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
 
-    await insertBugsnagConfig(appBuildGradlePath, logger)
+    await insertBugsnagConfigBlock(appBuildGradlePath, logger)
 
     await insertValueAfterPattern(
       appBuildGradlePath,
