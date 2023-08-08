@@ -94,11 +94,11 @@ async function installBugsnagCliPackage (projectRoot: string, urls: OnPremiseUrl
   await checkReactNativeMappings(projectRoot, logger)
 
   if (urls[UrlType.BUILD]) {
-    await addBuildEndpoint(projectRoot, urls[UrlType.BUILD], logger)
+    await addBuildEndpoint(projectRoot, urls[UrlType.BUILD] as string, logger)
   }
 
   if (urls[UrlType.UPLOAD]) {
-    await addUploadEndpoint(projectRoot, urls[UrlType.UPLOAD], logger)
+    await addUploadEndpoint(projectRoot, urls[UrlType.UPLOAD] as string, logger)
   }
 
   const alreadyInstalled = await detectInstalled('@bugsnag/cli', projectRoot)
