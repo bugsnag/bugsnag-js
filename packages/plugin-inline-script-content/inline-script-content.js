@@ -1,6 +1,7 @@
 const map = require('@bugsnag/core/lib/es-utils/map')
 const reduce = require('@bugsnag/core/lib/es-utils/reduce')
 const filter = require('@bugsnag/core/lib/es-utils/filter')
+const globals = require('./globals')
 
 const MAX_LINE_LENGTH = 200
 const MAX_SCRIPT_LENGTH = 500000
@@ -106,7 +107,7 @@ module.exports = (doc = document, win = window) => ({
     )
 
     // Proxy all the host objects whose prototypes have an addEventListener function
-    map(['EventTarget'], o => {
+    map(globals, o => {
       if (!win[o] || !win[o].prototype || !Object.prototype.hasOwnProperty.call(win[o].prototype, 'addEventListener')) return
       __proxy(win[o].prototype, 'addEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor)
