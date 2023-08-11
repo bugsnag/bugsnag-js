@@ -1,5 +1,6 @@
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
 
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get update && apt-get install -y nodejs rsync expect \
     # Dependencies for MazeRunner
     ruby-full apt-utils docker-compose wget unzip bash bundler libcurl4 libcurl4-openssl-dev
