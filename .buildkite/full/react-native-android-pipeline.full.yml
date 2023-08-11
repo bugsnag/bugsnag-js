@@ -3,20 +3,6 @@ steps:
   - group: "React Native (Android) Tests"
     steps:
       #
-      # Android builder
-      #
-      - label: ":docker: Build RN Android Builder image"
-        key: "android-builder-image"
-        timeout_in_minutes: 30
-        plugins:
-          - docker-compose#v4.12.0:
-              build: react-native-android-builder
-              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-              cache-from:  react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-          - docker-compose#v4.12.0:
-              push: react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-
-      #
       # Test fixtures
       #
       - label: ":android: Build RN 0.60 apk"
