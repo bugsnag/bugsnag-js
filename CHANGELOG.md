@@ -8,6 +8,11 @@
 - (react-native) Update bugsnag-cocoa from v6.25.2 to [v6.26.2](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6262-2023-04-20)
 - (delivery-xml-http-request) Ensure delivery errors are passed to the post report callback [#1938](https://github.com/bugsnag/bugsnag-js/pull/1938)
 
+### Fixed
+
+- (electron) Fix `onSendError` callbacks not being called [#1999](https://github.com/bugsnag/bugsnag-js/pull/1999)
+- (plugin-inline-script-content) Ensure script metadata is added in Safari 16 [#1998](https://github.com/bugsnag/bugsnag-js/pull/1998)
+
 ## 7.20.1 (2023-02-08)
 
 ### Changes

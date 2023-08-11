@@ -46,7 +46,7 @@ module.exports = (app, net, filestore, NativeClient) => ({
 
     const { sendMinidump } = sendMinidumpFactory(net, client)
     const queue = new MinidumpQueue(filestore)
-    const loop = new MinidumpDeliveryLoop(sendMinidump, client._config.onSend, queue, client._logger)
+    const loop = new MinidumpDeliveryLoop(sendMinidump, client._config.onSendError, queue, client._logger)
 
     app.whenReady().then(() => {
       const stateManagerPlugin = client.getPlugin('clientStateManager')

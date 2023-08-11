@@ -1,12 +1,18 @@
 const { readFile } = require('fs').promises
+const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
+const { serialiseEvent, deserialiseEvent } = require('./event-serialisation')
 
 module.exports = class MinidumpDeliveryLoop {
-  constructor (sendMinidump, onSend = () => true, minidumpQueue, logger) {
+  constructor (sendMinidump, onSendError, minidumpQueue, logger) {
     this._sendMinidump = sendMinidump
-    this._onSend = onSend
     this._minidumpQueue = minidumpQueue
     this._logger = logger
     this._running = false
+
+    // onSendError can be a function or an array of functions
+    this._onSendError = typeof onSendError === 'function'
+      ? [onSendError]
+      : onSendError
   }
 
   _onerror (err, minidump) {
@@ -31,24 +37,34 @@ module.exports = class MinidumpDeliveryLoop {
   }
 
   async _deliverMinidump (minidump) {
-    const event = await this._readEvent(minidump.eventPath)
-    const shouldSendMinidump = event && await this._onSend(event)
+    let shouldSendMinidump = true
+    let eventJson = await this._readEvent(minidump.eventPath)
 
-    if (shouldSendMinidump === false) {
-      this._minidumpQueue.remove(minidump)
-      this._scheduleSelf()
-    } else {
+    if (eventJson && this._onSendError.length > 0) {
+      const event = deserialiseEvent(eventJson, minidump.minidumpPath)
+      const ignore = runSyncCallbacks(this._onSendError, event, 'onSendError', this._logger)
+
+      // i.e. we SHOULD send the minidump if we SHOULD NOT ignore the event
+      shouldSendMinidump = !ignore
+
+      // reserialise the event for sending in the form payload
+      eventJson = serialiseEvent(event)
+    }
+
+    if (shouldSendMinidump) {
       try {
-        await this._sendMinidump(minidump.minidumpPath, event)
+        await this._sendMinidump(minidump.minidumpPath, eventJson)
 
-        // if we had a successful delivery - remove the minidump from the queue, and schedule the next
+        // if we had a successful delivery - remove the minidump from the queue
         this._minidumpQueue.remove(minidump)
       } catch (e) {
         this._onerror(e, minidump)
-      } finally {
-        this._scheduleSelf()
       }
+    } else {
+      this._minidumpQueue.remove(minidump)
     }
+
+    this._scheduleSelf()
   }
 
   async _deliverNextMinidump () {
