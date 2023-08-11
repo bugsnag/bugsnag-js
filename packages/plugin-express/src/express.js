@@ -13,9 +13,11 @@ module.exports = {
   name: 'express',
   load: client => {
     const requestHandler = (req, res, next) => {
-      // Get a client to be scoped to this request. If sessions are enabled, use the
-      // resumeSession() call to get a session client, otherwise, clone the existing client.
-      const requestClient = client._config.autoTrackSessions ? client.resumeSession() : clone(client)
+      // clone the client to be scoped to this request. If sessions are enabled, start one
+      const requestClient = clone(client)
+      if (requestClient._config.autoTrackSessions) {
+        requestClient.startSession()
+      }
 
       // attach it to the request
       req.bugsnag = requestClient

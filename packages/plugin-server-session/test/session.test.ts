@@ -96,30 +96,6 @@ describe('plugin: server sessions', () => {
     c.startSession()
   })
 
-  it('should clone properties that shouldn’t be mutated on the original client', () => {
-    class TrackerMock extends EventEmitter {
-      start () {}
-      stop () {}
-      track () {}
-    }
-    Tracker.mockImplementation(() => new TrackerMock() as any)
-
-    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }, undefined, [plugin])
-
-    c.leaveBreadcrumb('tick')
-    c._metadata = { datetime: { tz: 'GMT+1' } }
-
-    const sessionClient = c.startSession()
-
-    sessionClient.leaveBreadcrumb('tock')
-    sessionClient.addMetadata('other', { widgetsAdded: 'cat,dog,mouse' })
-
-    expect(c._breadcrumbs.length).toBe(1)
-    expect(Object.keys(c._metadata).length).toBe(1)
-    expect(sessionClient._breadcrumbs.length).toBe(2)
-    expect(Object.keys(sessionClient._metadata).length).toBe(2)
-  })
-
   it('should support pausing/resuming sessions', () => {
     class TrackerMock extends EventEmitter {
       start () {}
@@ -130,28 +106,28 @@ describe('plugin: server sessions', () => {
 
     const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }, undefined, [plugin])
 
-    // start a session and get its id
-    const sessionClient = c.startSession()
-    const sid0 = (sessionClient._session as Session).id
+    // start a session and get its idc.startSession()
+    c.startSession()
+    const sid0 = (c._session as Session).id
 
     // ensure pausing the session clears the client._session property
-    sessionClient.pauseSession()
-    const s1 = sessionClient._session
-    const psid1 = (sessionClient._pausedSession as Session).id
+    c.pauseSession()
+    const s1 = c._session
+    const psid1 = (c._pausedSession as Session).id
     expect(s1).toBe(null)
     expect(psid1).toBe(sid0)
 
     // ensure resuming the session gets back the original session (not a new one)
-    sessionClient.resumeSession()
-    const sid2 = (sessionClient._session as Session).id
+    c.resumeSession()
+    const sid2 = (c._session as Session).id
     expect(sid2).toBe(sid0)
 
     // ensure resumeSession() starts a new one when no paused session exists
-    sessionClient._session = null
-    sessionClient._pausedSession = null
-    const resumedClient = sessionClient.resumeSession()
-    expect(resumedClient._session).toBeTruthy()
-    const sid3 = (resumedClient._session as Session).id
+    c._session = null
+    c._pausedSession = null
+    c.resumeSession()
+    expect(c._session).toBeTruthy()
+    const sid3 = (c._session as unknown as Session).id
     expect(sid3).not.toBe(sid0)
   })
 })
