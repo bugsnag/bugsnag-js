@@ -1,7 +1,6 @@
 FROM openjdk:11-jdk-bullseye
 
 # OS setup
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev
 
 # Android tools
