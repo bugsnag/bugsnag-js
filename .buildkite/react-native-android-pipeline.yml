@@ -29,6 +29,7 @@ steps:
           LANG: "en_US.UTF-8"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.60.apk
@@ -42,6 +43,7 @@ steps:
           REACT_NATIVE_VERSION: "rn0.66"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.66.apk
@@ -55,6 +57,7 @@ steps:
           REACT_NATIVE_VERSION: "rn0.67"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.67.apk
@@ -68,6 +71,7 @@ steps:
           REACT_NATIVE_VERSION: "rn0.68-hermes"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.68-hermes.apk
@@ -81,6 +85,7 @@ steps:
           REACT_NATIVE_VERSION: "rn0.69"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.69.apk
@@ -96,6 +101,7 @@ steps:
           ARTEFACT_NAME: "rn0.71-old-arch"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.71-old-arch.apk
@@ -111,6 +117,7 @@ steps:
           ARTEFACT_NAME: "rn0.71-new-arch"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.71-new-arch.apk
@@ -126,6 +133,7 @@ steps:
           ARTEFACT_NAME: "rn0.72-old-arch"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.72-old-arch.apk
@@ -141,6 +149,7 @@ steps:
           ARTEFACT_NAME: "rn0.72-new-arch"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.72-new-arch.apk
@@ -156,6 +165,7 @@ steps:
           ARTEFACT_NAME: "r_navigation_0.60"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/r_navigation_0.60.apk
@@ -171,6 +181,7 @@ steps:
           ARTEFACT_NAME: "r_navigation_0.69"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/r_navigation_0.69.apk
@@ -186,6 +197,7 @@ steps:
           ARTEFACT_NAME: "r_native_navigation_0.60"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/r_native_navigation_0.60.apk
@@ -201,6 +213,7 @@ steps:
           ARTEFACT_NAME: "r_native_navigation_0.66"
         plugins:
           - docker-compose#v4.12.0:
+              pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
           - build/r_native_navigation_0.66.apk
