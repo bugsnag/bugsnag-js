@@ -54,7 +54,7 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":android: RN 0.72 (Old Arch) Android 12 end-to-end tests"
+      - label: ":bitbar: :android: RN 0.72 (Old Arch) Android 12 end-to-end tests"
         depends_on: "rn-0-72-old-arch-apk"
         timeout_in_minutes: 60
         plugins:
@@ -80,7 +80,7 @@ steps:
         concurrency_group: "bitbar-app"
         concurrency_method: eager
 
-      - label: ":android: RN 0.72 (New Arch) Android 12 end-to-end tests"
+      - label: ":bitbar: :android: RN 0.72 (New Arch) Android 12 end-to-end tests"
         depends_on: "rn-0-72-new-arch-apk"
         timeout_in_minutes: 60
         plugins:
