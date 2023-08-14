@@ -224,7 +224,8 @@ Scenario: feature flags are attached to native crashes from the main process
         | minidumps | 0 |
         | sessions  | 1 |
     When I click "main-process-crash"
-    And I launch an app
+    And I launch an app with configuration:
+      | bugsnag | on-send-error |
     Then the total requests received by the server matches:
         | events    | 0 |
         | minidumps | 1 |
@@ -250,7 +251,8 @@ Scenario: feature flags can be cleared entirely in the main process with a nativ
         | sessions  | 1 |
     When I click "main-process-clear-feature-flags-now"
     And I click "main-process-crash"
-    And I launch an app
+    And I launch an app with configuration:
+      | bugsnag | on-send-error |
     Then the total requests received by the server matches:
         | events    | 0 |
         | minidumps | 1 |
@@ -265,7 +267,7 @@ Scenario: feature flags can be cleared entirely in the main process with a nativ
 
 Scenario: feature flags are attached to native crashes from a renderer process
     Given I launch an app with configuration:
-        | bugsnag         | feature-flags                                            |
+        | bugsnag         | feature-flags-on-send-error                              |
         | renderer_config | { "featureFlags": [{ "name": "from renderer config" }] } |
     Then the total requests received by the server matches:
         | events    | 0 |
@@ -289,7 +291,7 @@ Scenario: feature flags are attached to native crashes from a renderer process
 
 Scenario: feature flags can be cleared entirely in a renderer process with a native crash
     Given I launch an app with configuration:
-        | bugsnag         | feature-flags                                            |
+        | bugsnag         | feature-flags-on-send-error                              |
         | renderer_config | { "featureFlags": [{ "name": "from renderer config" }] } |
     Then the total requests received by the server matches:
         | events    | 0 |

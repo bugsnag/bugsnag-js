@@ -47,7 +47,8 @@ module.exports = {
       // Native layer
       common.changeDir('android')
 
-      if (process.env.RN_NEW_ARCH) {
+      if (process.env.RN_NEW_ARCH === 'true') {
+        common.run('cp newarch.gradle.properties gradle.properties')
         common.run('./gradlew generateCodegenArtifactsFromSchema assembleRelease', true)
       } else {
         common.run('./gradlew assembleRelease', true)
