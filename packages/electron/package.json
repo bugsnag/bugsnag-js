@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron",
-  "version": "7.20.2",
+  "version": "7.21.0",
   "main": "src/notifier.js",
   "types": "types/notifier.d.ts",
   "description": "@bugsnag/electron notifier",
@@ -25,7 +25,7 @@
     "@bugsnag/plugin-electron-app-breadcrumbs": "^7.19.0",
     "@bugsnag/plugin-electron-client-state-manager": "^7.19.0",
     "@bugsnag/plugin-electron-client-state-persistence": "^7.19.0",
-    "@bugsnag/plugin-electron-deliver-minidumps": "^7.19.0",
+    "@bugsnag/plugin-electron-deliver-minidumps": "^7.21.0",
     "@bugsnag/plugin-electron-device": "^7.19.0",
     "@bugsnag/plugin-electron-ipc": "^7.19.0",
     "@bugsnag/plugin-electron-net-breadcrumbs": "^7.19.0",
