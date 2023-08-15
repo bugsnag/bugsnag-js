@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron",
-  "version": "7.20.0",
+  "version": "7.20.2",
   "main": "src/notifier.js",
   "types": "types/notifier.d.ts",
   "description": "@bugsnag/electron notifier",
@@ -36,7 +36,7 @@
     "@bugsnag/plugin-electron-renderer-event-data": "^7.19.0",
     "@bugsnag/plugin-electron-renderer-strip-project-root": "^7.19.0",
     "@bugsnag/plugin-electron-session": "^7.19.0",
-    "@bugsnag/plugin-interaction-breadcrumbs": "^7.19.0",
+    "@bugsnag/plugin-interaction-breadcrumbs": "^7.20.2",
     "@bugsnag/plugin-internal-callback-marker": "^7.19.0",
     "@bugsnag/plugin-network-breadcrumbs": "^7.19.0",
     "@bugsnag/plugin-node-surrounding-code": "^7.19.0",
