@@ -29,7 +29,11 @@ export async function getSuggestedBugsnagGradleVersion (projectRoot: string, log
     return '5.+'
   } else if (major === 7) {
     return '7.+'
-  } else {
+  }  else {
+    const versionMatchResult = fileContents.match(/classpath\(["']com.android.tools.build:gradle["']\)/)
+    if (versionMatchResult) {
+      return '7.+'
+    }
     logger.warn(`Cannot determine an appropriate version of the Bugsnag Android Gradle plugin for use in this project.
 
 Please see ${DOCS_LINK} for information on Gradle and the Android Gradle Plugin (AGP) compatibility`)
@@ -82,6 +86,7 @@ export async function modifyAppBuildGradle (projectRoot: string, logger: Logger)
     await insertValueAfterPattern(
       appBuildGradlePath,
       /^apply from: ["']\.\.\/\.\.\/node_modules\/react-native\/react\.gradle["']$/m,
+      // ../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle
       GRADLE_PLUGIN_APPLY,
       GRADLE_PLUGIN_APPLY_REGEX,
       logger
