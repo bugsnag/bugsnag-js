@@ -6,9 +6,9 @@ steps:
   - label: ":copyright: License Audit"
     timeout_in_minutes: 20
     agents:
-      queue: opensource-mac-cocoa-11
+      queue: opensource-arm-mac-cocoa-12
     env:
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
+      DEVELOPER_DIR: /Applications/Xcode13.4.app
     command: scripts/license_finder.sh
 
   #
@@ -18,11 +18,11 @@ steps:
     key: "android-builder-base"
     timeout_in_minutes: 30
     plugins:
-      - docker-compose#v3.9.0:
+      - docker-compose#v4.12.0:
           build: android-builder-base
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:  android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
-      - docker-compose#v3.9.0:
+      - docker-compose#v4.12.0:
           push: android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
 
   #
@@ -32,7 +32,7 @@ steps:
     key: "package-js"
     timeout_in_minutes: 3
     plugins:
-      - docker-compose#v3.9.0:
+      - docker-compose#v4.12.0:
           run: minimal-packager
     artifact_paths: min_packages.tar
 
@@ -40,7 +40,7 @@ steps:
     key: "publish-js"
     timeout_in_minutes: 30
     plugins:
-      - docker-compose#v3.9.0:
+      - docker-compose#v4.12.0:
           build: publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
 
@@ -66,14 +66,14 @@ steps:
     plugins:
       - artifacts#v1.5.0:
           download: min_packages.tar
-      - docker-compose#v3.9.0:
+      - docker-compose#v4.12.0:
           build:
             - ci
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
-      - docker-compose#v3.9.0:
+      - docker-compose#v4.12.0:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
@@ -82,7 +82,7 @@ steps:
     depends_on: "ci-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.9.0:
+      docker-compose#v4.12.0:
         run: ci
     command: "npm run test:lint"
 
@@ -90,7 +90,7 @@ steps:
     depends_on: "ci-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.9.0:
+      docker-compose#v4.12.0:
         run: ci
     command: "npm run test:unit"
 
@@ -98,74 +98,41 @@ steps:
     depends_on: "ci-image"
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v3.9.0:
+      docker-compose#v4.12.0:
         run: ci
     command: "npm run test:types"
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on: "package-js"
     commands:
-      - buildkite-agent pipeline upload .buildkite/browser-pipeline.yml
+      - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    skip: Skipped pending PLAT-10345
     commands:
-      - buildkite-agent pipeline upload .buildkite/electron-pipeline.yml
+      - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on: "package-js"
     commands:
-      - buildkite-agent pipeline upload .buildkite/node-pipeline.yml
+      - buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
       - "publish-js"
       - "android-builder-base"
     commands:
-      - buildkite-agent pipeline upload .buildkite/react-native-android-pipeline.yml
+      - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
       - "publish-js"
     commands:
-      - buildkite-agent pipeline upload .buildkite/react-native-ios-pipeline.yml
+      - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE CLI STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on:
-      - "publish-js"
-      - "android-builder-base"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/react-native-cli-pipeline.yml
-
-  - label: "@bugsnag/expo latest"
-    depends_on: "publish-js"
-    trigger: "bugsnag-expo"
-    build:
-      # don't specify 'branch' here so we build the default branch in the expo
-      # repo, which should be the most up-to-date @bugsnag/expo version
-      env:
-        BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
-        BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
-        # a branch name that's safe to use as a docker cache identifier
-        BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
-
-  - label: "@bugsnag/expo v46-next"
-    depends_on: "publish-js"
-    trigger: "bugsnag-expo"
-    build:
-      branch: "v46-next"
-      env:
-        BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
-        BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
-        # a branch name that's safe to use as a docker cache identifier
-        BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
-
-  - label: "@bugsnag/expo v45-next"
-    depends_on: "publish-js"
-    trigger: "bugsnag-expo"
-    build:
-      branch: "v45-next"
-      env:
-        BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
-        BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
-        # a branch name that's safe to use as a docker cache identifier
-        BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
+  #
+  # Conditionally trigger full pipeline
+  #
+  - label: 'Conditionally trigger full set of tests'
+    timeout_in_minutes: 30
+    command: sh -c .buildkite/pipeline_trigger.sh

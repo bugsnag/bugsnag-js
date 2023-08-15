@@ -1,5 +1,18 @@
 # Changelog
 
+## 7.21.0 (2023-08-15)
+
+This release adds support for apps using React Native New Architecture
+
+### Added
+
+- (react-native) Support React Native New Architecture [#1973](https://github.com/bugsnag/bugsnag-js/pull/1973)
+
+### Fixed
+
+- (electron) Fix `onSendError` callbacks not being called [#1999](https://github.com/bugsnag/bugsnag-js/pull/1999)
+- (plugin-inline-script-content) Ensure script metadata is added in Safari 16 [#1998](https://github.com/bugsnag/bugsnag-js/pull/1998)
+
 ## 7.20.2 (2023-04-25)
 
 ### Changes

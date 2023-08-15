@@ -9,4 +9,4 @@ Scenario: tracking sessions by default
 Scenario: autoTrackSessions=false
   When I navigate to the test URL "/sessions/script/b.html"
   And I wait for 2 seconds
-  Then I should receive no requests
+  Then I should receive no sessions

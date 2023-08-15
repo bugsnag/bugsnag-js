@@ -34,9 +34,19 @@ module.exports = {
       const initCommand = `./rn-cli-init-android.sh ${version} ${rnVersion}`
       common.run(initCommand, true)
 
+      // Use Perl to replace the Bugsnag start command to use a loaded configuration
+      const applicationPath = `android/app/src/main/java/com/${rnVersion}/`
+      common.changeDir(`${destFixtures}/${rnVersion}/${applicationPath}`)
+      const perlCommand = 'perl -pi -e "s/Bugsnag.start\\(this\\);/Bugsnag.start\\(this, createConfiguration\\(\\)\\);/g" MainApplication.java'
+      common.run(perlCommand, true)
+
       // Native layer
       common.changeDir(`${destFixtures}/${rnVersion}/android`)
-      common.run('./gradlew assembleRelease', true)
+      if (process.env.RN_NEW_ARCH) {
+        common.run('./gradlew bugsnag_react-native:generateCodegenArtifactsFromSchema assembleRelease', true)
+      } else {
+        common.run('./gradlew assembleRelease', true)
+      }
 
       // Finally, copy the APK back to the host
       common.run(`mkdir -p ${baseDir}/build`)

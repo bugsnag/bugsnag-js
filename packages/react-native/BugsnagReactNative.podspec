@@ -18,5 +18,10 @@ Pod::Spec.new do |s|
   s.public_header_files = "ios/vendor/bugsnag-cocoa/{#{bugsnag_cocoa_public_header_files.join(',')}}"
   s.header_dir = 'Bugsnag'
   s.requires_arc = true
-  s.dependency "React-Core"
+
+  if ENV['RCT_NEW_ARCH_ENABLED'] == "1"
+    install_modules_dependencies(s)
+  else
+    s.dependency "React-Core"
+  end
 end

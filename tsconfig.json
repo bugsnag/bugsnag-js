@@ -107,5 +107,8 @@
     "packages/plugin-console-breadcrumbs",
     "packages/plugin-browser-session",
     "packages/browser"
+  ],
+  "exclude": [
+    "packages/react-native/src/NativeBugsnag.ts"
   ]
 }

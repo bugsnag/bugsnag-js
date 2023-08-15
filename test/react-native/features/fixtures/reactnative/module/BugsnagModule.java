@@ -123,12 +123,15 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
       Configuration config = new Configuration(options.getString("apiKey"));
       config.setAutoTrackSessions(options.getBoolean("autoTrackSessions"));
 
-      if (options.hasKey("endpoint")) {
-        config.setEndpoints(new EndpointConfiguration(options.getString("endpoint"), options.getString("endpoint")));
-      }
-      else if (options.hasKey("endpoints")) {
+      if (options.hasKey("endpoints")) {
           ReadableMap endpoints = options.getMap("endpoints");
           config.setEndpoints(new EndpointConfiguration(endpoints.getString("notify"), endpoints.getString("sessions")));
+      } else {
+        ConfigFileReader configReader = new ConfigFileReader();
+        String mazeAddress = configReader.getMazeRunnerAddress(reactContext);
+        String notifyEndpoint = "http://" + mazeAddress + "/notify";
+        String sessionEndpoint = "http://" + mazeAddress + "/sessions";
+        config.setEndpoints(new EndpointConfiguration(notifyEndpoint, sessionEndpoint));
       }
 
       if (options.hasKey("appVersion")) {
