@@ -4,10 +4,15 @@ steps:
   # Upload full React Native pipelines
   #
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: FULL REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+    - "publish-js"
+    - "android-builder-image"
     commands:
       - buildkite-agent pipeline upload .buildkite/full/react-native-android-pipeline.full.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: FULL REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+    - "publish-js"
     commands:
       - buildkite-agent pipeline upload .buildkite/full/react-native-ios-pipeline.full.yml
 
