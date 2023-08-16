@@ -29,7 +29,7 @@ export async function getSuggestedBugsnagGradleVersion (projectRoot: string, log
     return '5.+'
   } else if (major === 7) {
     return '7.+'
-  }  else {
+  } else {
     const versionMatchResult = fileContents.match(/classpath\(["']com.android.tools.build:gradle["']\)/)
     if (versionMatchResult) {
       return '7.+'
@@ -151,7 +151,7 @@ async function insertBugsnagConfigBlock (
   await insertValueAfterPattern(
     appBuildGradlePath,
     /$/,
-    RegExp('\n'),
+    /''/,
     BUGSNAG_CONFIGURATION_BLOCK,
     BUGSNAG_CONFIGURATION_BLOCK_REGEX,
     logger
@@ -168,7 +168,7 @@ export async function addUploadEndpoint (projectRoot: string, uploadEndpoint: st
     await insertValueAfterPattern(
       appBuildGradlePath,
       /^\s*bugsnag {[^}]*?(?=})/m,
-      RegExp('\n'),
+      /''/,
       `  endpoint = "${uploadEndpoint}"\n`,
       UPLOAD_ENDPOINT_REGEX,
       logger
@@ -213,7 +213,7 @@ export async function addBuildEndpoint (projectRoot: string, buildEndpoint: stri
     await insertValueAfterPattern(
       appBuildGradlePath,
       /^\s*bugsnag {[^}]*?(?=})/m,
-      RegExp('\n'),
+      /''/,
       `  releasesEndpoint = "${buildEndpoint}"\n`,
       BUILD_ENDPOINT_REGEX,
       logger
@@ -258,12 +258,12 @@ async function insertValueAfterPattern (file: string, pattern: RegExp, pattern2:
   }
   let match = fileContents.match(pattern)
   if (!match || match.index === undefined || !match.input) {
-    if (pattern2.source === '\\n') {
-      throw new Error('Pattern not found');
+    if (pattern2.source === RegExp('').source) {
+      throw new Error('Pattern not found')
     }
-    match = fileContents.match(pattern2);
+    match = fileContents.match(pattern2)
     if (!match || match.index === undefined || !match.input) {
-      throw new Error('Pattern not found');
+      throw new Error('Pattern not found')
     }
   }
 
