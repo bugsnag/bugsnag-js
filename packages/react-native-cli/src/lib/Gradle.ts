@@ -49,6 +49,7 @@ export async function modifyRootBuildGradle (projectRoot: string, pluginVersion:
     await insertValueAfterPattern(
       topLevelBuildGradlePath,
       /[\r\n]\s*classpath\(["']com.android.tools.build:gradle:.+["']\)/,
+      /[\r\n]\s*classpath\(["']com.android.tools.build:gradle["']\)/,
       GRADLE_PLUGIN_IMPORT(pluginVersion),
       GRADLE_PLUGIN_IMPORT_REGEX,
       logger
@@ -86,7 +87,8 @@ export async function modifyAppBuildGradle (projectRoot: string, logger: Logger)
     await insertValueAfterPattern(
       appBuildGradlePath,
       /^apply from: ["']\.\.\/\.\.\/node_modules\/react-native\/react\.gradle["']$/m,
-      // ../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle
+      // apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+      /^apply from: file\(["']..\/\.\.\/node_modules\/@react-native-community\/cli-platform-android\/native_modules\.gradle["']\); applyNativeModulesAppBuildGradle\(project\)$/m,
       GRADLE_PLUGIN_APPLY,
       GRADLE_PLUGIN_APPLY_REGEX,
       logger
@@ -149,6 +151,7 @@ async function insertBugsnagConfigBlock (
   await insertValueAfterPattern(
     appBuildGradlePath,
     /$/,
+    RegExp('\n'),
     BUGSNAG_CONFIGURATION_BLOCK,
     BUGSNAG_CONFIGURATION_BLOCK_REGEX,
     logger
@@ -165,6 +168,7 @@ export async function addUploadEndpoint (projectRoot: string, uploadEndpoint: st
     await insertValueAfterPattern(
       appBuildGradlePath,
       /^\s*bugsnag {[^}]*?(?=})/m,
+      RegExp('\n'),
       `  endpoint = "${uploadEndpoint}"\n`,
       UPLOAD_ENDPOINT_REGEX,
       logger
@@ -209,6 +213,7 @@ export async function addBuildEndpoint (projectRoot: string, buildEndpoint: stri
     await insertValueAfterPattern(
       appBuildGradlePath,
       /^\s*bugsnag {[^}]*?(?=})/m,
+      RegExp('\n'),
       `  releasesEndpoint = "${buildEndpoint}"\n`,
       BUILD_ENDPOINT_REGEX,
       logger
@@ -244,17 +249,22 @@ See ${DOCS_LINK} for more information`
   }
 }
 
-async function insertValueAfterPattern (file: string, pattern: RegExp, value: string, presencePattern: RegExp, logger: Logger): Promise<void> {
+async function insertValueAfterPattern (file: string, pattern: RegExp, pattern2: RegExp, value: string, presencePattern: RegExp, logger: Logger): Promise<void> {
   const fileContents = await fs.readFile(file, 'utf8')
 
   if (presencePattern.test(fileContents)) {
     logger.warn('Value already found in file, skipping.')
     return
   }
-
-  const match = fileContents.match(pattern)
+  let match = fileContents.match(pattern)
   if (!match || match.index === undefined || !match.input) {
-    throw new Error('Pattern not found')
+    if (pattern2.source === '\\n') {
+      throw new Error('Pattern not found');
+    }
+    match = fileContents.match(pattern2);
+    if (!match || match.index === undefined || !match.input) {
+      throw new Error('Pattern not found');
+    }
   }
 
   const splitLocation = match.index + match[0].length
