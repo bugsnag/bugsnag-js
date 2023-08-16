@@ -256,7 +256,7 @@ async function insertValueAfterPattern (file: string, patterns: RegExp[], value:
     logger.warn('Value already found in file, skipping.')
     return
   }
-  let match = fileContents.match(pattern)
+  let match = patterns.find(search => fileContents.match(search))
   if (!match || match.index === undefined || !match.input) {
     if (pattern2.source === RegExp('').source) {
       throw new Error('Pattern not found')
