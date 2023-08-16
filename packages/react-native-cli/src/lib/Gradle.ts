@@ -249,7 +249,7 @@ See ${DOCS_LINK} for more information`
   }
 }
 
-async function insertValueAfterPattern (file: string, pattern: RegExp, pattern2: RegExp, value: string, presencePattern: RegExp, logger: Logger): Promise<void> {
+async function insertValueAfterPattern (file: string, patterns: RegExp[], value: string, presencePattern: RegExp, logger: Logger): Promise<void> {
   const fileContents = await fs.readFile(file, 'utf8')
 
   if (presencePattern.test(fileContents)) {
