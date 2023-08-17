@@ -7,8 +7,7 @@ import { install, detectInstalledVersion, detectInstalled, guessPackageManager }
 import onCancel from '../lib/OnCancel'
 import { checkReactNativeMappings, addUploadEndpoint, addBuildEndpoint } from '../lib/Gradle'
 import { UrlType, OnPremiseUrls } from '../lib/OnPremise'
-const semver = require('semver')
-import detectIndent from "detect-indent";
+import detectIndent from 'detect-indent'
 
 const DSYM_INSTRUCTIONS = `To configure your project to upload dSYMs, follow the iOS symbolication guide:
 
@@ -59,6 +58,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
 
       if (reactNativeVersion) {
+        const semver = require('semver')
         if (semver.lt(reactNativeVersion, '0.68.0')) {
           await prompts({
             type: 'text',
@@ -151,35 +151,35 @@ async function installJavaScriptPackage (projectRoot: string): Promise<void> {
   logger.success('@bugsnag/source-maps dependency is installed')
 }
 
-async function writeToPackageJson(packageJsonPath: string, uploadUrl?: string, buildUrl?: string): Promise<void> {
+async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, buildUrl?: string): Promise<void> {
   try {
-    const data = await fs.readFile(packageJsonPath, 'utf8');
-    const packageJson = JSON.parse(data);
+    const data = await fs.readFile(packageJsonPath, 'utf8')
+    const packageJson = JSON.parse(data)
 
     // Default to two spaces if indent cannot be detected
-    const existingIndent = detectIndent(data).indent || '  ';
+    const existingIndent = detectIndent(data).indent || '  '
 
-    let uploadCommand = 'bugsnag-cli upload react-native-android';
-    let buildCommand = 'bugsnag-cli create-build';
+    let uploadCommand = 'bugsnag-cli upload react-native-android'
+    let buildCommand = 'bugsnag-cli create-build'
 
     if (uploadUrl) {
-      uploadCommand += ` --upload-api-root-url=${uploadUrl}`;
+      uploadCommand += ` --upload-api-root-url=${uploadUrl}`
     }
 
     if (buildUrl) {
-      buildCommand += ` --build-api-root-url=${buildUrl}`;
+      buildCommand += ` --build-api-root-url=${buildUrl}`
     }
 
     packageJson.scripts = {
       ...packageJson.scripts,
       'bugsnag:create-build': buildCommand,
-      'bugsnag:upload-android': uploadCommand,
+      'bugsnag:upload-android': uploadCommand
     };
 
-    const updatedPackageJson = JSON.stringify(packageJson, null, existingIndent);
+    const updatedPackageJson = JSON.stringify(packageJson, null, existingIndent)
 
-    await fs.writeFile(packageJsonPath, updatedPackageJson, 'utf8');
+    await fs.writeFile(packageJsonPath, updatedPackageJson, 'utf8')
   } catch (err) {
-    console.error(`Error writing package.json: ${err}`);
+    console.error(`Error writing package.json: ${err}`)
   }
 }
