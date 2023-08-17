@@ -48,8 +48,7 @@ export async function modifyRootBuildGradle (projectRoot: string, pluginVersion:
   try {
     await insertValueAfterPattern(
       topLevelBuildGradlePath,
-      /[\r\n]\s*classpath\(["']com.android.tools.build:gradle:.+["']\)/,
-      /[\r\n]\s*classpath\(["']com.android.tools.build:gradle["']\)/,
+      [/[\r\n]\s*classpath\(["']com.android.tools.build:gradle:.+["']\)/, /[\r\n]\s*classpath\(["']com.android.tools.build:gradle["']\)/],
       GRADLE_PLUGIN_IMPORT(pluginVersion),
       GRADLE_PLUGIN_IMPORT_REGEX,
       logger
@@ -86,9 +85,7 @@ export async function modifyAppBuildGradle (projectRoot: string, logger: Logger)
   try {
     await insertValueAfterPattern(
       appBuildGradlePath,
-      /^apply from: ["']\.\.\/\.\.\/node_modules\/react-native\/react\.gradle["']$/m,
-      // apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
-      /^apply from: file\(["']..\/\.\.\/node_modules\/@react-native-community\/cli-platform-android\/native_modules\.gradle["']\); applyNativeModulesAppBuildGradle\(project\)$/m,
+      [/^apply from: ["']\.\.\/\.\.\/node_modules\/react-native\/react\.gradle["']$/m,/^apply from: file\(["']..\/\.\.\/node_modules\/@react-native-community\/cli-platform-android\/native_modules\.gradle["']\); applyNativeModulesAppBuildGradle\(project\)$/m],
       GRADLE_PLUGIN_APPLY,
       GRADLE_PLUGIN_APPLY_REGEX,
       logger
@@ -150,8 +147,7 @@ async function insertBugsnagConfigBlock (
 
   await insertValueAfterPattern(
     appBuildGradlePath,
-    /$/,
-    /''/,
+    [/$/],
     BUGSNAG_CONFIGURATION_BLOCK,
     BUGSNAG_CONFIGURATION_BLOCK_REGEX,
     logger
@@ -167,8 +163,7 @@ export async function addUploadEndpoint (projectRoot: string, uploadEndpoint: st
 
     await insertValueAfterPattern(
       appBuildGradlePath,
-      /^\s*bugsnag {[^}]*?(?=})/m,
-      /''/,
+      [/^\s*bugsnag {[^}]*?(?=})/m],
       `  endpoint = "${uploadEndpoint}"\n`,
       UPLOAD_ENDPOINT_REGEX,
       logger
@@ -212,8 +207,7 @@ export async function addBuildEndpoint (projectRoot: string, buildEndpoint: stri
 
     await insertValueAfterPattern(
       appBuildGradlePath,
-      /^\s*bugsnag {[^}]*?(?=})/m,
-      /''/,
+      [/^\s*bugsnag {[^}]*?(?=})/m, /''/],
       `  releasesEndpoint = "${buildEndpoint}"\n`,
       BUILD_ENDPOINT_REGEX,
       logger
@@ -256,15 +250,10 @@ async function insertValueAfterPattern (file: string, patterns: RegExp[], value:
     logger.warn('Value already found in file, skipping.')
     return
   }
-  let match = patterns.find(search => fileContents.match(search))
+
+  const match = patterns.map(search => fileContents.match(search)).find(m => !!m)
   if (!match || match.index === undefined || !match.input) {
-    if (pattern2.source === RegExp('').source) {
-      throw new Error('Pattern not found')
-    }
-    match = fileContents.match(pattern2)
-    if (!match || match.index === undefined || !match.input) {
-      throw new Error('Pattern not found')
-    }
+    throw new Error('Pattern not found')
   }
 
   const splitLocation = match.index + match[0].length
