@@ -8,6 +8,7 @@ import onCancel from '../lib/OnCancel'
 import { checkReactNativeMappings, addUploadEndpoint, addBuildEndpoint } from '../lib/Gradle'
 import { UrlType, OnPremiseUrls } from '../lib/OnPremise'
 import detectIndent from 'detect-indent'
+import semver from 'semver'
 
 const DSYM_INSTRUCTIONS = `To configure your project to upload dSYMs, follow the iOS symbolication guide:
 
@@ -58,7 +59,6 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
 
       if (reactNativeVersion) {
-        const semver = require('semver')
         if (semver.lt(reactNativeVersion, '0.68.0')) {
           await prompts({
             type: 'text',
@@ -174,7 +174,7 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
       ...packageJson.scripts,
       'bugsnag:create-build': buildCommand,
       'bugsnag:upload-android': uploadCommand
-    };
+    }
 
     const updatedPackageJson = JSON.stringify(packageJson, null, existingIndent)
 
