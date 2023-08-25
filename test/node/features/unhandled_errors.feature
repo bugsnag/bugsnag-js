@@ -22,7 +22,7 @@ Scenario: reporting thrown exception which is not caught
 Scenario: not reporting uncaughtExceptions when autoDetectErrors is off
   And I run the service "unhandled" with the command "node scenarios/thrown-error-not-caught-auto-notify-off"
   And I wait for 1 second
-  Then I should receive no requests
+  Then I should receive no errors
 
 Scenario: reporting unhandled promise rejections
   And I run the service "unhandled" with the command "node scenarios/unhandled-promise-rejection"
@@ -53,7 +53,7 @@ Scenario: reporting unhandled promise rejections
 Scenario: not reporting unhandledRejections when autoDetectErrors is off
   And I run the service "unhandled" with the command "node scenarios/unhandled-promise-rejection-auto-notify-off"
   And I wait for 1 second
-  Then I should receive no requests
+  Then I should receive no errors
 
 Scenario: using contextualize to add context to an error
   And I run the service "unhandled" with the command "node scenarios/contextualize"

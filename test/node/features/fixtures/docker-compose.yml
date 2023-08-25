@@ -275,4 +275,6 @@ services:
 
 networks:
   default:
+    external: true
     name: ${NETWORK_NAME:-js-maze-runner}
+
