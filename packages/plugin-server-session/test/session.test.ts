@@ -106,7 +106,7 @@ describe('plugin: server sessions', () => {
 
     const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }, undefined, [plugin])
 
-    // start a session and get its idc.startSession()
+    // start a session and get its id
     c.startSession()
     const sid0 = (c._session as Session).id
 
