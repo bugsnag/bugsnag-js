@@ -31,6 +31,7 @@
           }
         }
       ],
+      "context": "checkout page",
       "device": {
         "runtimeVersions": {
           "node": "{TYPE:string}",
@@ -42,6 +43,11 @@
         "osVersion": "{REGEX:\\d+\\.\\d+}"
       },
       "metadata": {
+        "account": {
+          "type": "VIP",
+          "verified": true,
+          "status": "it's complicated"
+        },
         "app": {
           "name": "Runner",
           "CFBundleVersion": "{PLATFORM_MACOS:1.0.2}"

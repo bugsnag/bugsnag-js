@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/react-native",
-  "version": "7.19.0",
+  "version": "7.21.0",
   "main": "src/notifier.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for React Native applications",
@@ -29,6 +29,8 @@
     "android/build.gradle",
     "android/proguard-rules.pro",
     "android/src/main",
+    "android/src/newarch",
+    "android/src/oldarch",
     "android/com/bugsnag",
     "ios/BugsnagReactNative",
     "ios/BugsnagReactNative.xcodeproj",
@@ -64,5 +66,13 @@
   },
   "scripts": {
     "prepare": "bash prepare-android-vendor.sh"
+  },
+  "codegenConfig": {
+    "name": "BugsnagReactNativeSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.bugsnag.android"
+    }
   }
 }

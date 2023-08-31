@@ -3,6 +3,10 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTBridge.h>
 
+#ifdef RCT_NEW_ARCH_ENABLED
+#import <BugsnagReactNativeSpec/BugsnagReactNativeSpec.h>
+#endif
+
 @class BugsnagConfiguration;
 
 @interface BugsnagReactNative: NSObject<RCTBridgeModule>
@@ -48,3 +52,8 @@
 - (void)leaveBreadcrumb:(NSDictionary *)options;
 
 @end
+
+#ifdef RCT_NEW_ARCH_ENABLED
+@interface BugsnagReactNativeEmitter () <NativeBugsnagSpec>
+@end
+#endif

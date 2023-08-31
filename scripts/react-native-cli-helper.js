@@ -42,7 +42,11 @@ module.exports = {
 
       // Native layer
       common.changeDir(`${destFixtures}/${rnVersion}/android`)
-      common.run('./gradlew assembleRelease', true)
+      if (process.env.RN_NEW_ARCH) {
+        common.run('./gradlew bugsnag_react-native:generateCodegenArtifactsFromSchema assembleRelease', true)
+      } else {
+        common.run('./gradlew assembleRelease', true)
+      }
 
       // Finally, copy the APK back to the host
       common.run(`mkdir -p ${baseDir}/build`)

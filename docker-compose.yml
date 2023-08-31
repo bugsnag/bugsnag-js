@@ -131,6 +131,7 @@ services:
       - BUILDKITE
       - REGISTRY_URL
       - REACT_NATIVE_VERSION
+      - RN_NEW_ARCH
       - NOTIFIER_VERSION
       - ARTEFACT_NAME
       - JS_SOURCE_DIR
@@ -187,7 +188,7 @@ services:
       - ./test/react-native-cli/features/:/app/features
 
   react-native-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli
     environment:
       <<: *common-environment
       BITBAR_USERNAME:
@@ -206,7 +207,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   react-native-cli-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli
     environment:
       <<: *common-environment
       BITBAR_USERNAME:

@@ -139,7 +139,7 @@ Then('minidump request {int} has no feature flags', async (index) => {
 
   expect(actual).toHaveProperty('events')
   expect(actual.events).toHaveLength(1)
-  expect(actual.events[0]).toHaveProperty('featureFlags', [])
+  expect(actual.events[0]).not.toHaveProperty('featureFlags')
 })
 
 Then('the total requests received by the server matches:', async (data) => {
