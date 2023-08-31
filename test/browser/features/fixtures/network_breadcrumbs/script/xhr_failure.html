@@ -32,7 +32,7 @@
     <pre id="bugsnag-test-should-run">PENDING</pre>
     <script>
         var el = document.getElementById('bugsnag-test-should-run')
-        el.textContent = el.innerText = 'XMLHttpRequest' in window && 'addEventListener' in window.XMLHttpRequest.prototype && 'onerror' in window.XMLHttpRequest.prototype
+        el.textContent = el.innerText = 'XMLHttpRequest' in window
             ? 'YES'
             : 'NO'
     </script>

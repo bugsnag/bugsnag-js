@@ -9,11 +9,61 @@
 ### Changed
 
 - (plugin-navigation-breadcrumbs) calling `pushState` or `replaceState` no longer triggers a new session when `autoTrackSessions` is enabled [#1820](https://github.com/bugsnag/bugsnag-js/pull/1820)
+- (plugin-contextualize) reimplement without relying on the deprecated node Domain API. From Node 16+ unhandled promise rejections are also supported [#1924](https://github.com/bugsnag/bugsnag-js/pull/1924)
+- (node) enable breadcrumbs and context-scoped calls [#1927](https://github.com/bugsnag/bugsnag-js/pull/1927)
+- (plugin-navigation-breadcrumbs) Calling `pushState` or `replaceState` no longer triggers a new session when `autoTrackSessions` is enabled [#1820](https://github.com/bugsnag/bugsnag-js/pull/1820)
+- (plugin-contextualize) Reimplement without relying on the deprecated node Domain API. From Node 16+ unhandled promise rejections are also supported [#1924](https://github.com/bugsnag/bugsnag-js/pull/1924)
+- (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) *Breaking change*: The `request` metadata field in network breadcrumbs has been renamed to `url` and is no longer pre-pended with the HTTP method [#1988](https://github.com/bugsnag/bugsnag-js/pull/1988)
+- (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Added `method` metadata field to network breadcrumbs [#1988](https://github.com/bugsnag/bugsnag-js/pull/1988)
+- (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Added `duration` metadata field to network breadcrumbs [#1903](https://github.com/bugsnag/bugsnag-js/pull/1903)
 
 ## TBD
 
+## 7.21.0 (2023-08-15)
+
+This release adds support for apps using React Native New Architecture
+
+### Added
+
+- (react-native) Support React Native New Architecture [#1973](https://github.com/bugsnag/bugsnag-js/pull/1973)
+
+### Fixed
+
+- (electron) Fix `onSendError` callbacks not being called [#1999](https://github.com/bugsnag/bugsnag-js/pull/1999)
+- (plugin-inline-script-content) Ensure script metadata is added in Safari 16 [#1998](https://github.com/bugsnag/bugsnag-js/pull/1998)
+
+## 7.20.2 (2023-04-25)
+
+### Changes
+
+- (react-native) Update bugsnag-android from v5.28.3 to [v5.28.4](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5284-2023-02-08)
+- (react-native) Update bugsnag-cocoa from v6.25.2 to [v6.26.2](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6262-2023-04-20)
+- (delivery-xml-http-request) Ensure delivery errors are passed to the post report callback [#1938](https://github.com/bugsnag/bugsnag-js/pull/1938)
+
+## 7.20.1 (2023-02-08)
+
+### Changes
+
+- (web-worker) Change default configuration for autoDetectErrors to false [#1919](https://github.com/bugsnag/bugsnag-js/pull/1919)
+
+## 7.20.0 (2023-01-31)
+
+This release adds support for service workers and web workers [#1915](https://github.com/bugsnag/bugsnag-js/pull/1915)
+
+### Enhancements
+
+- (delivery-fetch) Create fetch based delivery package [#1894](https://github.com/bugsnag/bugsnag-js/pull/1894)
+- (web-worker) Create web-worker notifier package [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
+
+### Changes
+
+- (plugin-browser-device) Refactor parameters for improved guarding [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
+
+## 7.19.0 (2023-01-26)
+
 ### Changed
 
+- (react-native) Update bugsnag-cocoa from v6.25.0 to [v6.25.2](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6252-2023-01-18)
 - After trimming, attempt to send all event and session payloads, even if believed oversize [#1823](https://github.com/bugsnag/bugsnag-js/pull/1823)
 - (react-native) Update bugsnag-android from v5.28.1 to [v5.28.3](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5283-2022-11-16)
 

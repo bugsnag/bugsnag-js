@@ -1,0 +1,148 @@
+steps:
+
+  - group: "Browser Tests"
+    steps:
+      - label:  ":docker: Maze Runner image - BitBar browsers"
+        key: "browser-maze-runner-bb"
+        timeout_in_minutes: 20
+        plugins:
+          - artifacts#v1.5.0:
+              download: min_packages.tar
+          - docker-compose#v4.12.0:
+              build:
+                - browser-maze-runner-bb
+              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+              cache-from:
+                - browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+          - docker-compose#v4.12.0:
+              push:
+                - browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+
+      - label:  ":docker: Maze Runner image - BrowserStack browsers"
+        key: "browser-maze-runner-bs"
+        timeout_in_minutes: 20
+        plugins:
+          - artifacts#v1.5.0:
+              download: min_packages.tar
+          - docker-compose#v4.12.0:
+              build:
+                - browser-maze-runner-bs
+              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+              cache-from:
+                - browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+          - docker-compose#v4.12.0:
+              push:
+                - browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+
+      #
+      # BitBar tests
+      #
+      - label: ":bitbar: {{matrix}} Browser tests (US hub)"
+        matrix:
+          - firefox_latest
+          - chrome_latest
+          - edge_latest
+        depends_on: "browser-maze-runner-bb"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v4.12.0:
+            pull: browser-maze-runner-bb
+            run: browser-maze-runner-bb
+            service-ports: true
+            use-aliases: true
+            command:
+              - "--farm=bb"
+              - "--browser={{matrix}}"
+              - "--no-tunnel"
+              - "--aws-public-ip"
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
+        concurrency: 5
+        concurrency_group: "bitbar-web"
+        concurrency_method: eager
+
+# Skipped pending PLAT-10590
+#      - label: ":bitbar: {{matrix}} Browser tests (EU hub)"
+#        matrix:
+#          - chrome_43
+#          - chrome_72
+#          - firefox_78
+#        depends_on: "browser-maze-runner-bb"
+#        timeout_in_minutes: 30
+#        plugins:
+#          docker-compose#v4.12.0:
+#            pull: browser-maze-runner-bb
+#            run: browser-maze-runner-bb
+#            service-ports: true
+#            use-aliases: true
+#            command:
+#              - "--farm=bb"
+#              - "--browser={{matrix}}"
+#              - "--no-tunnel"
+#              - "--aws-public-ip"
+#              - "--selenium-server=https://eu-desktop-hub.bitbar.com/wd/hub"
+#          artifacts#v1.5.0:
+#            upload:
+#              - "./test/browser/maze_output/failed/**/*"
+#        concurrency: 5
+#        concurrency_group: "bitbar-web"
+#        concurrency_method: eager
+
+      - label: ":bitbar: ie_11 Browser tests"
+        depends_on: "browser-maze-runner-bb"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v4.12.0:
+            pull: browser-maze-runner-bb
+            run: browser-maze-runner-bb
+            service-ports: true
+            use-aliases: true
+            command:
+              - "--farm=bb"
+              - "--browser=ie_11"
+              - "--no-tunnel"
+              - "--aws-public-ip"
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
+        concurrency: 5
+        concurrency_group: "bitbar-web"
+        concurrency_method: eager
+        env:
+          HOST: "localhost" # IE11 needs the host set to localhost for some reason
+
+      #
+      # BrowserStack tests
+      #
+      - label: ":browserstack: {{matrix}} tests"
+        matrix:
+          - ie_8
+          - ie_9
+          - ie_10
+          - edge_17
+          - safari_10
+          - safari_16
+          - ios_10
+          - ios_15
+          - android_7
+          # TODO: Move these to BitBar
+          - chrome_43
+          - chrome_72
+          - firefox_78
+        depends_on: "browser-maze-runner-bs"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v4.12.0:
+            pull: browser-maze-runner-bs
+            run: browser-maze-runner-bs
+            use-aliases: true
+            command:
+              - "--farm=bs"
+              - "--browser={{matrix}}"
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
+        concurrency: 2
+        concurrency_group: "browserstack"
+        concurrency_method: eager

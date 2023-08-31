@@ -16,7 +16,7 @@ class XMLHttpRequest {
   open (method: string, url: string | { toString: () => any }) {
   }
 
-  send (body: any, fail: boolean = false, status: number | null = null) {
+  send (fail: boolean, status: number | null = null) {
     if (fail) {
       this._listeners.error.call(this)
     } else {
@@ -73,7 +73,7 @@ describe('plugin: network breadcrumbs', () => {
     const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
     request.open('GET', '/')
     // tell the mock request to succeed with status code 200
-    request.send(undefined, false, 200)
+    request.send(false, 200)
 
     expect(client._breadcrumbs.length).toBe(1)
     expect(client._breadcrumbs[0]).toEqual(expect.objectContaining({
@@ -81,11 +81,11 @@ describe('plugin: network breadcrumbs', () => {
       message: 'XMLHttpRequest succeeded',
       metadata: {
         status: 200,
-        request: 'GET /',
+        method: 'GET',
+        url: '/',
         duration: expect.any(Number)
       }
     }))
-    expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
   })
 
   it('should not leave duplicate breadcrumbs if open() is called twice', () => {
@@ -97,7 +97,7 @@ describe('plugin: network breadcrumbs', () => {
     const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
     request.open('GET', '/')
     request.open('GET', '/')
-    request.send(undefined, false, 200)
+    request.send(false, 200)
     expect(client._breadcrumbs.length).toBe(1)
   })
 
@@ -109,7 +109,7 @@ describe('plugin: network breadcrumbs', () => {
 
     const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
     request.open('GET', '/this-does-not-exist')
-    request.send(undefined, false, 404)
+    request.send(false, 404)
 
     expect(client._breadcrumbs.length).toBe(1)
     expect(client._breadcrumbs[0]).toEqual(expect.objectContaining({
@@ -117,11 +117,11 @@ describe('plugin: network breadcrumbs', () => {
       message: 'XMLHttpRequest failed',
       metadata: {
         status: 404,
-        request: 'GET /this-does-not-exist',
+        method: 'GET',
+        url: '/this-does-not-exist',
         duration: expect.any(Number)
       }
     }))
-    expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
   })
 
   it('should leave a breadcrumb when an XMLHTTPRequest has a network error', () => {
@@ -133,18 +133,18 @@ describe('plugin: network breadcrumbs', () => {
     const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
 
     request.open('GET', 'https://another-domain.xyz/')
-    request.send(undefined, true)
+    request.send(true)
 
     expect(client._breadcrumbs.length).toBe(1)
     expect(client._breadcrumbs[0]).toEqual(expect.objectContaining({
       type: 'request',
       message: 'XMLHttpRequest error',
       metadata: {
-        request: 'GET https://another-domain.xyz/',
+        method: 'GET',
+        url: 'https://another-domain.xyz/',
         duration: expect.any(Number)
       }
     }))
-    expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
   })
 
   it('should not leave a breadcrumb for request to bugsnag notify endpoint', () => {
@@ -155,7 +155,7 @@ describe('plugin: network breadcrumbs', () => {
 
     const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
     request.open('GET', client._config.endpoints!.notify)
-    request.send(undefined, false, 200)
+    request.send(false, 200)
 
     expect(client._breadcrumbs.length).toBe(0)
   })
@@ -168,7 +168,7 @@ describe('plugin: network breadcrumbs', () => {
 
     const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
     request.open('GET', client._config.endpoints!.sessions)
-    request.send(undefined, false, 200)
+    request.send(false, 200)
     expect(client._breadcrumbs.length).toBe(0)
   })
 
@@ -187,7 +187,7 @@ describe('plugin: network breadcrumbs', () => {
 
     const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
     request.open('GET', { toString: () => 'https://example.com' })
-    request.send(undefined, false, 200)
+    request.send(false, 200)
 
     expect(client._breadcrumbs.length).toBe(1)
     expect(client._breadcrumbs[0]).toEqual(expect.objectContaining({
@@ -195,11 +195,11 @@ describe('plugin: network breadcrumbs', () => {
       message: 'XMLHttpRequest succeeded',
       metadata: {
         status: 200,
-        request: 'GET https://example.com',
+        method: 'GET',
+        url: 'https://example.com',
         duration: expect.any(Number)
       }
     }))
-    expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
   })
 
   it('should leave a breadcrumb when the request URL is not a string for a request that errors', () => {
@@ -217,14 +217,15 @@ describe('plugin: network breadcrumbs', () => {
 
     const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
     request.open('GET', { toString: () => 'https://example.com' })
-    request.send(undefined, true)
+    request.send(true)
 
     expect(client._breadcrumbs.length).toBe(1)
     expect(client._breadcrumbs[0]).toEqual(expect.objectContaining({
       type: 'request',
       message: 'XMLHttpRequest error',
       metadata: {
-        request: 'GET https://example.com',
+        method: 'GET',
+        url: 'https://example.com',
         duration: expect.any(Number)
       }
     }))
@@ -244,11 +245,11 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'GET /',
+          method: 'GET',
+          url: '/',
           duration: expect.any(Number)
         }
       }))
-      expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
       done()
     })
   })
@@ -267,11 +268,11 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() failed',
         metadata: {
           status: 405,
-          request: 'null /',
+          method: 'null',
+          url: '/',
           duration: expect.any(Number)
         }
       }))
-      expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
       done()
     })
   })
@@ -292,11 +293,11 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'GET /',
+          method: 'GET',
+          url: '/',
           duration: expect.any(Number)
         }
       }))
-      expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
       done()
     })
   })
@@ -317,11 +318,11 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'PUT /',
+          method: 'PUT',
+          url: '/',
           duration: expect.any(Number)
         }
       }))
-      expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
       done()
     })
   })
@@ -340,11 +341,11 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() failed',
         metadata: {
           status: 404,
-          request: 'GET null',
+          method: 'GET',
+          url: 'null',
           duration: expect.any(Number)
         }
       }))
-      expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
       done()
     })
   })
@@ -363,7 +364,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'GET /',
+          method: 'GET',
+          url: '/',
           duration: expect.any(Number)
         }
       }))
@@ -385,7 +387,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() failed',
         metadata: {
           status: 404,
-          request: 'GET undefined',
+          method: 'GET',
+          url: 'undefined',
           duration: expect.any(Number)
         }
       }))
@@ -407,7 +410,8 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'PUT /foo',
+          method: 'PUT',
+          url: '/foo',
           duration: expect.any(Number)
         }
       }))
@@ -429,11 +433,11 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() failed',
         metadata: {
           status: 405,
-          request: 'null /foo',
+          method: 'null',
+          url: '/foo',
           duration: expect.any(Number)
         }
       }))
-      expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
       done()
     })
   })
@@ -452,11 +456,11 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() succeeded',
         metadata: {
           status: 200,
-          request: 'GET /foo',
+          method: 'GET',
+          url: '/foo',
           duration: expect.any(Number)
         }
       }))
-      expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
       done()
     })
   })
@@ -475,11 +479,11 @@ describe('plugin: network breadcrumbs', () => {
         message: 'fetch() failed',
         metadata: {
           status: 404,
-          request: 'GET /does-not-exist',
+          method: 'GET',
+          url: '/does-not-exist',
           duration: expect.any(Number)
         }
       }))
-      expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
       done()
     })
   })
@@ -497,11 +501,11 @@ describe('plugin: network breadcrumbs', () => {
         type: 'request',
         message: 'fetch() error',
         metadata: {
-          request: 'GET https://another-domain.xyz/foo/bar',
+          method: 'GET',
+          url: 'https://another-domain.xyz/foo/bar',
           duration: expect.any(Number)
         }
       }))
-      expect(client._breadcrumbs[0].metadata.requestContentLength).toBeUndefined()
       done()
     })
   })
@@ -514,7 +518,7 @@ describe('plugin: network breadcrumbs', () => {
 
     const request = new XMLHttpRequest()
     request.open('GET', '/')
-    request.send(undefined, false, 200)
+    request.send(false, 200)
 
     expect(client._breadcrumbs.length).toBe(0)
   })
@@ -527,7 +531,7 @@ describe('plugin: network breadcrumbs', () => {
 
     const request = new XMLHttpRequest()
     request.open('GET', '/')
-    request.send(undefined, false, 200)
+    request.send(false, 200)
 
     expect(client._breadcrumbs.length).toBe(1)
   })
@@ -540,7 +544,7 @@ describe('plugin: network breadcrumbs', () => {
 
     const request = new XMLHttpRequest()
     request.open('GET', '/')
-    request.send(undefined, false, 200)
+    request.send(false, 200)
 
     expect(client._breadcrumbs.length).toBe(1)
   })
@@ -553,15 +557,15 @@ describe('plugin: network breadcrumbs', () => {
 
     const request0 = new XMLHttpRequest()
     request0.open('GET', '/')
-    request0.send(undefined, false, 200)
+    request0.send(false, 200)
 
     const request1 = new XMLHttpRequest()
     request1.open('GET', '/ignoreme?123')
-    request1.send(undefined, false, 200)
+    request1.send(false, 200)
 
     const request2 = new XMLHttpRequest()
     request2.open('GET', '/ignoremeno')
-    request2.send(undefined, false, 200)
+    request2.send(false, 200)
 
     expect(client._breadcrumbs.length).toBe(2)
   })

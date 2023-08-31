@@ -60,7 +60,8 @@
           "name": "net.request failed",
           "timestamp": "{TIMESTAMP}",
           "metaData": {
-            "request": "{REGEX:^GET http:\\/\\/localhost:\\d{4}\\/fail$}",
+            "method": "GET",
+            "url": "{REGEX:^http:\\/\\/localhost:\\d{4}\\/fail$}",
             "status": 404,
             "duration": "{TYPE:number}"
           }

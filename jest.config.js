@@ -26,11 +26,13 @@ module.exports = {
   ],
   projects: [
     project('core', ['core']),
+    project('web workers', ['web-worker']),
     project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
     project('browser', [
       'browser',
       'delivery-x-domain-request',
       'delivery-xml-http-request',
+      'delivery-fetch',
       'plugin-react',
       'plugin-vue',
       'plugin-browser-context',
@@ -91,6 +93,7 @@ module.exports = {
     ], {
       testEnvironment: 'node',
       testMatch: [
+        '<rootDir>/packages/node/test/**/*.test.[jt]s',
         '<rootDir>/packages/node/test/integration/**/*.test.[jt]s'
       ]
     }),

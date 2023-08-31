@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+
+const { gzipSync } = require('zlib')
+const { readFileSync } = require('fs')
+
+const dir = process.cwd()
+const file = process.argv[2]
+
+const getSize = () => {
+  const code = readFileSync(`${dir}/${file}`, 'utf8')
+  const kb = (gzipSync(code).length / 1000).toFixed(2)
+  return kb
+}
+
+const kb = getSize()
+console.log(`${kb}kB`)

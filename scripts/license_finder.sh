@@ -8,7 +8,7 @@ curl https://raw.githubusercontent.com/bugsnag/license-audit/master/config/decis
 ruby -v
 
 gem install license_finder
-npx lerna bootstrap
+npm install
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 ruby $SCRIPT_DIR/license_finder.rb

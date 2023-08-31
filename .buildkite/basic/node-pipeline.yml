@@ -1,0 +1,35 @@
+steps:
+
+  - group: "Node Tests"
+    steps:
+      - label:  ":docker: Build node maze runner image"
+        key: "node-maze-runner-image"
+        timeout_in_minutes: 20
+        plugins:
+          - artifacts#v1.5.0:
+              download: min_packages.tar
+              build: ${BUILDKITE_TRIGGERED_FROM_BUILD_ID}
+          - docker-compose#v4.12.0:
+              build:
+                - node-maze-runner
+              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+              cache-from:
+                - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
+          - docker-compose#v4.12.0:
+              push:
+                - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
+
+      - label: ":node: Node {{matrix}}"
+        depends_on: "node-maze-runner-image"
+        timeout_in_minutes: 30
+        matrix:
+          - 12
+          - 14
+          - 16
+          - 18
+        plugins:
+          docker-compose#v4.12.0:
+            run: node-maze-runner
+            use-aliases: true
+        env:
+          NODE_VERSION: "{{matrix}}"

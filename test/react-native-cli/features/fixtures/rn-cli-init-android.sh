@@ -35,7 +35,7 @@ expect "Enter version of the Bugsnag Android Gradle plugin you want to use"
 send -- \r
 
 expect "What is your Bugsnag project API key?"
-send -- 1234567890ABCDEF1234567890ABCDEF\r
+send -- "1234567890ABCDEF1234567890ABCDEF\r"
 
 expect "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
 send -- n

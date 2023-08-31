@@ -21,7 +21,7 @@ Scenario: Automatic session on app start
 Scenario: Automatic sessions disabled
   When I run "SessionAutoDisabledScenario"
   And I wait for 5 seconds
-  Then I should receive no requests
+  Then I should receive no sessions
 
 Scenario: Manual JS sessions (JS Controls)
   When I run "SessionJsControlledManualJsScenario"

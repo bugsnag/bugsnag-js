@@ -18,7 +18,7 @@ Scenario: Handled JS error
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
   And the event "app.id" equals the platform-dependent string:
   | android | com.reactnative                        |
-  | ios     | org.reactjs.native.example.reactnative |
+  | ios     | com.bugsnag.fixtures.reactnative |
   And the event "app.type" equals the platform-dependent string:
   | android | android |
   | ios     | iOS     |
@@ -42,7 +42,7 @@ Scenario: Unhandled JS error
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
   And the event "app.id" equals the platform-dependent string:
   | android | com.reactnative                        |
-  | ios     | org.reactjs.native.example.reactnative |
+  | ios     | com.bugsnag.fixtures.reactnative |
   And the event "app.type" equals the platform-dependent string:
   | android | android |
   | ios     | iOS   |
@@ -67,7 +67,7 @@ Scenario: Handled native error
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
   And the event "app.id" equals the platform-dependent string:
   | android | com.reactnative                        |
-  | ios     | org.reactjs.native.example.reactnative |
+  | ios     | com.bugsnag.fixtures.reactnative |
   And the event "app.type" equals the platform-dependent string:
   | android | android |
   | ios     | iOS     |
@@ -93,7 +93,7 @@ Scenario: Unhandled native error
   And the event "app.codeBundleId" equals "1.2.3-r00110011"
   And the event "app.id" equals the platform-dependent string:
   | android | com.reactnative                        |
-  | ios     | org.reactjs.native.example.reactnative |
+  | ios     | com.bugsnag.fixtures.reactnative |
   And the event "app.type" equals the platform-dependent string:
   | android | android |
   | ios     | iOS     |
@@ -125,4 +125,4 @@ Scenario: Setting releaseStage and enabledReleaseStages to enable delivery
 Scenario: Setting releaseStage and enabledReleaseStages to disable delivery
   When I run "AppConfigEnabledReleaseStagesNoSendScenario"
   And I wait for 5 seconds
-  Then I should receive no requests
+  Then I should receive no errors

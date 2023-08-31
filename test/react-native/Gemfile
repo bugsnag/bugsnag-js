@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'cocoapods'
 
-gem 'bugsnag-maze-runner', git: 'https://github.com/bugsnag/maze-runner', tag: 'v7.7.0'
+gem 'bugsnag-maze-runner', '~>8.4.0'
 
 # Use a branch of Maze Runner
 #gem 'bugsnag-maze-runner', git: 'https://github.com/bugsnag/maze-runner', branch: 'tms/use-maze-check'

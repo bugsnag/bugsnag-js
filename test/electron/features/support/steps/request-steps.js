@@ -26,6 +26,10 @@ const featureFlagsTableToExpected = table => {
   })
 }
 
+Given('I set the next http status code to {int}', (responseCode) => {
+  global.server.responseStatusCode = responseCode
+})
+
 Given('I launch an app', launchConfig, async () => {
   return global.automator.start()
 })
@@ -135,7 +139,7 @@ Then('minidump request {int} has no feature flags', async (index) => {
 
   expect(actual).toHaveProperty('events')
   expect(actual.events).toHaveLength(1)
-  expect(actual.events[0]).toHaveProperty('featureFlags', [])
+  expect(actual.events[0]).not.toHaveProperty('featureFlags')
 })
 
 Then('the total requests received by the server matches:', async (data) => {

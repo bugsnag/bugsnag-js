@@ -60,7 +60,8 @@
           "name": "net.request succeeded",
           "timestamp": "{TIMESTAMP}",
           "metaData": {
-            "request": "{REGEX:^GET http:\\/\\/localhost:\\d{4}\\/success$}",
+            "method": "GET",
+            "url": "{REGEX:^http:\\/\\/localhost:\\d{4}\\/success$}",
             "status": 200,
             "duration": "{TYPE:number}"
           }

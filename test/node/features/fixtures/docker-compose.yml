@@ -107,6 +107,21 @@ services:
           - express
     restart: "no"
 
+  contextualize:
+    build:
+      context: contextualize
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      default:
+        aliases:
+          - contextualize
+    restart: "no"
+
   express-disabled:
     build:
       context: express
@@ -275,4 +290,6 @@ services:
 
 networks:
   default:
+    external: true
     name: ${NETWORK_NAME:-js-maze-runner}
+

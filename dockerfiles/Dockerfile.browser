@@ -21,6 +21,7 @@ RUN npm pack --verbose packages/node/
 RUN npm pack --verbose packages/plugin-angular/
 RUN npm pack --verbose packages/plugin-react/
 RUN npm pack --verbose packages/plugin-vue/
+RUN npm pack --verbose packages/web-worker/
 
 COPY test/browser/features test/browser/features
 
@@ -28,6 +29,7 @@ WORKDIR /app/test/browser/features/fixtures
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-browser-*.tgz
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-react-*.tgz
 RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-vue-*.tgz
+RUN npm install --no-package-lock --no-save ../../../../bugsnag-web-worker-*.tgz
 WORKDIR plugin_angular/ng
 RUN npm install --no-package-lock --no-save \
   ../../../../../../bugsnag-plugin-angular-*.tgz  \
@@ -45,13 +47,7 @@ RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_mo
 RUN rm -fr **/*/node_modules/
 
 # The maze-runner browser tests (W3C protocol)
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli as browser-maze-runner
-
-COPY --from=browser-feature-builder /app/test/browser /app/test/browser/
-WORKDIR /app/test/browser
-
-# The maze-runner legacy browser tests (JSON-WP protocol)
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v7-cli-legacy as browser-maze-runner-legacy
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli as browser-maze-runner
 
 COPY --from=browser-feature-builder /app/test/browser /app/test/browser/
 WORKDIR /app/test/browser
