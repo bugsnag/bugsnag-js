@@ -54,6 +54,10 @@ The previous Bugsnag React Native SDK – [`bugsnag-react-native`](https://githu
 
 See the [React Native upgrade guide](/packages/react-native/UPGRADING.md) for specific instructions on how to upgrade from `bugsnag-react-native` to `@bugsnag/react-native`.
 
+#### plugin-contextualize
+
+Unhandled errors that occur within a contextualize context now respect the `autoDetectErrors`` and `enabledErrorTypes`` configuration options. Previously unhandled errors would have been caught regardless of the configuration.
+
 ## 7.0 to 7.1
 
 This release contains an update to the way the React and Vue plugins work, allowing the reference to the framework to be supplied after Bugsnag has been initialized.
