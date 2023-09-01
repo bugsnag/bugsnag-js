@@ -35,7 +35,7 @@ module.exports = {
     const ciIndicator = (process.env.BUILDKITE ? 'ci-' : '')
 
     const version = `${lernaVersion}-${ciIndicator}${branchName}.${commitId}`
-    console.log(String.raw(version))
+    console.log(version)
     return version
   }
 }
