@@ -14,9 +14,11 @@ module.exports = {
   name: 'koa',
   load: client => {
     const requestHandler = async (ctx, next) => {
-      // Get a client to be scoped to this request. If sessions are enabled, use the
-      // resumeSession() call to get a session client, otherwise, clone the existing client.
-      const requestClient = client._config.autoTrackSessions ? client.resumeSession() : clone(client)
+      // clone the client to be scoped to this request. If sessions are enabled, start one
+      const requestClient = clone(client)
+      if (requestClient._config.autoTrackSessions) {
+        requestClient.startSession()
+      }
 
       ctx.bugsnag = requestClient
 
@@ -35,9 +37,11 @@ module.exports = {
     }
 
     requestHandler.v1 = function * (next) {
-      // Get a client to be scoped to this request. If sessions are enabled, use the
-      // resumeSession() call to get a session client, otherwise, clone the existing client.
-      const requestClient = client._config.autoTrackSessions ? client.resumeSession() : clone(client)
+      // clone the client to be scoped to this request. If sessions are enabled, start one
+      const requestClient = clone(client)
+      if (requestClient._config.autoTrackSessions) {
+        requestClient.startSession()
+      }
 
       this.bugsnag = requestClient
 
