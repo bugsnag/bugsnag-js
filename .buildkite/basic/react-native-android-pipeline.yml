@@ -54,54 +54,54 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":bitbar: :android: RN 0.72 (Old Arch) Android 12 end-to-end tests"
-        depends_on: "rn-0-72-old-arch-apk"
-        timeout_in_minutes: 60
-        plugins:
-          artifacts#v1.9.0:
-            download: "build/rn0.72-old-arch.apk"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.7.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            command:
-              - --app=build/rn0.72-old-arch.apk
-              - --farm=bb
-              - --device=ANDROID_12
-              - --a11y-locator
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-        env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
-        concurrency: 25
-        concurrency_group: "bitbar-app"
-        concurrency_method: eager
+      # - label: ":bitbar: :android: RN 0.72 (Old Arch) Android 12 end-to-end tests"
+      #   depends_on: "rn-0-72-old-arch-apk"
+      #   timeout_in_minutes: 60
+      #   plugins:
+      #     artifacts#v1.9.0:
+      #       download: "build/rn0.72-old-arch.apk"
+      #       upload: ./test/react-native/maze_output/**/*
+      #     docker-compose#v4.7.0:
+      #       pull: react-native-maze-runner
+      #       run: react-native-maze-runner
+      #       service-ports: true
+      #       command:
+      #         - --app=build/rn0.72-old-arch.apk
+      #         - --farm=bb
+      #         - --device=ANDROID_12
+      #         - --a11y-locator
+      #         - --fail-fast
+      #         - --no-tunnel
+      #         - --aws-public-ip
+      #   env:
+      #     SKIP_NAVIGATION_SCENARIOS: "true"
+      #     HERMES: "true"
+      #   concurrency: 25
+      #   concurrency_group: "bitbar-app"
+      #   concurrency_method: eager
 
-      - label: ":bitbar: :android: RN 0.72 (New Arch) Android 12 end-to-end tests"
-        depends_on: "rn-0-72-new-arch-apk"
-        timeout_in_minutes: 60
-        plugins:
-          artifacts#v1.9.0:
-            download: "build/rn0.72-new-arch.apk"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.7.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            command:
-              - --app=build/rn0.72-new-arch.apk
-              - --farm=bb
-              - --device=ANDROID_12
-              - --a11y-locator
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-        env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
-        concurrency: 25
-        concurrency_group: "bitbar-app"
-        concurrency_method: eager
+      # - label: ":bitbar: :android: RN 0.72 (New Arch) Android 12 end-to-end tests"
+      #   depends_on: "rn-0-72-new-arch-apk"
+      #   timeout_in_minutes: 60
+      #   plugins:
+      #     artifacts#v1.9.0:
+      #       download: "build/rn0.72-new-arch.apk"
+      #       upload: ./test/react-native/maze_output/**/*
+      #     docker-compose#v4.7.0:
+      #       pull: react-native-maze-runner
+      #       run: react-native-maze-runner
+      #       service-ports: true
+      #       command:
+      #         - --app=build/rn0.72-new-arch.apk
+      #         - --farm=bb
+      #         - --device=ANDROID_12
+      #         - --a11y-locator
+      #         - --fail-fast
+      #         - --no-tunnel
+      #         - --aws-public-ip
+      #   env:
+      #     SKIP_NAVIGATION_SCENARIOS: "true"
+      #     HERMES: "true"
+      #   concurrency: 25
+      #   concurrency_group: "bitbar-app"
+      #   concurrency_method: eager

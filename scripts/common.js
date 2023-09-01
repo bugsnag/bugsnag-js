@@ -34,6 +34,8 @@ module.exports = {
     const lernaVersion = lerna.version.match(/^[1-9][0-9]*\.[0-9]+\.[0-9]+/)[0]
     const ciIndicator = (process.env.BUILDKITE ? 'ci-' : '')
 
-    return `${lernaVersion}-${ciIndicator}${branchName}.${commitId}`
+    const version = `${lernaVersion}-${ciIndicator}${branchName}.${commitId}`
+    console.log(String.raw(version))
+    return version
   }
 }
