@@ -125,4 +125,4 @@ Scenario: Setting releaseStage and enabledReleaseStages to enable delivery
 Scenario: Setting releaseStage and enabledReleaseStages to disable delivery
   When I run "AppConfigEnabledReleaseStagesNoSendScenario"
   And I wait for 5 seconds
-  Then I should receive no errors
+  Then I should receive no requests
