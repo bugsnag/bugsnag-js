@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-xml-http-request",
-  "version": "7.19.0",
+  "version": "7.20.2",
   "main": "delivery.js",
   "description": "@bugsnag/js delivery mechanism for most browsers",
   "homepage": "https://www.bugsnag.com/",
