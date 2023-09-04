@@ -97,7 +97,7 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.node
       target: node-maze-runner
-    command: --fail-fast --retry 2
+    # command: --fail-fast --retry 2
     environment:
       <<: *common-environment
       NODE_VERSION: "${NODE_VERSION:-10}"
