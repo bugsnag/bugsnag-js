@@ -9,7 +9,7 @@ Background:
   And I wait for the host "restify" to open port "80"
 
 Scenario: a synchronous thrown error in a route
-  Then I open the URL "http://restify/sync/hello?a=1&b=2&c=3" tolerating any error
+  Then I open the URL "http://restify/sync/hello?a=1&b=2&c=3"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
@@ -31,7 +31,7 @@ Scenario: a synchronous thrown error in a route
   And the event "metaData.request.params.message" equals "hello"
 
 Scenario: an asynchronous thrown error in a route
-  Then I open the URL "http://restify/async" tolerating any error
+  Then I open the URL "http://restify/async"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true

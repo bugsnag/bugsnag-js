@@ -9,11 +9,11 @@ Background:
   And I wait for the host "restify-disabled" to open port "80"
 
 Scenario: a synchronous thrown error in a route
-  Then I open the URL "http://restify-disabled/sync" tolerating any error
+  Then I open the URL "http://restify-disabled/sync"
   And I should receive no errors
 
 Scenario: an asynchronous thrown error in a route
-  Then I open the URL "http://restify-disabled/async" tolerating any error
+  Then I open the URL "http://restify-disabled/async"
   And I should receive no errors
 
 Scenario: an error passed to next(err)
@@ -21,7 +21,7 @@ Scenario: an error passed to next(err)
   And I should receive no errors
 
 Scenario: throwing non-Error error
-  Then I open the URL "http://restify-disabled/throw-non-error" tolerating any error
+  Then I open the URL "http://restify-disabled/throw-non-error"
   And I should receive no errors
 
 Scenario: an explicit 404

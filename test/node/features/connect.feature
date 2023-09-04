@@ -22,7 +22,7 @@ Scenario: a synchronous thrown error in a route
   And the event "request.httpMethod" equals "GET"
 
 Scenario: an asynchronous thrown error in a route
-  Then I open the URL "http://connect/async" tolerating any error
+  Then I open the URL "http://connect/async"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true

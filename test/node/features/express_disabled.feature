@@ -12,7 +12,7 @@ Scenario: a synchronous thrown error in a route
   And I should receive no errors
 
 Scenario: an asynchronous thrown error in a route
-  Then I open the URL "http://express-disabled/async" tolerating any error
+  Then I open the URL "http://express-disabled/async"
   And I should receive no errors
 
 Scenario: an error passed to next(err)
