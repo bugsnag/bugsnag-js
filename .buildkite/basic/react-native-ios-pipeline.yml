@@ -10,7 +10,7 @@ steps:
         key: "rn-0-72-old-arch-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           REACT_NATIVE_VERSION: "rn0.72"
           LANG: "en_US.UTF-8"
@@ -25,7 +25,7 @@ steps:
         key: "rn-0-72-new-arch-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           REACT_NATIVE_VERSION: "rn0.72"
           LANG: "en_US.UTF-8"
