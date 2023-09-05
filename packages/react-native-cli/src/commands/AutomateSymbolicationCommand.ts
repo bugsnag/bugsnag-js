@@ -54,6 +54,10 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       initial: true
     }, { onCancel })
 
+    if (iosIntegration) {
+      await installJavaScriptPackage(projectRoot)
+    }
+
     if (androidIntegration) {
       await installBugsnagCliPackage(projectRoot, urls)
       const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
@@ -81,9 +85,6 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       }
     }
 
-    if (iosIntegration) {
-      await installJavaScriptPackage(projectRoot)
-    }
     return true
   } catch (e) {
     logger.error(e)
@@ -108,8 +109,6 @@ async function installBugsnagCliPackage (projectRoot: string, urls: OnPremiseUrl
     logger.warn('@bugsnag/cli is already installed, skipping')
     return
   }
-
-  logger.info(alreadyInstalled)
 
   logger.info('Adding @bugsnag/cli dependency')
 
