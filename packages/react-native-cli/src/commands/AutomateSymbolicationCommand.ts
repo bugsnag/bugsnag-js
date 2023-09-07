@@ -26,6 +26,12 @@ const HERMES_INSTRUCTIONS = `You are running a version of React Native that we c
 
 `
 
+const BUGSNAG_CLI_INSTRUCTIONS = `bugsnag:upload-android task added to your package.json - run this task to upload Android source maps after a build.
+
+    See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
+
+`
+
 export default async function run (projectRoot: string, urls: OnPremiseUrls): Promise<boolean> {
   try {
     const { iosIntegration } = await prompts({
@@ -76,13 +82,20 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       const { packageJsonIntegration } = await prompts({
         type: 'confirm',
         name: 'packageJsonIntegration',
-        message: 'Do you want to add an NPM task to your package.json to upload Android source maps?',
+        message: 'Do you want to add an NPM task to your package.json that you can run to upload Android source maps?',
         initial: true
       }, { onCancel })
 
       if (packageJsonIntegration) {
         await writeToPackageJson(join(projectRoot, 'package.json'), urls[UrlType.UPLOAD], urls[UrlType.BUILD])
       }
+
+      await prompts({
+        type: 'text',
+        name: 'bugsnagCliInstructions',
+        message: BUGSNAG_CLI_INSTRUCTIONS,
+        initial: 'Hit enter to continue …'
+      }, { onCancel })
     }
 
     return true

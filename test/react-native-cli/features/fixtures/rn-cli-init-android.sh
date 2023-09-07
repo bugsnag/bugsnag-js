@@ -67,7 +67,10 @@ if {[expr $rnVersionInt3 < 0.68]} {
    send -- \r
 }
 
-expect "Do you want to add an NPM task to your package.json to upload Android source maps?"
+expect "Do you want to add an NPM task to your package.json that you can run to upload Android source maps?"
+send -- \r
+
+expect "See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details."
 send -- \r
 
 expect eof
