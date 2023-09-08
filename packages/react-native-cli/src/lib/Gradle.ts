@@ -8,8 +8,8 @@ const GRADLE_PLUGIN_APPLY = 'apply plugin: "com.bugsnag.android.gradle"'
 const GRADLE_PLUGIN_APPLY_REGEX = /apply plugin: ["']com\.bugsnag\.android\.gradle["']/
 const GRADLE_ANDROID_PLUGIN_REGEX = /classpath\(["']com.android.tools.build:gradle:[^0-9]*([^'"]+)["']\)/
 const DOCS_LINK = 'https://docs.bugsnag.com/build-integrations/gradle/#installation'
-const ENABLE_REACT_NATIVE_MAPPINGS = 'bugsnag {\n  uploadReactNativeMappings = true\n}\n'
-const ENABLE_REACT_NATIVE_MAPPINGS_REGEX = /^\s*bugsnag {[^}]*uploadReactNativeMappings[^}]*?}/m
+const BUGSNAG_CONFIGURATION_BLOCK = 'bugsnag {\n}\n'
+const BUGSNAG_CONFIGURATION_BLOCK_REGEX = /^\s*bugsnag {[^}]*?}/m
 const UPLOAD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*endpoint[^}]*?}/m
 const BUILD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*releasesEndpoint[^}]*?}/m
 
@@ -30,6 +30,10 @@ export async function getSuggestedBugsnagGradleVersion (projectRoot: string, log
   } else if (major === 7) {
     return '7.+'
   } else {
+    const versionMatchResult = fileContents.match(/classpath\(["']com.android.tools.build:gradle["']\)/)
+    if (versionMatchResult) {
+      return '7.+'
+    }
     logger.warn(`Cannot determine an appropriate version of the Bugsnag Android Gradle plugin for use in this project.
 
 Please see ${DOCS_LINK} for information on Gradle and the Android Gradle Plugin (AGP) compatibility`)
@@ -44,7 +48,7 @@ export async function modifyRootBuildGradle (projectRoot: string, pluginVersion:
   try {
     await insertValueAfterPattern(
       topLevelBuildGradlePath,
-      /[\r\n]\s*classpath\(["']com.android.tools.build:gradle:.+["']\)/,
+      [/[\r\n]\s*classpath\(["']com.android.tools.build:gradle:.+["']\)/, /[\r\n]\s*classpath\(["']com.android.tools.build:gradle["']\)/],
       GRADLE_PLUGIN_IMPORT(pluginVersion),
       GRADLE_PLUGIN_IMPORT_REGEX,
       logger
@@ -81,7 +85,7 @@ export async function modifyAppBuildGradle (projectRoot: string, logger: Logger)
   try {
     await insertValueAfterPattern(
       appBuildGradlePath,
-      /^apply from: ["']\.\.\/\.\.\/node_modules\/react-native\/react\.gradle["']$/m,
+      [/^apply from: ["']\.\.\/\.\.\/node_modules\/react-native\/react\.gradle["']$/m, /^apply from: file\(["']..\/\.\.\/node_modules\/@react-native-community\/cli-platform-android\/native_modules\.gradle["']\); applyNativeModulesAppBuildGradle\(project\)$/m],
       GRADLE_PLUGIN_APPLY,
       GRADLE_PLUGIN_APPLY_REGEX,
       logger
@@ -111,10 +115,8 @@ See ${DOCS_LINK} for more information`
   logger.success('Finished modifying android/app/build.gradle')
 }
 
-export async function enableReactNativeMappings (
+export async function checkReactNativeMappings (
   projectRoot: string,
-  uploadEndpoint: string|undefined,
-  buildEndpoint: string|undefined,
   logger: Logger
 ): Promise<void> {
   logger.debug('Enabling Bugsnag Android Gradle plugin React Native mappings')
@@ -123,75 +125,45 @@ export async function enableReactNativeMappings (
   try {
     const fileContents = await fs.readFile(appBuildGradlePath, 'utf8')
 
-    // If the file contains a 'bugsnag' configuration section already, add the
-    // 'uploadReactNativeMappings' flag to it
-    if (/^\s*bugsnag {/m.test(fileContents)) {
-      await insertValueAfterPattern(
-        appBuildGradlePath,
-        /^\s*bugsnag {[^}]*?(?=})/m,
-        '  uploadReactNativeMappings = true\n',
-        ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
-        logger
-      )
-    } else {
-      // If the file doesn't contain bugsnag config already, add it now
-      await insertValueAfterPattern(
-        appBuildGradlePath,
-        /$/,
-        ENABLE_REACT_NATIVE_MAPPINGS,
-        ENABLE_REACT_NATIVE_MAPPINGS_REGEX,
-        logger
+    if (/^\s*uploadReactNativeMappings\s*=\s*true/m.test(fileContents)) {
+      logger.warn(
+        `The uploadReactNativeMappings option for the Bugsnag Gradle plugin is currently enabled in ${appBuildGradlePath}.
+
+This is no longer required as mappings will be uploaded by the BugSnag CLI.
+
+Please remove this line or disable it in your builds to prevent duplicate uploads.`
       )
     }
   } catch (e) {
-    if (e.message === 'Pattern not found') {
-      logger.warn(
-        `The gradle file was in an unexpected format and so couldn't be updated automatically.
-
-Enable React Native mappings to your app module's build.gradle:
-
-${ENABLE_REACT_NATIVE_MAPPINGS}
-
-See ${DOCS_LINK} for more information`
-      )
-
-      return
-    }
-
-    if (e.code === 'ENOENT') {
-      logger.warn(
-        `A gradle file was not found at the expected location and so couldn't be updated automatically.
-
-Enable React Native mappings to your app module's build.gradle:
-
-${ENABLE_REACT_NATIVE_MAPPINGS}
-
-See ${DOCS_LINK} for more information`
-      )
-
-      return
-    }
-
-    throw e
+    // No action required
   }
-
-  if (uploadEndpoint) {
-    await addUploadEndpoint(appBuildGradlePath, uploadEndpoint, logger)
-  }
-
-  if (buildEndpoint) {
-    await addBuildEndpoint(appBuildGradlePath, buildEndpoint, logger)
-  }
-
-  logger.success('React Native mappings enabled in android/app/build.gradle')
 }
 
-async function addUploadEndpoint (appBuildGradlePath: string, uploadEndpoint: string, logger: Logger): Promise<void> {
+async function insertBugsnagConfigBlock (
+  appBuildGradlePath: string,
+  logger: Logger
+): Promise<void> {
+  logger.debug('Inserting Bugsnag config block')
+
+  await insertValueAfterPattern(
+    appBuildGradlePath,
+    [/$/],
+    BUGSNAG_CONFIGURATION_BLOCK,
+    BUGSNAG_CONFIGURATION_BLOCK_REGEX,
+    logger
+  )
+  logger.success('Bugsnag config block inserted into android/app/build.gradle')
+}
+
+export async function addUploadEndpoint (projectRoot: string, uploadEndpoint: string, logger: Logger): Promise<void> {
   try {
-    // We know the 'bugsnag' section must exist after enabling RN mappings
+    const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
+
+    await insertBugsnagConfigBlock(appBuildGradlePath, logger)
+
     await insertValueAfterPattern(
       appBuildGradlePath,
-      /^\s*bugsnag {[^}]*?(?=})/m,
+      [/^\s*bugsnag {[^}]*?(?=})/m],
       `  endpoint = "${uploadEndpoint}"\n`,
       UPLOAD_ENDPOINT_REGEX,
       logger
@@ -227,12 +199,15 @@ See ${DOCS_LINK} for more information`
   }
 }
 
-async function addBuildEndpoint (appBuildGradlePath: string, buildEndpoint: string, logger: Logger): Promise<void> {
+export async function addBuildEndpoint (projectRoot: string, buildEndpoint: string, logger: Logger): Promise<void> {
   try {
-    // We know the 'bugsnag' section must exist after enabling RN mappings
+    const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
+
+    await insertBugsnagConfigBlock(appBuildGradlePath, logger)
+
     await insertValueAfterPattern(
       appBuildGradlePath,
-      /^\s*bugsnag {[^}]*?(?=})/m,
+      [/^\s*bugsnag {[^}]*?(?=})/m, /''/],
       `  releasesEndpoint = "${buildEndpoint}"\n`,
       BUILD_ENDPOINT_REGEX,
       logger
@@ -268,7 +243,7 @@ See ${DOCS_LINK} for more information`
   }
 }
 
-async function insertValueAfterPattern (file: string, pattern: RegExp, value: string, presencePattern: RegExp, logger: Logger): Promise<void> {
+async function insertValueAfterPattern (file: string, patterns: RegExp[], value: string, presencePattern: RegExp, logger: Logger): Promise<void> {
   const fileContents = await fs.readFile(file, 'utf8')
 
   if (presencePattern.test(fileContents)) {
@@ -276,7 +251,7 @@ async function insertValueAfterPattern (file: string, pattern: RegExp, value: st
     return
   }
 
-  const match = fileContents.match(pattern)
+  const match = patterns.map(search => fileContents.match(search)).find(m => !!m)
   if (!match || match.index === undefined || !match.input) {
     throw new Error('Pattern not found')
   }
