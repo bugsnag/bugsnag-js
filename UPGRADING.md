@@ -38,7 +38,10 @@ app.use(async (ctx, next) => {
 })
 ```
 
-Note: `req.bugsnag` (and `ctx.bugsnag` in koa) is still present in version 8 of `bugsnag-js`.
+Notes
+
+* `req.bugsnag` (and `ctx.bugsnag` in koa) is still present in version 8 of `bugsnag-js`, so you can continue using these as before.
+* There are rare situations on Express servers when this contextual storage can get lost, causing the data stored to become server-scoped and so affect all threads that are being executed. See our [online docs](https://docs.bugsnag.com/platforms/javascript/express/node-async/#context-loss-in-express-servers) for full details.
 
 #### breadcrumb support
 
