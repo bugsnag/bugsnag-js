@@ -59,7 +59,7 @@ See the [React Native upgrade guide](/packages/react-native/UPGRADING.md) for sp
 
 #### plugin-contextualize
 
-Unhandled errors that occur within a contextualize context now respect the `autoDetectErrors`` and `enabledErrorTypes`` configuration options. Previously unhandled errors would have been caught regardless of the configuration.
+Unhandled errors that occur within a contextualize context now respect the `autoDetectErrors` and `enabledErrorTypes` configuration options. Previously unhandled errors would have been caught regardless of the configuration.
 
 ## 7.0 to 7.1
 
