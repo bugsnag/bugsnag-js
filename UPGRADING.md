@@ -17,7 +17,7 @@ Prior to `bugsnag-js` v8, calls made to the top-level `Bugsnag` static interface
 
 #### BugSnag no longer prevents the node process from exiting
 
-Additionally, prior to `bugsnag-js` v8, unhandled errors in requests were caught using the deprecated Domain API and the error handler attached to the domain was preventing the termination of the node process, which is the normal node behavior when an uncaught exception occurs. With version 8 of the notifier, BugSnag no longer changes the normal behavior of the application and so uncaught exceptions thrown in request handlers (and `plugin-contextualize` callbacks, see below) will cause the node process to terminate.
+Additionally, prior to `bugsnag-js` v8, unhandled errors in requests were caught using the deprecated Domain API and the error handler attached to the domain was preventing the termination of the node process. With version 8 of the notifier, BugSnag no longer changes the normal behavior of the application and so uncaught exceptions thrown in request handlers (and `plugin-contextualize` callbacks, see below) will cause the node process to terminate.
 
 Express
 
