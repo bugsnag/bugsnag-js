@@ -15,6 +15,10 @@ When using `plugin-express`, `plugin-koa`, `plugin-restify`, or `plugin-contextu
 
 Prior to `bugsnag-js` v8, calls made to the top-level `Bugsnag` static interface were not aware of this context so users had to ensure they were calling methods on the correct client instance, i.e. the cloned client that was made available on `req.bugsnag` (or `ctx.bugsnag` for koa). This wasn't ideal because if you wanted to interact with Bugsnag in some function deep in a call stack you would have to pass `req.bugsnag` all the way down, as calling `Bugsnag.notify` would not have contained the request metadata gathered by the plugin. With version 8 of the notifier, top-level calls to `Bugsnag` are now context-aware. This means you can call `Bugsnag.notify` (or `Bugsnag.leaveBreadcrumb` etc.), and, if it was called within a context, the call will be forwarded to the correct cloned version of that client (i.e. for the particular request from which the call originated).
 
+#### BugSnag no longer prevents the node process from exiting
+
+Additionally, prior to `bugsnag-js` v8, unhandled errors in requests were caught using the deprecated Domain API and the error handler attached to the domain was preventing the termination of the node process, which is the normal node behavior when an uncaught exception occurs. With version 8 of the notifier, BugSnag no longer changes the normal behavior of the application and so uncaught exceptions thrown in request handlers (and `plugin-contextualize` callbacks, see below) will cause the node process to terminate.
+
 Express
 
 ```diff
@@ -60,6 +64,8 @@ See the [React Native upgrade guide](/packages/react-native/UPGRADING.md) for sp
 #### plugin-contextualize
 
 Unhandled errors that occur within a contextualize context now respect the `autoDetectErrors` and `enabledErrorTypes` configuration options. Previously unhandled errors would have been caught regardless of the configuration.
+
+Additionally, prior to `bugsnag-js` v8, unhandled errors that occur within a contextualize context were preventing the termination of the node process. With version 8 of the notifier, uncaught exceptions occurring within a contextualize context will cause the node process to terminate.
 
 ## 7.0 to 7.1
 
