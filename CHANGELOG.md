@@ -4,7 +4,7 @@
 
 ### Changes
 
-(react-native-cli) Update the react native cli to install and configure the `@bugsnag/cli` package to upload javascript source maps for react native android [#1998](https://github.com/bugsnag/bugsnag-js/pull/1990)
+(react-native-cli) Update the react native cli to install and configure the `@bugsnag/cli` package to upload javascript source maps for react native android [#1990](https://github.com/bugsnag/bugsnag-js/pull/1990)
 
 ## 7.21.0 (2023-08-15)
 
