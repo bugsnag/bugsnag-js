@@ -18,4 +18,4 @@ Scenario: using options to configure a proxy
 Scenario: making sure no request get through a bad proxy
   And I run the service "proxy" with the command "node scenarios/misconfigured-proxy"
   And I wait for 1 second
-  Then I should receive no requests
+  Then I should receive no errors

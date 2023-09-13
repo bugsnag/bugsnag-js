@@ -44,6 +44,28 @@ const npmCommand = (module: string, version: string, dev: boolean): Command => [
   !dev ? ['install', '--save', `${module}@${version}`] : ['install', '--save-dev', `${module}@${version}`]
 ]
 
+export async function detectInstalledVersion (module: string, projectRoot: string): Promise<string | undefined> {
+  try {
+    const pkg = JSON.parse(await fs.readFile(join(projectRoot, 'package.json'), 'utf8'))
+
+    if (pkg.dependencies && pkg.dependencies[module]) {
+      return pkg.dependencies[module]
+    }
+
+    if (pkg.devDependencies && pkg.devDependencies[module]) {
+      return pkg.devDependencies[module]
+    }
+
+    if (pkg.peerDependencies && pkg.peerDependencies[module]) {
+      return pkg.peerDependencies[module]
+    }
+
+    return undefined
+  } catch (e) {
+    throw new Error('Could not load package.json. Is this the project root?')
+  }
+}
+
 export async function detectInstalled (module: string, projectRoot: string): Promise<boolean> {
   try {
     const pkg = JSON.parse(await fs.readFile(join(projectRoot, 'package.json'), 'utf8'))

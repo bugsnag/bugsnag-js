@@ -48,6 +48,10 @@ module.exports = {
         common.run('./gradlew assembleRelease', true)
       }
 
+      common.changeDir(`${destFixtures}/${rnVersion}`)
+      const bugsnagCliCommand = './node_modules/.bin/bugsnag-cli upload react-native-android --upload-api-root-url=http://localhost:9339 --overwrite'
+      common.run(bugsnagCliCommand, true)
+
       // Finally, copy the APK back to the host
       common.run(`mkdir -p ${baseDir}/build`)
       fs.copyFileSync(`${destFixtures}/${rnVersion}/android/app/build/outputs/apk/release/app-release.apk`,

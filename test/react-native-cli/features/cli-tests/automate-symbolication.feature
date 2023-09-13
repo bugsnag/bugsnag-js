@@ -25,13 +25,18 @@ Scenario: successfully modify project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I input a return interactively
-    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
+    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
+    When I input a return interactively
+    Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
+    When RN version is 0.68 or lower dismiss the warning message
+    And I wait for the current stdout line to match the regex "Do you want to add an NPM task to your package.json that you can run to upload Android source maps\?"
+    When I input "n" interactively
     Then the last interactive command exited successfully
-    And bugsnag source maps library is in the package.json file
+    And bugsnag cli library is in the package.json file
     And the iOS build has been modified to upload source maps
     And the Bugsnag Android Gradle plugin is not installed
     And the Android build has been modified to upload source maps
@@ -61,13 +66,18 @@ Scenario: successfully modify project, choosing source-maps version
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
-    When I input "1.0.0-beta.1" interactively
-    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
+    When I input a return interactively
+    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
+    When I input "1.1.8" interactively
+    Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
+    When RN version is 0.68 or lower dismiss the warning message
+    And I wait for the current stdout line to match the regex "Do you want to add an NPM task to your package.json that you can run to upload Android source maps\?"
+    When I input "n" interactively
     Then the last interactive command exited successfully
-    And bugsnag source maps library version "^1.0.0-beta.1" is in the package.json file
+    And bugsnag cli library version "^1.1.8" is in the package.json file
     And the iOS build has been modified to upload source maps
     And the Bugsnag Android Gradle plugin is not installed
     And the Android build has been modified to upload source maps
@@ -101,13 +111,18 @@ Scenario: successfully modify project with custom endpoints
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I input a return interactively
-    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
+    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
+    When I input a return interactively
+    Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
+    When RN version is 0.68 or lower dismiss the warning message
+    And I wait for the current stdout line to match the regex "Do you want to add an NPM task to your package.json that you can run to upload Android source maps\?"
+    When I input "n" interactively
     Then the last interactive command exited successfully
-    And bugsnag source maps library is in the package.json file
+    And bugsnag cli library is in the package.json file
     And the iOS build has been modified to upload source maps to "https://upload.example.com"
     And the Bugsnag Android Gradle plugin is not installed
     And the Android build has been modified to upload source maps to "https://upload.example.com"
@@ -138,7 +153,7 @@ Scenario: opt not to modify the Android project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input "n" interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
     When I input a return interactively
@@ -174,13 +189,16 @@ Scenario: opt not to modify the iOS project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input "y" interactively
-    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
+    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
-    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
+    Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
+    When RN version is 0.68 or lower dismiss the warning message
+    And I wait for the current stdout line to match the regex "Do you want to add an NPM task to your package.json that you can run to upload Android source maps\?"
+    When I input "n" interactively
     Then the last interactive command exited successfully
-    And bugsnag source maps library is in the package.json file
+    And bugsnag cli library is in the package.json file
     And the iOS build has not been modified to upload source maps
     And the Bugsnag Android Gradle plugin is not installed
     And the Android build has been modified to upload source maps
@@ -210,7 +228,7 @@ Scenario: opt not to modify either project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Gradle build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input "n" interactively
     And I wait for the current stdout line to match the regex "\/app #"
     Then the last interactive command exited successfully
