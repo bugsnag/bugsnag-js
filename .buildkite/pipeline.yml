@@ -33,3 +33,16 @@ steps:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
 
+  # React Native
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+      - "publish-js"
+      - "android-builder-base"
+    commands:
+      - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
+
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+      - "publish-js"
+    commands:
+      - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
