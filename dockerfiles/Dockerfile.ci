@@ -11,7 +11,6 @@ RUN npm install --unsafe-perm
 COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 ADD min_packages.tar .
 COPY bin ./bin
-RUN npx lerna bootstrap
 COPY scripts ./scripts
 COPY test ./test
 COPY packages ./packages
