@@ -326,7 +326,7 @@ steps:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
         concurrency: 25
-        concurrency_group: "bitbar-app"
+        concurrency_group: "bitbar"
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.71 (New Arch) Android 12 end-to-end tests"
@@ -352,7 +352,7 @@ steps:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
         concurrency: 25
-        concurrency_group: "bitbar-app"
+        concurrency_group: "bitbar"
         concurrency_method: eager
 
       - label: ":bitbar: :android: react-navigation 0.60 Android end-to-end tests"
