@@ -510,7 +510,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.61 Android end-to-end tests"
@@ -533,7 +533,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.62 Android end-to-end tests"
@@ -556,7 +556,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.63 Android end-to-end tests"
@@ -579,7 +579,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.63 Expo (ejected) Android end-to-end tests"
@@ -602,7 +602,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.64 Android end-to-end tests"
@@ -625,7 +625,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.65 Android end-to-end tests"
@@ -648,7 +648,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.66 Android end-to-end tests"
@@ -671,7 +671,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.67 Android end-to-end tests (Non-hermes)"
@@ -694,7 +694,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":runner: RN 0.69 Android end-to-end tests (Non-hermes)"
@@ -717,7 +717,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       #
