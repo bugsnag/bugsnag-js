@@ -217,12 +217,3 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
-
-bugsnag {
-  config = yes
-  options = set to things
-
-  endpoint = "https://upload.example.com"
-
-  releasesEndpoint = "https://build.example.com"
-}

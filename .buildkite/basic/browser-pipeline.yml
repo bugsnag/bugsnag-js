@@ -58,8 +58,8 @@ steps:
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
-        concurrency: 5
-        concurrency_group: "bitbar-web"
+        concurrency: 25
+        concurrency_group: "bitbar"
         concurrency_method: eager
 
 # Skipped pending PLAT-10590
@@ -85,8 +85,8 @@ steps:
 #          artifacts#v1.5.0:
 #            upload:
 #              - "./test/browser/maze_output/failed/**/*"
-#        concurrency: 5
-#        concurrency_group: "bitbar-web"
+#        concurrency: 25
+#        concurrency_group: "bitbar"
 #        concurrency_method: eager
 
       - label: ":bitbar: ie_11 Browser tests"
@@ -106,8 +106,8 @@ steps:
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
-        concurrency: 5
-        concurrency_group: "bitbar-web"
+        concurrency: 25
+        concurrency_group: "bitbar"
         concurrency_method: eager
         env:
           HOST: "localhost" # IE11 needs the host set to localhost for some reason
