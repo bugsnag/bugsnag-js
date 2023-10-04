@@ -186,7 +186,6 @@ steps:
               - --farm=bs
               - --device=IOS_12
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -210,7 +209,6 @@ steps:
               - --farm=bs
               - --device=IOS_14
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -234,7 +232,6 @@ steps:
               - --farm=bs
               - --device=IOS_14
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -259,7 +256,6 @@ steps:
               - --farm=bs
               - --device=IOS_14
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -284,7 +280,6 @@ steps:
               - --farm=bs
               - --device=IOS_14
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -309,7 +304,6 @@ steps:
               - --farm=bs
               - --device=IOS_14
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -334,7 +328,6 @@ steps:
               - --farm=bs
               - --device=IOS_14
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -361,7 +354,6 @@ steps:
               - --farm=bs
               - --device=IOS_12
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
               - features/navigation.feature
         concurrency: 5
@@ -384,7 +376,6 @@ steps:
               - --farm=bs
               - --device=IOS_14
               - --a11y-locator
-              - --appium-version=1.21.0
               - --fail-fast
               - features/navigation.feature
         concurrency: 5
@@ -408,7 +399,6 @@ steps:
               - --app=build/r_native_navigation_0.60.ipa
               - --farm=bs
               - --device=IOS_13
-              - --appium-version=1.18.0
               - --a11y-locator
               - --fail-fast
               - features/navigation.feature
@@ -434,7 +424,6 @@ steps:
               - --farm=bs
               - --device=IOS_13
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
               - features/navigation.feature
         concurrency: 5
