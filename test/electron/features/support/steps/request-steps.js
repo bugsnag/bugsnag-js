@@ -5,7 +5,7 @@ const { readFixtureFile } = require('../utils')
 const expect = require('../utils/expect')
 const { applySourcemaps } = require('../utils/source-mapper')
 
-const REQUEST_RESOLUTION_TIMEOUT = 3000
+const REQUEST_RESOLUTION_TIMEOUT = 5000
 const launchConfig = { timeout: 30 * 1000 }
 const requestDelay = (callback) => new Promise((resolve, reject) => {
   setTimeout(() => callback(resolve), REQUEST_RESOLUTION_TIMEOUT)

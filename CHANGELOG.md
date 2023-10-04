@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Fixed
+
+- (electron) Fix startup crash when using Electron v26+ on Linux [#2022](https://github.com/bugsnag/bugsnag-js/pull/2022)
+
 ## 7.22.0 (2023-09-13)
 
 ### Changes
