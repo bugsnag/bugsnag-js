@@ -10,8 +10,8 @@
   "dependencies": {
     "@bugsnag/js": "^7.9.2",
     "@bugsnag/plugin-aws-lambda": "^7.9.2",
-    "eslint-config-next": "^13.4.4",
-    "next": "^13.4.4",
+    "eslint-config-next": "^13.5.4",
+    "next": "^13.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
