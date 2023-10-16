@@ -49,7 +49,7 @@ steps:
         matrix:
           - firefox_latest
           - chrome_latest
-          - edge_latest
+          #- edge_latest
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
         plugins:
@@ -70,32 +70,32 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
 
-# Skipped pending PLAT-10590
-#      - label: ":bitbar: {{matrix}} Browser tests (EU hub)"
-#        matrix:
-#          - chrome_43
-#          - chrome_72
-#          - firefox_78
-#        depends_on: "browser-maze-runner-bb"
-#        timeout_in_minutes: 30
-#        plugins:
-#          docker-compose#v4.12.0:
-#            pull: browser-maze-runner-bb
-#            run: browser-maze-runner-bb
-#            service-ports: true
-#            use-aliases: true
-#            command:
-#              - "--farm=bb"
-#              - "--browser={{matrix}}"
-#              - "--no-tunnel"
-#              - "--aws-public-ip"
-#              - "--selenium-server=https://eu-desktop-hub.bitbar.com/wd/hub"
-#          artifacts#v1.5.0:
-#            upload:
-#              - "./test/browser/maze_output/failed/**/*"
-#        concurrency: 25
-#        concurrency_group: "bitbar"
-#        concurrency_method: eager
+      - label: ":bitbar: {{matrix}} Browser tests (EU hub)"
+        matrix:
+          - firefox_78
+          # Skipped pending PLAT-10590
+          # - chrome_43
+          # - chrome_72
+        depends_on: "browser-maze-runner-bb"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v4.12.0:
+            pull: browser-maze-runner-bb
+            run: browser-maze-runner-bb
+            service-ports: true
+            use-aliases: true
+            command:
+              - "--farm=bb"
+              - "--browser={{matrix}}"
+              - "--no-tunnel"
+              - "--aws-public-ip"
+              - "--selenium-server=https://eu-desktop-hub.bitbar.com/wd/hub"
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
+        concurrency: 25
+        concurrency_group: "bitbar"
+        concurrency_method: eager
 
       - label: ":bitbar: ie_11 Browser tests"
         depends_on: "browser-maze-runner-bb"
@@ -135,9 +135,9 @@ steps:
           - ios_15
           - android_7
           # TODO: Move these to BitBar
+          - edge_latest
           - chrome_43
           - chrome_72
-          - firefox_78
         depends_on: "browser-maze-runner-bs"
         timeout_in_minutes: 30
         plugins:
