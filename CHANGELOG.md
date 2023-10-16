@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Changes
+
+- (react-native) Update bugsnag-android from v5.28.4 to [v5.31.2](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5312-2023-10-11)
+
 ### Fixed
 
 - (electron) Fix startup crash when using Electron v26+ on Linux [#2022](https://github.com/bugsnag/bugsnag-js/pull/2022)
