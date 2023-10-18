@@ -18,6 +18,10 @@ steps:
         artifact_paths: build/rn0.60.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Build RN 0.66 ipa"
         key: "rn-0-66-ipa"
@@ -31,6 +35,10 @@ steps:
         artifact_paths: build/rn0.66.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Build RN 0.67 ipa"
         key: "rn-0-67-ipa"
@@ -44,6 +52,10 @@ steps:
         artifact_paths: build/rn0.67.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Build RN 0.68 Hermes ipa"
         key: "rn-0-68-hermes-ipa"
@@ -57,6 +69,10 @@ steps:
         artifact_paths: build/rn0.68-hermes.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Build RN 0.69 ipa"
         key: "rn-0-69-ipa"
@@ -70,6 +86,10 @@ steps:
         artifact_paths: build/rn0.69.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Build RN 0.71 (Old Arch) ipa"
         key: "rn-0-71-old-arch-ipa"
@@ -85,6 +105,10 @@ steps:
         artifact_paths: build/rn0.71-old-arch.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Build RN 0.71 (New Arch) ipa"
         key: "rn-0-71-new-arch-ipa"
@@ -100,6 +124,10 @@ steps:
         artifact_paths: build/rn0.71-new-arch.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       # See: PLAT-5173
       - label: ":ios: Build react-navigation 0.60 ipa"
@@ -117,6 +145,10 @@ steps:
         artifact_paths: build/r_navigation_0.60.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Build react-navigation 0.69 ipa"
         key: "react-navigation-0-69-ipa"
@@ -132,6 +164,10 @@ steps:
         artifact_paths: build/r_navigation_0.69.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       # See: PLAT-5173
       - label: ":ios: Build react-native-navigation 0.60 ipa"
@@ -149,6 +185,10 @@ steps:
         artifact_paths: build/r_native_navigation_0.60.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       # See: PLAT-5173
       - label: ":ios: Build react-native-navigation 0.66 ipa"
@@ -166,6 +206,10 @@ steps:
         artifact_paths: build/r_native_navigation_0.66.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       #
       # End-to-end tests

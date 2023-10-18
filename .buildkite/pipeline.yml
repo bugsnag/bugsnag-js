@@ -24,6 +24,10 @@ steps:
           cache-from:  android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
       - docker-compose#v4.12.0:
           push: android-builder-base:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 1
 
   #
   # Publish/package notifier
@@ -43,6 +47,10 @@ steps:
       - docker-compose#v4.12.0:
           build: publisher
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 1
 
   - label: ":aws-lambda: AWS Lambda tests"
     timeout_in_minutes: 35
@@ -77,6 +85,10 @@ steps:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 1
 
   - label: "Lint"
     depends_on: "ci-image"
