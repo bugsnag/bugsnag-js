@@ -24,7 +24,7 @@ describe('electron-minidump-delivery: sendMinidump', () => {
   it('sends minidump successfully', async () => {
     const net = {
       request: jest.fn().mockImplementation((_, handle) => {
-        handle({ statusCode: 200 })
+        handle({ statusCode: 200, on: (event, cb) => {} })
       })
     }
 
@@ -48,7 +48,7 @@ describe('electron-minidump-delivery: sendMinidump', () => {
   it('marks server error as retry', async () => {
     const net = {
       request: jest.fn().mockImplementation((opts, handle) => {
-        handle({ statusCode: 500 })
+        handle({ statusCode: 500, on: (event, cb) => {} })
       })
     }
 
@@ -62,7 +62,7 @@ describe('electron-minidump-delivery: sendMinidump', () => {
   it('marks bad request as no-retry', async () => {
     const net = {
       request: jest.fn().mockImplementation((opts, handle) => {
-        handle({ statusCode: 400 })
+        handle({ statusCode: 400, on: (event, cb) => {} })
       })
     }
 
@@ -77,7 +77,7 @@ describe('electron-minidump-delivery: sendMinidump', () => {
     let minidumpFile
     const net = {
       request: jest.fn().mockImplementation((_, handle) => {
-        handle({ statusCode: 200 })
+        handle({ statusCode: 200, on: (event, cb) => {} })
       })
     }
 
