@@ -342,15 +342,15 @@ describe('delivery: electron', () => {
       events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
     } as unknown as EventDeliveryPayload
 
-    const err = new Error('Error after response received')
+    const secondaryError = new Error('Error after response received')
 
     // create a mock response object that emits an error event
     const response = {
       statusCode: 407,
       statusMessage: STATUS_CODES[407],
-      on (_event: any, cb: any) {
-        if (_event === 'error') {
-          cb(err)
+      on (event: any, cb: any) {
+        if (event === 'error') {
+          cb(secondaryError)
         }
       }
     }
@@ -360,15 +360,15 @@ describe('delivery: electron', () => {
     // create a mock net instance that will return a response and also emit errors
     const net = {
       request: (opts: any, responseCallback: any) => ({
-        on (_event: any, cb: any) {
-          if (_event === 'error') {
+        on (event: any, cb: any) {
+          if (event === 'error') {
             requestErrorCallback = cb
           }
         },
         write () {},
         end () {
           responseCallback(response)
-          requestErrorCallback(err)
+          requestErrorCallback(secondaryError)
         }
       })
     }
@@ -381,7 +381,7 @@ describe('delivery: electron', () => {
     }
 
     delivery(filestore, net, app)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
-      expect(err).toBe(err)
+      expect(err).toBe(secondaryError)
       expect(err.isRetryable).toBe(false)
       expect(logger.error).toHaveBeenCalledWith('event failed to send…\n', err.stack)
       expect(logger.error).toHaveBeenCalledTimes(1)
