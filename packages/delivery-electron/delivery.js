@@ -5,47 +5,43 @@ const PayloadDeliveryLoop = require('./payload-loop')
 const NetworkStatus = require('@bugsnag/electron-network-status')
 
 const delivery = (client, filestore, net, app) => {
+  const noop = () => {}
+
   const send = (opts, body, cb) => {
-    // an error can still happen on both the request and response even after a response is received,
-    // so we store a reference to the response error to ensure this is only handled once
-    let responseError
+    let errorCallback = (error, response) => {
+      // an error can still happen on both the request and response even after a response is received,
+      // so we noop on subsequent calls to ensure this is only handled once
+      errorCallback = noop
 
-    const requestErrorHandler = requestError => {
-      if (responseError) return
-
-      requestError.isRetryable = true
-      cb(requestError)
-    }
-
-    const responseErrorHandler = (response, err) => {
-      if (responseError) return
-
-      responseError = err
-      responseError.isRetryable = isRetryable(response.statusCode)
-      // do not retry oversized payloads regardless of status code
-      if (body.length > 10e5) {
-        client._logger.warn(`Discarding over-sized event (${(body.length / 10e5).toFixed(2)} MB) after failed delivery`)
-        responseError.isRetryable = false
+      if (response) {
+        error.isRetryable = isRetryable(response.statusCode)
+        // do not retry oversized payloads regardless of status code
+        if (body.length > 10e5) {
+          client._logger.warn(`Discarding over-sized event (${(body.length / 10e5).toFixed(2)} MB) after failed delivery`)
+          error.isRetryable = false
+        }
+      } else {
+        error.isRetryable = true
       }
 
-      cb(responseError)
+      cb(error)
     }
 
     const req = net.request(opts, response => {
       // handle errors on the response stream
       response.on('error', err => {
-        responseErrorHandler(response, err)
+        errorCallback(err, response)
       })
 
       if (isOk(response)) {
         cb(null)
       } else {
         const err = new Error(`Bad status code from API: ${response.statusCode}`)
-        responseErrorHandler(response, err)
+        errorCallback(err, response)
       }
     })
 
-    req.on('error', requestErrorHandler)
+    req.on('error', err => errorCallback(err))
 
     try {
       req.write(body)
