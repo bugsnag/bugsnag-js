@@ -1,11 +1,10 @@
 # Changelog
 
-## 7.22.1 (2023-10-19)
+## 7.22.1 (2023-10-30)
 
 ### Fixed
 
 - (electron) Fix startup crash when using Electron v26+ on Linux [#2022](https://github.com/bugsnag/bugsnag-js/pull/2022)
-
 - (electron) Fix unhandled secondary errors during delivery [#2025](https://github.com/bugsnag/bugsnag-js/pull/2025)
 
 ## 7.22.0 (2023-09-13)
