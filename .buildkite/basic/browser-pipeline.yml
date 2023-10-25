@@ -17,6 +17,10 @@ steps:
           - docker-compose#v4.12.0:
               push:
                 - browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label:  ":docker: Maze Runner image - BrowserStack browsers"
         key: "browser-maze-runner-bs"
@@ -33,6 +37,10 @@ steps:
           - docker-compose#v4.12.0:
               push:
                 - browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       #
       # BitBar tests

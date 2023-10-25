@@ -20,6 +20,10 @@ steps:
         artifact_paths: build/rn0.72-old-arch.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Build RN 0.72 (New Arch) ipa"
         key: "rn-0-72-new-arch-ipa"
@@ -35,6 +39,10 @@ steps:
         artifact_paths: build/rn0.72-new-arch.ipa
         commands:
           - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       #
       # End-to-end tests
