@@ -8,7 +8,7 @@ steps:
     agents:
       queue: macos-11
     env:
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
+      XCODE_VERSION: "12.5.1"
       NODE_VERSION: "{{matrix.node_version}}"
       ELECTRON_VERSION: "{{matrix.electron_version}}"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"

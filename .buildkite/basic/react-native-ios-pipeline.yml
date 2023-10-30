@@ -10,11 +10,11 @@ steps:
         key: "rn-0-72-old-arch-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           REACT_NATIVE_VERSION: "rn0.72"
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          XCODE_VERSION: "14.1.0
           RCT_NEW_ARCH_ENABLED: "0"
           ARTEFACT_NAME: "rn0.72-old-arch"
         artifact_paths: build/rn0.72-old-arch.ipa
@@ -29,11 +29,11 @@ steps:
         key: "rn-0-72-new-arch-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           REACT_NATIVE_VERSION: "rn0.72"
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          XCODE_VERSION: "14.1.0
           RCT_NEW_ARCH_ENABLED: "1"
           ARTEFACT_NAME: "rn0.72-new-arch"
         artifact_paths: build/rn0.72-new-arch.ipa
