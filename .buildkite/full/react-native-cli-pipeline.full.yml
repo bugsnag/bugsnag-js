@@ -456,7 +456,7 @@ steps:
         key: "rn-cli-0-63-ipa"
         timeout_in_minutes: 30
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
@@ -473,7 +473,7 @@ steps:
         key: "rn-cli-0-63-expo-ejected-ipa"
         timeout_in_minutes: 30
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
@@ -490,7 +490,7 @@ steps:
         key: "rn-cli-0-64-ipa"
         timeout_in_minutes: 30
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
@@ -507,7 +507,7 @@ steps:
         key: "rn-cli-0-65-ipa"
         timeout_in_minutes: 30
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
@@ -524,7 +524,7 @@ steps:
         key: "rn-cli-0-66-ipa"
         timeout_in_minutes: 30
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
@@ -541,7 +541,7 @@ steps:
         key: "rn-cli-0-67-ipa"
         timeout_in_minutes: 30
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
@@ -558,7 +558,7 @@ steps:
         key: "rn-cli-0-69-ipa"
         timeout_in_minutes: 30
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-1"
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
