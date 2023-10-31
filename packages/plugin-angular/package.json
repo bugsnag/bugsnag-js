@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-angular",
-  "version": "7.21.0",
+  "version": "7.22.1",
   "description": "Angular integration for bugsnag-js",
   "main": "dist/esm5/index.js",
   "browser": "dist/esm5/index.js",
