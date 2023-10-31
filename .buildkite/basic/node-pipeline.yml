@@ -18,6 +18,10 @@ steps:
           - docker-compose#v4.12.0:
               push:
                 - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":node: Node {{matrix}}"
         depends_on: "node-maze-runner-image"

@@ -5,29 +5,43 @@ const PayloadDeliveryLoop = require('./payload-loop')
 const NetworkStatus = require('@bugsnag/electron-network-status')
 
 const delivery = (client, filestore, net, app) => {
+  const noop = () => {}
+
   const send = (opts, body, cb) => {
-    const errorHandler = err => {
-      err.isRetryable = true
-      cb(err)
+    let errorCallback = (error, response) => {
+      // an error can still happen on both the request and response even after a response is received,
+      // so we noop on subsequent calls to ensure this is only handled once
+      errorCallback = noop
+
+      if (response) {
+        error.isRetryable = isRetryable(response.statusCode)
+        // do not retry oversized payloads regardless of status code
+        if (body.length > 10e5) {
+          client._logger.warn(`Discarding over-sized event (${(body.length / 10e5).toFixed(2)} MB) after failed delivery`)
+          error.isRetryable = false
+        }
+      } else {
+        error.isRetryable = true
+      }
+
+      cb(error)
     }
 
     const req = net.request(opts, response => {
-      req.removeListener('error', errorHandler)
+      // handle errors on the response stream
+      response.on('error', err => {
+        errorCallback(err, response)
+      })
+
       if (isOk(response)) {
         cb(null)
       } else {
         const err = new Error(`Bad status code from API: ${response.statusCode}`)
-        err.isRetryable = isRetryable(response.statusCode)
-        // do not retry oversized payloads regardless of status code
-        if (body.length > 10e5) {
-          client._logger.warn(`Discarding over-sized event (${(body.length / 10e5).toFixed(2)} MB) after failed delivery`)
-          err.isRetryable = false
-        }
-        cb(err)
+        errorCallback(err, response)
       }
     })
 
-    req.on('error', errorHandler)
+    req.on('error', err => errorCallback(err))
 
     try {
       req.write(body)

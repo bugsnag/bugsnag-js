@@ -385,6 +385,60 @@ describe('delivery: electron', () => {
     })
   })
 
+  it('ignores secondary request/response errors after a response is received', done => {
+    const payload = {
+      events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]
+    } as unknown as EventDeliveryPayload
+
+    const secondaryError = new Error('Error after response received')
+
+    // create a mock response object that emits an error event
+    const response = {
+      statusCode: 407,
+      statusMessage: STATUS_CODES[407],
+      on (event: any, cb: any) {
+        if (event === 'error') {
+          cb(secondaryError)
+        }
+      }
+    }
+
+    let requestErrorCallback: any = () => {}
+
+    // create a mock net instance that will return a response and also emit errors
+    const net = {
+      request: (opts: any, responseCallback: any) => ({
+        on (event: any, cb: any) {
+          if (event === 'error') {
+            requestErrorCallback = cb
+          }
+        },
+        write () {},
+        end () {
+          responseCallback(response)
+          requestErrorCallback(secondaryError)
+        }
+      })
+    }
+
+    const logger = { error: jest.fn(), info: jest.fn() }
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: 'http://localhost:9999/events/' },
+      redactedKeys: []
+    }
+
+    delivery(filestore, net, app)(makeClient(config, logger)).sendEvent(payload, (err: any) => {
+      expect(err).toBe(secondaryError)
+      expect(err.isRetryable).toBe(false)
+      expect(logger.error).toHaveBeenCalledWith('event failed to send…\n', err.stack)
+      expect(logger.error).toHaveBeenCalledTimes(1)
+      expect(enqueueSpy).not.toHaveBeenCalled()
+
+      done()
+    })
+  })
+
   it('handles uncaught exceptions during event delivery', done => {
     const payload = {
       events: [{ errors: [{ errorClass: 'Error', errorMessage: 'foo is not a function' }] }]

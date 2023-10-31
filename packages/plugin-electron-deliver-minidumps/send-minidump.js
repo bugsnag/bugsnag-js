@@ -8,6 +8,8 @@ module.exports = (net, client) => {
   const send = (opts, formData) => {
     return new Promise((resolve, reject) => {
       const req = net.request(opts, response => {
+        response.on('error', reject)
+
         if (isOk(response)) {
           resolve()
         } else {
