@@ -49,7 +49,7 @@ steps:
         matrix:
           - firefox_latest
           - chrome_latest
-          #- edge_latest
+          - edge_latest
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
         plugins:
@@ -135,7 +135,6 @@ steps:
           - ios_15
           - android_7
           # TODO: Move these to BitBar
-          - edge_latest
           - chrome_43
           - chrome_72
         depends_on: "browser-maze-runner-bs"
