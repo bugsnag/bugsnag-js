@@ -17,8 +17,9 @@ SUPPRESSED_ERRORS=(\
     --suppress='unusedVariable:*/deps/*' \
     --suppress='variableScope:*/deps/*' \
     --suppress='ConfigurationNotChecked:*/deps/parson/parson.c:1425' \
-    --suppress='knownConditionTrueFalse:*/deps/parson/parson.c:692' \
+    --suppress='knownConditionTrueFalse:*/deps/parson/parson.c:600' \
     --suppress='memleak:*/plugin-electron-client-state-persistence/src/deps/tinycthread/tinycthread.c:620' \
+    --suppress='constParameter:*/plugin-electron-client-state-persistence/src/deps/tinycthread/tinycthread.c:591' \
     --suppress='unusedFunction:*/plugin-electron-client-state-persistence/src/api.c:513' \
     --suppress='unusedFunction:*/plugin-electron-app/src/api.c:60')
 

@@ -8,9 +8,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        electron: [ '^12.0.0', '^20.0.0' ]
+        electron: [ '^12.0.0', '^20.0.0', '^25.0.0', '^26.0.0' ]
         node-version: [12, 14]
-        os: [ ubuntu-20.04, windows-2019 ]
+        os: [ ubuntu-22.04, windows-2019 ]
 
     steps:
     - uses: actions/checkout@v2

@@ -451,7 +451,7 @@ firefox_latest:
     errorClass: 'SyntaxError'
     errorMessage: "unexpected token: '!'"
     lineNumber: 18
-    columnNumber: 12
+    columnNumber: 13
     file: '/unhandled/script/a.html'
   unhandled_thrown:
     errorClass: 'Error'

@@ -15,6 +15,10 @@ steps:
               cache-from:  react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
           - docker-compose#v4.12.0:
               push: react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       #
       # Test fixtures
@@ -34,6 +38,10 @@ steps:
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.72-old-arch.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Build RN 0.72 (New Arch) apk"
         key: "rn-0-72-new-arch-apk"
@@ -50,6 +58,10 @@ steps:
               run: react-native-android-builder
         artifact_paths:
           - build/rn0.72-new-arch.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       #
       # End-to-end tests
@@ -77,7 +89,7 @@ steps:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
         concurrency: 25
-        concurrency_group: "bitbar-app"
+        concurrency_group: "bitbar"
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.72 (New Arch) Android 12 end-to-end tests"
@@ -103,5 +115,5 @@ steps:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
         concurrency: 25
-        concurrency_group: "bitbar-app"
+        concurrency_group: "bitbar"
         concurrency_method: eager

@@ -203,6 +203,10 @@ steps:
               cache-from:  react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
           - docker-compose#v4.12.0:
               push: react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Init and build RN 0.60 apk"
         key: "rn-cli-0-60-apk"
@@ -218,6 +222,10 @@ steps:
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
           - build/rn0_60.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Init and build RN 0.61 apk"
         key: "rn-cli-0-61-apk"
@@ -233,6 +241,10 @@ steps:
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
           - build/rn0_61.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Init and build RN 0.62 apk"
         key: "rn-cli-0-62-apk"
@@ -248,6 +260,10 @@ steps:
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
           - build/rn0_62.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Init and build RN 0.63 apk"
         key: "rn-cli-0-63-apk"
@@ -263,6 +279,10 @@ steps:
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
           - build/rn0_63.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Init and build RN 0.63 Expo (ejected) apk"
         key: "rn-cli-0-63-expo-ejected-apk"
@@ -278,6 +298,10 @@ steps:
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
           - build/rn0_63_expo_ejected.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Init and build RN 0.64 apk"
         key: "rn-cli-0-64-apk"
@@ -293,6 +317,10 @@ steps:
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
           - build/rn0_64.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Init and build RN 0.65 apk"
         key: "rn-cli-0-65-apk"
@@ -308,6 +336,10 @@ steps:
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
           - build/rn0_65.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Init and build RN 0.66 apk"
         key: "rn-cli-0-66-apk"
@@ -323,6 +355,10 @@ steps:
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
           - build/rn0_66.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Init and build RN 0.67 apk (Non-hermes)"
         key: "rn-cli-0-67-apk"
@@ -338,6 +374,10 @@ steps:
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
           - build/rn0_67.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":android: Init and build RN 0.69 apk (Non-hermes)"
         key: "rn-cli-0-69-apk"
@@ -353,6 +393,10 @@ steps:
               command: ["features/build-app-tests/build-android-app.feature"]
         artifact_paths:
           - build/rn0_69.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       #
       # Built app test fixtures - iOS
@@ -369,6 +413,10 @@ steps:
         artifact_paths: build/rn0_60.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_60
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Init and build RN 0.61 ipa"
         key: "rn-cli-0-61-ipa"
@@ -382,6 +430,10 @@ steps:
         artifact_paths: build/rn0_61.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_61
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Init and build RN 0.62 ipa"
         key: "rn-cli-0-62-ipa"
@@ -395,6 +447,10 @@ steps:
         artifact_paths: build/rn0_62.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_62
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Init and build RN 0.63 ipa"
         key: "rn-cli-0-63-ipa"
@@ -408,6 +464,10 @@ steps:
         artifact_paths: build/rn0_63.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_63
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Init and build RN 0.63 Expo (ejected) ipa"
         key: "rn-cli-0-63-expo-ejected-ipa"
@@ -421,6 +481,10 @@ steps:
         artifact_paths: build/rn0_63_expo_ejected.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_63_expo_ejected
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Init and build RN 0.64 ipa"
         key: "rn-cli-0-64-ipa"
@@ -434,6 +498,10 @@ steps:
         artifact_paths: build/rn0_64.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_64
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Init and build RN 0.65 ipa"
         key: "rn-cli-0-65-ipa"
@@ -447,6 +515,10 @@ steps:
         artifact_paths: build/rn0_65.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_65
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Init and build RN 0.66 ipa"
         key: "rn-cli-0-66-ipa"
@@ -460,6 +532,10 @@ steps:
         artifact_paths: build/rn0_66.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_66
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Init and build RN 0.67 ipa (Non-hermes)"
         key: "rn-cli-0-67-ipa"
@@ -473,6 +549,10 @@ steps:
         artifact_paths: build/rn0_67.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_67
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       - label: ":ios: Init and build RN 0.69 ipa (Non-hermes)"
         key: "rn-cli-0-69-ipa"
@@ -486,6 +566,10 @@ steps:
         artifact_paths: build/rn0_69.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_69
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 
       #
       # Init, build and notify end-to-end tests - Android
@@ -510,7 +594,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.61 Android end-to-end tests"
@@ -533,7 +617,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.62 Android end-to-end tests"
@@ -556,7 +640,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.63 Android end-to-end tests"
@@ -579,7 +663,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.63 Expo (ejected) Android end-to-end tests"
@@ -602,7 +686,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.64 Android end-to-end tests"
@@ -625,7 +709,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.65 Android end-to-end tests"
@@ -648,7 +732,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.66 Android end-to-end tests"
@@ -671,7 +755,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":bitbar: :android: RN 0.67 Android end-to-end tests (Non-hermes)"
@@ -694,7 +778,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       - label: ":runner: RN 0.69 Android end-to-end tests (Non-hermes)"
@@ -717,7 +801,7 @@ steps:
               - --aws-public-ip
               - features/run-app-tests
         concurrency: 25
-        concurrency_group: 'bitbar-app'
+        concurrency_group: 'bitbar'
         concurrency_method: eager
 
       #
