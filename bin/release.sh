@@ -32,15 +32,7 @@ WORKER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/web-wo
 
 # increment package version numbers
 if [ -z "${RETRY_PUBLISH:-}" ]; then
-  case $VERSION in
-    "prerelease" | "prepatch" | "preminor" | "premajor")
-      npx lerna version "$VERSION" --dist-tag next --no-push
-      ;;
-
-    *)
-      npx lerna version "$VERSION" --no-push
-      ;;
-  esac
+  npx lerna version "$VERSION" --no-push
 fi
 
 # build packages
@@ -58,10 +50,18 @@ npx lerna run build \
 git push origin --follow-tags
 
 # publish
-if [ -z "${RETRY_PUBLISH:-}" ]; then
-  npx lerna publish from-git
-else
+if [ -v RETRY_PUBLISH ]; then
   npx lerna publish from-package
+else
+  case $VERSION in
+    "prerelease" | "prepatch" | "preminor" | "premajor")
+      npx lerna publish from-git --dist-tag next
+      ;;
+
+    *)
+      npx lerna publish from-git
+      ;;
+  esac
 fi
 
 if [ "$BROWSER_PACKAGE_CHANGED" -eq 1 ] || [  -v FORCE_CDN_UPLOAD ]; then
