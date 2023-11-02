@@ -21,6 +21,6 @@
     "promise": "^8.0.2"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.0.0"
+    "@bugsnag/core": "^8.0.0"
   }
 }

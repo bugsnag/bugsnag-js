@@ -30,7 +30,6 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.0.1",
     "@bugsnag/delivery-x-domain-request": "^8.0.0-alpha.0",
     "@bugsnag/delivery-xml-http-request": "^8.0.0-alpha.0",
     "@bugsnag/plugin-app-duration": "^8.0.0-alpha.0",
