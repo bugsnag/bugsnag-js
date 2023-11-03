@@ -26,7 +26,7 @@
     "@bugsnag/electron-network-status": "^8.0.0-alpha.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7 || ^8",
+    "@bugsnag/core": "^8",
     "@bugsnag/electron-network-status": "^8.0.0"
   },
   "author": "Bugsnag",

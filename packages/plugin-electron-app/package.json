@@ -32,7 +32,7 @@
     "bindings": "^1.5.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7 || ^8"
+    "@bugsnag/core": "^8"
   },
   "author": "Bugsnag",
   "license": "MIT"
