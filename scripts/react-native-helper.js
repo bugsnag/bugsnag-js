@@ -97,7 +97,7 @@ module.exports = {
 
       // Install notifier
       console.log(`Installing notifier: ${version}`)
-      const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
+      const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl} --legacy-peer-deps`
       common.run(command, true)
 
       // Install any required secondary files
