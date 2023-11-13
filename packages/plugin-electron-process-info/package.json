@@ -17,7 +17,7 @@
     "@bugsnag/core": "^8.0.0-alpha.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.9.2"
+    "@bugsnag/core": "^8"
   },
   "author": "Bugsnag",
   "license": "MIT"

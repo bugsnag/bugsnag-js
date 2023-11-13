@@ -22,6 +22,7 @@ RUN echo "registry=$REGISTRY_URL" >> ~/.npmrc
 RUN echo "_auth=$REG_BASIC_CREDENTIAL" >> ~/.npmrc
 RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
 RUN echo "always-auth=true" >> ~/.npmrc
+RUN echo "legacy-peer-deps=true" >> ~/.npmrc
 
 # Now copy in all the files needed to build
 COPY .git .git

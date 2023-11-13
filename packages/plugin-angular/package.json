@@ -40,6 +40,6 @@
     "zone.js": "^0.8.26"
   },
   "peerDependencies": {
-    "@bugsnag/js": "^7.0.0"
+    "@bugsnag/js": "^8.0.0"
   }
 }

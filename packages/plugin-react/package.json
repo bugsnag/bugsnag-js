@@ -27,7 +27,7 @@
     "@bugsnag/core": "^8.0.0-alpha.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.0.0"
+    "@bugsnag/core": "^8"
   },
   "peerDependenciesMeta": {
     "@bugsnag/core": {
