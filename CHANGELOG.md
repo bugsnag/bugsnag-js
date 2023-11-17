@@ -2,6 +2,9 @@
 
 ## TBD
 
+### Changed
+
+- (react-native) Update bugsnag-android from v5.28.4 to [v5.31.3](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#5313-2023-11-06)
 - (react-native) Update bugsnag-cocoa from v6.26.2 to [v6.27.3](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6273-2023-11-15)
 
 ## 7.22.1 (2023-10-31)
@@ -13,7 +16,7 @@
 
 ## 7.22.0 (2023-09-13)
 
-### Changes
+### Changed
 
 (react-native-cli) Update the react native cli to install and configure the `@bugsnag/cli` package to upload javascript source maps for react native android [#1990](https://github.com/bugsnag/bugsnag-js/pull/1990)
 
@@ -32,7 +35,7 @@ This release adds support for apps using React Native New Architecture
 
 ## 7.20.2 (2023-04-25)
 
-### Changes
+### Changed
 
 - (react-native) Update bugsnag-android from v5.28.3 to [v5.28.4](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5284-2023-02-08)
 - (react-native) Update bugsnag-cocoa from v6.25.2 to [v6.26.2](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6262-2023-04-20)
@@ -40,7 +43,7 @@ This release adds support for apps using React Native New Architecture
 
 ## 7.20.1 (2023-02-08)
 
-### Changes
+### Changed
 
 - (web-worker) Change default configuration for autoDetectErrors to false [#1919](https://github.com/bugsnag/bugsnag-js/pull/1919)
 
@@ -53,7 +56,7 @@ This release adds support for service workers and web workers [#1915](https://gi
 - (delivery-fetch) Create fetch based delivery package [#1894](https://github.com/bugsnag/bugsnag-js/pull/1894)
 - (web-worker) Create web-worker notifier package [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
 
-### Changes
+### Changed
 
 - (plugin-browser-device) Refactor parameters for improved guarding [#1896](https://github.com/bugsnag/bugsnag-js/pull/1896)
 
