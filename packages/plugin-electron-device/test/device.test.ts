@@ -3,15 +3,39 @@ import plugin from '../'
 
 const nextTick = async () => new Promise(process.nextTick)
 
+const schema = {
+  enabledErrorTypes: {
+    defaultValue: () => ({
+      unhandledExceptions: true,
+      unhandledRejections: true,
+      nativeCrashes: true
+    }),
+    allowPartialObject: true,
+    validate: value => true
+  }
+}
+
+interface MakeClientOptions {
+  app?: any
+  screen?: any
+  process?: any
+  fileStore?: any
+  NativeClient?: any
+  powerMonitor?: any
+  config?: object
+  filestore?: any
+}
+
 function makeClient ({
   app = makeApp(),
   screen = makeScreen(),
   process = makeProcess(),
   filestore = makeFilestore(),
   NativeClient = makeNativeClient(),
-  powerMonitor = makePowerMonitor()
-} = {}) {
-  return makeClientForPlugin({ plugin: plugin(app, screen, process, filestore, NativeClient, powerMonitor) })
+  powerMonitor = makePowerMonitor(),
+  config = undefined
+}: MakeClientOptions = {}) {
+  return makeClientForPlugin({ plugins: [plugin(app, screen, process, filestore, NativeClient, powerMonitor)], schema, config })
 }
 
 const DEFAULTS = {
@@ -101,6 +125,38 @@ describe('plugin: electron device info', () => {
     expect(session.device).toEqual(makeExpectedSessionDevice())
   })
 
+  it('does not sync device information to the NativeClient when enabledErrorTypes.nativeCrashes is disabled', async () => {
+    const NativeClient = makeNativeClient()
+
+    const { sendEvent, sendSession } = makeClient({ NativeClient, config: { enabledErrorTypes: { nativeCrashes: false } } })
+
+    await nextTick()
+
+    const event = await sendEvent()
+    expect(event.device).toEqual(makeExpectedEventDevice())
+    expect(event.getMetadata('device')).toEqual(makeExpectedMetadataDevice())
+
+    const session = await sendSession()
+    expect(session.device).toEqual(makeExpectedSessionDevice())
+    expect(NativeClient.setDevice).not.toHaveBeenCalled()
+  })
+
+  it('does not sync device information to the NativeClient when autoDetectErrors is disabled', async () => {
+    const NativeClient = makeNativeClient()
+
+    const { sendEvent, sendSession } = makeClient({ NativeClient, config: { autoDetectErrors: false } })
+
+    await nextTick()
+
+    const event = await sendEvent()
+    expect(event.device).toEqual(makeExpectedEventDevice())
+    expect(event.getMetadata('device')).toEqual(makeExpectedMetadataDevice())
+
+    const session = await sendSession()
+    expect(session.device).toEqual(makeExpectedSessionDevice())
+    expect(NativeClient.setDevice).not.toHaveBeenCalled()
+  })
+
   it('reports correct locale and OS for macOS', async () => {
     const process = makeProcess({ platform: 'darwin' })
 
@@ -170,7 +226,6 @@ describe('plugin: electron device info', () => {
   it('does not report screen information if there is no primary display', async () => {
     const screen = { getPrimaryDisplay: () => undefined, on: () => {} }
 
-    // @ts-expect-error
     const { sendEvent, sendSession } = makeClient({ screen })
 
     await nextTick()
@@ -283,7 +338,6 @@ describe('plugin: electron device info', () => {
   it('does not add device.id when one is not created', async () => {
     const filestore = { getDeviceInfo: jest.fn().mockReturnValue({}) }
 
-    // @ts-expect-error
     const { sendEvent, sendSession } = makeClient({ filestore })
 
     await nextTick()

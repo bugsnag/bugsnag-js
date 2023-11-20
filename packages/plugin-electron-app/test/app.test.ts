@@ -700,7 +700,7 @@ describe('plugin: electron app info', () => {
     expect(NativeClient.setApp).toHaveBeenCalledTimes(2)
   })
 
-  it('does not sync "launchDurationMillis" elapsing after "markLaunchComplete" has been caled', async () => {
+  it('does not sync "launchDurationMillis" elapsing after "markLaunchComplete" has been called', async () => {
     jest.useFakeTimers('modern')
 
     const now = Date.now()
@@ -748,6 +748,38 @@ describe('plugin: electron app info', () => {
       'Invalid configuration\n  - launchDurationMillis should be an integer ≥0, got -1234567890'
     ))
   })
+
+  it('does not sync data to NativeClient when enabledErrorTypes.nativeCrashes is disabled', async () => {
+    const NativeClient = makeNativeClient()
+    const config = { launchDurationMillis: 0, enabledErrorTypes: { nativeCrashes: false } }
+    const process = makeProcess({ platform: 'darwin' })
+    const { sendEvent, sendSession } = makeClient({ NativeClient, config, process })
+
+    // app info should still be updated in the JS client
+    const event = await sendEvent()
+    expect(event.app).toEqual(makeExpectedEventApp({ type: 'macOS' }))
+
+    const session = await sendSession()
+    expect(session.app).toEqual(makeExpectedSessionApp({ type: 'macOS' }))
+
+    expect(NativeClient.setApp).not.toHaveBeenCalled()
+  })
+
+  it('does not sync data to NativeClient when autoDetectErrors is disabled', async () => {
+    const NativeClient = makeNativeClient()
+    const config = { launchDurationMillis: 0, autoDetectErrors: false }
+    const process = makeProcess({ platform: 'darwin' })
+    const { sendEvent, sendSession } = makeClient({ NativeClient, config, process })
+
+    // app info should still be updated in the JS client
+    const event = await sendEvent()
+    expect(event.app).toEqual(makeExpectedEventApp({ type: 'macOS' }))
+
+    const session = await sendSession()
+    expect(session.app).toEqual(makeExpectedSessionApp({ type: 'macOS' }))
+
+    expect(NativeClient.setApp).not.toHaveBeenCalled()
+  })
 })
 
 interface MakeClientOptions {
@@ -756,8 +788,20 @@ interface MakeClientOptions {
   NativeClient?: any
   NativeApp?: any
   process?: any
-  config?: { launchDurationMillis: number|undefined }
+  config?: object
   filestore?: any
+}
+
+const schema = {
+  enabledErrorTypes: {
+    defaultValue: () => ({
+      unhandledExceptions: true,
+      unhandledRejections: true,
+      nativeCrashes: true
+    }),
+    allowPartialObject: true,
+    validate: value => true
+  }
 }
 
 function makeClient ({
@@ -771,7 +815,8 @@ function makeClient ({
 }: MakeClientOptions = {}): ReturnType<typeof makeClientForPlugin> {
   return makeClientForPlugin({
     config,
-    plugin: plugin(NativeClient, process, electronApp, BrowserWindow, filestore, NativeApp)
+    schema,
+    plugins: [plugin(NativeClient, process, electronApp, BrowserWindow, filestore, NativeApp)]
   })
 }
 

@@ -4,8 +4,12 @@
 
 ### Changed
 
-- (react-native) Update bugsnag-android from v5.28.4 to [v5.31.3](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#5313-2023-11-06)
+- (react-native) Update bugsnag-android from v5.28.4 to [v5.31.3](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5313-2023-11-06)
 - (react-native) Update bugsnag-cocoa from v6.26.2 to [v6.27.3](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6273-2023-11-15)
+
+### Fixed
+
+- (electron) Do not sync to NativeClient when `autoDetectErrors` or `nativeCrashes` are disabled [#2040](https://github.com/bugsnag/bugsnag-js/pull/2040)
 
 ## 7.22.1 (2023-10-31)
 

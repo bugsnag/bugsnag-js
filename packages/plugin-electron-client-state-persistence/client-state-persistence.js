@@ -1,9 +1,15 @@
 const featureFlagDelegate = require('@bugsnag/core/lib/feature-flag-delegate')
 
+const isEnabledFor = client => client._config.autoDetectErrors && client._config.enabledErrorTypes.nativeCrashes
+
 module.exports = {
   NativeClient: require('bindings')('bugsnag_pecsp_bindings'),
   plugin: (NativeClient) => ({
     load: (client) => {
+      if (!isEnabledFor(client)) {
+        return
+      }
+
       client.addOnBreadcrumb(breadcrumb => {
         try {
           NativeClient.leaveBreadcrumb(breadcrumb)

@@ -11,8 +11,8 @@ interface ClientTestHelpers {
 export function makeClientForPlugin ({
   config = {},
   schema = {},
-  plugin = undefined
-}: { config?: object, schema?: object, plugin?: Plugin } = {}): ClientTestHelpers {
+  plugins = []
+}: { config?: object, schema?: object, plugins?: Plugin[] } = {}): ClientTestHelpers {
   const client = new Client(
     {
       apiKey: 'abcabcabcabcabcabcabc1234567890f',
@@ -20,7 +20,7 @@ export function makeClientForPlugin ({
       ...config
     },
     { ...defaultSchema, ...schema },
-    plugin !== undefined ? [plugin] : []
+    plugins
   )
 
   let lastSession: SessionPayload

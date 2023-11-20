@@ -2,27 +2,43 @@ const native = require('bindings')('bugsnag_plugin_electron_app_bindings')
 const { schema } = require('@bugsnag/core/config')
 const intRange = require('@bugsnag/core/lib/validators/int-range')
 
+const isNativeClientEnabled = client => client._config.autoDetectErrors && client._config.enabledErrorTypes.nativeCrashes
+
+const noop = () => {}
+
 const osToAppType = new Map([
   ['darwin', 'macOS'],
   ['linux', 'Linux'],
   ['win32', 'Windows']
 ])
 
-const createAppUpdater = (client, NativeClient, app) => newProperties => {
-  Object.assign(app, newProperties)
+const createAppUpdater = (client, NativeClient, app) => {
+  if (!isNativeClientEnabled(client)) {
+    return newProperties => Object.assign(app, newProperties)
+  }
 
-  try {
-    NativeClient.setApp(app)
-  } catch (err) {
-    client._logger.error(err)
+  return newProperties => {
+    Object.assign(app, newProperties)
+
+    try {
+      NativeClient.setApp(app)
+    } catch (err) {
+      client._logger.error(err)
+    }
   }
 }
 
-const createLastRunInfoUpdater = (client, NativeClient) => lastRunInfo => {
-  try {
-    NativeClient.setLastRunInfo(JSON.stringify(lastRunInfo))
-  } catch (err) {
-    client._logger.error(err)
+const createLastRunInfoUpdater = (client, NativeClient) => {
+  if (!isNativeClientEnabled(client)) {
+    return noop
+  }
+
+  return lastRunInfo => {
+    try {
+      NativeClient.setLastRunInfo(JSON.stringify(lastRunInfo))
+    } catch (err) {
+      client._logger.error(err)
+    }
   }
 }
 
