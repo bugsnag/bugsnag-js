@@ -41,7 +41,8 @@
   "devDependencies": {
     "@bugsnag/core": "^7.19.0",
     "@bugsnag/plugin-electron-client-state-manager": "^7.19.0",
-    "@types/bindings": "^1.5.0"
+    "@types/bindings": "^1.5.0",
+    "@bugsnag/electron-test-helpers": "^7.19.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2"
