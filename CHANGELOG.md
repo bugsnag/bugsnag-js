@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## v7.22.2 (2023-11-21)
 
 ### Changed
 
