@@ -117,7 +117,7 @@ describe('plugin: preload-error', () => {
 })
 
 function makeClient ({ config = {}, schema = {}, _app = app } = {}) {
-  const { client } = makeClientForPlugin({ config, schema, plugin: plugin(_app) })
+  const { client } = makeClientForPlugin({ config, schema, plugins: [plugin(_app)] })
   client._setDelivery(() => ({ sendEvent: jest.fn(), sendSession: () => {} }))
 
   return client

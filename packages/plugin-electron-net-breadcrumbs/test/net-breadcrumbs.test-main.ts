@@ -283,7 +283,7 @@ describe.skip('plugin: electron net breadcrumbs', () => {
 })
 
 function makeClient ({ config = {}, schema = {} } = {}) {
-  return makeClientForPlugin({ config, schema, plugin: plugin(net) }).client
+  return makeClientForPlugin({ config, schema, plugins: [plugin(net)] }).client
 }
 
 const defaultRequestHandler = (statusCode: number) => (req: IncomingMessage, res: ServerResponse) => {
