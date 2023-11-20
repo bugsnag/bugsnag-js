@@ -1,9 +1,27 @@
 import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+import { schema as defaultSchema } from '@bugsnag/core/config'
 import { SessionPayload } from '@bugsnag/core'
 import { makeApp, makeBrowserWindow } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
 
 const expectCuid = expect.stringMatching(/^c[a-z0-9]{20,30}$/)
+
+const config = {
+  apiKey: 'abcabcabcabcabcabcabc1234567890f'
+}
+
+const schema = {
+  ...defaultSchema,
+  enabledErrorTypes: {
+    defaultValue: () => ({
+      unhandledExceptions: true,
+      unhandledRejections: true,
+      nativeCrashes: true
+    }),
+    allowPartialObject: true,
+    validate: value => true
+  }
+}
 
 describe('plugin: electron sessions', () => {
   let NativeClient
@@ -17,8 +35,8 @@ describe('plugin: electron sessions', () => {
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
-      undefined,
+      config,
+      schema,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -67,8 +85,8 @@ describe('plugin: electron sessions', () => {
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
-      undefined,
+      config,
+      schema,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -117,8 +135,8 @@ describe('plugin: electron sessions', () => {
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
-      undefined,
+      config,
+      schema,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -174,7 +192,7 @@ describe('plugin: electron sessions', () => {
 
     const client = new Client(
       { apiKey: 'abcabcabcabcabcabcabc1234567890f', autoTrackSessions: false },
-      undefined,
+      schema,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -204,8 +222,8 @@ describe('plugin: electron sessions', () => {
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
-      undefined,
+      config,
+      schema,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -228,8 +246,8 @@ describe('plugin: electron sessions', () => {
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
-      undefined,
+      config,
+      schema,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -243,8 +261,8 @@ describe('plugin: electron sessions', () => {
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      { apiKey: 'abcabcabcabcabcabcabc1234567890f' },
-      undefined,
+      config,
+      schema,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -258,6 +276,79 @@ describe('plugin: electron sessions', () => {
       startedAt: expect.any(Date),
       events: { handled: 0, unhandled: 1 }
     })
+  })
+
+  it('does not update the native session when nativeCrashes is disabled', async () => {
+    jest.useFakeTimers('modern')
+    const BrowserWindow = makeBrowserWindow()
+    const app = makeApp({ BrowserWindow })
+
+    const client = new Client(
+      // @ts-expect-error enabledErrorTypes.nativeCrashes is not part of the core schema
+      { ...config, enabledErrorTypes: { nativeCrashes: false } },
+      schema,
+      [plugin(app, BrowserWindow, NativeClient)]
+    )
+
+    const window = new BrowserWindow(123, 'hello world')
+    const payloads: SessionPayload[] = []
+
+    client._setDelivery(() => ({
+      sendEvent (payload: EventDeliveryPayload, cb = () => {}) {
+      },
+      sendSession (payload: SessionPayload, cb = () => {}) {
+        payloads.push(payload)
+        cb()
+      }
+    }))
+
+    client.startSession()
+    client.pauseSession()
+    client.resumeSession()
+    client.notify(new Error('oh no'))
+
+    app._emit('browser-window-blur', window)
+    jest.advanceTimersByTime(120_000)
+    app._emit('browser-window-focus', window)
+
+    expect(payloads).toHaveLength(2)
+    expect(NativeClient.setSession).not.toHaveBeenCalled()
+  })
+
+  it('does not update the native session when autoDetectErrors is disabled', async () => {
+    jest.useFakeTimers('modern')
+    const BrowserWindow = makeBrowserWindow()
+    const app = makeApp({ BrowserWindow })
+
+    const client = new Client(
+      { ...config, autoDetectErrors: false },
+      schema,
+      [plugin(app, BrowserWindow, NativeClient)]
+    )
+
+    const window = new BrowserWindow(123, 'hello world')
+    const payloads: SessionPayload[] = []
+
+    client._setDelivery(() => ({
+      sendEvent (payload: EventDeliveryPayload, cb = () => {}) {
+      },
+      sendSession (payload: SessionPayload, cb = () => {}) {
+        payloads.push(payload)
+        cb()
+      }
+    }))
+
+    client.startSession()
+    client.pauseSession()
+    client.resumeSession()
+    client.notify(new Error('oh no'))
+
+    app._emit('browser-window-blur', window)
+    jest.advanceTimersByTime(120_000)
+    app._emit('browser-window-focus', window)
+
+    expect(payloads).toHaveLength(2)
+    expect(NativeClient.setSession).not.toHaveBeenCalled()
   })
 })
 
