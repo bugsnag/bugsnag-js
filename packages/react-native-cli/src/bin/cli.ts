@@ -103,7 +103,9 @@ export default async function run (argv: string[]): Promise<void> {
       }
     }
   } catch (e) {
-    logger.error(`Invalid options. ${e.message}`)
+    let error = ''
+    if (e instanceof Error) error = e.message
+    logger.error(`Invalid options. ${error}`)
     process.exitCode = 1
   }
 }

@@ -13,6 +13,14 @@ const BUGSNAG_CONFIGURATION_BLOCK_REGEX = /^\s*bugsnag {[^}]*?}/m
 const UPLOAD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*endpoint[^}]*?}/m
 const BUILD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*releasesEndpoint[^}]*?}/m
 
+function getErrorMessage (error: unknown) {
+  if (error instanceof Error) {
+    return error.message
+  }
+
+  return 'unknown error'
+}
+
 export async function getSuggestedBugsnagGradleVersion (projectRoot: string, logger: Logger): Promise<string> {
   let fileContents: string
   try {
@@ -54,7 +62,7 @@ export async function modifyRootBuildGradle (projectRoot: string, pluginVersion:
       logger
     )
   } catch (e) {
-    if (e.message === 'Pattern not found') {
+    if (getErrorMessage(e) === 'Pattern not found') {
       logger.warn(
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
 
@@ -62,6 +70,7 @@ Add '${GRADLE_PLUGIN_IMPORT(pluginVersion)}' to the 'buildscript.dependencies se
 
 See ${DOCS_LINK} for more information`
       )
+      // @ts-expect-error
     } else if (e.code === 'ENOENT') {
       logger.warn(
         `A gradle file was not found at the expected location and so couldn't be updated automatically.
@@ -91,7 +100,7 @@ export async function modifyAppBuildGradle (projectRoot: string, logger: Logger)
       logger
     )
   } catch (e) {
-    if (e.message === 'Pattern not found') {
+    if (getErrorMessage(e) === 'Pattern not found') {
       logger.warn(
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
 
@@ -99,6 +108,7 @@ Add '${GRADLE_PLUGIN_APPLY}' to android/app/build.gradle
 
 See ${DOCS_LINK} for more information`
       )
+      // @ts-expect-error
     } else if (e.code === 'ENOENT') {
       logger.warn(
         `A gradle file was not found at the expected location and so couldn't be updated automatically.
@@ -169,7 +179,7 @@ export async function addUploadEndpoint (projectRoot: string, uploadEndpoint: st
       logger
     )
   } catch (e) {
-    if (e.message === 'Pattern not found') {
+    if (getErrorMessage(e) === 'Pattern not found') {
       logger.warn(
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
 
@@ -181,6 +191,7 @@ bugsnag {
 
 See ${DOCS_LINK} for more information`
       )
+      // @ts-expect-error
     } else if (e.code === 'ENOENT') {
       logger.warn(
         `A gradle file was not found at the expected location and so couldn't be updated automatically.
@@ -213,7 +224,7 @@ export async function addBuildEndpoint (projectRoot: string, buildEndpoint: stri
       logger
     )
   } catch (e) {
-    if (e.message === 'Pattern not found') {
+    if (getErrorMessage(e) === 'Pattern not found') {
       logger.warn(
         `The gradle file was in an unexpected format and so couldn't be updated automatically.
 
@@ -225,6 +236,7 @@ bugsnag {
 
 See ${DOCS_LINK} for more information`
       )
+      // @ts-expect-error
     } else if (e.code === 'ENOENT') {
       logger.warn(
         `A gradle file was not found at the expected location and so couldn't be updated automatically.

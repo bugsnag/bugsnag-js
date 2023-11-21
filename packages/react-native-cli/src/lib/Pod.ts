@@ -17,6 +17,7 @@ export async function install (projectRoot: string, logger: Logger): Promise<voi
       return
     }
   } catch (e) {
+    // @ts-expect-error
     if (e.code === 'ENOENT') {
       logger.warn('No ios directory found in project, skipping')
       return
