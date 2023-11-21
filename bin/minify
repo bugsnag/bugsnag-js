@@ -3,6 +3,9 @@
 cat - | ../../node_modules/.bin/uglifyjs \
   --compress \
   --mangle \
-  --ie \
   --source-map "includeSources,content=inline,url=$(basename "$1").map" \
   --output "$1"
+
+  # TODO: Investigate
+  # why option was causing build failure
+  # --ie \ 
