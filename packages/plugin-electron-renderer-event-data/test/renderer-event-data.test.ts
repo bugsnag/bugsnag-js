@@ -56,5 +56,5 @@ describe('plugin: electron renderer event data', () => {
   })
 })
 
-const makeClient = payloadInfo => makeClientForPlugin({ plugin: plugin(makeIpcRenderer(payloadInfo)) })
+const makeClient = payloadInfo => makeClientForPlugin({ plugins: [plugin(makeIpcRenderer(payloadInfo))] })
 const makeIpcRenderer = payloadInfo => ({ getPayloadInfo: async () => payloadInfo })

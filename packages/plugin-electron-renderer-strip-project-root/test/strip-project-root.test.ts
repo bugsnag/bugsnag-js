@@ -55,7 +55,7 @@ describe('plugin: stack frame file trimmer', () => {
 async function sendEvent (initialStackframe: any, projectRoot: string|null = null) {
   const config = { projectRoot }
   const schema = { projectRoot: { defaultValue: () => null, validate: () => true } }
-  const { client, sendEvent } = makeClientForPlugin({ config, schema, plugin })
+  const { client, sendEvent } = makeClientForPlugin({ config, schema, plugins: [plugin] })
   client.addOnError((event: Event) => {
     event.errors[0].stacktrace = [initialStackframe]
   }, true)

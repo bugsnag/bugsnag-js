@@ -7,13 +7,21 @@ const platformToOs = new Map([
 // electron memory APIs are documented as KB but are actually KiB
 const kibibytesToBytes = kibibytes => kibibytes * 1024
 
-const createDeviceUpdater = (client, NativeClient, device) => newProperties => {
-  Object.assign(device, newProperties)
+const isNativeClientEnabled = client => client._config.autoDetectErrors && client._config.enabledErrorTypes.nativeCrashes
 
-  try {
-    NativeClient.setDevice(device)
-  } catch (err) {
-    client._logger.error(err)
+const createDeviceUpdater = (client, NativeClient, device) => {
+  if (!isNativeClientEnabled(client)) {
+    return newProperties => Object.assign(device, newProperties)
+  }
+
+  return newProperties => {
+    Object.assign(device, newProperties)
+
+    try {
+      NativeClient.setDevice(device)
+    } catch (err) {
+      client._logger.error(err)
+    }
   }
 }
 

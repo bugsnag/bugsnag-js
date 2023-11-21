@@ -16,7 +16,7 @@ describe('plugin: electron power monitor breadcrumbs', () => {
 
   it.each(events)('leaves a breadcrumb for the "%s" event', (event, expectedMessage) => {
     const powerMonitor = makePowerMonitor()
-    const { client } = makeClientForPlugin({ plugin: plugin(powerMonitor) })
+    const { client } = makeClientForPlugin({ plugins: [plugin(powerMonitor)] })
 
     powerMonitor._emit(event)
 
@@ -28,7 +28,7 @@ describe('plugin: electron power monitor breadcrumbs', () => {
   it.each(events)('honours enabledBreadcrumbTypes for "%s"', (event, expectedMessage) => {
     const powerMonitor = makePowerMonitor()
     const { client } = makeClientForPlugin({
-      plugin: plugin(powerMonitor),
+      plugins: [plugin(powerMonitor)],
       config: { enabledBreadcrumbTypes: [] }
     })
 
@@ -40,7 +40,7 @@ describe('plugin: electron power monitor breadcrumbs', () => {
   it.each(events)('works when enabledBreadcrumbTypes=null for "%s"', (event, expectedMessage) => {
     const powerMonitor = makePowerMonitor()
     const { client } = makeClientForPlugin({
-      plugin: plugin(powerMonitor),
+      plugins: [plugin(powerMonitor)],
       config: { enabledBreadcrumbTypes: null }
     })
 
