@@ -21,6 +21,7 @@
     "@babel/preset-typescript": "^7.10.4",
     "@cucumber/cucumber": "^7.2.1",
     "@jest-runner/electron": "^3.0.1",
+    "@lerna/legacy-package-management": "^7.4.2",
     "@types/jest": "^25.1.2",
     "@types/ncp": "^2.0.4",
     "@types/node": "^13.7.1",
