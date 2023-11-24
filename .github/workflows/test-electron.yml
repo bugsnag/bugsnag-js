@@ -57,12 +57,15 @@ jobs:
       run: defaults write com.apple.CrashReporter DialogType none
     - name: run unit tests
       run: npm run test:unit:electron-runner
+      env:
+        ELECTRON_DISABLE_SANDBOX: 1
     - name: run integration tests
       run: npm run test:electron
       shell: bash
       env:
         START_LOCAL_NPM: 1
         VERBOSE: 1
+        ELECTRON_DISABLE_SANDBOX: 1
         ELECTRON_VERSION: ${{ matrix.electron }}
     - uses: actions/upload-artifact@v2
       if: failure()
