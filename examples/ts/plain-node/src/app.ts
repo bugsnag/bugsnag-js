@@ -39,7 +39,7 @@ process.stdin.on('data', function (d: Buffer) {
   switch (str) {
     case 'u': return unhandledError()
     case 'h': return handledError()
-    //case 'l': return leaveBreadcrumb()
+    case 'l': return leaveBreadcrumb()
     case 'o': return onError()
     default: return unknown(str)
   }
@@ -61,7 +61,6 @@ function handledError () {
   Bugsnag.notify(new Error('scheduling clash'))
 }
 
-// TODO Breadcrumbs not yet implemented for Node
 function leaveBreadcrumb () {
   console.log('leaving a breadcrumb…')
   // you can record all kinds of events which will be sent along with error reports
