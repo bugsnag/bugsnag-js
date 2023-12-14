@@ -21,45 +21,45 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
       // XMLHttpRequest monkey patch
       function monkeyPatchXMLHttpRequest () {
-        if (!('addEventListener' in win.XMLHttpRequest.prototype)) return
-        const nativeOpen = win.XMLHttpRequest.prototype.open
+        if (!('addEventListener' in win.XMLHttpRequest.prototype) || !('WeakMap' in win)) return
 
-        // override native open()
+        const trackedRequests = new WeakMap()
+        const requestHandlers = new WeakMap()
+
+        const originalOpen = win.XMLHttpRequest.prototype.open
         win.XMLHttpRequest.prototype.open = function open (method, url) {
-          let requestSetupKey = false
+          trackedRequests.set(this, { method, url })
+          originalOpen.apply(this, arguments)
+        }
 
-          const error = () => handleXHRError(method, url, getDuration(requestStart))
-          const load = () => handleXHRLoad(method, url, this.status, getDuration(requestStart))
+        const originalSend = win.XMLHttpRequest.prototype.send
+        win.XMLHttpRequest.prototype.send = function send (body) {
+          const requestData = trackedRequests.get(this)
+          if (requestData) {
+          // if we have already setup listeners then this request instance is being reused,
+          // so we need to remove the listeners from the previous send
+            const listeners = requestHandlers.get(this)
+            if (listeners) {
+              this.removeEventListener('load', listeners.load)
+              this.removeEventListener('error', listeners.error)
+            }
 
-          // if we have already setup listeners, it means open() was called twice, we need to remove
-          // the listeners and recreate them
-          if (requestSetupKey) {
-            this.removeEventListener('load', load)
-            this.removeEventListener('error', error)
+            const requestStart = new Date()
+            const error = () => handleXHRError(requestData.method, requestData.url, getDuration(requestStart))
+            const load = () => handleXHRLoad(requestData.method, requestData.url, this.status, getDuration(requestStart))
+
+            this.addEventListener('load', load)
+            this.addEventListener('error', error)
+            requestHandlers.set(this, { load, error })
           }
 
-          // attach load event listener
-          this.addEventListener('load', load)
-          // attach error event listener
-          this.addEventListener('error', error)
-
-          requestSetupKey = true
-
-          const oldSend = this.send
-          let requestStart
-
-          // override send() for this XMLHttpRequest instance
-          this.send = function send () {
-            requestStart = new Date()
-            oldSend.apply(this, arguments)
-          }
-
-          nativeOpen.apply(this, arguments)
+          originalSend.apply(this, arguments)
         }
 
         if (process.env.NODE_ENV !== 'production') {
           restoreFunctions.push(() => {
-            win.XMLHttpRequest.prototype.open = nativeOpen
+            win.XMLHttpRequest.prototype.open = originalOpen
+            win.XMLHttpRequest.prototype.send = originalSend
           })
         }
       }
