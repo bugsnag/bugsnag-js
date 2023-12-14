@@ -2,7 +2,7 @@
 
 This is an example project showing how to use `@bugsnag/js` with a Gatsby application.
 
-In this example the Bugsnag notifier is only initialized in the browser using the `onClientEntry` hook.
+In this example the Bugsnag notifier is only initialized in the browser using the `onClientEntry` hook. Uploading of source maps is also demonstrated using the `onCreateWebpackConfig` hook.
 
 ## Usage
 

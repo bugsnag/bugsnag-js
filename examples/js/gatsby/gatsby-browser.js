@@ -6,6 +6,7 @@ const bugsnagConfig = {
     // env vars prefixed with `GATSBY_` are made available to the browser
     apiKey: process.env.GATSBY_BUGSNAG_API_KEY,
     plugins: [new BugsnagPluginReact()],
+    appVersion: '1.2.3',
 }
 
 /**
