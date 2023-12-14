@@ -2,6 +2,8 @@
 
 This is an example project showing how to use `@bugsnag/js` with a Gatsby application.
 
+In this example the Bugsnag notifier is only initialized in the browser using the `onClientEntry` hook.
+
 ## Usage
 
 Clone the repo and `cd` into the directory of this example:
