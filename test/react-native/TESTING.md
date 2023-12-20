@@ -77,8 +77,7 @@ particular, these commands need the `BrowserStackLocal` binary (available
     ```shell script
     bundle exec maze-runner --app=../../build/${REACT_NATIVE_VERSION}.ipa \
                             --farm=bs \
-                            --device=IOS_13 \
-                            --appium-version=1.18.0 \
+                            --device=IOS_16 \
                             --a11y-locator \
                             features/app.feature
     ```
