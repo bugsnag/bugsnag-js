@@ -9,25 +9,22 @@ const bugsnagConfig = {
     appVersion: '1.2.3',
 }
 
-/**
- * With `gatsby develop` wrapRootElement is called before onClientEntry and then again afterwards.
- * However, `gatsby serve` onClientEntry is called, followed by wrapRootElement. So we need this 
- * extra state to deal with the difference in behavior.
- */
-let bugsnagStarted = false
-
 export const onClientEntry = () => {
-    if (bugsnagStarted) {
+    /**
+     * With `gatsby develop` wrapRootElement is called before onClientEntry and then again afterwards.
+     * However, `gatsby serve` onClientEntry is called, followed by wrapRootElement. So we need this 
+     * extra state to deal with the difference in behavior.
+     */
+    if (Bugsnag.isStarted()) {
         return
     }
+
     Bugsnag.start(bugsnagConfig)
-    bugsnagStarted = true
 }
 
 export const wrapRootElement = ({ element }) => {
-    if (!bugsnagStarted) {
+    if (!Bugsnag.isStarted()) {
         Bugsnag.start(bugsnagConfig)
-        bugsnagStarted = true
     }
 
     const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)
