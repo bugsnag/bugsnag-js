@@ -1,10 +1,10 @@
 # Changelog
 
-## TBD
+## v7.22.3 (2024-01-03)
 
 ### Changed
 
-- (react-native) Update bugsnag-cocoa from v6.27.3 to [v6.28.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6280-2023-12-13)
+- (react-native) Update bugsnag-cocoa from v6.27.3 to [v6.28.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6280-2023-12-13) (includes compliance with Apple's Required Reasons API  – see [online docs](https://docs.bugsnag.com/platforms/ios/appstore-privacy/#declaring-required-reasons-for-api-usage))
 
 ### Fixed
 
