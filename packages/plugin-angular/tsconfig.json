@@ -17,6 +17,7 @@
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
     "sourceRoot": "src",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "skipLibCheck": true
   }
 }

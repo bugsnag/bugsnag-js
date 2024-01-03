@@ -57,6 +57,8 @@ jobs:
       run: defaults write com.apple.CrashReporter DialogType none
     - name: run unit tests
       run: npm run test:unit:electron-runner
+      env:
+        ELECTRON_DISABLE_SANDBOX: 1
     - name: run integration tests
       run: npm run test:electron
       shell: bash

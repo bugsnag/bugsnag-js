@@ -16,7 +16,7 @@ export async function install (projectRoot: string, logger: Logger): Promise<voi
       logger.warn('No Podfile found in ios directory, skipping')
       return
     }
-  } catch (e) {
+  } catch (e: any) {
     if (e.code === 'ENOENT') {
       logger.warn('No ios directory found in project, skipping')
       return
