@@ -2,7 +2,13 @@
 
 ## TBD
 
+### Changed
+
 - (react-native) Update bugsnag-cocoa from v6.27.3 to [v6.28.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6280-2023-12-13)
+
+### Fixed
+
+- (plugin-vue) Fix errorInfo metadata in Vue 3.4+ [#2062](https://github.com/bugsnag/bugsnag-js/pull/2062)
 
 ## v7.22.2 (2023-11-21)
 
