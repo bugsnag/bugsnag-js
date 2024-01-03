@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/node",
-  "version": "7.19.0",
+  "version": "7.22.3",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",
@@ -24,18 +24,18 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-node": "^7.19.0",
+    "@bugsnag/delivery-node": "^7.22.3",
     "@bugsnag/plugin-app-duration": "^7.19.0",
-    "@bugsnag/plugin-contextualize": "^7.19.0",
-    "@bugsnag/plugin-intercept": "^7.19.0",
-    "@bugsnag/plugin-node-device": "^7.19.0",
-    "@bugsnag/plugin-node-in-project": "^7.19.0",
+    "@bugsnag/plugin-contextualize": "^7.22.3",
+    "@bugsnag/plugin-intercept": "^7.22.3",
+    "@bugsnag/plugin-node-device": "^7.22.3",
+    "@bugsnag/plugin-node-in-project": "^7.22.3",
     "@bugsnag/plugin-node-surrounding-code": "^7.19.0",
-    "@bugsnag/plugin-node-uncaught-exception": "^7.19.0",
-    "@bugsnag/plugin-node-unhandled-rejection": "^7.19.0",
+    "@bugsnag/plugin-node-uncaught-exception": "^7.22.3",
+    "@bugsnag/plugin-node-unhandled-rejection": "^7.22.3",
     "@bugsnag/plugin-server-session": "^7.19.0",
     "@bugsnag/plugin-stackframe-path-normaliser": "^7.19.0",
-    "@bugsnag/plugin-strip-project-root": "^7.19.0"
+    "@bugsnag/plugin-strip-project-root": "^7.22.3"
   },
   "dependencies": {
     "@bugsnag/core": "^7.19.0",

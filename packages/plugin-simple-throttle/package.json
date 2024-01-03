@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-simple-throttle",
-  "version": "7.19.0",
+  "version": "7.22.3",
   "main": "throttle.js",
   "description": "@bugsnag/js plugin to prevent too many events from being sent",
   "homepage": "https://www.bugsnag.com/",

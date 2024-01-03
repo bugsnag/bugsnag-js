@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron",
-  "version": "7.22.2",
+  "version": "7.22.3",
   "main": "src/notifier.js",
   "types": "types/notifier.d.ts",
   "description": "@bugsnag/electron notifier",
@@ -20,7 +20,7 @@
     "@bugsnag/delivery-electron": "^7.22.1",
     "@bugsnag/electron-filestore": "^7.16.2",
     "@bugsnag/electron-network-status": "^7.19.0",
-    "@bugsnag/plugin-console-breadcrumbs": "^7.19.0",
+    "@bugsnag/plugin-console-breadcrumbs": "^7.22.3",
     "@bugsnag/plugin-electron-app": "^7.22.2",
     "@bugsnag/plugin-electron-app-breadcrumbs": "^7.22.2",
     "@bugsnag/plugin-electron-client-state-manager": "^7.19.0",
@@ -35,16 +35,16 @@
     "@bugsnag/plugin-electron-renderer-client-state-updates": "^7.19.0",
     "@bugsnag/plugin-electron-renderer-event-data": "^7.22.2",
     "@bugsnag/plugin-electron-renderer-strip-project-root": "^7.22.2",
-    "@bugsnag/plugin-electron-session": "^7.22.2",
-    "@bugsnag/plugin-interaction-breadcrumbs": "^7.20.2",
+    "@bugsnag/plugin-electron-session": "^7.22.3",
+    "@bugsnag/plugin-interaction-breadcrumbs": "^7.22.3",
     "@bugsnag/plugin-internal-callback-marker": "^7.19.0",
-    "@bugsnag/plugin-network-breadcrumbs": "^7.19.0",
+    "@bugsnag/plugin-network-breadcrumbs": "^7.22.3",
     "@bugsnag/plugin-node-surrounding-code": "^7.19.0",
-    "@bugsnag/plugin-node-uncaught-exception": "^7.19.0",
-    "@bugsnag/plugin-node-unhandled-rejection": "^7.19.0",
+    "@bugsnag/plugin-node-uncaught-exception": "^7.22.3",
+    "@bugsnag/plugin-node-unhandled-rejection": "^7.22.3",
     "@bugsnag/plugin-stackframe-path-normaliser": "^7.19.0",
-    "@bugsnag/plugin-strip-project-root": "^7.19.0",
-    "@bugsnag/plugin-window-onerror": "^7.20.0",
-    "@bugsnag/plugin-window-unhandled-rejection": "^7.19.0"
+    "@bugsnag/plugin-strip-project-root": "^7.22.3",
+    "@bugsnag/plugin-window-onerror": "^7.22.3",
+    "@bugsnag/plugin-window-unhandled-rejection": "^7.22.3"
   }
 }
