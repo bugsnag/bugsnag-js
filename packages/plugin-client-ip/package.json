@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-client-ip",
-  "version": "7.19.0",
+  "version": "7.22.3",
   "main": "client-ip.js",
   "description": "@bugsnag/js plugin to disable client IP from error reports",
   "homepage": "https://www.bugsnag.com/",

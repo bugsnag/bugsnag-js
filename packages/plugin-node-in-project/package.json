@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-in-project",
-  "version": "7.19.0",
+  "version": "7.22.3",
   "main": "in-project.js",
   "description": "@bugsnag/js plugin to mark whether stackframes are 'in-project'",
   "homepage": "https://www.bugsnag.com/",

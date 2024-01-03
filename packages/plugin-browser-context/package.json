@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-browser-context",
-  "version": "7.19.0",
+  "version": "7.22.3",
   "main": "context.js",
   "description": "@bugsnag/js plugin to set event context in browsers",
   "homepage": "https://www.bugsnag.com/",

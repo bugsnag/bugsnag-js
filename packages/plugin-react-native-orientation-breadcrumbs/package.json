@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-orientation-breadcrumbs",
-  "version": "7.19.0",
+  "version": "7.22.3",
   "main": "orientation.js",
   "description": "@bugsnag/js plugin to create breadcrumbs when the device orientation changes in a React Native app",
   "homepage": "https://www.bugsnag.com/",

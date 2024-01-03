@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-navigation-breadcrumbs",
-  "version": "7.19.0",
+  "version": "7.22.3",
   "main": "navigation-breadcrumbs.js",
   "description": "@bugsnag/js plugin to record browser navigation as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",
