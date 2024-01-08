@@ -687,8 +687,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_63_expo_ejected.apk
-              - --app-activity=com.reactnative_expo_ejected.MainActivity
-              - --app-package=com.reactnative_expo_ejected
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
