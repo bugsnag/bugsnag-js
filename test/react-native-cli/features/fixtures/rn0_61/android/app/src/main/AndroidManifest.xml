@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.rn0_61">
+  package="com.reactnative">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

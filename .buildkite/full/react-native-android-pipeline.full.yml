@@ -232,8 +232,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0.60.apk
-              - --app-activity=com.rn060.MainActivity
-              - --app-package=com.rn060
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -426,8 +426,8 @@ steps:
             service-ports: true
             command:
               - --app=build/r_navigation_0.60.apk
-              - --app-activity=com.rn060.MainActivity
-              - --app-package=com.rn060
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -478,8 +478,8 @@ steps:
             service-ports: true
             command:
               - --app=build/r_native_navigation_0.60.apk
-              - --app-activity=com.rn060.MainActivity
-              - --app-package=com.rn060
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator

@@ -587,8 +587,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_60.apk
-              - --app-activity=com.rn0_60.MainActivity
-              - --app-package=com.rn0_60
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -612,8 +612,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_61.apk
-              - --app-activity=com.rn0_61.MainActivity
-              - --app-package=com.rn0_61
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -637,8 +637,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_62.apk
-              - --app-activity=com.rn0_62.MainActivity
-              - --app-package=com.rn0_62
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -662,8 +662,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_63.apk
-              - --app-activity=com.rn0_63.MainActivity
-              - --app-package=com.rn0_63
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -687,8 +687,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_63_expo_ejected.apk
-              - --app-activity=com.rn0_63_expo_ejected.MainActivity
-              - --app-package=com.rn0_63_expo_ejected
+              - --app-activity=com.reactnative_expo_ejected.MainActivity
+              - --app-package=com.reactnative_expo_ejected
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -712,8 +712,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_64.apk
-              - --app-activity=com.rn0_64.MainActivity
-              - --app-package=com.rn0_64
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -737,8 +737,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_65.apk
-              - --app-activity=com.rn0_65.MainActivity
-              - --app-package=com.rn0_65
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -762,8 +762,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_66.apk
-              - --app-activity=com.rn0_66.MainActivity
-              - --app-package=com.rn0_66
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -787,8 +787,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_67.apk
-              - --app-activity=com.rn0_67.MainActivity
-              - --app-package=com.rn0_67
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
@@ -812,8 +812,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0_69.apk
-              - --app-activity=com.rn0_69.MainActivity
-              - --app-package=com.rn0_69
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --a11y-locator
