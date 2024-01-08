@@ -22,7 +22,7 @@ Once started, it will serve a page at http://localhost:9000 with buttons that ca
 The project includes a `Dockerfile`. If you're familiar with docker, this is the easiest way to start the example. Otherwise, skip ahead to the [without docker](#without-docker) section.
 
 ```
-GATSBY_BUGSNAG_API_KEY=YOUR_API_KEY docker build -t bugsnag-js-example-gatsby .
+docker build --build-arg GATSBY_BUGSNAG_API_KEY=YOUR_API_KEY -t bugsnag-js-example-gatsby .
 docker run -p 9000:9000 -it bugsnag-js-example-gatsby
 ```
 
