@@ -132,7 +132,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.rn0_64"
+        applicationId "com.reactnative"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
