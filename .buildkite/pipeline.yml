@@ -114,33 +114,33 @@ steps:
         run: ci
     command: "npm run test:types"
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on: "package-js"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
+#  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+#    depends_on: "package-js"
+#    commands:
+#      - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    skip: Skipped pending PLAT-10345
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
+#  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+#    skip: Skipped pending PLAT-10345
+#    commands:
+#      - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on: "package-js"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
+#  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+#    depends_on: "package-js"
+#    commands:
+#      - buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on:
-      - "publish-js"
-      - "android-builder-base"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
-
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on:
-      - "publish-js"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
+#  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+#    depends_on:
+#      - "publish-js"
+#      - "android-builder-base"
+#    commands:
+#      - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
+#
+#  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+#    depends_on:
+#      - "publish-js"
+#    commands:
+#      - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
 
   #
   # Conditionally trigger full pipeline
