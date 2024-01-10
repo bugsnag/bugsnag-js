@@ -34,6 +34,47 @@ const BUGSNAG_CLI_INSTRUCTIONS = `bugsnag:upload-android task added to your pack
 
 export default async function run (projectRoot: string, urls: OnPremiseUrls): Promise<boolean> {
   try {
+    const { bugsnagCliIntegration } = await prompts({
+      type: 'confirm',
+      name: 'bugsnagCliIntegration',
+      message: 'Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android?',
+      initial: true
+    }, { onCancel })
+
+    if (bugsnagCliIntegration) {
+      await installBugsnagCliPackage(projectRoot, urls)
+      const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
+
+      if (reactNativeVersion) {
+        if (semver.lt(reactNativeVersion, '0.68.0')) {
+          await prompts({
+            type: 'text',
+            name: 'hermesInstructions',
+            message: HERMES_INSTRUCTIONS,
+            initial: 'Hit enter to continue …'
+          }, { onCancel })
+        }
+      }
+    }
+
+    const { bugsnagCliNpmTasks } = await prompts({
+      type: 'text',
+      name: 'bugsnagCliNpmTasks',
+      message: 'Do you want to add an NPM task to your package.json that you can run to upload Android and iOS source maps?',
+      initial: true
+    }, { onCancel })
+
+    if (bugsnagCliNpmTasks) {
+        await writeToPackageJson(join(projectRoot, 'package.json'), urls[UrlType.UPLOAD], urls[UrlType.BUILD])
+    }
+
+    await prompts({
+      type: 'text',
+      name: 'bugsnagCliInstructions',
+      message: BUGSNAG_CLI_INSTRUCTIONS,
+      initial: 'Hit enter to continue …'
+    }, { onCancel })
+
     const { iosIntegration } = await prompts({
       type: 'confirm',
       name: 'iosIntegration',
@@ -52,51 +93,6 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       message: DSYM_INSTRUCTIONS,
       initial: 'Hit enter to continue …'
     }, { onCancel })
-
-    const { androidIntegration } = await prompts({
-      type: 'confirm',
-      name: 'androidIntegration',
-      message: 'Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps?',
-      initial: true
-    }, { onCancel })
-
-    if (iosIntegration) {
-      await installJavaScriptPackage(projectRoot)
-    }
-
-    if (androidIntegration) {
-      await installBugsnagCliPackage(projectRoot, urls)
-      const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
-
-      if (reactNativeVersion) {
-        if (semver.lt(reactNativeVersion, '0.68.0')) {
-          await prompts({
-            type: 'text',
-            name: 'hermesInstructions',
-            message: HERMES_INSTRUCTIONS,
-            initial: 'Hit enter to continue …'
-          }, { onCancel })
-        }
-      }
-
-      const { packageJsonIntegration } = await prompts({
-        type: 'confirm',
-        name: 'packageJsonIntegration',
-        message: 'Do you want to add an NPM task to your package.json that you can run to upload Android source maps?',
-        initial: true
-      }, { onCancel })
-
-      if (packageJsonIntegration) {
-        await writeToPackageJson(join(projectRoot, 'package.json'), urls[UrlType.UPLOAD], urls[UrlType.BUILD])
-      }
-
-      await prompts({
-        type: 'text',
-        name: 'bugsnagCliInstructions',
-        message: BUGSNAG_CLI_INSTRUCTIONS,
-        initial: 'Hit enter to continue …'
-      }, { onCancel })
-    }
 
     return true
   } catch (e) {
@@ -171,11 +167,13 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
     // Default to two spaces if indent cannot be detected
     const existingIndent = detectIndent(data).indent || '  '
 
-    let uploadCommand = 'bugsnag-cli upload react-native-android'
+    let androidUploadCommand = 'bugsnag-cli upload react-native-android'
+    let iosUploadCommand = 'bugsnag-cli upload react-native-ios'
     let buildCommand = 'bugsnag-cli create-build'
 
     if (uploadUrl) {
-      uploadCommand += ` --upload-api-root-url=${uploadUrl}`
+      androidUploadCommand += ` --upload-api-root-url=${uploadUrl}`
+      iosUploadCommand += ` --upload-api-root-url=${uploadUrl}`
     }
 
     if (buildUrl) {
@@ -185,7 +183,8 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
     packageJson.scripts = {
       ...packageJson.scripts,
       'bugsnag:create-build': buildCommand,
-      'bugsnag:upload-android': uploadCommand
+      'bugsnag:upload-android': androidUploadCommand,
+      'bugsnag:upload-ios': iosUploadCommand
     }
 
     const updatedPackageJson = JSON.stringify(packageJson, null, existingIndent)

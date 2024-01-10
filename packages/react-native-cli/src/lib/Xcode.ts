@@ -35,7 +35,7 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
   const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
   logger.info('Ensuring React Native build phase outputs source maps')
 
-  const didUpdate = await updateBuildReactNativeTask(buildPhaseMap, logger)
+  const didUpdate = await updateXcodeEnv(projectRoot, logger)
   logger.info('Adding build phase to upload source maps to Bugsnag')
 
   const didAdd = await addUploadSourceMapsTask(proj, buildPhaseMap, endpoint, logger)
@@ -47,26 +47,6 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
   logger.success('Written changes to Xcode project')
 }
 
-async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<string, unknown>>, logger: Logger): Promise<boolean> {
-  let didAnythingUpdate = false
-  for (const shellBuildPhaseKey in buildPhaseMap) {
-    const phase = buildPhaseMap[shellBuildPhaseKey]
-    // The shell script can vary slightly... Vanilla RN projects contain
-    //   ../node_modules/react-native/scripts/react-native-xcode.sh
-    // and ejected Expo projects contain
-    //   `node --print "require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'"`
-    // so we need a little leniency
-    if (typeof phase.shellScript === 'string' && phase.shellScript.includes('/react-native-xcode.sh')) {
-      let didThisUpdate
-      [phase.shellScript, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.shellScript, logger)
-      if (didThisUpdate) {
-        didAnythingUpdate = true
-      }
-    }
-  }
-  return didAnythingUpdate
-}
-
 async function addUploadSourceMapsTask (
   proj: Project,
   buildPhaseMap: Record<string, Record<string, unknown>>,
@@ -75,17 +55,13 @@ async function addUploadSourceMapsTask (
 ): Promise<boolean> {
   for (const shellBuildPhaseKey in buildPhaseMap) {
     const phase = buildPhaseMap[shellBuildPhaseKey]
-    if (typeof phase.shellScript === 'string' && phase.shellScript.includes('bugsnag-react-native-xcode.sh')) {
+    if (typeof phase.shellScript === 'string' && phase.shellScript.includes('bugsnag-react-native-xcode.sh') || typeof phase.shellScript === 'string' && phase.shellScript.includes('Upload source maps to Bugsnag')) {
       logger.warn('An "Upload source maps to Bugsnag" build phase already exists')
       return false
     }
   }
 
-  let shellScript = 'SOURCE_MAP="$TMPDIR/$(md5 -qs "$CONFIGURATION_BUILD_DIR")-main.jsbundle.map" ../node_modules/@bugsnag/react-native/bugsnag-react-native-xcode.sh'
-
-  if (endpoint) {
-    shellScript = `export ENDPOINT='${endpoint}'\\n${shellScript}`
-  }
+  let shellScript = 'npm run bugsnag:upload-ios'
 
   proj.addBuildPhase(
     [],
@@ -106,4 +82,29 @@ function addExtraPackagerArgs (phaseId: string, existingShellScript: string, log
   }
   const scriptLines = parsedExistingShellScript.split('\n')
   return [JSON.stringify([EXTRA_PACKAGER_ARGS].concat(scriptLines).join('\n')), true]
+}
+
+function updateXcodeEnv(projectRoot: string, logger: Logger): boolean {
+  const searchString = 'SOURCEMAP_FILE=';
+  const sourceMapFilePath = 'ios/build/main.jsbundle.map'
+  const envFilePath = path.join(projectRoot, 'ios', '.xcode.env')
+
+  const data = fs.readFile(envFilePath, 'utf8').then(
+    function (results){
+      if (results.includes(searchString)) {
+        logger.warn(`The .xcode.env file already contains a section for "${searchString}"`);
+        return false;
+      } else {
+        const newData = `${results}\n\n#React Native Source Map File\n${searchString}${sourceMapFilePath}`;
+        fs.writeFile(envFilePath, newData, 'utf8')
+        return true
+      }
+
+    }).catch(
+      function (error){
+        logger.warn(`Error updating the .xcode.env file: ${error}`);
+        return false
+      })
+
+  return true
 }
