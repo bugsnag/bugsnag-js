@@ -11,8 +11,6 @@ export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION
 
 See ${DOCS_LINK} for more information`
 
-const EXTRA_PACKAGER_ARGS = 'export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION_BUILD_DIR")-main.jsbundle.map"'
-
 export async function updateXcodeProject (projectRoot: string, endpoint: string|undefined, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
   const xcodeprojDir = (await fs.readdir(iosDir)).find(p => p.endsWith('.xcodeproj'))
@@ -79,8 +77,8 @@ function updateXcodeEnv (projectRoot: string, logger: Logger): boolean {
   const sourceMapFilePath = 'ios/build/main.jsbundle.map'
   const envFilePath = path.join(projectRoot, 'ios', '.xcode.env')
 
-  const data = fs.readFile(envFilePath, 'utf8').then(
-    function (results){
+  fs.readFile(envFilePath, 'utf8').then(
+    function (results) {
       if (results.includes(searchString)) {
         logger.warn(`The .xcode.env file already contains a section for "${searchString}"`)
         return false
@@ -89,12 +87,11 @@ function updateXcodeEnv (projectRoot: string, logger: Logger): boolean {
         fs.writeFile(envFilePath, newData, 'utf8')
         return true
       }
-
     }).catch(
-      function (error){
-        logger.warn(`Error updating the .xcode.env file: ${error}`)
-        return false
-      })
+    function (error) {
+      logger.warn(`Error updating the .xcode.env file: ${error}`)
+      return false
+    })
 
   return true
 }
