@@ -55,13 +55,13 @@ async function addUploadSourceMapsTask (
 ): Promise<boolean> {
   for (const shellBuildPhaseKey in buildPhaseMap) {
     const phase = buildPhaseMap[shellBuildPhaseKey]
-    if (typeof phase.shellScript === 'string' && phase.shellScript.includes('bugsnag-react-native-xcode.sh') || typeof phase.shellScript === 'string' && phase.shellScript.includes('Upload source maps to Bugsnag')) {
+    if (typeof phase.shellScript === 'string' && (phase.shellScript.includes('bugsnag-react-native-xcode.sh') || phase.shellScript.includes('Upload source maps to Bugsnag'))) {
       logger.warn('An "Upload source maps to Bugsnag" build phase already exists')
       return false
     }
   }
 
-  let shellScript = 'npm run bugsnag:upload-ios'
+  const shellScript = 'npm run bugsnag:upload-ios'
 
   proj.addBuildPhase(
     [],
@@ -74,35 +74,25 @@ async function addUploadSourceMapsTask (
   return true
 }
 
-function addExtraPackagerArgs (phaseId: string, existingShellScript: string, logger: Logger): [string, boolean] {
-  const parsedExistingShellScript = JSON.parse(existingShellScript) as string
-  if (parsedExistingShellScript.includes(EXTRA_PACKAGER_ARGS)) {
-    logger.warn(`The "Bundle React Native Code and Images" build phase (${phaseId}) already includes the required arguments`)
-    return [existingShellScript, false]
-  }
-  const scriptLines = parsedExistingShellScript.split('\n')
-  return [JSON.stringify([EXTRA_PACKAGER_ARGS].concat(scriptLines).join('\n')), true]
-}
-
-function updateXcodeEnv(projectRoot: string, logger: Logger): boolean {
-  const searchString = 'SOURCEMAP_FILE=';
+function updateXcodeEnv (projectRoot: string, logger: Logger): boolean {
+  const searchString = 'SOURCEMAP_FILE='
   const sourceMapFilePath = 'ios/build/main.jsbundle.map'
   const envFilePath = path.join(projectRoot, 'ios', '.xcode.env')
 
   const data = fs.readFile(envFilePath, 'utf8').then(
     function (results){
       if (results.includes(searchString)) {
-        logger.warn(`The .xcode.env file already contains a section for "${searchString}"`);
-        return false;
+        logger.warn(`The .xcode.env file already contains a section for "${searchString}"`)
+        return false
       } else {
-        const newData = `${results}\n\n#React Native Source Map File\n${searchString}${sourceMapFilePath}`;
+        const newData = `${results}\n\n#React Native Source Map File\n${searchString}${sourceMapFilePath}`
         fs.writeFile(envFilePath, newData, 'utf8')
         return true
       }
 
     }).catch(
       function (error){
-        logger.warn(`Error updating the .xcode.env file: ${error}`);
+        logger.warn(`Error updating the .xcode.env file: ${error}`)
         return false
       })
 
