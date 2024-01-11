@@ -58,7 +58,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     }
 
     const { bugsnagCliNpmTasks } = await prompts({
-      type: 'text',
+      type: 'confirm',
       name: 'bugsnagCliNpmTasks',
       message: 'Do you want to add an NPM task to your package.json that you can run to upload Android and iOS source maps?',
       initial: true
