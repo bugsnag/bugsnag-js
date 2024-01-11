@@ -13,7 +13,7 @@ Scenario: successfully modify project
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android\?"
     When I input a return interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -54,7 +54,7 @@ Scenario: successfully modify project, choosing source-maps version
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android\?"
     When I input a return interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -99,7 +99,7 @@ Scenario: successfully modify project with custom endpoints
     When I input "https://upload.example.com" interactively
     And I wait for the current stdout line to match the regex "What is your Bugsnag build endpoint\?"
     When I input "https://build.example.com" interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android\?"
     When I input a return interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -141,7 +141,7 @@ Scenario: opt not to modify the Android project
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android\?"
     When I input a return interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -177,7 +177,7 @@ Scenario: opt not to modify the iOS project
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android\?"
     When I input "n" interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -216,7 +216,7 @@ Scenario: opt not to modify either project
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android\?"
     When I input "n" interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
