@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk-bullseye
+FROM openjdk:17-jdk-bullseye
 
 # OS setup
 RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev

@@ -23,41 +23,41 @@ steps:
       #
       # Test fixtures
       #
-      - label: ":android: Build RN 0.72 (Old Arch) apk"
-        key: "rn-0-72-old-arch-apk"
+      - label: ":android: Build RN 0.73 (Old Arch) apk"
+        key: "rn-0-73-old-arch-apk"
         depends_on:
           - "android-builder-image"
         timeout_in_minutes: 60
         env:
-          REACT_NATIVE_VERSION: "rn0.72"
+          REACT_NATIVE_VERSION: "rn0.73"
           RN_NEW_ARCH: "false"
-          ARTEFACT_NAME: "rn0.72-old-arch"
+          ARTEFACT_NAME: "rn0.73-old-arch"
         plugins:
           - docker-compose#v4.12.0:
               pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
-          - build/rn0.72-old-arch.apk
+          - build/rn0.73-old-arch.apk
         retry:
           automatic:
             - exit_status: "*"
               limit: 1
 
-      - label: ":android: Build RN 0.72 (New Arch) apk"
-        key: "rn-0-72-new-arch-apk"
+      - label: ":android: Build RN 0.73 (New Arch) apk"
+        key: "rn-0-73-new-arch-apk"
         depends_on:
           - "android-builder-image"
         timeout_in_minutes: 60
         env:
-          REACT_NATIVE_VERSION: "rn0.72"
+          REACT_NATIVE_VERSION: "rn0.73"
           RN_NEW_ARCH: "true"
-          ARTEFACT_NAME: "rn0.72-new-arch"
+          ARTEFACT_NAME: "rn0.73-new-arch"
         plugins:
           - docker-compose#v4.12.0:
               pull: react-native-android-builder
               run: react-native-android-builder
         artifact_paths:
-          - build/rn0.72-new-arch.apk
+          - build/rn0.73-new-arch.apk
         retry:
           automatic:
             - exit_status: "*"
@@ -66,19 +66,19 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":bitbar: :android: RN 0.72 (Old Arch) Android 12 end-to-end tests"
-        depends_on: "rn-0-72-old-arch-apk"
+      - label: ":bitbar: :android: RN 0.73 (Old Arch) Android 12 end-to-end tests"
+        depends_on: "rn-0-73-old-arch-apk"
         timeout_in_minutes: 60
         plugins:
           artifacts#v1.9.0:
-            download: "build/rn0.72-old-arch.apk"
+            download: "build/rn0.73-old-arch.apk"
             upload: ./test/react-native/maze_output/**/*
           docker-compose#v4.7.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
             command:
-              - --app=build/rn0.72-old-arch.apk
+              - --app=build/rn0.73-old-arch.apk
               - --app-activity=com.reactnative.MainActivity
               - --app-package=com.reactnative
               - --farm=bb
@@ -94,19 +94,19 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
 
-      - label: ":bitbar: :android: RN 0.72 (New Arch) Android 12 end-to-end tests"
-        depends_on: "rn-0-72-new-arch-apk"
+      - label: ":bitbar: :android: RN 0.73 (New Arch) Android 12 end-to-end tests"
+        depends_on: "rn-0-73-new-arch-apk"
         timeout_in_minutes: 60
         plugins:
           artifacts#v1.9.0:
-            download: "build/rn0.72-new-arch.apk"
+            download: "build/rn0.73-new-arch.apk"
             upload: ./test/react-native/maze_output/**/*
           docker-compose#v4.7.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
             command:
-              - --app=build/rn0.72-new-arch.apk
+              - --app=build/rn0.73-new-arch.apk
               - --app-activity=com.reactnative.MainActivity
               - --app-package=com.reactnative
               - --farm=bb
