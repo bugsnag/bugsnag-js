@@ -21,6 +21,7 @@ Scenario: successfully modify project
     When RN version is 0.68 or lower dismiss the warning message
     And I wait for the current stdout line to match the regex "Do you want to add an NPM task to your package.json that you can run to upload Android and iOS source maps\?"
     When I input "n" interactively
+    And I wait for the current stdout line to match the regex "Hit enter to continue"
     And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input "y" interactively
     And I wait for the interactive shell to output the following lines in stdout
