@@ -16,13 +16,13 @@ Scenario: successfully modify project
     And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
-    When I input a retrun interactively
+    When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     When RN version is 0.68 or lower dismiss the warning message
     And I wait for the current stdout line to match the regex "Do you want to add an NPM task to your package.json that you can run to upload Android and iOS source maps\?"
     When I input "n" interactively
     And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
-    When I inpit "y" interactively
+    When I input "y" interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
