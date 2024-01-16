@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1",
+    "@bugsnag/electron-test-helpers": "^8.0.0-alpha.1",
     "@bugsnag/plugin-electron-client-state-manager": "^8.0.0-alpha.1",
     "@types/bindings": "^1.5.0"
   },

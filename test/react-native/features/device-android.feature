@@ -10,7 +10,7 @@ Scenario: Handled JS error
 
   And the event "device.id" is not null
   And the event "device.jailbroken" is false
-  And the event "device.locale" matches "^en_[A-Z]{2}$"
+  And the event "device.locale" matches "^[a-z]{2}_[A-Z]{2}$"
   And the event "device.manufacturer" is not null
   And the event "device.model" is not null
   And the event "device.osName" equals "android"
@@ -34,7 +34,7 @@ Scenario: Unhandled JS error
 
   And the event "device.id" is not null
   And the event "device.jailbroken" is false
-  And the event "device.locale" matches "^en_[A-Z]{2}$"
+  And the event "device.locale" matches "^[a-z]{2}_[A-Z]{2}$"
   And the event "device.manufacturer" is not null
   And the event "device.model" is not null
   And the event "device.osName" equals "android"
@@ -58,7 +58,7 @@ Scenario: Handled native error
 
   And the event "device.id" is not null
   And the event "device.jailbroken" is false
-  And the event "device.locale" matches "^en_[A-Z]{2}$"
+  And the event "device.locale" matches "^[a-z]{2}_[A-Z]{2}$"
   And the event "device.manufacturer" is not null
   And the event "device.model" is not null
   And the event "device.osName" equals "android"
@@ -82,7 +82,7 @@ Scenario: Unhandled native error
 
   And the event "device.id" is not null
   And the event "device.jailbroken" is false
-  And the event "device.locale" matches "^en_[A-Z]{2}$"
+  And the event "device.locale" matches "^[a-z]{2}_[A-Z]{2}$"
   And the event "device.manufacturer" is not null
   And the event "device.model" is not null
   And the event "device.osName" equals "android"

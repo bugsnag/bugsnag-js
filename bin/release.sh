@@ -26,6 +26,16 @@ cd /app/bugsnag-js
 npm ci
 npm run bootstrap -- --ci
 
+# check if CDN packages changed – if they didn't we don't need to upload to the CDN
+BROWSER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/js$ || test $? = 1;)
+WORKER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/web-worker$ || test $? = 1;)
+
+# increment package version numbers
+if [ -z "${RETRY_PUBLISH:-}" ]; then
+  npx lerna version "$VERSION" --no-push
+fi
+
+# build packages
 npx lerna run build \
   --scope @bugsnag/node \
   --scope @bugsnag/browser
@@ -36,20 +46,20 @@ npx lerna run build \
   --ignore @bugsnag/plugin-electron-app \
   --ignore @bugsnag/plugin-electron-client-state-persistence
 
-# check if CDN packages changed – if they didn't we don't need to upload to the CDN
-BROWSER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/js$ || test $? = 1;)
-WORKER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/web-worker$ || test $? = 1;)
+# push local changes and tags
+git push origin --follow-tags
 
+# publish
 if [ -v RETRY_PUBLISH ]; then
   npx lerna publish from-package
-else 
+else
   case $VERSION in
     "prerelease" | "prepatch" | "preminor" | "premajor")
-      npx lerna publish "$VERSION" --dist-tag next
+      npx lerna publish from-git --dist-tag next
       ;;
 
     *)
-      npx lerna publish "$VERSION"
+      npx lerna publish from-git
       ;;
   esac
 fi

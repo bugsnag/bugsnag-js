@@ -228,9 +228,8 @@ steps:
             command:
               - --app=build/rn0.60.ipa
               - --farm=bs
-              - --device=IOS_12
+              - --device=IOS_16
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -252,9 +251,8 @@ steps:
             command:
               - --app=build/rn0.66.ipa
               - --farm=bs
-              - --device=IOS_14
+              - --device=IOS_16
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -276,9 +274,8 @@ steps:
             command:
               - --app=build/rn0.67.ipa
               - --farm=bs
-              - --device=IOS_14
+              - --device=IOS_16
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -301,9 +298,8 @@ steps:
             command:
               - --app=build/rn0.69.ipa
               - --farm=bs
-              - --device=IOS_14
+              - --device=IOS_16
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -326,9 +322,8 @@ steps:
             command:
               - --app=build/rn0.68-hermes.ipa
               - --farm=bs
-              - --device=IOS_14
+              - --device=IOS_16
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -351,9 +346,8 @@ steps:
             command:
               - --app=build/rn0.71-old-arch.ipa
               - --farm=bs
-              - --device=IOS_14
+              - --device=IOS_16
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -376,9 +370,8 @@ steps:
             command:
               - --app=build/rn0.71-new-arch.ipa
               - --farm=bs
-              - --device=IOS_14
+              - --device=IOS_16
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
@@ -403,9 +396,8 @@ steps:
             command:
               - --app=build/r_navigation_0.60.ipa
               - --farm=bs
-              - --device=IOS_12
+              - --device=IOS_16
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
               - features/navigation.feature
         concurrency: 5
@@ -426,9 +418,8 @@ steps:
             command:
               - --app=build/r_navigation_0.69.ipa
               - --farm=bs
-              - --device=IOS_14
+              - --device=IOS_16
               - --a11y-locator
-              - --appium-version=1.21.0
               - --fail-fast
               - features/navigation.feature
         concurrency: 5
@@ -451,8 +442,7 @@ steps:
             command:
               - --app=build/r_native_navigation_0.60.ipa
               - --farm=bs
-              - --device=IOS_13
-              - --appium-version=1.18.0
+              - --device=IOS_16
               - --a11y-locator
               - --fail-fast
               - features/navigation.feature
@@ -476,9 +466,8 @@ steps:
             command:
               - --app=build/r_native_navigation_0.66.ipa
               - --farm=bs
-              - --device=IOS_13
+              - --device=IOS_16
               - --a11y-locator
-              - --appium-version=1.18.0
               - --fail-fast
               - features/navigation.feature
         concurrency: 5

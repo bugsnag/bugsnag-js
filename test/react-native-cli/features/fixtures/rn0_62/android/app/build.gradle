@@ -130,13 +130,13 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.rn0_62"
+        applicationId "com.reactnative"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         ndk {
-            abiFilters "arm64-v8a", "x86"
+            abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
     splits {

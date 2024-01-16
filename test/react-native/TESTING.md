@@ -77,8 +77,7 @@ particular, these commands need the `BrowserStackLocal` binary (available
     ```shell script
     bundle exec maze-runner --app=../../build/${REACT_NATIVE_VERSION}.ipa \
                             --farm=bs \
-                            --device=IOS_13 \
-                            --appium-version=1.18.0 \
+                            --device=IOS_16 \
                             --a11y-locator \
                             features/app.feature
     ```
@@ -127,7 +126,7 @@ Remove
     1. In app/build.gradle:
         - add Kotlin
         - add Bugsnag
-        - add NDK `abiFilters "arm64-v8a", "x86"`
+        - add NDK `abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"`
     1. In gradle.properties, set org.gradle.jvmargs=-Xmx4096m  
     1. In app/proguard-rules.pro, add:
         ```

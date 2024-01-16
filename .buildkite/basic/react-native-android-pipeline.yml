@@ -79,6 +79,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0.72-old-arch.apk
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_12
               - --a11y-locator
@@ -105,6 +107,8 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0.72-new-arch.apk
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
               - --farm=bb
               - --device=ANDROID_12
               - --a11y-locator

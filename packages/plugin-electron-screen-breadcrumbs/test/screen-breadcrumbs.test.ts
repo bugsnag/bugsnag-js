@@ -5,7 +5,7 @@ import plugin from '../'
 describe('plugin: electron screen breadcrumbs', () => {
   it('leaves a breadcrumb for the "display-added" event', () => {
     const screen = makeScreen()
-    const { client } = makeClientForPlugin({ plugin: plugin(screen) })
+    const { client } = makeClientForPlugin({ plugins: [plugin(screen)] })
 
     const display = makeDisplay({ id: 1234 })
 
@@ -21,7 +21,7 @@ describe('plugin: electron screen breadcrumbs', () => {
 
   it('leaves a breadcrumb for the "display-removed" event', () => {
     const screen = makeScreen()
-    const { client } = makeClientForPlugin({ plugin: plugin(screen) })
+    const { client } = makeClientForPlugin({ plugins: [plugin(screen)] })
 
     const display = makeDisplay({ id: 1234 })
 
@@ -46,7 +46,7 @@ describe('plugin: electron screen breadcrumbs', () => {
     ]
   ])('leaves a breadcrumb for the "display-metrics-changed" event with changedMetrics = %p', (changedMetrics, message) => {
     const screen = makeScreen()
-    const { client } = makeClientForPlugin({ plugin: plugin(screen) })
+    const { client } = makeClientForPlugin({ plugins: [plugin(screen)] })
 
     const display = makeDisplay({ id: 23456 })
 
@@ -61,7 +61,7 @@ describe('plugin: electron screen breadcrumbs', () => {
   it('honours enabledBreadcrumbTypes', () => {
     const screen = makeScreen()
     const { client } = makeClientForPlugin({
-      plugin: plugin(screen),
+      plugins: [plugin(screen)],
       config: { enabledBreadcrumbTypes: [] }
     })
 
@@ -77,7 +77,7 @@ describe('plugin: electron screen breadcrumbs', () => {
   it('works when enabledBreadcrumbTypes=null', () => {
     const screen = makeScreen()
     const { client } = makeClientForPlugin({
-      plugin: plugin(screen),
+      plugins: [plugin(screen)],
       config: { enabledBreadcrumbTypes: null }
     })
 
@@ -92,7 +92,7 @@ describe('plugin: electron screen breadcrumbs', () => {
 
   it('anonymises IDs correctly', () => {
     const screen = makeScreen()
-    const { client } = makeClientForPlugin({ plugin: plugin(screen) })
+    const { client } = makeClientForPlugin({ plugins: [plugin(screen)] })
 
     const display = makeDisplay({ id: 1234 })
 
