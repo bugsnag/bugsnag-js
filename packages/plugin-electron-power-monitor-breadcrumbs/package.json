@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-power-monitor-breadcrumbs",
-  "version": "8.0.0-alpha.1",
+  "version": "8.0.0-alpha.2",
   "main": "power-monitor-breadcrumbs.js",
   "description": "@bugsnag/electron plugin to collect power state breadcrumbs",
   "repository": {
@@ -15,7 +15,7 @@
   ],
   "devDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1",
-    "@bugsnag/electron-test-helpers": "^8.0.0-alpha.1"
+    "@bugsnag/electron-test-helpers": "^8.0.0-alpha.2"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8"

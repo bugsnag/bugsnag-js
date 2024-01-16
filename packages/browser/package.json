@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browser",
-  "version": "8.0.0-alpha.1",
+  "version": "8.0.0-alpha.2",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for browser JavaScript",
@@ -42,8 +42,8 @@
     "@bugsnag/plugin-inline-script-content": "^8.0.0-alpha.1",
     "@bugsnag/plugin-interaction-breadcrumbs": "^8.0.0-alpha.1",
     "@bugsnag/plugin-navigation-breadcrumbs": "^8.0.0-alpha.1",
-    "@bugsnag/plugin-network-breadcrumbs": "^8.0.0-alpha.1",
-    "@bugsnag/plugin-simple-throttle": "^8.0.0-alpha.1",
+    "@bugsnag/plugin-network-breadcrumbs": "^8.0.0-alpha.2",
+    "@bugsnag/plugin-simple-throttle": "^8.0.0-alpha.2",
     "@bugsnag/plugin-strip-query-string": "^8.0.0-alpha.1",
     "@bugsnag/plugin-window-onerror": "^8.0.0-alpha.1",
     "@bugsnag/plugin-window-unhandled-rejection": "^8.0.0-alpha.1"
