@@ -1,4 +1,7 @@
-FROM openjdk:17-jdk-bullseye
+FROM openjdk:11-jdk-bullseye as java-11
+
+FROM openjdk:17-jdk-bullseye 
+COPY --from=java-11 /usr/local/openjdk-11 /usr/local/openjdk-11
 
 # OS setup
 RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev

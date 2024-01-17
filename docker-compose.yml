@@ -126,6 +126,8 @@ services:
         - REG_BASIC_CREDENTIAL
         - REG_NPM_EMAIL
         - MAVEN_REPO_URL
+        - JAVA_VERSION
+        - NODE_VERSION
     environment:
       - DEBUG
       - BRANCH_NAME
@@ -169,6 +171,7 @@ services:
         - REGISTRY_URL
         - REG_BASIC_CREDENTIAL
         - REG_NPM_EMAIL
+        - JAVA_VERSION
     environment:
       - VERBOSE
       - DEBUG

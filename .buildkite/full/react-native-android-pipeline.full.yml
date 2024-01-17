@@ -3,12 +3,33 @@ steps:
   - group: "React Native (Android) Tests"
     steps:
       #
+      # Android builder
+      #
+      - label: ":docker: Build legacy RN Android Builder image (Java 11, Node 16)"
+        key: "android-builder-image-legacy"
+        timeout_in_minutes: 30
+        plugins:
+          - docker-compose#v4.12.0:
+              build: react-native-android-builder
+              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+              cache-from:  react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}-jdk11-node16
+              args:
+                - JAVA_VERSION=11
+                - NODE_VERSION=16
+          - docker-compose#v4.12.0:
+              push: react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}-jdk11-node16
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
+
+      #
       # Test fixtures
       #
       - label: ":android: Build RN 0.60 apk"
         key: "rn-0-60-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.60"
@@ -27,7 +48,7 @@ steps:
       - label: ":android: Build RN 0.66 apk"
         key: "rn-0-66-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.66"
@@ -45,7 +66,7 @@ steps:
       - label: ":android: Build RN 0.67 apk"
         key: "rn-0-67-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.67"
@@ -63,7 +84,7 @@ steps:
       - label: ":android: Build RN 0.68 Hermes apk"
         key: "rn-0-68-hermes-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.68-hermes"
@@ -81,7 +102,7 @@ steps:
       - label: ":android: Build RN 0.69 apk"
         key: "rn-0-69-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.69"
@@ -99,7 +120,7 @@ steps:
       - label: ":android: Build RN 0.71 (Old Arch) apk"
         key: "rn-0-71-old-arch-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.71"
@@ -119,7 +140,7 @@ steps:
       - label: ":android: Build RN 0.71 (New Arch) apk"
         key: "rn-0-71-new-arch-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.71"
@@ -136,10 +157,50 @@ steps:
             - exit_status: "*"
               limit: 1
 
+      - label: ":android: Build RN 0.72 (Old Arch) apk"
+        key: "rn-0-72-old-arch-apk"
+        depends_on:
+          - "android-builder-image-legacy"
+        timeout_in_minutes: 60
+        env:
+          REACT_NATIVE_VERSION: "rn0.72"
+          RN_NEW_ARCH: "false"
+          ARTEFACT_NAME: "rn0.72-old-arch"
+        plugins:
+          - docker-compose#v4.12.0:
+              pull: react-native-android-builder
+              run: react-native-android-builder
+        artifact_paths:
+          - build/rn0.72-old-arch.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
+
+      - label: ":android: Build RN 0.72 (New Arch) apk"
+        key: "rn-0-72-new-arch-apk"
+        depends_on:
+          - "android-builder-image-legacy"
+        timeout_in_minutes: 60
+        env:
+          REACT_NATIVE_VERSION: "rn0.72"
+          RN_NEW_ARCH: "true"
+          ARTEFACT_NAME: "rn0.72-new-arch"
+        plugins:
+          - docker-compose#v4.12.0:
+              pull: react-native-android-builder
+              run: react-native-android-builder
+        artifact_paths:
+          - build/rn0.72-new-arch.apk
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
+
       - label: ":android: Build react-navigation 0.60 apk"
         key: "react-navigation-0-60-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.60"
@@ -159,7 +220,7 @@ steps:
       - label: ":android: Build react-navigation 0.69 apk"
         key: "react-navigation-0-69-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.69"
@@ -179,7 +240,7 @@ steps:
       - label: ":android: Build react-native-navigation 0.60 apk"
         key: "react-native-navigation-0-60-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.60"
@@ -199,7 +260,7 @@ steps:
       - label: ":android: Build react-native-navigation 0.66 apk"
         key: "react-native-navigation-0-66-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-legacy"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.66"
@@ -398,6 +459,62 @@ steps:
             service-ports: true
             command:
               - --app=build/rn0.71-new-arch.apk
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
+              - --farm=bb
+              - --device=ANDROID_12
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+          HERMES: "true"
+        concurrency: 25
+        concurrency_group: "bitbar"
+        concurrency_method: eager
+
+      - label: ":bitbar: :android: RN 0.72 (Old Arch) Android 12 end-to-end tests"
+        depends_on: "rn-0-72-old-arch-apk"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.9.0:
+            download: "build/rn0.72-old-arch.apk"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.7.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=build/rn0.72-old-arch.apk
+              - --app-activity=com.reactnative.MainActivity
+              - --app-package=com.reactnative
+              - --farm=bb
+              - --device=ANDROID_12
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+          HERMES: "true"
+        concurrency: 25
+        concurrency_group: "bitbar"
+        concurrency_method: eager
+
+      - label: ":bitbar: :android: RN 0.72 (New Arch) Android 12 end-to-end tests"
+        depends_on: "rn-0-72-new-arch-apk"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.9.0:
+            download: "build/rn0.72-new-arch.apk"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.7.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=build/rn0.72-new-arch.apk
               - --app-activity=com.reactnative.MainActivity
               - --app-package=com.reactnative
               - --farm=bb
