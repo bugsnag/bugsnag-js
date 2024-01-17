@@ -78,7 +78,7 @@
     "xvfb-maybe": "^0.2.1"
   },
   "overrides": {
-    "@babel/types": "7.23.0",
+    "@babel/types": "7.23.3",
     "@babel/traverse": "7.23.2"
   },
   "scripts": {
