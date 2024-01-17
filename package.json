@@ -78,8 +78,8 @@
     "xvfb-maybe": "^0.2.1"
   },
   "overrides": {
-    "@babel/types": "7.23.6",
-    "@babel/traverse": "7.23.6"
+    "@babel/types": "7.23.0",
+    "@babel/traverse": "7.23.2"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
