@@ -103,7 +103,7 @@ describe('bugsnag vue', () => {
     }))
     expect(typeof mockVueApp.config.errorHandler).toBe('function')
     const errorHandler = mockVueApp.config.errorHandler as unknown as Vue3ErrorHandler
-    errorHandler(new Error('oops'), { $options: { name: 'MyComponent' } }, 'https://vuejs.org/errors/#runtime-1')
+    errorHandler(new Error('oops'), { $options: { name: 'MyComponent' } }, 'https://vuejs.org/error-reference/#runtime-1')
   })
 
   it('tolerates unmappable info paramater', done => {

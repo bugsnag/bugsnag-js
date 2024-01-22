@@ -7,7 +7,7 @@ module.exports = (app, client) => {
 
     // In Vue 3.4+, the info param is a link to the Vue error docs in prod, so we need to extract the error code from it
     // https://github.com/vuejs/core/pull/9165/commits/c261beab2c0a26e401f2c3d5eae2e4c41de6fe4d
-    const code = typeof info === 'string' && info.indexOf('-') > 0 ? info.split('-')[1] : info
+    const code = typeof info === 'string' && info.indexOf('runtime-') > 0 ? info.split('runtime-')[1] : info
     const errorInfo = ErrorTypeStrings[code] || info
 
     event.addMetadata('vue', {
