@@ -72,26 +72,19 @@ async function addUploadSourceMapsTask (
   return true
 }
 
-function updateXcodeEnv (projectRoot: string, logger: Logger): boolean {
+async function updateXcodeEnv (projectRoot: string, logger: Logger): Promise<boolean> {
   const searchString = 'SOURCEMAP_FILE='
   const sourceMapFilePath = 'ios/build/main.jsbundle.map'
   const envFilePath = path.join(projectRoot, 'ios', '.xcode.env')
 
-  fs.readFile(envFilePath, 'utf8').then(
-    function (results) {
-      if (results.includes(searchString)) {
-        logger.warn(`The .xcode.env file already contains a section for "${searchString}"`)
-        return false
-      } else {
-        const newData = `${results}\n\n#React Native Source Map File\n${searchString}${sourceMapFilePath}`
-        fs.writeFile(envFilePath, newData, 'utf8')
-        return true
-      }
-    }).catch(
-    function (error) {
-      logger.warn(`Error updating the .xcode.env file: ${error}`)
-      return false
-    })
+  const xcodeEnvData = await fs.readFile(envFilePath, 'utf8')
 
-  return true
+  if (xcodeEnvData.includes(searchString)) {
+    logger.warn(`The .xcode.env file already contains a section for "${searchString}"`)
+    return false
+  } else {
+    const newData = `${xcodeEnvData}\n\n#React Native Source Map File\n${searchString}${sourceMapFilePath}`
+    await fs.writeFile(envFilePath, newData, 'utf8')
+    return true
+  }
 }
