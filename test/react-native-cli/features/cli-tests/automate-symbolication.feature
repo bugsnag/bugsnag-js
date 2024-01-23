@@ -32,6 +32,7 @@ Scenario: successfully modify project
         See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
+    When I input a return interactively
     And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input "y" interactively
     And I wait for the interactive shell to output the following lines in stdout
