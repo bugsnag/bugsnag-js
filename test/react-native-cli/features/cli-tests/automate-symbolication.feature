@@ -137,6 +137,14 @@ Scenario: opt not to modify the Android project
     When I input a return interactively
     And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android\?"
     When I input a return interactively
+    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
+    When I input a return interactively
+    Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
+    When RN version is 0.68 or lower dismiss the warning message
+    And I wait for the current stdout line to match the regex "Do you want to add an NPM task to your package.json that you can run to upload Android and iOS source maps\?"
+    When I input "n" interactively
+    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    When I input "y" interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
         To configure your project to upload dSYMs, follow the iOS symbolication guide:
@@ -147,13 +155,8 @@ Scenario: opt not to modify the Android project
         """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
-    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
-    When I input "n" interactively
-    And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
-    When I input a return interactively
-    Then I wait for the shell to output a match for the regex "@bugsnag/source-maps dependency is installed" to stdout
     Then the last interactive command exited successfully
-    And bugsnag source maps library is in the package.json file
+    And bugsnag cli library is in the package.json file
     And the iOS build has been modified to upload source maps
     And the Bugsnag Android Gradle plugin is not installed
     And the Android build has not been modified to upload source maps
