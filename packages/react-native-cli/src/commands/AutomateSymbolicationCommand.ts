@@ -72,12 +72,14 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       await writeToPackageJson(join(projectRoot, 'package.json'), urls[UrlType.UPLOAD], urls[UrlType.BUILD])
     }
 
-    await prompts({
-      type: 'text',
-      name: 'bugsnagCliInstructions',
-      message: BUGSNAG_CLI_INSTRUCTIONS,
-      initial: 'Hit enter to continue …'
-    }, { onCancel })
+    if (bugsnagCliNpmTasks) {
+      await prompts({
+        type: 'text',
+        name: 'bugsnagCliInstructions',
+        message: BUGSNAG_CLI_INSTRUCTIONS,
+        initial: 'Hit enter to continue …'
+      }, { onCancel })
+    }
 
     const { iosIntegration } = await prompts({
       type: 'confirm',
