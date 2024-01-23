@@ -21,6 +21,16 @@ Scenario: successfully modify project
     When RN version is 0.68 or lower dismiss the warning message
     And I wait for the current stdout line to match the regex "Do you want to add an NPM task to your package.json that you can run to upload Android and iOS source maps\?"
     When I input "n" interactively
+    And I wait for the interactive shell to output the following lines in stdout
+        """
+        The following tasks have been added to your package.json:
+
+        bugsnag:upload-android - run this task to upload Android source maps after a build.
+
+        bugsnag:upload-ios - run this task to upload iOS source maps after a build.
+
+        See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
+        """
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
     When I input "y" interactively
