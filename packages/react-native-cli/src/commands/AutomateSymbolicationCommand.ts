@@ -70,9 +70,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
 
     if (bugsnagCliNpmTasks) {
       await writeToPackageJson(join(projectRoot, 'package.json'), urls[UrlType.UPLOAD], urls[UrlType.BUILD])
-    }
 
-    if (bugsnagCliNpmTasks) {
       await prompts({
         type: 'text',
         name: 'bugsnagCliInstructions',
