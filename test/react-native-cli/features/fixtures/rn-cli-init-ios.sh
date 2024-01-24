@@ -37,16 +37,27 @@ send -- \r
 expect "What is your Bugsnag project API key?"
 send -- "1234567890ABCDEF1234567890ABCDEF\r"
 
+expect "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android?"
+send -- y
+
+expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
+send -- 2.1.0-alpha\r
+
+if {[expr $rnVersionInt3 < 0.68]} {
+   expect "or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')"
+   send -- \r
+}
+
+expect "Do you want to add an NPM task to your package.json that you can run to upload Android and iOS source maps?"
+send -- y
+
+expect "See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details."
+send -- \r
+
 expect "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
 send -- y
 
-expect "This will enable you to see full native stacktraces. It can't be done automatically."
+expect "  This will enable you to see full native stacktraces. It can't be done automatically."
 send -- \r
-
-expect "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps?"
-send -- n
-
-expect "If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want"
-send -- latest\r
 
 expect eof
