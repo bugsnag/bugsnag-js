@@ -2,6 +2,10 @@
 
 ## TBD
 
+### Changed
+
+- (react-native) Update bugsnag-android from v5.31.3 to [v5.32.1](https://github.com/bugsnag/bugsnag-android/blob/v5.32.1/CHANGELOG.md#5321-2024-01-23)
+
 ### Fixed
 
 - (plugin-vue) Handle updated Vue error info URL [#2068](https://github.com/bugsnag/bugsnag-js/pull/2068)
