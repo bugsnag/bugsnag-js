@@ -79,7 +79,7 @@ async function updateXcodeEnv (projectRoot: string, logger: Logger): Promise<boo
 
   const xcodeEnvData = await fs.readFile(envFilePath, 'utf8')
 
-  if (xcodeEnvData.includes(searchString)) {
+  if (xcodeEnvData.includes('SOURCEMAP_FILE=')) {
     logger.warn(`The .xcode.env file already contains a section for "${searchString}"`)
     return false
   } else {
