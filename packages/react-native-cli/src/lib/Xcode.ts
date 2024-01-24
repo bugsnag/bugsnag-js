@@ -72,7 +72,7 @@ async function addUploadSourceMapsTask (
   return true
 }
 
-async function updateXcodeEnv(iosDir: string, logger: Logger): Promise<boolean> {
+async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean> {
   const searchString = 'SOURCEMAP_FILE='
   const sourceMapFilePath = 'ios/build/main.jsbundle.map'
   const envFilePath = path.join(iosDir, '.xcode.env')
