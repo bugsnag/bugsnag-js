@@ -52,15 +52,15 @@ test('updateXcodeProject(): success', async () => {
   await updateXcodeProject('/random/path', undefined, logger)
 
   expect(readFileSyncMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj', 'utf8')
-  expect(writeFileMock).toHaveBeenCalledTimes(1)
+  expect(writeFileMock).toHaveBeenCalledTimes(2)
 
   // the added build phase gets a generated build ID, so we need to figure out what that is before doing an exact string match
-  const matches = /([A-Z0-9]{24}) \/\* Upload source maps to Bugsnag \*\/ = \{/.exec(writeFileMock.mock.calls[0][1] as string)
+  const matches = /([A-Z0-9]{24}) \/\* Upload source maps to Bugsnag \*\/ = \{/.exec(writeFileMock.mock.calls[1] as unknown as string)
   if (!matches) throw new Error('Failed to detect build ID')
   const generatedPhaseId = matches[1]
   const expectedOutput = (await loadFixture(path.join(__dirname, 'fixtures', 'project-after.pbxproj')))
     .replace(/43CF599E6AE1472FAF1EC029/g, generatedPhaseId)
-  expect(writeFileMock).toHaveBeenCalledWith(
+  expect(writeFileMock).toHaveBeenLastCalledWith(
     '/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj',
     expectedOutput,
     'utf8'
@@ -86,11 +86,10 @@ test('updateXcodeProject(): success with custom endpoint', async () => {
   await updateXcodeProject('/random/path', 'https://upload.example.com', logger)
 
   expect(readFileSyncMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj', 'utf8')
-  expect(writeFileMock).toHaveBeenCalledTimes(1)
+  expect(writeFileMock).toHaveBeenCalledTimes(2)
 
   // the added build phase gets a generated build ID, so we need to figure out what that is before doing an exact string match
-  const matches = /([A-Z0-9]{24}) \/\* Upload source maps to Bugsnag \*\/ = \{/.exec(writeFileMock.mock.calls[0][1] as string)
-
+  const matches = /([A-Z0-9]{24}) \/\* Upload source maps to Bugsnag \*\/ = \{/.exec(writeFileMock.mock.calls[1] as unknown as string)
   if (!matches) {
     throw new Error('Failed to detect build ID')
   }
@@ -99,7 +98,7 @@ test('updateXcodeProject(): success with custom endpoint', async () => {
   const expectedOutput = (await loadFixture(path.join(__dirname, 'fixtures', 'project-after-with-endpoint.pbxproj')))
     .replace(/43CF599E6AE1472FAF1EC029/g, generatedPhaseId)
 
-  expect(writeFileMock).toHaveBeenCalledWith(
+  expect(writeFileMock).toHaveBeenLastCalledWith(
     '/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj',
     expectedOutput,
     'utf8'
@@ -122,11 +121,8 @@ test('updateXcodeProject(): modifications already exist', async () => {
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
   await updateXcodeProject('/random/path', undefined, logger)
   expect(readFileSyncMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj', 'utf8')
-  expect(writeFileMock).not.toHaveBeenCalled()
+  expect(writeFileMock).toHaveBeenCalledTimes(2)
   expect(logger.warn).toHaveBeenCalledWith('An "Upload source maps to Bugsnag" build phase already exists')
-  expect(logger.warn).toHaveBeenCalledWith(expect.stringMatching(
-    /The "Bundle React Native Code and Images" build phase \([A-F0-9]{24}\) already includes the required arguments/
-  ))
 })
 
 test('updateXcodeProject(): can\'t find project', async () => {

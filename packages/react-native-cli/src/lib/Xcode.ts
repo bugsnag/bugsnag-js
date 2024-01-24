@@ -33,10 +33,9 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
   const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
   logger.info('Ensuring React Native build phase outputs source maps')
 
-  const didUpdate = await updateXcodeEnv(projectRoot, logger)
   logger.info('Adding build phase to upload source maps to Bugsnag')
-
   const didAdd = await addUploadSourceMapsTask(proj, buildPhaseMap, endpoint, logger)
+  const didUpdate = await updateXcodeEnv(projectRoot, logger)
   const didChange = didUpdate || didAdd
 
   if (!didChange) return
@@ -53,7 +52,7 @@ async function addUploadSourceMapsTask (
 ): Promise<boolean> {
   for (const shellBuildPhaseKey in buildPhaseMap) {
     const phase = buildPhaseMap[shellBuildPhaseKey]
-    if (typeof phase.shellScript === 'string' && (phase.shellScript.includes('bugsnag-react-native-xcode.sh') || phase.shellScript.includes('Upload source maps to Bugsnag'))) {
+    if (typeof phase.shellScript === 'string' && (phase.shellScript.includes('bugsnag-react-native-xcode.sh') || phase.shellScript.includes('npm run bugsnag:upload-ios'))) {
       logger.warn('An "Upload source maps to Bugsnag" build phase already exists')
       return false
     }
@@ -79,7 +78,7 @@ async function updateXcodeEnv (projectRoot: string, logger: Logger): Promise<boo
 
   const xcodeEnvData = await fs.readFile(envFilePath, 'utf8')
 
-  if (xcodeEnvData.includes('SOURCEMAP_FILE=')) {
+  if (xcodeEnvData?.includes('SOURCEMAP_FILE=')) {
     logger.warn(`The .xcode.env file already contains a section for "${searchString}"`)
     return false
   } else {
