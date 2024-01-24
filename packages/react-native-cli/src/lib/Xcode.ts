@@ -32,7 +32,7 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
 
   const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
   logger.info('Ensuring React Native build phase outputs source maps')
-  const didUpdate = await updateXcodeEnv(projectRoot, logger)
+  const didUpdate = await updateXcodeEnv(iosDir, logger)
 
   logger.info('Adding build phase to upload source maps to Bugsnag')
   const didAdd = await addUploadSourceMapsTask(proj, buildPhaseMap, endpoint, logger)
@@ -72,10 +72,13 @@ async function addUploadSourceMapsTask (
   return true
 }
 
-async function updateXcodeEnv (projectRoot: string, logger: Logger): Promise<boolean> {
+async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean> {
   const searchString = 'SOURCEMAP_FILE='
   const sourceMapFilePath = 'ios/build/main.jsbundle.map'
-  const envFilePath = path.join(projectRoot, 'ios', '.xcode.env')
+  const envFilePath = path.join(iosDir, '.xcode.env')
+
+  const xcodeprojDir = (await fs.readdir(iosDir))
+  console.log(xcodeprojDir)
 
   const xcodeEnvData = await fs.readFile(envFilePath, 'utf8')
 
