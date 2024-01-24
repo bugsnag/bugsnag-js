@@ -11,10 +11,10 @@ cd $rnVersion
 spawn ./node_modules/.bin/bugsnag-react-native-cli init
 
 expect "Do you want to continue anyway?"
-send -- "Y"
+send -- "Y\r"
 
 expect "Are you using Bugsnag on-premise?"
-send -- "Y"
+send -- "Y\r"
 
 expect "What is your Bugsnag notify endpoint?"
 send -- http://bs-local.com:9339/notify\r
@@ -52,7 +52,7 @@ send -- \r
 expect "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
 send -- y
 
-expect "  This will enable you to see full native stacktraces. It can't be done automatically."
+expect "This will enable you to see full native stacktraces. It can't be done automatically."
 send -- \r
 
 expect eof
