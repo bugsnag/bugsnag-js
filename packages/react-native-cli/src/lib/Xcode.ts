@@ -79,7 +79,7 @@ async function updateXcodeEnv(iosDir: string, logger: Logger): Promise<boolean> 
 
   try {
     // Check if the file exists
-    await fs.access(envFilePath, 0)
+    await fs.stat(envFilePath)
 
     // If the file exists, read its content
     const xcodeEnvData = await fs.readFile(envFilePath, 'utf8')
