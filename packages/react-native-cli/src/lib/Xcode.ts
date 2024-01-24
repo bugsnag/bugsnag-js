@@ -32,10 +32,11 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
 
   const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
   logger.info('Ensuring React Native build phase outputs source maps')
+  const didUpdate = await updateXcodeEnv(projectRoot, logger)
 
   logger.info('Adding build phase to upload source maps to Bugsnag')
   const didAdd = await addUploadSourceMapsTask(proj, buildPhaseMap, endpoint, logger)
-  const didUpdate = await updateXcodeEnv(projectRoot, logger)
+
   const didChange = didUpdate || didAdd
 
   if (!didChange) return
@@ -82,7 +83,7 @@ async function updateXcodeEnv (projectRoot: string, logger: Logger): Promise<boo
     logger.warn(`The .xcode.env file already contains a section for "${searchString}"`)
     return false
   } else {
-    const newData = `${xcodeEnvData}\n\n#React Native Source Map File\n${searchString}${sourceMapFilePath}`
+    const newData = `${xcodeEnvData}\n\n# React Native Source Map File\n${searchString}${sourceMapFilePath}`
     await fs.writeFile(envFilePath, newData, 'utf8')
     return true
   }
