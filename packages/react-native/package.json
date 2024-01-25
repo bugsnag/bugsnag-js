@@ -38,6 +38,7 @@
     "ios/vendor/bugsnag-cocoa/Bugsnag.xcodeproj",
     "ios/vendor/bugsnag-cocoa/Framework/{Info.plist,module.modulemap}",
     "ios/vendor/bugsnag-cocoa/Bugsnag.podspec.json",
+    "ios/vendor/bugsnag-cocoa/Bugsnag/resources/PrivacyInfo.xcprivacy",
     "BugsnagReactNative.podspec",
     "react-native.config.js",
     "bugsnag-react-native.gradle",

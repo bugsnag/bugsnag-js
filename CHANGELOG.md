@@ -9,6 +9,7 @@
 ### Fixed
 
 - (plugin-vue) Handle updated Vue error info URL [#2068](https://github.com/bugsnag/bugsnag-js/pull/2068)
+- (react-native) Publish xcprivacy file from vendored bugsnag-cocoa [#2072](https://github.com/bugsnag/bugsnag-js/pull/2072)
 
 ## v7.22.3 (2024-01-03)
 
