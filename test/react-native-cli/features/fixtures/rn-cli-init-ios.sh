@@ -3,6 +3,19 @@
 set timeout -1
 set notifierVersion [lindex $argv 0];
 set rnVersion [lindex $argv 1];
+set rnVersionInt ""
+set substringToTrim ".expo.ejected"
+
+# Extract the substring starting from the third character
+set rnVersionInt [string range $rnVersion 2 end]
+
+# Replace underscore (_) with a period (.)
+set rnVersionInt2 [string map {_ .} $rnVersionInt]
+
+set rnVersionInt3 [string map [list $substringToTrim ""] $rnVersionInt2]
+
+# Convert float string to float value using bc
+regsub -all {^0+} $rnVersionInt3 "" $rnVersionInt3
 
 puts "Using notifier version: $notifierVersion"
 puts "Using React Native version: $rnVersion"
@@ -42,6 +55,11 @@ send -- y
 
 expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
 send -- 2.1.0-alpha\r
+
+if {[expr $rnVersionInt3 < 0.68]} {
+   expect "or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')"
+   send -- \r
+}
 
 expect "Do you want to add an NPM task to your package.json that you can run to upload Android and iOS source maps?"
 send -- y

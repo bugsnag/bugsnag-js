@@ -88,15 +88,15 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       if (iosIntegration) {
         logger.info('Modifying the Xcode project')
         await updateXcodeProject(projectRoot, urls[UrlType.UPLOAD], logger)
+
+        await prompts({
+          type: 'text',
+          name: 'dsymUploadInstructions',
+          message: DSYM_INSTRUCTIONS,
+          initial: 'Hit enter to continue …'
+        }, { onCancel })
       }
     }
-
-    await prompts({
-      type: 'text',
-      name: 'dsymUploadInstructions',
-      message: DSYM_INSTRUCTIONS,
-      initial: 'Hit enter to continue …'
-    }, { onCancel })
 
     return true
   } catch (e) {
