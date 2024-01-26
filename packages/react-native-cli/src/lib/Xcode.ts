@@ -73,8 +73,8 @@ async function addUploadSourceMapsTask (
 }
 
 async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean> {
-  const searchString = 'SOURCEMAP_FILE='
-  const sourceMapFilePath = 'ios/build/main.jsbundle.map'
+  const searchString = 'export SOURCEMAP_FILE='
+  const sourceMapFilePath = 'ios/build/sourcemaps/main.jsbundle.map'
   const envFilePath = path.join(iosDir, '.xcode.env')
 
   try {
@@ -96,7 +96,7 @@ async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean>
   } catch (error) {
     // If the file doesn't exist, create it
     if (error.code === 'ENOENT') {
-      const newData = `# React Native Source Map File\n${searchString}${sourceMapFilePath}`
+      const newData = `export NODE_BINARY=$(command -v node)\n# React Native Source Map File\n${searchString}${sourceMapFilePath}`
       await fs.writeFile(envFilePath, newData, 'utf8')
       return true
     } else {
