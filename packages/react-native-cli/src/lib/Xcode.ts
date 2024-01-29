@@ -11,9 +11,6 @@ export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION
 
 See ${DOCS_LINK} for more information`
 
-// const EXTRA_PACKAGER_ARGS = 'export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION_BUILD_DIR")-main.jsbundle.map"'
-const EXTRA_PACKAGER_ARGS = 'export SOURCEMAP_FILE=$(pwd)/build/sourcemaps/main.jsbundle.map"'
-
 export async function updateXcodeProject (projectRoot: string, endpoint: string|undefined, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
   const xcodeprojDir = (await fs.readdir(iosDir)).find(p => p.endsWith('.xcodeproj'))
@@ -35,8 +32,7 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
 
   const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
   logger.info('Ensuring React Native build phase outputs source maps')
-  // const didUpdate = await updateXcodeEnv(iosDir, logger)
-  const didUpdate = await updateBuildReactNativeTask(buildPhaseMap, logger)
+  const didUpdate = await updateXcodeEnv(iosDir, logger)
 
   logger.info('Adding build phase to upload source maps to Bugsnag')
   const didAdd = await addUploadSourceMapsTask(proj, buildPhaseMap, endpoint, logger)
@@ -47,36 +43,6 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
 
   await fs.writeFile(pbxProjPath, proj.writeSync(), 'utf8')
   logger.success('Written changes to Xcode project')
-}
-
-async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<string, unknown>>, logger: Logger): Promise<boolean> {
-  let didAnythingUpdate = false
-  for (const shellBuildPhaseKey in buildPhaseMap) {
-    const phase = buildPhaseMap[shellBuildPhaseKey]
-    // The shell script can vary slightly... Vanilla RN projects contain
-    //   ../node_modules/react-native/scripts/react-native-xcode.sh
-    // and ejected Expo projects contain
-    //   `node --print "require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'"`
-    // so we need a little leniency
-    if (typeof phase.shellScript === 'string' && phase.shellScript.includes('/react-native-xcode.sh')) {
-      let didThisUpdate
-      [phase.shellScript, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.shellScript, logger)
-      if (didThisUpdate) {
-        didAnythingUpdate = true
-      }
-    }
-  }
-  return didAnythingUpdate
-}
-
-function addExtraPackagerArgs (phaseId: string, existingShellScript: string, logger: Logger): [string, boolean] {
-  const parsedExistingShellScript = JSON.parse(existingShellScript) as string
-  if (parsedExistingShellScript.includes(EXTRA_PACKAGER_ARGS)) {
-    logger.warn(`The "Bundle React Native Code and Images" build phase (${phaseId}) already includes the required arguments`)
-    return [existingShellScript, false]
-  }
-  const scriptLines = parsedExistingShellScript.split('\n')
-  return [JSON.stringify([EXTRA_PACKAGER_ARGS].concat(scriptLines).join('\n')), true]
 }
 
 async function addUploadSourceMapsTask (
@@ -106,37 +72,37 @@ async function addUploadSourceMapsTask (
   return true
 }
 
-// async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean> {
-//   const searchString = 'SOURCEMAP_FILE='
-//   const sourceMapFilePath = 'ios/build/sourcemaps/main.jsbundle.map'
-//   const envFilePath = path.join(iosDir, '.xcode.env')
-//
-//   try {
-//     // Check if the file exists
-//     await fs.stat(envFilePath)
-//
-//     // If the file exists, read its content
-//     const xcodeEnvData = await fs.readFile(envFilePath, 'utf8')
-//
-//     if (xcodeEnvData.includes(searchString)) {
-//       logger.warn(`The .xcode.env file already contains a section for "${searchString}"`)
-//       return false
-//     } else {
-//       // Append the new data to the existing content
-//       const newData = `${xcodeEnvData}\n\n# React Native Source Map File\nexport ${searchString}${sourceMapFilePath}`
-//       await fs.writeFile(envFilePath, newData, 'utf8')
-//       return true
-//     }
-//   } catch (error) {
-//     // If the file doesn't exist, create it
-//     if (error.code === 'ENOENT') {
-//       const newData = `export NODE_BINARY=$(command -v node)\n# React Native Source Map File\nexport ${searchString}${sourceMapFilePath}`
-//       await fs.writeFile(envFilePath, newData, 'utf8')
-//       return true
-//     } else {
-//       // Other error occurred
-//       console.error(`Error updating .xcode.env file: ${error.message}`)
-//       return false
-//     }
-//   }
-// }
+async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean> {
+  const searchString = 'SOURCEMAP_FILE='
+  const sourceMapFilePath = 'ios/build/sourcemaps/main.jsbundle.map'
+  const envFilePath = path.join(iosDir, '.xcode.env')
+
+  try {
+    // Check if the file exists
+    await fs.stat(envFilePath)
+
+    // If the file exists, read its content
+    const xcodeEnvData = await fs.readFile(envFilePath, 'utf8')
+
+    if (xcodeEnvData.includes(searchString)) {
+      logger.warn(`The .xcode.env file already contains a section for "${searchString}"`)
+      return false
+    } else {
+      // Append the new data to the existing content
+      const newData = `${xcodeEnvData}\n\n# React Native Source Map File\nexport ${searchString}${sourceMapFilePath}`
+      await fs.writeFile(envFilePath, newData, 'utf8')
+      return true
+    }
+  } catch (error) {
+    // If the file doesn't exist, create it
+    if (error.code === 'ENOENT') {
+      const newData = `export NODE_BINARY=$(command -v node)\n# React Native Source Map File\nexport ${searchString}${sourceMapFilePath}`
+      await fs.writeFile(envFilePath, newData, 'utf8')
+      return true
+    } else {
+      // Other error occurred
+      console.error(`Error updating .xcode.env file: ${error.message}`)
+      return false
+    }
+  }
+}
