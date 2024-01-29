@@ -11,7 +11,7 @@ export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION
 
 See ${DOCS_LINK} for more information`
 
-const EXTRA_PACKAGER_ARGS = '"$(SRCROOT)/.xcode.env.local",\n"$(SRCROOT)/.xcode.env",'
+const EXTRA_PACKAGER_ARGS = '"$(SRCROOT)/.xcode.env.local",\n"$(SRCROOT)/.xcode.env"'
 
 export async function updateXcodeProject (projectRoot: string, endpoint: string|undefined, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
