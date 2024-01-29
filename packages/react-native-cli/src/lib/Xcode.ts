@@ -31,6 +31,7 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
   })
 
   const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
+  logger.info(buildPhaseMap)
   logger.info('Ensuring React Native build phase outputs source maps')
   const didUpdate = await updateXcodeEnv(iosDir, logger)
 
@@ -106,3 +107,4 @@ async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean>
     }
   }
 }
+
