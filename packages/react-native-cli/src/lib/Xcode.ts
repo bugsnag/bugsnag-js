@@ -34,7 +34,6 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
 
   const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
   logger.info('Ensuring React Native build phase outputs source maps')
-  logger.info(buildPhaseMap)
 
   const didUpdate = await updateBuildReactNativeTask(buildPhaseMap, logger)
   logger.info('Adding build phase to upload source maps to Bugsnag')
@@ -58,6 +57,7 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<
     //   `node --print "require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'"`
     // so we need a little leniency
     if (typeof phase.shellScript === 'string' && phase.shellScript.includes('/react-native-xcode.sh')) {
+      logger.info(phase.inputPaths)
       let didThisUpdate
       [phase.shellScript, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.shellScript, logger)
       if (didThisUpdate) {
