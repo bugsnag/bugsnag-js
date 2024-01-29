@@ -34,6 +34,7 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
 
   const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
   logger.info('Ensuring React Native build phase outputs source maps')
+  logger.info(buildPhaseMap)
 
   const didUpdate = await updateBuildReactNativeTask(buildPhaseMap, logger)
   logger.info('Adding build phase to upload source maps to Bugsnag')
