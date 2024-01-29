@@ -11,7 +11,7 @@ export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION
 
 See ${DOCS_LINK} for more information`
 
-const EXTRA_PACKAGER_ARGS = 'export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION_BUILD_DIR")-main.jsbundle.map"'
+const EXTRA_PACKAGER_ARGS = '"$(SRCROOT)/.xcode.env.local",\n"$(SRCROOT)/.xcode.env",'
 
 export async function updateXcodeProject (projectRoot: string, endpoint: string|undefined, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
@@ -57,12 +57,12 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<
     //   `node --print "require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'"`
     // so we need a little leniency
     if (typeof phase.shellScript === 'string' && phase.shellScript.includes('/react-native-xcode.sh')) {
-      logger.info(phase.inputPaths)
       let didThisUpdate
-      [phase.shellScript, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.shellScript, logger)
+      [phase.inputPaths, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.inputPaths as string, logger)
       if (didThisUpdate) {
         didAnythingUpdate = true
       }
+      logger.info(phase.inputPaths)
     }
   }
   return didAnythingUpdate
