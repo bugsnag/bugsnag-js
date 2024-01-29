@@ -11,8 +11,8 @@ export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION
 
 See ${DOCS_LINK} for more information`
 
-// const EXTRA_PACKAGER_ARGS = 'export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION_BUILD_DIR")-main.jsbundle.map"'
-const EXTRA_PACKAGER_ARGS = 'export SOURCEMAP_FILE="$(pwd)/build/sourcemaps/main.jsbundle.map"'
+const EXTRA_PACKAGER_ARGS = 'export EXTRA_PACKAGER_ARGS="--sourcemap-output $(pwd)/main.jsbundle.map"'
+// const EXTRA_PACKAGER_ARGS = 'export SOURCEMAP_FILE="$(pwd)/build/sourcemaps/main.jsbundle.map"'
 
 export async function updateXcodeProject (projectRoot: string, endpoint: string|undefined, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
