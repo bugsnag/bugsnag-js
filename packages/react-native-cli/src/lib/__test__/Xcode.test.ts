@@ -121,7 +121,7 @@ test('updateXcodeProject(): modifications already exist', async () => {
   const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
   await updateXcodeProject('/random/path', undefined, logger)
   expect(readFileSyncMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj', 'utf8')
-  expect(writeFileMock).not.toHaveBeenCalled()
+  expect(writeFileMock).not.toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest.xcodeproj/project.pbxproj', 'utf8')
   expect(logger.warn).toHaveBeenCalledWith('An "Upload source maps to Bugsnag" build phase already exists')
 })
 

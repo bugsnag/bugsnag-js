@@ -62,9 +62,7 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<
     }
   }
 
-  if (didAnythingUpdate) {
-    await updateXcodeEnv(iosDir, logger)
-  }
+  await updateXcodeEnv(iosDir, logger)
 
   return didAnythingUpdate
 }
