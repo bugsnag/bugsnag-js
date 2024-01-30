@@ -101,6 +101,8 @@ async function addUploadSourceMapsTask (
 
 function addExtraPackagerArgs (phaseId: string, existingShellScript: string, logger: Logger): [string, boolean] {
   const parsedExistingShellScript = JSON.parse(existingShellScript) as string
+  logger.info(existingShellScript)
+  logger.info(parsedExistingShellScript)
   if (parsedExistingShellScript.includes(EXTRA_PACKAGER_ARGS)) {
     logger.warn(`The "Bundle React Native Code and Images" build phase (${phaseId}) already includes the required arguments`)
     return [existingShellScript, false]
