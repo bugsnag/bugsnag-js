@@ -11,7 +11,7 @@ export EXTRA_PACKAGER_ARGS="--sourcemap-output $TMPDIR/$(md5 -qs "$CONFIGURATION
 
 See ${DOCS_LINK} for more information`
 
-const EXTRA_PACKAGER_ARGS = '"$(SRCROOT)/.xcode.env.local",\n"$(SRCROOT)/.xcode.env"'
+const EXTRA_PACKAGER_ARGS = ['$(SRCROOT)/.xcode.env.local', '$(SRCROOT)/.xcode.env']
 
 export async function updateXcodeProject (projectRoot: string, endpoint: string|undefined, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
@@ -99,14 +99,14 @@ async function addUploadSourceMapsTask (
   return true
 }
 
-function addExtraPackagerArgs (phaseId: string, existingShellScript: string, logger: Logger): [string, boolean] {
-  logger.info(existingShellScript)
-  const parsedExistingShellScript = JSON.parse(existingShellScript) as string
-  logger.info(parsedExistingShellScript)
-  if (parsedExistingShellScript.includes(EXTRA_PACKAGER_ARGS)) {
+function addExtraPackagerArgs (phaseId: string, existingInputFiles: string[], logger: Logger): [string[], boolean] {
+  if (arrayContainsElements(existingInputFiles, EXTRA_PACKAGER_ARGS)) {
     logger.warn(`The "Bundle React Native Code and Images" build phase (${phaseId}) already includes the required arguments`)
-    return [existingShellScript, false]
+    return [existingInputFiles, false]
   }
-  const scriptLines = parsedExistingShellScript.split('\n')
-  return [JSON.stringify([EXTRA_PACKAGER_ARGS].concat(scriptLines).join('\n')), true]
+  return [EXTRA_PACKAGER_ARGS.concat(existingInputFiles), true]
+}
+
+function arrayContainsElements (mainArray: any[], subArray: any[]): boolean {
+  return subArray.every(element => mainArray.some(mainElement => mainElement === element))
 }
