@@ -58,7 +58,7 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<
     // so we need a little leniency
     if (typeof phase.shellScript === 'string' && phase.shellScript.includes('/react-native-xcode.sh')) {
       let didThisUpdate
-      [phase.inputPaths, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.inputPaths as string, logger)
+      [phase.inputPaths, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.inputPaths as string[], logger)
       if (didThisUpdate) {
         didAnythingUpdate = true
       }
