@@ -12,6 +12,7 @@ if [[ -z ${GITHUB_USER:-} ]]; then error_missing_field "GITHUB_USER"; fi
 if [[ -z ${GITHUB_ACCESS_TOKEN:-} ]]; then error_missing_field "GITHUB_ACCESS_TOKEN"; fi
 if [[ -z ${RELEASE_BRANCH:-} ]]; then error_missing_field "RELEASE_BRANCH"; fi
 if [[ -z ${VERSION:-} ]]; then error_missing_field "VERSION"; fi
+if [[ -z ${DIST_TAG:-} ]]; then error_missing_field "DIST_TAG"; fi
 if [[ -z ${AWS_ACCESS_KEY_ID:-} ]]; then error_missing_field "AWS_ACCESS_KEY_ID"; fi
 if [[ -z ${AWS_SECRET_ACCESS_KEY:-} ]]; then error_missing_field "AWS_SECRET_ACCESS_KEY"; fi
 if [[ -z ${AWS_SESSION_TOKEN:-} ]]; then error_missing_field "AWS_SESSION_TOKEN"; fi
@@ -51,17 +52,9 @@ git push origin --follow-tags
 
 # publish
 if [ -v RETRY_PUBLISH ]; then
-  npx lerna publish from-package
+  npx lerna publish from-package --dist-tag "$DIST_TAG"
 else
-  case $VERSION in
-    "prerelease" | "prepatch" | "preminor" | "premajor")
-      npx lerna publish from-git --dist-tag next
-      ;;
-
-    *)
-      npx lerna publish from-git
-      ;;
-  esac
+  npx lerna publish from-git --dist-tag "$DIST_TAG"
 fi
 
 if [ "$BROWSER_PACKAGE_CHANGED" -eq 1 ] || [  -v FORCE_CDN_UPLOAD ]; then
