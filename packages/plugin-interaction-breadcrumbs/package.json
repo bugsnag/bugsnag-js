@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-interaction-breadcrumbs",
-  "version": "7.20.2",
+  "version": "7.22.3",
   "main": "interaction-breadcrumbs.js",
   "description": "@bugsnag/js plugin to record UI click events as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",

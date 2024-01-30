@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-client-sync",
-  "version": "7.19.0",
+  "version": "7.22.3",
   "main": "client-sync.js",
   "description": "@bugsnag/react-native plugin to sync information between JS and native layer",
   "homepage": "https://www.bugsnag.com/",

@@ -80,6 +80,32 @@ describe('bugsnag vue', () => {
     errorHandler(new Error('oops'), { $parent: null, $options: {} }, 1)
   })
 
+  it('handles URL info paramater', done => {
+    const mockVueApp: Vue3App = {
+      use: (plugin) => {
+        plugin.install(mockVueApp)
+      },
+      config: { errorHandler: undefined }
+    }
+    const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
+    // eslint-disable-next-line
+    mockVueApp.use(client.getPlugin('vue')!)
+    client._setDelivery(client => ({
+      sendEvent: (payload) => {
+        expect(payload.events[0].errors[0].errorClass).toBe('Error')
+        expect(payload.events[0].errors[0].errorMessage).toBe('oops')
+        expect(payload.events[0]._metadata.vue).toBeDefined()
+        expect(payload.events[0]._metadata.vue.component).toBe('MyComponent')
+        expect(payload.events[0]._metadata.vue.errorInfo).toBe('render function')
+        done()
+      },
+      sendSession: () => {}
+    }))
+    expect(typeof mockVueApp.config.errorHandler).toBe('function')
+    const errorHandler = mockVueApp.config.errorHandler as unknown as Vue3ErrorHandler
+    errorHandler(new Error('oops'), { $options: { name: 'MyComponent' } }, 'https://vuejs.org/error-reference/#runtime-1')
+  })
+
   it('tolerates unmappable info paramater', done => {
     const mockVueApp: Vue3App = {
       use: (plugin) => {
@@ -106,7 +132,7 @@ describe('bugsnag vue', () => {
     errorHandler(new Error('oops'), { $options: { name: 'MyComponent' } }, 'abcz')
   })
 
-  it('tolerates tolerates anonymous components', done => {
+  it('tolerates anonymous components', done => {
     const mockVueApp: Vue3App = {
       use: (plugin) => {
         plugin.install(mockVueApp)

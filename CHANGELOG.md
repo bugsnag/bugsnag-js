@@ -2,7 +2,24 @@
 
 ## TBD
 
-- (react-native) Update bugsnag-cocoa from v6.27.3 to [v6.28.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6280-2023-12-13)
+### Changed
+
+- (react-native) Update bugsnag-android from v5.31.3 to [v5.32.1](https://github.com/bugsnag/bugsnag-android/blob/v5.32.1/CHANGELOG.md#5321-2024-01-23)
+
+### Fixed
+
+- (plugin-vue) Handle updated Vue error info URL [#2068](https://github.com/bugsnag/bugsnag-js/pull/2068)
+- (react-native) Publish xcprivacy file from vendored bugsnag-cocoa [#2072](https://github.com/bugsnag/bugsnag-js/pull/2072)
+
+## v7.22.3 (2024-01-03)
+
+### Changed
+
+- (react-native) Update bugsnag-cocoa from v6.27.3 to [v6.28.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6280-2023-12-13) (includes compliance with Apple's Required Reasons API  – see [online docs](https://docs.bugsnag.com/platforms/ios/appstore-privacy/#declaring-required-reasons-for-api-usage))
+
+### Fixed
+
+- (plugin-vue) Fix errorInfo metadata in Vue 3.4+ [#2062](https://github.com/bugsnag/bugsnag-js/pull/2062)
 
 ## v7.22.2 (2023-11-21)
 

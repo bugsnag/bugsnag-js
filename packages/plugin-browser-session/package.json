@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-browser-session",
-  "version": "7.19.0",
+  "version": "7.22.3",
   "main": "session.js",
   "description": "@bugsnag/js plugin to enable session tracking in browsers",
   "homepage": "https://www.bugsnag.com/",

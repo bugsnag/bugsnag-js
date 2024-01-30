@@ -97,6 +97,7 @@ AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
 RELEASE_BRANCH=master \
 VERSION=patch \
+DIST_TAG=latest \
   docker-compose run release
 ```
 
@@ -142,6 +143,7 @@ AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
 RELEASE_BRANCH=master \
 VERSION=preminor \
+DIST_TAG=next \
   docker-compose run release
 ```
 
@@ -165,6 +167,8 @@ GITHUB_ACCESS_TOKEN=<generate a personal access token> \
 AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
 RELEASE_BRANCH=master \
+VERSION=patch \
+DIST_TAG=latest \
 RETRY_PUBLISH=1 \
 FORCE_CDN_UPLOAD=1 \
   docker-compose run release

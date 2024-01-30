@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-unhandled-rejection",
-  "version": "7.19.0",
+  "version": "7.22.3",
   "main": "unhandled-rejection.js",
   "description": "@bugsnag/js plugin to capture and report unhandled rejections",
   "homepage": "https://www.bugsnag.com/",
