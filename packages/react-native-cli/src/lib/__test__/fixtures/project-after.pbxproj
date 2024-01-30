@@ -369,8 +369,10 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-			);
+      inputPaths = (
+          $(SRCROOT)/.xcode.env.local,
+          $(SRCROOT)/.xcode.env,
+      );
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
@@ -383,8 +385,10 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-			);
+      inputPaths = (
+          $(SRCROOT)/.xcode.env.local,
+          $(SRCROOT)/.xcode.env,
+      );
 			name = "Bundle React Native Code And Images";
 			outputPaths = (
 			);
@@ -566,7 +570,7 @@
 			outputPaths = (
 			);
 			shellPath = /bin/sh;
-			shellScript = "SOURCE_MAP=\"$TMPDIR/$(md5 -qs \"$CONFIGURATION_BUILD_DIR\")-main.jsbundle.map\" ../node_modules/@bugsnag/react-native/bugsnag-react-native-xcode.sh";
+			shellScript = "npm run bugsnag:upload-ios";
 		};
 /* End PBXShellScriptBuildPhase section */
 
