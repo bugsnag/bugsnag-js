@@ -18,21 +18,20 @@ class XMLHttpRequest {
 
   send (fail: boolean, status: number | null = null) {
     if (fail) {
-      this._listeners.error.map(fn => fn())
+      this?._listeners.error.map(fn => fn())
     } else {
       this.status = status
-      this._listeners.load.map(fn => fn())
+      this?._listeners.load.map(fn => fn())
     }
   }
 
   addEventListener (evt: 'load'| 'error', listener: () => void) {
-    this._listeners[evt].push(listener)
+    this?._listeners[evt].push(listener)
   }
 
   removeEventListener (evt: 'load'| 'error', listener: () => void) {
-    for (let i = this._listeners[evt].length - 1; i >= 0; i--) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      if (listener.name === this._listeners[evt][i].name) delete this._listeners[evt][i]
+    for (let i = this?._listeners?.[evt]?.length ?? 0 - 1; i >= 0; i--) {
+      if (listener.name === this?._listeners?.[evt]?.[i]?.name) delete this?._listeners[evt][i]
     }
   }
 }
@@ -203,6 +202,22 @@ describe('plugin: network breadcrumbs', () => {
         duration: expect.any(Number)
       }
     }))
+  })
+
+  it('should gracefully degrade an XMLHTTPRequest with undefined function context', () => {
+    const window = { XMLHttpRequest, WeakMap } as unknown as Window & typeof globalThis
+
+    p = plugin([], window)
+    const client = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [p] })
+
+    const request = new window.XMLHttpRequest() as unknown as XMLHttpRequest
+    const open = request.open
+    const send = request.send
+
+    open('GET', 'https://another-domain.xyz/')
+    send(true)
+
+    expect(client._breadcrumbs.length).toBe(0)
   })
 
   it('should not leave a breadcrumb for request to bugsnag notify endpoint', () => {
