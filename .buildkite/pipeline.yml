@@ -141,6 +141,12 @@ steps:
 #      - "publish-js"
 #    commands:
 #      - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE CLI STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+      - "publish-js"
+      - "android-builder-base"
+    commands:
+      - buildkite-agent pipeline upload .buildkite/full/react-native-cli-pipeline.full.yml
 
   #
   # Conditionally trigger full pipeline
