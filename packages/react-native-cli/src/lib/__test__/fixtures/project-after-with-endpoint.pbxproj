@@ -369,10 +369,10 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-      inputPaths = (
-          $(SRCROOT)/.xcode.env.local,
-          $(SRCROOT)/.xcode.env,
-      );
+			inputPaths = (
+				$(SRCROOT)/.xcode.env.local,
+				$(SRCROOT)/.xcode.env,
+			);
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
@@ -385,10 +385,10 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-      inputPaths = (
-          $(SRCROOT)/.xcode.env.local,
-          $(SRCROOT)/.xcode.env,
-      );
+			inputPaths = (
+				$(SRCROOT)/.xcode.env.local,
+				$(SRCROOT)/.xcode.env,
+			);
 			name = "Bundle React Native Code And Images";
 			outputPaths = (
 			);
