@@ -12,7 +12,7 @@ Please see ${DOCS_LINK} for more information`
 const EXTRA_INPUT_FILES = ['"$(SRCROOT)/.xcode.env.local"', '"$(SRCROOT)/.xcode.env"']
 const EXTRA_PACKAGER_ARGS = 'export SOURCE_MAP_PATH=$(pwd)/build/sourcemaps\nif [ ! -d "$SOURCE_MAP_PATH" ]; then\n\tmkdir -p "$SOURCE_MAP_PATH";\nfi\nexport EXTRA_PACKAGER_ARGS="--sourcemap-output $(pwd)/build/sourcemaps/main.jsbundle.map"'
 
-export async function updateXcodeProject (projectRoot: string, endpoint: string|undefined, reactNativeVersion: string|undefined, logger: Logger) {
+export async function updateXcodeProject (projectRoot: string, endpoint: string, reactNativeVersion: string|undefined, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
   const xcodeprojDir = (await fs.readdir(iosDir)).find(p => p.endsWith('.xcodeproj'))
 
