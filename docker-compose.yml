@@ -156,6 +156,7 @@ services:
       dockerfile: dockerfiles/Dockerfile.react-native-android-builder-java-17-node-18
       args:
         - REGISTRY_URL
+        - REGISTRY_URI
         - REG_BASIC_CREDENTIAL
         - REG_NPM_EMAIL
         - MAVEN_REPO_URL
@@ -164,6 +165,7 @@ services:
       - BRANCH_NAME
       - BUILDKITE
       - REGISTRY_URL
+      - REGISTRY_URI
       - REACT_NATIVE_VERSION
       - RN_NEW_ARCH
       - NOTIFIER_VERSION
