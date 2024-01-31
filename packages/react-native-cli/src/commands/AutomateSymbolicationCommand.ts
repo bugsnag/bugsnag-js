@@ -87,7 +87,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
 
       if (iosIntegration) {
         logger.info('Modifying the Xcode project')
-        await updateXcodeProject(projectRoot, urls[UrlType.UPLOAD], logger)
+        await updateXcodeProject(projectRoot, urls[UrlType.UPLOAD], reactNativeVersion as string, logger)
 
         await prompts({
           type: 'text',
