@@ -108,7 +108,6 @@ function arrayContainsElements (mainArray: any[], subArray: any[]): boolean {
 
 async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean> {
   const searchString = 'SOURCEMAP_FILE='
-  const sourceMapFilePath = 'ios/build/sourcemaps/main.jsbundle.map'
   const envFilePath = path.join(iosDir, '.xcode.env')
 
   try {
@@ -120,13 +119,14 @@ async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean>
       logger.warn(`The .xcode.env file already contains a section for "${searchString}"`)
       return false
     } else {
-      const newData = `${xcodeEnvData}\n\n# React Native Source Map File\nexport ${searchString}${sourceMapFilePath}`
+      const newData = `${xcodeEnvData}\n\n# React Native Source Map File\nexport SOURCE_MAP_PATH=$(pwd)/build/sourcemaps\nif [ ! -d "$SOURCE_MAP_PATH" ]; then\n\tmkdir -p "$SOURCE_MAP_PATH";\nfi\nexport ${searchString}$(pwd)/build/sourcemaps/main.jsbundle.map`
       await fs.writeFile(envFilePath, newData, 'utf8')
       return true
     }
   } catch (error) {
     if (error.code === 'ENOENT') {
-      const newData = `export NODE_BINARY=$(command -v node)\n# React Native Source Map File\nexport ${searchString}${sourceMapFilePath}`
+      const newData = `export NODE_BINARY=$(command -v node)\n\n# React Native Source Map File\nexport SOURCE_MAP_PATH=$(pwd)/build/sourcemaps\nif [ ! -d "$SOURCE_MAP_PATH" ]; then\n\tmkdir -p "$SOURCE_MAP_PATH";\nfi\nexport ${searchString}$(pwd)/build/sourcemaps/main.jsbundle.map`
+
       await fs.writeFile(envFilePath, newData, 'utf8')
       return true
     } else {
