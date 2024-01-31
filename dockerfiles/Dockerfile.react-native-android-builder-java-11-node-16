@@ -1,12 +1,6 @@
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-11
 
-# Java version
-ARG JAVA_VERSION
-ENV JAVA_HOME=/usr/local/openjdk-${JAVA_VERSION}
-
-ARG NODE_VERSION
-ENV NODE_VERSION=$NODE_VERSION
-RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs rsync
 
 RUN npm i -g run-func
@@ -17,14 +11,9 @@ WORKDIR /app
 RUN rm -f ~/.npmrc
 ARG REG_BASIC_CREDENTIAL
 ARG REG_NPM_EMAIL
-ARG REGISTRY_URL
-RUN echo "registry=$REGISTRY_URL" >> ~/.npmrc
 RUN echo "_auth=$REG_BASIC_CREDENTIAL" >> ~/.npmrc
 RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
 RUN echo "always-auth=true" >> ~/.npmrc
-
-# fix npm auth config for node 18
-RUN if [ "$NODE_VERSION" = "18" ]; then npm config fix; fi
 
 # gradle / artifactory auth
 ARG MAVEN_REPO_URL

@@ -6,7 +6,7 @@ steps:
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: FULL REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
     - "publish-js"
-    - "android-builder-base"
+    - "android-builder-base-java-11"
     commands:
       - buildkite-agent pipeline upload .buildkite/full/react-native-android-pipeline.full.yml
 
@@ -19,7 +19,7 @@ steps:
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE CLI STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
       - "publish-js"
-      - "android-builder-base"
+      - "android-builder-base-java-11"
     commands:
       - buildkite-agent pipeline upload .buildkite/full/react-native-cli-pipeline.full.yml
 

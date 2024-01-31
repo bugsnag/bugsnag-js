@@ -5,19 +5,16 @@ steps:
       #
       # Android builder
       #
-      - label: ":docker: Build RN Android Builder image"
-        key: "android-builder-image"
+      - label: ":docker: Build RN Android Builder image (Java 17, Node 18)"
+        key: "android-builder-image-java-17-node-18"
         timeout_in_minutes: 30
         plugins:
           - docker-compose#v4.12.0:
-              build: react-native-android-builder
+              build: react-native-android-builder-java-17-node-18
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-              cache-from:  react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-              args:
-                - JAVA_VERSION=17
-                - NODE_VERSION=18
+              cache-from:  react-native-android-builder-java-17-node-18:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
           - docker-compose#v4.12.0:
-              push: react-native-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+              push: react-native-android-builder-java-17-node-18:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
         retry:
           automatic:
             - exit_status: "*"
@@ -29,7 +26,7 @@ steps:
       - label: ":android: Build RN 0.73 (Old Arch) apk"
         key: "rn-0-73-old-arch-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-java-17-node-18"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.73"
@@ -37,8 +34,8 @@ steps:
           ARTEFACT_NAME: "rn0.73-old-arch"
         plugins:
           - docker-compose#v4.12.0:
-              pull: react-native-android-builder
-              run: react-native-android-builder
+              pull: react-native-android-builder-java-17-node-18
+              run: react-native-android-builder-java-17-node-18
         artifact_paths:
           - build/rn0.73-old-arch.apk
         retry:
@@ -49,7 +46,7 @@ steps:
       - label: ":android: Build RN 0.73 (New Arch) apk"
         key: "rn-0-73-new-arch-apk"
         depends_on:
-          - "android-builder-image"
+          - "android-builder-image-java-17-node-18"
         timeout_in_minutes: 60
         env:
           REACT_NATIVE_VERSION: "rn0.73"
@@ -57,8 +54,8 @@ steps:
           ARTEFACT_NAME: "rn0.73-new-arch"
         plugins:
           - docker-compose#v4.12.0:
-              pull: react-native-android-builder
-              run: react-native-android-builder
+              pull: react-native-android-builder-java-17-node-18
+              run: react-native-android-builder-java-17-node-18
         artifact_paths:
           - build/rn0.73-new-arch.apk
         retry:

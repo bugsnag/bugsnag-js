@@ -201,8 +201,6 @@ steps:
               build: react-native-cli-android-builder
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
               cache-from:  react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-              args:
-                - JAVA_VERSION=11
           - docker-compose#v4.12.0:
               push: react-native-cli-android-builder:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
         retry:

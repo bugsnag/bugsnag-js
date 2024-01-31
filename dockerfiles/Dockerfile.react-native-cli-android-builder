@@ -1,8 +1,4 @@
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base
-
-# Java version
-ARG JAVA_VERSION
-ENV JAVA_HOME=/usr/local/openjdk-${JAVA_VERSION}
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-11
 
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get update && apt-get install -y nodejs rsync expect \

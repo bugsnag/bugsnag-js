@@ -1,7 +1,4 @@
-FROM openjdk:11-jdk-bullseye as java-11
-
-FROM openjdk:17-jdk-bullseye 
-COPY --from=java-11 /usr/local/openjdk-11 /usr/local/openjdk-11
+FROM openjdk:17-jdk-bullseye
 
 # OS setup
 RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev
@@ -31,9 +28,7 @@ ENV GRADLE_USER_HOME="/app/gradle"
 WORKDIR /app/gradle
 
 # TODO: Not convinced this is actually saving repeat downloads as it is intended to do
-RUN wget -q https://services.gradle.org/distributions/gradle-5.1.1-all.zip \
-            https://services.gradle.org/distributions/gradle-5.4.1-all.zip \
-            https://services.gradle.org/distributions/gradle-6.2-all.zip
+RUN wget -q https://services.gradle.org/distributions/gradle-8.3-all.zip
 
 RUN ln -s /sdk/build-tools/33.0.0/d8 /sdk/build-tools/33.0.0/dx \
     && ln -s /sdk/build-tools/33.0.0/lib/d8.jar /sdk/build-tools/33.0.0/lib/dx.jar
