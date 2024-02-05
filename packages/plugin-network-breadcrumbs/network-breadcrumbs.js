@@ -28,7 +28,10 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
         const originalOpen = win.XMLHttpRequest.prototype.open
         win.XMLHttpRequest.prototype.open = function open (method, url) {
-          trackedRequests.set(this, { method, url })
+          // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
+          if (this) {
+            trackedRequests.set(this, { method, url })
+          }
           originalOpen.apply(this, arguments)
         }
 
@@ -50,7 +53,10 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
             this.addEventListener('load', load)
             this.addEventListener('error', error)
-            requestHandlers.set(this, { load, error })
+            // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
+            if (this) {
+              requestHandlers.set(this, { load, error })
+            }
           }
 
           originalSend.apply(this, arguments)
