@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/js",
-  "version": "7.22.3",
+  "version": "7.22.4",
   "main": "node/notifier.js",
   "browser": "browser/notifier.js",
   "types": "types.d.ts",
@@ -33,7 +33,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/browser": "^7.22.3",
+    "@bugsnag/browser": "^7.22.4",
     "@bugsnag/node": "^7.22.3"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browser",
-  "version": "7.22.3",
+  "version": "7.22.4",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for browser JavaScript",
@@ -35,7 +35,7 @@
     "@bugsnag/delivery-xml-http-request": "^7.22.3",
     "@bugsnag/plugin-app-duration": "^7.19.0",
     "@bugsnag/plugin-browser-context": "^7.22.3",
-    "@bugsnag/plugin-browser-device": "^7.20.0",
+    "@bugsnag/plugin-browser-device": "^7.22.4",
     "@bugsnag/plugin-browser-request": "^7.22.3",
     "@bugsnag/plugin-browser-session": "^7.22.3",
     "@bugsnag/plugin-client-ip": "^7.22.3",
