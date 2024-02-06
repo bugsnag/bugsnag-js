@@ -18,6 +18,7 @@
     "moduleResolution": "node",
     "sourceRoot": "src",
     "experimentalDecorators": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": []
   }
 }

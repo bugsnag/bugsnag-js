@@ -7,7 +7,7 @@ module.exports = (app, client) => {
 
     // In Vue 3.4+, the info param is a link to the Vue error docs in prod, so we need to extract the error code from it
     // https://github.com/vuejs/core/pull/9165/commits/c261beab2c0a26e401f2c3d5eae2e4c41de6fe4d
-    const code = typeof info === 'string' && info.indexOf('-') > 0 ? info.split('-')[1] : info
+    const code = typeof info === 'string' && info.indexOf('runtime-') > 0 ? info.split('runtime-')[1] : info
     const errorInfo = ErrorTypeStrings[code] || info
 
     event.addMetadata('vue', {
@@ -33,7 +33,7 @@ function formatComponentName (vm) {
 // We copy in the following data structures from Vue's source so we can map the "info" parameter in the errorhandler
 // callback (which is supplied as either a string or int) back to something meaningful
 
-// https://github.com/vuejs/vue-next/blob/d5cce47789db8f37b9f5f8ea6602ea63e3a04b07/packages/runtime-core/src/component.ts#L153-L167
+// https://github.com/vuejs/core/blob/f1068fc60ca511f68ff0aaedcc18b39124791d29/packages/runtime-core/src/enums.ts
 const LifecycleHooks = {
   BEFORE_CREATE: 'bc',
   CREATED: 'c',
@@ -47,10 +47,11 @@ const LifecycleHooks = {
   ACTIVATED: 'a',
   RENDER_TRIGGERED: 'rtg',
   RENDER_TRACKED: 'rtc',
-  ERROR_CAPTURED: 'ec'
+  ERROR_CAPTURED: 'ec',
+  SERVER_PREFETCH: 'sp'
 }
 
-// https://github.com/vuejs/vue-next/blob/d5cce47789db8f37b9f5f8ea6602ea63e3a04b07/packages/runtime-core/src/errorHandling.ts#L6-L24
+// https://github.com/vuejs/core/blob/f1068fc60ca511f68ff0aaedcc18b39124791d29/packages/runtime-core/src/errorHandling.ts#L7-L25
 const ErrorCodes = {
   SETUP_FUNCTION: 0,
   RENDER_FUNCTION: 1,
@@ -69,8 +70,9 @@ const ErrorCodes = {
   SCHEDULER: 14
 }
 
-// https://github.com/vuejs/vue-next/blob/d5cce47789db8f37b9f5f8ea6602ea63e3a04b07/packages/runtime-core/src/errorHandling.ts#L26-L57
+// https://github.com/vuejs/core/blob/f1068fc60ca511f68ff0aaedcc18b39124791d29/packages/runtime-core/src/errorHandling.ts#L27-L59
 const ErrorTypeStrings = {
+  [LifecycleHooks.SERVER_PREFETCH]: 'serverPrefetch hook',
   [LifecycleHooks.BEFORE_CREATE]: 'beforeCreate hook',
   [LifecycleHooks.CREATED]: 'created hook',
   [LifecycleHooks.BEFORE_MOUNT]: 'beforeMount hook',
@@ -100,5 +102,5 @@ const ErrorTypeStrings = {
   [ErrorCodes.ASYNC_COMPONENT_LOADER]: 'async component loader',
   [ErrorCodes.SCHEDULER]:
     'scheduler flush. This is likely a Vue internals bug. ' +
-    'Please open an issue at https://new-issue.vuejs.org/?repo=vuejs/vue-next'
+    'Please open an issue at https://github.com/vuejs/core .'
 }

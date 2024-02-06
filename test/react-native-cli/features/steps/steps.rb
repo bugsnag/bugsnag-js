@@ -224,12 +224,12 @@ Then('the iOS app contains the bugsnag initialisation code') do
   step("the interactive file '#{filename}' contains '[Bugsnag start];'")
 end
 
-def get_android_main_application_path(current_fixture)
-  "android/app/src/main/java/com/#{current_fixture}/MainApplication.java"
+def get_android_main_application_path
+  "android/app/src/main/java/com/reactnative/MainApplication.java"
 end
 
 Then('the Android app contains the bugsnag initialisation code') do
-  filename = get_android_main_application_path current_fixture
+  filename = get_android_main_application_path
   step("the interactive file '#{filename}' contains 'import com.bugsnag.android.Bugsnag;'")
   step("the interactive file '#{filename}' contains 'Bugsnag.start(this);'")
 end
@@ -242,7 +242,7 @@ Then('the iOS app does not contain the bugsnag initialisation code') do
 end
 
 Then('the Android app does not contain the bugsnag initialisation code') do
-  filename = get_android_main_application_path current_fixture
+  filename = get_android_main_application_path
   step("the interactive file '#{filename}' does not contain 'import com.bugsnag.android.Bugsnag;'")
   step("the interactive file '#{filename}' does not contain 'Bugsnag.start(this);'")
 end
@@ -272,7 +272,7 @@ Then('the modified files are as expected after running the insert command') do
     When I input "git status --porcelain" interactively
     Then I wait for the interactive shell to output the following lines in stdout
       """
-      M #{get_android_main_application_path current_fixture}
+      M #{get_android_main_application_path}
       M index.js
       M ios/#{current_fixture}/AppDelegate.m
       """

@@ -8,7 +8,7 @@ import { Device, Session } from '@bugsnag/core'
 import EventWithInternals from '@bugsnag/core/event'
 import { schema } from '@bugsnag/core/config'
 
-declare class SessionWithDevice extends Session { public device: Device }
+interface SessionWithDevice extends Session { device: Device }
 
 const navigator = { language: 'en-GB', userAgent: 'testing browser 1.2.3' } as unknown as Navigator
 const mockWindow = { screen: { orientation: { type: 'landscape-primary' } } } as unknown as Window & typeof globalThis

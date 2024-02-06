@@ -1,0 +1,31 @@
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-17
+
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get install -y nodejs rsync
+
+RUN npm i -g run-func
+
+WORKDIR /app
+
+# npm auth
+RUN rm -f ~/.npmrc
+ARG REG_BASIC_CREDENTIAL
+ARG REG_NPM_EMAIL
+ARG REGISTRY_URL
+ARG REGISTRY_URI
+RUN echo "registry=$REGISTRY_URL" >> ~/.npmrc
+RUN echo "$REGISTRY_URI:_auth=$REG_BASIC_CREDENTIAL" >> ~/.npmrc
+RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
+
+# gradle / artifactory auth
+ARG MAVEN_REPO_URL
+ENV MAVEN_REPO_URL="$MAVEN_REPO_URL"
+ENV MAVEN_REPO_CREDS="$REG_BASIC_CREDENTIAL"
+
+# Now copy in all the files needed to build
+COPY .git .git
+COPY lerna.json .
+COPY scripts/common.js scripts/react-native-helper.js scripts/
+
+# Do a full build by running the container
+CMD run-func scripts/react-native-helper.js buildAndroid "/app/test/react-native/features/fixtures" "/app/features/fixtures"

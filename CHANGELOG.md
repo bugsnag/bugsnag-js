@@ -1,5 +1,18 @@
 # Changelog
 
+## v7.22.4 (2024-02-06)
+
+This release adds support for React Native 0.73 to `@bugsnag/react-native`
+
+### Changed
+
+- (react-native) Update bugsnag-android from v5.31.3 to [v5.32.1](https://github.com/bugsnag/bugsnag-android/blob/v5.32.1/CHANGELOG.md#5321-2024-01-23)
+
+### Fixed
+
+- (plugin-vue) Handle updated Vue error info URL [#2068](https://github.com/bugsnag/bugsnag-js/pull/2068)
+- (react-native) Publish xcprivacy file from vendored bugsnag-cocoa [#2072](https://github.com/bugsnag/bugsnag-js/pull/2072)
+
 ## v7.22.3 (2024-01-03)
 
 ### Changed
