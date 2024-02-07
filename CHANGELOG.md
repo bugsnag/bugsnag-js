@@ -1,6 +1,8 @@
 # Changelog
 
-## TBD
+## v7.22.4 (2024-02-06)
+
+This release adds support for React Native 0.73 to `@bugsnag/react-native`
 
 ### Changed
 

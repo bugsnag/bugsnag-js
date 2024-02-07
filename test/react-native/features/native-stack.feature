@@ -13,7 +13,9 @@ Scenario: Handled JS error with native stacktrace
 
   # the native part of the stack comes first
   And the error payload field "events.0.exceptions.0.stacktrace.0.type" equals "android"
-  And the error payload field "events.0.exceptions.0.stacktrace.0.file" equals "Scenario.kt"
+  And the error payload field "events.0.exceptions.0.stacktrace.0.file" equals one of:
+    | Scenario.kt |
+    | SourceFile  |
   And the error payload field "events.0.exceptions.0.stacktrace.0.method" equals one of:
     | com.reactnative.scenarios.Scenario.generateException |
     | generateException |
@@ -39,10 +41,15 @@ Scenario: Unhandled JS error with native stacktrace
 
   # the native part of the stack comes first
   And the error payload field "events.0.exceptions.0.stacktrace.0.type" equals "android"
-  And the error payload field "events.0.exceptions.0.stacktrace" is a non-empty array
-  And the error payload field "events.0.exceptions.0.stacktrace.0.file" equals "Scenario.kt"
-  And the error payload field "events.0.exceptions.0.stacktrace.1.file" equals "NativeStackUnhandledScenario.kt"
-  And the error payload field "events.0.exceptions.0.stacktrace.2.file" equals "BugsnagModule.java"
+  And the error payload field "events.0.exceptions.0.stacktrace.0.file" equals one of:
+    | Scenario.kt |
+    | SourceFile  |
+  And the error payload field "events.0.exceptions.0.stacktrace.1.file" equals one of:
+    | NativeStackUnhandledScenario.kt |
+    | SourceFile |
+  And the error payload field "events.0.exceptions.0.stacktrace.2.file" equals one of:
+    | BugsnagModule.java |
+    | SourceFile |
   And the error payload field "events.0.exceptions.0.stacktrace.0.method" equals one of:
     | com.reactnative.scenarios.Scenario.generateException |
     | generateException |

@@ -1,6 +1,6 @@
 {
     "name": "@bugsnag/web-worker",
-    "version": "7.22.3",
+    "version": "7.22.4",
     "description": "BugSnag error reporter for JavaScript web workers and service workers",
     "homepage": "https://www.bugsnag.com/",
     "main": "dist/bugsnag.web-worker.js",
@@ -41,7 +41,7 @@
     "devDependencies": {
         "@bugsnag/core": "^7.18.0",
         "@bugsnag/delivery-fetch": "^7.20.0",
-        "@bugsnag/plugin-browser-device": "^7.20.0",
+        "@bugsnag/plugin-browser-device": "^7.22.4",
         "@bugsnag/plugin-browser-session": "^7.22.3",
         "@bugsnag/plugin-client-ip": "^7.22.3",
         "@bugsnag/plugin-window-onerror": "^7.22.3",
