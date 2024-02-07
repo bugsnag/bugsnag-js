@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-in-project",
-  "version": "8.0.0-alpha.1",
+  "version": "8.0.0-alpha.3",
   "main": "in-project.js",
   "description": "@bugsnag/js plugin to mark whether stackframes are 'in-project'",
   "homepage": "https://www.bugsnag.com/",
@@ -18,7 +18,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.1"
+    "@bugsnag/core": "^8.0.0-alpha.3"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8"
