@@ -100,6 +100,8 @@ Remove
 - .eslintrc.js
 - App.js
 - index.js
+- README.md
+- yarn.lock
 
 1. Create a `.dockerignore` file:
     ```
@@ -157,6 +159,16 @@ Remove
         <key>NSExceptionAllowsInsecureHTTPLoads</key>
         <true/>
     </dict>
+    <key>localhost</key>
+    <dict>
+        <key>NSExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
+    </dict>
+    ```
+    1. In `reactnative.xcodeproj/project.pbxproj`, update all instances of `PRODUCT_BUNDLE_IDENTIFIER`:
+    ```diff
+    - PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+    + PRODUCT_BUNDLE_IDENTIFIER = "com.bugsnag.fixtures.$(PRODUCT_NAME:rfc1034identifier)";
     ```
 
 1. Open `ios/reactnative.xcworkspace` in Xcode
@@ -165,4 +177,4 @@ Remove
     1. Add all files in `../../ios-modules/Scenarios` to the new group
     1. Xcode may prompt to add a bridging header for Swift.  Cancel this and instead:
     1. Set Build Settings -> Swift Compiler - General -> Objective-C Bridging Header to `../../ios-module/Scenarios/Scenario.h`
-    1. Set Signing & Capabilities -> Build team to the shared Bugsnag iOS build team
+    1. Set Signing & Capabilities -> Build team to the shared SmartBear build team
