@@ -3,23 +3,29 @@ Upgrading
 
 ## 7.x to 8.x
 
-### node
+As well as a number of bug fixes and enhancements with breaking changes, this version contains major improvements to our Node package: including making the top-level `Bugsnag` static interface context-aware and enabling breadcrumbs for Node.js projects.
 
-This version contains major improvements to the node notifier, including making the top-level `Bugsnag` static interface context-aware and enabling breadcrumbs for node projects.
+### Amended triggers for automatically tracked sessions for web apps
 
-The minimum supported node version is now v12.17.0.
+To avoid over-reporting of session in browser-based apps, particularly SPAs, `replaceState` and `pushState` now no longer result in a new session. BugSnag sessions are now only created on full page loads. Depending on the type of web app you have, you may notice a drop in overall session numbers after upgrading.
 
-#### context-aware `Bugsnag` calls
+### Node.js support
+
+The minimum supported Node version is now v12.17.0.
+
+### Breadcrumb support for Node.js
+
+Breadcrumb support has been enabled for Node.js apps. This means you can call `Bugsnag.leaveBreadcrumb` to attach short log statements to each error report to help diagnose what events led to the error. However, no breadcrumbs are currently automatically collected.
+
+### Context-aware `Bugsnag` calls for Node.js
 
 When using `plugin-express`, `plugin-koa`, `plugin-restify`, or `plugin-contextualize`, a clone of the top-level Bugsnag client is made so that any subsequent changes made to the client (such as attaching metadata) only affect the scope of the current web request (or a function call, when using `plugin-contextualize`).
 
-Prior to `bugsnag-js` v8, calls made to the top-level `Bugsnag` static interface were not aware of this context so users had to ensure they were calling methods on the correct client instance, i.e. the cloned client that was made available on `req.bugsnag` (or `ctx.bugsnag` for koa). This wasn't ideal because if you wanted to interact with Bugsnag in some function deep in a call stack you would have to pass `req.bugsnag` all the way down, as calling `Bugsnag.notify` would not have contained the request metadata gathered by the plugin. With version 8 of the notifier, top-level calls to `Bugsnag` are now context-aware. This means you can call `Bugsnag.notify` (or `Bugsnag.leaveBreadcrumb` etc.), and, if it was called within a context, the call will be forwarded to the correct cloned version of that client (i.e. for the particular request from which the call originated).
+Prior to `bugsnag-js` v8, calls made to the top-level `Bugsnag` static interface were not aware of this context so users had to ensure they were calling methods on the correct client instance, i.e. the cloned client that was made available on `req.bugsnag` (or `ctx.bugsnag` for Koa). This wasn't ideal because if you wanted to interact with the Bugsnag client in some function deep in a call stack you would have to pass `req.bugsnag` all the way down, as calling `Bugsnag.notify` would not have contained the request metadata gathered by the plugin.
 
-#### BugSnag no longer prevents the node process from exiting
+With version 8 of the notifier, top-level calls to `Bugsnag` are now context-aware. This means you can call `Bugsnag.notify` (or `Bugsnag.leaveBreadcrumb` etc.), and, if it was called within a context, the call will be forwarded to the correct cloned version of that client (i.e. for the particular request from which the call originated).
 
-Additionally, prior to `bugsnag-js` v8, unhandled errors in requests were caught using the deprecated Domain API and the error handler attached to the domain was preventing the termination of the node process. With version 8 of the notifier, BugSnag no longer changes the normal behavior of the application and so uncaught exceptions thrown in request handlers (and `plugin-contextualize` callbacks, see below) will cause the node process to terminate.
-
-Express
+Express:
 
 ```diff
 app.get('/handled', function (req, res) {
@@ -28,7 +34,7 @@ app.get('/handled', function (req, res) {
 })
 ```
 
-Koa
+Koa:
 
 ```diff
 app.use(async (ctx, next) => {
@@ -42,16 +48,32 @@ app.use(async (ctx, next) => {
 })
 ```
 
-Notes
+#### Notes
 
 * `req.bugsnag` (and `ctx.bugsnag` in koa) is still present in version 8 of `bugsnag-js`, so you can continue using these as before.
 * There are rare situations on Express servers when this contextual storage can get lost, causing the data stored to become server-scoped and so affect all threads that are being executed. See our [online docs](https://docs.bugsnag.com/platforms/javascript/express/node-async/#context-loss-in-express-servers) for full details.
 
-#### breadcrumb support
+### BugSnag no longer prevents the Node.js process from exiting
 
-Breadcrumb support has been enabled for node. This means you can call `Bugsnag.leaveBreadcrumb` to attach short log statements to each error report to help diagnose what events led to the error.  
+Prior to `bugsnag-js` v8, unhandled errors in requests were caught using the deprecated Domain API and the error handler attached to the domain was preventing the termination of the Node process. With version 8, BugSnag no longer changes the normal behavior of the application and so uncaught exceptions thrown in request handlers (and `plugin-contextualize` callbacks, see below) will cause the process to terminate.
 
-Currently no breadcrumbs are automatically collected in node.
+### `plugin-contextualize` behavior
+
+Unhandled errors that occur within a contextualize context now respect the `autoDetectErrors` and `enabledErrorTypes` configuration options. Previously unhandled errors would have been caught regardless of the configuration.
+
+As noted above, with this release uncaught exceptions occurring within a contextualize context will cause the Node process to terminate where previously the error handler incorrectly prevented this happening.
+
+### `request` replaced with `url` and `method` in network breadcrumb metadata
+
+Prior to v8, network breadcrumb metadata included a field named `request`, which contained the request URL prepended with the HTTP method (e.g. `"GET https://request-url.com/`). This has been replaced with two separate metadata fields named `url` and `method`, which contain the request URL and HTTP method respectively.
+
+### Angular `onError` callbacks from `notify`
+
+Prior to v8, calls to `notify` triggered change detection cycles which could affect performance. Using built-in Angular zones, this has [now been eliminated](https://github.com/bugsnag/bugsnag-js/pull/1861). However this means that any changes made to templates from the `onError` will no longer trigger a render and so will need to be manually re-rendered.
+
+### Validation of BugSnag endpoints
+
+As of v8, for consistency with other BugSnag platforms, if only one [endpoint](https://docs.bugsnag.com/platforms/javascript/configuration-options/#endpoints) is set in configuration, no events **or** sessions will be sent. To correctly setup BugSnag for on-premise, both `notify` and `sessions` endpoint should be set. This change reduces the possibility of a misconfigured client leaking data to the wrong BugSnag server.
 
 #### `request` replaced with `url` and `method` in network breadcrumb metadata
 
@@ -64,12 +86,6 @@ As of `v7.3` of the [`bugsnag-js` monorepo](https://github.com/bugsnag/bugsnag-j
 The previous Bugsnag React Native SDK – [`bugsnag-react-native`](https://github.com/bugsnag/bugsnag-react-native) – continues to be available and will receive critical bug fixes, but it is no longer under active development and won't receive new features.
 
 See the [React Native upgrade guide](/packages/react-native/UPGRADING.md) for specific instructions on how to upgrade from `bugsnag-react-native` to `@bugsnag/react-native`.
-
-#### plugin-contextualize
-
-Unhandled errors that occur within a contextualize context now respect the `autoDetectErrors` and `enabledErrorTypes` configuration options. Previously unhandled errors would have been caught regardless of the configuration.
-
-Additionally, prior to `bugsnag-js` v8, unhandled errors that occur within a contextualize context were preventing the termination of the node process. With version 8 of the notifier, uncaught exceptions occurring within a contextualize context will cause the node process to terminate.
 
 ## 7.0 to 7.1
 
