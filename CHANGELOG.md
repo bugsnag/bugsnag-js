@@ -15,7 +15,9 @@
 - (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Added `method` metadata field to network breadcrumbs [#1988](https://github.com/bugsnag/bugsnag-js/pull/1988)
 - (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Added `duration` metadata field to network breadcrumbs [#1903](https://github.com/bugsnag/bugsnag-js/pull/1903)
 
-## TBD
+## v7.22.4 (2024-02-06)
+
+This release adds support for React Native 0.73 to `@bugsnag/react-native`
 
 ### Changed
 
