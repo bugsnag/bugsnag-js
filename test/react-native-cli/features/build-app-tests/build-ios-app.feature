@@ -2,9 +2,12 @@ Feature: Tests for building a React Native app (for iOS only) that was initializ
 
   Scenario: A CLI initialized React Native iOS app invokes a source map upload
     When I build the iOS app
-    And I wait to receive a build
+    And I wait to receive 1 sourcemaps
+
+    Then the sourcemap is valid for the Build API
 
     Then the sourcemaps Content-Type header is valid multipart form-data
-    And the build payload field "apiKey" equals "1234567890ABCDEF1234567890ABCDEF"
-    And the build payload field "platform" equals "ios"
-    And the build payload field "overwrite" equals "true"
+    And the sourcemap payload field "apiKey" equals "1234567890ABCDEF1234567890ABCDEF"
+    And the sourcemap payload field "platform" equals "ios"
+    And the sourcemap payload field "overwrite" equals "true"
+
