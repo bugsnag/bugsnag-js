@@ -36,7 +36,7 @@ expect "What is your Bugsnag sessions endpoint?"
 send -- http://bs-local.com:9339/sessions\r
 
 expect "What is your Bugsnag upload endpoint?"
-send -- http://localhost:9339/builds\r
+send -- http://localhost:9339\r
 
 expect "What is your Bugsnag build endpoint?"
 send -- http://localhost:9339/builds\r
