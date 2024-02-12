@@ -46,7 +46,7 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
   logger.success('Written changes to Xcode project')
 }
 
-async function updateBuildReactNativeTask(buildPhaseMap: Record<string, Record<string, unknown>>, iosDir: string, reactNativeVersion: string | undefined, logger: Logger): Promise<boolean> {
+async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<string, unknown>>, iosDir: string, reactNativeVersion: string | undefined, logger: Logger): Promise<boolean> {
   let didAnythingUpdate = false
   let didThisUpdate
 
