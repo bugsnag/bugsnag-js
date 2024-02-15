@@ -275,6 +275,7 @@ services:
       AWS_SESSION_TOKEN:
       AWS_SECRET_ACCESS_KEY:
       VERSION:
+      DIST_TAG:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
     volumes:
       - ~/.gitconfig:/home/releaser/.gitconfig
