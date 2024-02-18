@@ -1,5 +1,11 @@
 # Changelog
 
+## v7.22.5 (2024-02-15)
+
+### Changed
+
+- (react-native) Update bugsnag-android from v5.32.1 to [v5.32.2](https://github.com/bugsnag/bugsnag-android/blob/v5.32.2/CHANGELOG.md#5322-2024-02-12)
+
 ## v7.22.4 (2024-02-06)
 
 This release adds support for React Native 0.73 to `@bugsnag/react-native`

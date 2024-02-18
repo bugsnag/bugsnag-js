@@ -24,7 +24,8 @@ export default class App extends Component {
       apiKey: '12312312312312312312312312312312',
       notifyEndpoint: '',
       sessionsEndpoint: '',
-      scenario: null
+      scenario: null,
+      bugsnagStarted: false
     }
   }
 
@@ -68,6 +69,16 @@ export default class App extends Component {
     NativeModules.BugsnagTestInterface.clearPersistentData()
   }
 
+  pollBugsnagStarted = () => {
+    setTimeout(() => {
+      if (Bugsnag.isStarted()) {
+        this.setState(() => ({ bugsnagStarted: true }))
+      } else {
+        this.pollBugsnagStarted()
+      }
+    }, 50)
+  }
+
   startScenario = () => {
     console.log(`Running scenario: ${this.state.currentScenario}`)
     const scenarioName = this.state.currentScenario
@@ -76,6 +87,7 @@ export default class App extends Component {
     const scenario = new Scenarios[scenarioName](configuration, jsConfig)
     console.log(`  with config: ${JSON.stringify(configuration)} (native) and ${JSON.stringify(jsConfig)} (js)`)
     this.setState({ scenario: scenario })
+    this.pollBugsnagStarted()
     scenario.run()
   }
 
@@ -143,11 +155,11 @@ export default class App extends Component {
 
   ready () {
     const BugsnagNavigationContainer = Bugsnag.getPlugin('reactNavigation').createNavigationContainer(NavigationContainer)
-    return (
+    return this.state.bugsnagStarted ? (
       <BugsnagNavigationContainer>
         {this.state.scenario.view()}
       </BugsnagNavigationContainer>
-    )
+    ) : null
   }
 
   render () {
