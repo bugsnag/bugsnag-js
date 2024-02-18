@@ -59,12 +59,14 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<
     // so we need a little leniency
     if (typeof phase.shellScript === 'string' && phase.shellScript.includes('/react-native-xcode.sh')) {
       if (reactNativeVersion) {
+        // If we're dealing with RN >= 0.69.0 setup the .xcode.env file to export the source maps to our happy path
         if (semver.gte(reactNativeVersion, '0.69.0')) {
           [phase.inputPaths, didThisUpdate] = addExtraInputFiles(shellBuildPhaseKey, phase.inputPaths as string[], logger)
           if (didThisUpdate) {
             didAnythingUpdate = true
           }
         } else {
+          // If we're dealing with RN < 0.69.0 add the extra pacakge arguments to the xcode build phase as use of the .xcode.env file is not supported.
           [phase.shellScript, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.shellScript, logger)
           if (didThisUpdate) {
             didAnythingUpdate = true
