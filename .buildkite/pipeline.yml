@@ -150,7 +150,7 @@ steps:
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
       - "publish-js"
-      - "android-builder-base"
+      - "android-builder-base-java-17"
     commands:
       - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
 
