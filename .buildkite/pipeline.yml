@@ -66,6 +66,7 @@ steps:
       queue: "ms-arm-12-1"
     env:
       PUBLISH_URL: "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm/"
+      NODE_VERSION: "14"
     command:
       - "node scripts/publish.js $PUBLISH_URL"
     retry:
