@@ -62,7 +62,8 @@ steps:
     key: "publish-js"
     timeout_in_minutes: 30
     agents:
-      queue: "macos-12-arm"
+#      queue: "macos-12-arm"
+      queue: "ms-arm-12-1"
     env:
       PUBLISH_URL: "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm/"
     command:
