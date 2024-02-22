@@ -160,6 +160,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode13.app"
         artifact_paths: build/rn0_66.ipa
         commands:
+          - bundle install
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_66
         retry:
           automatic:
@@ -177,6 +178,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode13.app"
         artifact_paths: build/rn0_67.ipa
         commands:
+          - bundle install
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_67
         retry:
           automatic:
@@ -194,6 +196,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode13.app"
         artifact_paths: build/rn0_69.ipa
         commands:
+          - bundle install
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_69
         retry:
           automatic:
