@@ -67,6 +67,7 @@ steps:
     env:
       NODE_VERSION: "14"
       PUBLISH_URL: "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm/"
+      NODE_VERSION: "14"
     command:
       - "node scripts/publish.js $PUBLISH_URL"
     retry:
