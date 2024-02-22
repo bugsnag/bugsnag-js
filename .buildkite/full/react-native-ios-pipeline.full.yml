@@ -17,6 +17,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode13.app"
         artifact_paths: build/rn0.66.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -34,6 +35,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode13.app"
         artifact_paths: build/rn0.67.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -51,6 +53,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode13.app"
         artifact_paths: build/rn0.68-hermes.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -68,6 +71,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode13.app"
         artifact_paths: build/rn0.69.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -87,6 +91,7 @@ steps:
           ARTEFACT_NAME: "rn0.71-old-arch"
         artifact_paths: build/rn0.71-old-arch.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -106,6 +111,7 @@ steps:
           ARTEFACT_NAME: "rn0.71-new-arch"
         artifact_paths: build/rn0.71-new-arch.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -125,6 +131,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode13.app"
         artifact_paths: build/r_navigation_0.69.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -146,6 +153,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode13.app"
         artifact_paths: build/r_native_navigation_0.66.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:

@@ -19,6 +19,7 @@ steps:
           ARTEFACT_NAME: "rn0.72-old-arch"
         artifact_paths: build/rn0.72-old-arch.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -38,6 +39,7 @@ steps:
           ARTEFACT_NAME: "rn0.72-new-arch"
         artifact_paths: build/rn0.72-new-arch.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -58,6 +60,7 @@ steps:
           ARTEFACT_NAME: "rn0.73-old-arch"
         artifact_paths: build/rn0.73-old-arch.ipa
         commands:
+          - bundle install
           - npm run test:build-react-native-ios
         retry:
           automatic:
