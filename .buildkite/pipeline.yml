@@ -6,7 +6,7 @@ steps:
   - label: ":copyright: License Audit"
     timeout_in_minutes: 20
     agents:
-      queue: opensource-arm-mac-cocoa-12
+      queue: macos-12-arm
     env:
       DEVELOPER_DIR: /Applications/Xcode13.4.app
     command: scripts/license_finder.sh
