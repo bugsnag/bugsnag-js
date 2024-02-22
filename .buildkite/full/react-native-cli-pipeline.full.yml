@@ -153,7 +153,7 @@ steps:
         key: "rn-cli-0-66-ipa"
         timeout_in_minutes: 30
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-7"
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
@@ -171,7 +171,7 @@ steps:
         key: "rn-cli-0-67-ipa"
         timeout_in_minutes: 30
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-7"
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
@@ -189,7 +189,7 @@ steps:
         key: "rn-cli-0-69-ipa"
         timeout_in_minutes: 30
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "ms-arm-12-7"
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
