@@ -93,6 +93,7 @@ module.exports = {
       // JavaScript layer
       console.log(`Changing directory to: ${targetDir} and running "npm install"`)
       common.changeDir(`${targetDir}`)
+      common.run('bundle install', true)
       common.run(`npm install --registry ${registryUrl}`, true)
 
       // Install notifier
