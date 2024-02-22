@@ -65,6 +65,7 @@ steps:
 #      queue: "macos-12-arm"
       queue: "ms-arm-12-1"
     env:
+      NODE_VERSION: "14"
       PUBLISH_URL: "https://bugsnag.jfrog.io/artifactory/api/npm/platforms-npm/"
     command:
       - "node scripts/publish.js $PUBLISH_URL"
