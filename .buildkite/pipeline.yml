@@ -58,17 +58,17 @@ steps:
           run: minimal-packager
     artifact_paths: min_packages.tar
 
-  - label: ":docker: Build and publish JS packages"
-    key: "publish-js"
-    timeout_in_minutes: 30
-    plugins:
-      - docker-compose#v4.12.0:
-          build: publisher
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-    retry:
-      automatic:
-        - exit_status: "*"
-          limit: 1
+#  - label: ":docker: Build and publish JS packages"
+#    key: "publish-js"
+#    timeout_in_minutes: 30
+#    plugins:
+#      - docker-compose#v4.12.0:
+#          build: publisher
+#          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+#    retry:
+#      automatic:
+#        - exit_status: "*"
+#          limit: 1
 #
 #  - label: ":aws-lambda: AWS Lambda tests"
 #    timeout_in_minutes: 35
@@ -155,8 +155,8 @@ steps:
 #      - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on:
-      - "publish-js"
+#    depends_on:
+#      - "publish-js"
     commands:
       - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
 
