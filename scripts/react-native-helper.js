@@ -102,6 +102,7 @@ module.exports = {
       console.log(`Installing notifier: ${version}`)
       const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
       common.run(command, true)
+      common.run('pod update', true)
 
       // Install any required secondary files
       if (fs.existsSync('./install.sh')) {
