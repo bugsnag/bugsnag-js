@@ -14,6 +14,7 @@ steps:
       ARTEFACT_NAME: "rn0.72-old-arch"
     artifact_paths: build/rn0.72-old-arch.ipa
     commands:
+      - which bundle
       - bundle install
       - which pod
       - gem list
