@@ -110,7 +110,6 @@ module.exports = {
       if (!fs.existsSync('./build.sh')) {
         throw new Error('Local iOS build file at ./build.sh could not be found')
       }
-      common.run('bundle install', true)
       common.run('./build.sh', true)
 
       // Copy file out to build directory
