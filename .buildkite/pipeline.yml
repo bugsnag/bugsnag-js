@@ -14,10 +14,7 @@ steps:
       ARTEFACT_NAME: "rn0.72-old-arch"
     artifact_paths: build/rn0.72-old-arch.ipa
     commands:
-      - gem environment
-      - echo ---
-      - env
-      - echo ---
-      - ruby --version
       - bundle install
-      - npm run test:build-react-native-ios
+      - which pod
+      - gem list
+#      - npm run test:build-react-native-ios
