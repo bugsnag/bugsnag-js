@@ -2,12 +2,9 @@ steps:
   - label: "ruby"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-1
+      queue: ms-arm-12-7
     commands:
-      - gem environment
-      - bundle install
-      - gem list
-      - which pod
+      - gem environment && bundle install && gem list && which pod
   #
   # License audit
   #
