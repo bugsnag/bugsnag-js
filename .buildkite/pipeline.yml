@@ -15,4 +15,6 @@ steps:
     artifact_paths: build/rn0.72-old-arch.ipa
     commands:
       - rbenv init
+      - gem install bundler -v 2.4.22
+      - bundle install
 #      - npm run test:build-react-native-ios
