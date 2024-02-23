@@ -1,21 +1,41 @@
 steps:
-
-  - label: ":ios: Build RN 0.72 (Old Arch) ipa"
-    key: "rn-0-72-old-arch-ipa"
-    timeout_in_minutes: 60
+  - label: ':android: Build RN {{matrix}} test fixture APK (Old Arch)'
+    key: "build-react-native-android-fixture-old-arch"
+    timeout_in_minutes: 30
     agents:
       queue: "ms-arm-12-7"
     env:
-      REACT_NATIVE_VERSION: "rn0.72"
-      NOTIFIER_VERSION: "7.22.5-ci-tms-mac-build-publish.321c48847c"
-      LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode14.app"
-      RCT_NEW_ARCH_ENABLED: "0"
-      ARTEFACT_NAME: "rn0.72-old-arch"
-    artifact_paths: build/rn0.72-old-arch.ipa
+      RN_VERSION: "{{matrix}}"
+      BUILD_ANDROID: "true"
+    artifact_paths:
+      - "test/react-native/features/fixtures/generated/oldarch/**/reactnative.apk"
     commands:
-      - which bundle
-      - gem install bundler -v 2.4.22
-      - which bundle
       - bundle install
-      - npm run test:build-react-native-ios
+      - ./bin/generate-react-native-fixture
+    matrix:
+      - "0.71"
+      - "0.72"
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 1
+
+#  - label: ":ios: Build RN 0.72 (Old Arch) ipa"
+#    key: "rn-0-72-old-arch-ipa"
+#    timeout_in_minutes: 60
+#    agents:
+#      queue: "ms-arm-12-7"
+#    env:
+#      REACT_NATIVE_VERSION: "rn0.72"
+#      NOTIFIER_VERSION: "7.22.5-ci-tms-mac-build-publish.321c48847c"
+#      LANG: "en_US.UTF-8"
+#      DEVELOPER_DIR: "/Applications/Xcode14.app"
+#      RCT_NEW_ARCH_ENABLED: "0"
+#      ARTEFACT_NAME: "rn0.72-old-arch"
+#    artifact_paths: build/rn0.72-old-arch.ipa
+#    commands:
+#      - which bundle
+#      - gem install bundler -v 2.4.22
+#      - which bundle
+#      - bundle install
+#      - npm run test:build-react-native-ios
