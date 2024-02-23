@@ -4,7 +4,10 @@ steps:
     agents:
       queue: ms-arm-12-2
     commands:
-      - gem environment && bundle install && gem list && which pod
+      - gem environment
+      - bundle install
+      - gem list
+      - which pod
   #
   # License audit
   #
