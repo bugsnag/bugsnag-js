@@ -16,4 +16,4 @@ steps:
     commands:
       - gem install bundler -v 2.4.22
       - bundle install
-#      - npm run test:build-react-native-ios
+      - npm run test:build-react-native-ios
