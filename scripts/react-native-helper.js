@@ -21,9 +21,6 @@ module.exports = {
         artefactName = process.env.ARTEFACT_NAME
       }
 
-      console.log('RUBY VERSION')
-      common.run('ruby -v')
-
       console.log(`Installing notifier version: ${version}`)
 
       // Copy in files required
@@ -83,6 +80,9 @@ module.exports = {
       if (process.env.ARTEFACT_NAME) {
         artefactName = process.env.ARTEFACT_NAME
       }
+
+      console.log('RUBY VERSION')
+      common.run('ruby -v')
 
       // We're not in docker so check the above are set
       if (rnVersion === undefined || registryUrl === undefined) {
