@@ -6,7 +6,7 @@ steps:
   - label: "Ruby checks"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "echo '***' && gem list"
       - "echo '***' && bundle install"
@@ -21,7 +21,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "bundle install"
       - "pod --version"
@@ -33,7 +33,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
     retry:
@@ -43,7 +43,7 @@ steps:
   - label: "Ruby checks"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "echo '***' && gem list"
       - "echo '***' && bundle install"
@@ -57,7 +57,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "bundle install"
       - "pod --version"
@@ -69,83 +69,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
-    commands:
-      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  #
-  # License audit
-  #
-  - label: "Ruby checks"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "echo '***' && gem list"
-      - "echo '***' && bundle install"
-      - "echo '***' && gem list"
-      - "echo '***' && pod --version"
-      - "echo '***' && echo $$PATH"
-    retry:
-      manual:
-        permit_on_passed: true
-
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "bundle install"
-      - "pod --version"
-      - "./scripts/pod.sh"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Ruby checks"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "echo '***' && gem list"
-      - "echo '***' && bundle install"
-      - "echo '***' && gem list"
-      - "echo '***' && pod --version"
-      - "echo '***' && echo $$PATH"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "bundle install"
-      - "pod --version"
-      - "./scripts/pod.sh"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
     retry:
@@ -158,7 +82,7 @@ steps:
   - label: "Ruby checks"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "echo '***' && gem list"
       - "echo '***' && bundle install"
@@ -173,7 +97,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "bundle install"
       - "pod --version"
@@ -185,7 +109,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
     retry:
@@ -195,7 +119,7 @@ steps:
   - label: "Ruby checks"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "echo '***' && gem list"
       - "echo '***' && bundle install"
@@ -209,7 +133,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "bundle install"
       - "pod --version"
@@ -221,83 +145,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
-    commands:
-      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  #
-  # License audit
-  #
-  - label: "Ruby checks"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "echo '***' && gem list"
-      - "echo '***' && bundle install"
-      - "echo '***' && gem list"
-      - "echo '***' && pod --version"
-      - "echo '***' && echo $$PATH"
-    retry:
-      manual:
-        permit_on_passed: true
-
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "bundle install"
-      - "pod --version"
-      - "./scripts/pod.sh"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Ruby checks"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "echo '***' && gem list"
-      - "echo '***' && bundle install"
-      - "echo '***' && gem list"
-      - "echo '***' && pod --version"
-      - "echo '***' && echo $$PATH"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "bundle install"
-      - "pod --version"
-      - "./scripts/pod.sh"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
     retry:
@@ -310,7 +158,7 @@ steps:
   - label: "Ruby checks"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "echo '***' && gem list"
       - "echo '***' && bundle install"
@@ -325,7 +173,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "bundle install"
       - "pod --version"
@@ -337,7 +185,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
     retry:
@@ -347,7 +195,7 @@ steps:
   - label: "Ruby checks"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "echo '***' && gem list"
       - "echo '***' && bundle install"
@@ -361,7 +209,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "bundle install"
       - "pod --version"
@@ -373,83 +221,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
-    commands:
-      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  #
-  # License audit
-  #
-  - label: "Ruby checks"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "echo '***' && gem list"
-      - "echo '***' && bundle install"
-      - "echo '***' && gem list"
-      - "echo '***' && pod --version"
-      - "echo '***' && echo $$PATH"
-    retry:
-      manual:
-        permit_on_passed: true
-
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "bundle install"
-      - "pod --version"
-      - "./scripts/pod.sh"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Ruby checks"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "echo '***' && gem list"
-      - "echo '***' && bundle install"
-      - "echo '***' && gem list"
-      - "echo '***' && pod --version"
-      - "echo '***' && echo $$PATH"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
-    commands:
-      - "bundle install"
-      - "pod --version"
-      - "./scripts/pod.sh"
-    retry:
-      manual:
-        permit_on_passed: true
-
-  - label: "Script"
-    timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
     retry:
@@ -462,7 +234,7 @@ steps:
   - label: "Ruby checks"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "echo '***' && gem list"
       - "echo '***' && bundle install"
@@ -477,7 +249,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "bundle install"
       - "pod --version"
@@ -489,7 +261,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
     retry:
@@ -499,7 +271,7 @@ steps:
   - label: "Ruby checks"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "echo '***' && gem list"
       - "echo '***' && bundle install"
@@ -513,7 +285,7 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
     commands:
       - "bundle install"
       - "pod --version"
@@ -525,7 +297,235 @@ steps:
   - label: "Script"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-2
+      queue: macos-12-arm
+    commands:
+      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  #
+  # License audit
+  #
+  - label: "Ruby checks"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "echo '***' && gem list"
+      - "echo '***' && bundle install"
+      - "echo '***' && gem list"
+      - "echo '***' && pod --version"
+      - "echo '***' && echo $$PATH"
+    retry:
+      manual:
+        permit_on_passed: true
+
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "bundle install"
+      - "pod --version"
+      - "./scripts/pod.sh"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Ruby checks"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "echo '***' && gem list"
+      - "echo '***' && bundle install"
+      - "echo '***' && gem list"
+      - "echo '***' && pod --version"
+      - "echo '***' && echo $$PATH"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "bundle install"
+      - "pod --version"
+      - "./scripts/pod.sh"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  #
+  # License audit
+  #
+  - label: "Ruby checks"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "echo '***' && gem list"
+      - "echo '***' && bundle install"
+      - "echo '***' && gem list"
+      - "echo '***' && pod --version"
+      - "echo '***' && echo $$PATH"
+    retry:
+      manual:
+        permit_on_passed: true
+
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "bundle install"
+      - "pod --version"
+      - "./scripts/pod.sh"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Ruby checks"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "echo '***' && gem list"
+      - "echo '***' && bundle install"
+      - "echo '***' && gem list"
+      - "echo '***' && pod --version"
+      - "echo '***' && echo $$PATH"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "bundle install"
+      - "pod --version"
+      - "./scripts/pod.sh"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  #
+  # License audit
+  #
+  - label: "Ruby checks"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "echo '***' && gem list"
+      - "echo '***' && bundle install"
+      - "echo '***' && gem list"
+      - "echo '***' && pod --version"
+      - "echo '***' && echo $$PATH"
+    retry:
+      manual:
+        permit_on_passed: true
+
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "bundle install"
+      - "pod --version"
+      - "./scripts/pod.sh"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Ruby checks"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "echo '***' && gem list"
+      - "echo '***' && bundle install"
+      - "echo '***' && gem list"
+      - "echo '***' && pod --version"
+      - "echo '***' && echo $$PATH"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
+    commands:
+      - "bundle install"
+      - "pod --version"
+      - "./scripts/pod.sh"
+    retry:
+      manual:
+        permit_on_passed: true
+
+  - label: "Script"
+    timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
     commands:
       - "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'"
     retry:
