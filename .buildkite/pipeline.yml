@@ -2,7 +2,7 @@ steps:
   - label: "ruby"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-7
+      queue: ms-arm-12-1
     commands:
       - gem environment
       - bundle install
