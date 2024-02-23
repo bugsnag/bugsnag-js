@@ -9,7 +9,7 @@ steps:
       REACT_NATIVE_VERSION: "rn0.72"
       NOTIFIER_VERSION: "7.22.5-ci-tms-mac-build-publish.321c48847c"
       LANG: "en_US.UTF-8"
-      DEVELOPER_DIR: "/Applications/Xcode13.2.1.app"
+      DEVELOPER_DIR: "/Applications/Xcode14.app"
       RCT_NEW_ARCH_ENABLED: "0"
       ARTEFACT_NAME: "rn0.72-old-arch"
     artifact_paths: build/rn0.72-old-arch.ipa
