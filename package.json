@@ -91,7 +91,7 @@
     "test:build-browser-container": "docker-compose up --build minimal-packager && docker-compose build --pull browser-maze-runner",
     "test:build-node-container": "docker-compose up --build minimal-packager && docker-compose build --pull node-maze-runner",
     "test:build-react-native-android": "test/react-native/scripts/build-android-locally.js",
-    "test:build-react-native-ios": "bundle install && node -e 'require(\"./scripts/react-native-helper\").buildIOS()'",
+    "test:build-react-native-ios": "node -e 'require(\"./scripts/react-native-helper\").buildIOS()'",
     "test:build-react-native-maze-runner": "docker-compose build --pull react-native-maze-runner",
     "test:node": "npm run test:build-node-container && docker-compose run --use-aliases node-maze-runner",
     "test:react-native:ios": "npm run test:build-react-native-ios && npm run test:build-react-native-maze-runner && APP_LOCATION=build/$REACT_NATIVE_VERSION.ipa docker-compose run --use-aliases react-native-maze-runner",
