@@ -17,6 +17,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode14.app"
           RCT_NEW_ARCH_ENABLED: "0"
           ARTEFACT_NAME: "rn0.72-old-arch"
+          NOTIFIER_VERSION: "7.22.5"
         artifact_paths: build/rn0.72-old-arch.ipa
         commands:
           - bundle install
@@ -37,6 +38,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode14.app"
           RCT_NEW_ARCH_ENABLED: "1"
           ARTEFACT_NAME: "rn0.72-new-arch"
+          NOTIFIER_VERSION: "7.22.5"
         artifact_paths: build/rn0.72-new-arch.ipa
         commands:
           - bundle install
@@ -58,6 +60,7 @@ steps:
           DEVELOPER_DIR: "/Applications/Xcode14.app"
           RCT_NEW_ARCH_ENABLED: "0"
           ARTEFACT_NAME: "rn0.73-old-arch"
+          NOTIFIER_VERSION: "7.22.5"
         artifact_paths: build/rn0.73-old-arch.ipa
         commands:
           -  bundle install
