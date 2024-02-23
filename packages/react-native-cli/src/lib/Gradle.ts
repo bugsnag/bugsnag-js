@@ -33,11 +33,12 @@ export async function getSuggestedBugsnagGradleVersion (projectRoot: string, log
     const versionMatchResult = fileContents.match(/classpath\(["']com.android.tools.build:gradle["']\)/)
     if (versionMatchResult) {
       return '7.+'
-    }
-    logger.warn(`Cannot determine an appropriate version of the Bugsnag Android Gradle plugin for use in this project.
+    } else {
+      logger.warn(`Cannot determine an appropriate version of the Bugsnag Android Gradle plugin for use in this project.
 
 Please see ${DOCS_LINK} for information on Gradle and the Android Gradle Plugin (AGP) compatibility`)
-    return ''
+      return ''
+    }
   }
 }
 
