@@ -62,9 +62,7 @@ steps:
     key: "publish-js"
     timeout_in_minutes: 30
     agents:
-      # TODO - use the correct queue
-#      queue: "macos-12-arm"
-      queue: "ms-arm-12-1"
+      queue: "macos-12-arm"
     env:
       NODE_VERSION: "14"
     command:
