@@ -82,7 +82,7 @@ module.exports = {
       }
 
       console.log('RUBY VERSION')
-      common.run('ruby -v')
+      common.run('ruby -v', true)
 
       // We're not in docker so check the above are set
       if (rnVersion === undefined || registryUrl === undefined) {
