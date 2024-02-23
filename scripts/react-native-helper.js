@@ -21,6 +21,9 @@ module.exports = {
         artefactName = process.env.ARTEFACT_NAME
       }
 
+      console.log('RUBY VERSION')
+      common.run('ruby -v')
+
       console.log(`Installing notifier version: ${version}`)
 
       // Copy in files required
