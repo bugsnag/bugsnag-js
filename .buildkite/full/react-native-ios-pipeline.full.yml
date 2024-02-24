@@ -10,7 +10,7 @@ steps:
         key: "rn-0-66-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "macos-12-arm"
         env:
           REACT_NATIVE_VERSION: rn0.66
           LANG: "en_US.UTF-8"
@@ -27,7 +27,7 @@ steps:
         key: "rn-0-67-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "macos-12-arm"
         env:
           REACT_NATIVE_VERSION: rn0.67
           LANG: "en_US.UTF-8"
@@ -44,7 +44,7 @@ steps:
         key: "rn-0-68-hermes-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "macos-12-arm"
         env:
           REACT_NATIVE_VERSION: rn0.68-hermes
           LANG: "en_US.UTF-8"
@@ -61,7 +61,7 @@ steps:
         key: "rn-0-69-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "macos-12-arm"
         env:
           REACT_NATIVE_VERSION: rn0.69
           LANG: "en_US.UTF-8"
@@ -78,7 +78,7 @@ steps:
         key: "rn-0-71-old-arch-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "macos-12-arm"
         env:
           REACT_NATIVE_VERSION: "rn0.71"
           LANG: "en_US.UTF-8"
@@ -97,7 +97,7 @@ steps:
         key: "rn-0-71-new-arch-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "macos-12-arm"
         env:
           REACT_NATIVE_VERSION: "rn0.71"
           LANG: "en_US.UTF-8"
@@ -116,7 +116,7 @@ steps:
         key: "react-navigation-0-69-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "macos-12-arm"
         env:
           REACT_NATIVE_VERSION: rn0.69
           JS_SOURCE_DIR: "react_navigation_js"
@@ -137,7 +137,7 @@ steps:
         key: "react-native-navigation-0-66-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "opensource-arm-mac-cocoa-12"
+          queue: "macos-12-arm"
         env:
           REACT_NATIVE_VERSION: rn0.66
           JS_SOURCE_DIR: "react_native_navigation_js"
