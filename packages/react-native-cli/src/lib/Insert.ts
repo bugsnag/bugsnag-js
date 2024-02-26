@@ -147,13 +147,13 @@ export async function insertAndroid (projectRoot: string, logger: Logger): Promi
     const mainApplicationWithImport = mainApplication.replace('import', `${BUGSNAG_JAVA_IMPORT}\nimport`)
     const onCreateRes = JAVA_APP_ON_CREATE_REGEX.exec(mainApplicationWithImport)
     if (!onCreateRes) {
-      logger.warn(FAIL_MSG('MainApplication.java'))
+      logger.warn(FAIL_MSG('MainApplication.java, MainApplication.kt or MainApplication'))
       return
     }
 
     await fs.writeFile(mainApplicationPath, mainApplicationWithImport.replace(onCreateRes[1], `${onCreateRes[1]}${BUGSNAG_JAVA_INIT}${onCreateRes[2]}`), 'utf8')
     logger.success('Done')
   } catch (e) {
-    logger.error(FAIL_MSG('MainApplication.java'))
+    logger.error(FAIL_MSG('MainApplication.java, MainApplication.kt or MainApplication'))
   }
 }
