@@ -40,7 +40,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
     const { bugsnagCliIntegration } = await prompts({
       type: 'confirm',
       name: 'bugsnagCliIntegration',
-      message: 'Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android?',
+      message: 'Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps?',
       initial: true
     }, { onCancel })
 
