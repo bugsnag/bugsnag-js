@@ -265,7 +265,7 @@ test('insertAndroid(): failure to locate file', async () => {
   )
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java" automatically.'))
+  expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java, MainApplication.kt or MainApplication" automatically.'))
 })
 
 test('insertAndroid(): failure to locate package directory', async () => {
@@ -279,7 +279,7 @@ test('insertAndroid(): failure to locate package directory', async () => {
   expect(readFileMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java" automatically.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java, MainApplication.kt or MainApplication" automatically.'))
 })
 
 test('insertAndroid(): project directory error', async () => {
@@ -293,7 +293,7 @@ test('insertAndroid(): project directory error', async () => {
   expect(readFileMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java" automatically.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java, MainApplication.kt or MainApplication" automatically.'))
 })
 
 test('insertAndroid(): no identifiable onCreate method', async () => {
@@ -311,5 +311,5 @@ test('insertAndroid(): no identifiable onCreate method', async () => {
   )
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java" automatically.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java, MainApplication.kt or MainApplication" automatically.'))
 })
