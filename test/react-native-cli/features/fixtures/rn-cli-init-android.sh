@@ -61,9 +61,6 @@ if {[expr $rnVersionInt3 < 0.68]} {
    send -- \r
 }
 
-expect "Do you want to add an NPM task to your package.json that you can run to upload Android and iOS source maps?"
-send -- y
-
 expect "See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details."
 send -- \r
 

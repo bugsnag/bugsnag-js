@@ -110,7 +110,7 @@ async function addUploadSourceMapsTask (
 
 function addExtraInputFiles (phaseId: string, existingInputFiles: string[], logger: Logger): [string[], boolean] {
   if (arrayContainsElements(existingInputFiles, EXTRA_INPUT_FILES)) {
-    logger.warn(`The "Bundle React Native Code and Images" build phase (${phaseId}) already includes the required arguments`)
+    logger.info(`The "Bundle React Native Code and Images" build phase (${phaseId}) already includes the required arguments`)
     return [existingInputFiles, false]
   }
   return [EXTRA_INPUT_FILES.concat(existingInputFiles), true]
@@ -123,7 +123,7 @@ function arrayContainsElements (mainArray: any[], subArray: any[]): boolean {
 function addExtraPackagerArgs (phaseId: string, existingShellScript: string, logger: Logger): [string, boolean] {
   const parsedExistingShellScript = JSON.parse(existingShellScript) as string
   if (parsedExistingShellScript.includes(EXTRA_PACKAGER_ARGS)) {
-    logger.warn(`The "Bundle React Native Code and Images" build phase (${phaseId}) already includes the required arguments`)
+    logger.info(`The "Bundle React Native Code and Images" build phase (${phaseId}) already includes the required arguments`)
     return [existingShellScript, false]
   }
   const scriptLines = parsedExistingShellScript.split('\n')

@@ -59,23 +59,14 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
         }
       }
 
-      const { bugsnagCliNpmTasks } = await prompts({
-        type: 'confirm',
-        name: 'bugsnagCliNpmTasks',
-        message: 'Do you want to add an NPM task to your package.json that you can run to upload Android and iOS source maps?',
-        initial: true
+      await writeToPackageJson(join(projectRoot, 'package.json'), urls[UrlType.UPLOAD], urls[UrlType.BUILD])
+
+      await prompts({
+        type: 'text',
+        name: 'bugsnagCliInstructions',
+        message: BUGSNAG_CLI_INSTRUCTIONS,
+        initial: 'Hit enter to continue …'
       }, { onCancel })
-
-      if (bugsnagCliNpmTasks) {
-        await writeToPackageJson(join(projectRoot, 'package.json'), urls[UrlType.UPLOAD], urls[UrlType.BUILD])
-
-        await prompts({
-          type: 'text',
-          name: 'bugsnagCliInstructions',
-          message: BUGSNAG_CLI_INSTRUCTIONS,
-          initial: 'Hit enter to continue …'
-        }, { onCancel })
-      }
 
       const { iosIntegration } = await prompts({
         type: 'confirm',
