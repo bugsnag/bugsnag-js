@@ -26,11 +26,10 @@ const HERMES_INSTRUCTIONS = `You are running a version of React Native that we c
 
 `
 
-const BUGSNAG_CLI_INSTRUCTIONS = `The following tasks have been added to your package.json:
+const BUGSNAG_CLI_INSTRUCTIONS = `The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
 
-    bugsnag:upload-android - run this task to upload Android source maps after a build.
-
-    bugsnag:upload-ios - run this task to upload iOS source maps after a build.
+    bugsnag:upload-android
+    bugsnag:upload-ios
 
     See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
 
