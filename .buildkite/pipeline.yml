@@ -6,7 +6,7 @@ steps:
   - label: ":copyright: License Audit"
     timeout_in_minutes: 20
     agents:
-      queue: opensource-arm-mac-cocoa-12
+      queue: macos-12-arm
     env:
       DEVELOPER_DIR: /Applications/Xcode13.4.app
     command: scripts/license_finder.sh
@@ -61,10 +61,12 @@ steps:
   - label: ":docker: Build and publish JS packages"
     key: "publish-js"
     timeout_in_minutes: 30
-    plugins:
-      - docker-compose#v4.12.0:
-          build: publisher
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+    agents:
+      queue: "macos-12-arm"
+    env:
+      NODE_VERSION: "14"
+    command:
+      - "node scripts/publish.js $$PUBLISH_URL"
     retry:
       automatic:
         - exit_status: "*"
