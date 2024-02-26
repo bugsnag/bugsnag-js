@@ -108,21 +108,21 @@ export async function insertAndroid (projectRoot: string, logger: Logger): Promi
     const javaDir = path.join(projectRoot, 'android', 'app', 'src', 'main', 'java')
     const relativeMainApplicationPathJava = (await asyncGlob('**/*/MainApplication.java', {
       cwd: javaDir
-    }))[0];
+    }))[0]
 
     const relativeMainApplicationPathKotlin = (await asyncGlob('**/*/MainApplication.kt', {
       cwd: javaDir
-    }))[0];
+    }))[0]
 
     let relativeMainApplicationPath;
     if (relativeMainApplicationPathJava) {
-      relativeMainApplicationPath = relativeMainApplicationPathJava;
+      relativeMainApplicationPath = relativeMainApplicationPathJava
     } else if (relativeMainApplicationPathKotlin) {
-      relativeMainApplicationPath = relativeMainApplicationPathKotlin;
+      relativeMainApplicationPath = relativeMainApplicationPathKotlin
     }
 
     if (!relativeMainApplicationPath) {
-      return logger.warn(FAIL_MSG('MainApplication.java or MainApplication.kt'));
+      return logger.warn(FAIL_MSG('MainApplication.java or MainApplication.kt'))
     }
     mainApplicationPath = path.join(javaDir, relativeMainApplicationPath)
   } catch (e) {
