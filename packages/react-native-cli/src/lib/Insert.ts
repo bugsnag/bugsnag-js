@@ -114,7 +114,7 @@ export async function insertAndroid (projectRoot: string, logger: Logger): Promi
       cwd: javaDir
     }))[0]
 
-    let relativeMainApplicationPath;
+    let relativeMainApplicationPath
     if (relativeMainApplicationPathJava) {
       relativeMainApplicationPath = relativeMainApplicationPathJava
     } else if (relativeMainApplicationPathKotlin) {
