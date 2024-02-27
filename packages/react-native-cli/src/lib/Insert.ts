@@ -106,13 +106,26 @@ export async function insertAndroid (projectRoot: string, logger: Logger): Promi
   let mainApplicationPath
   try {
     const javaDir = path.join(projectRoot, 'android', 'app', 'src', 'main', 'java')
-    const relativeMainApplicationPath = (await asyncGlob('**/*/MainApplication.java', {
+    const relativeMainApplicationPathJava = (await asyncGlob('**/*/MainApplication.java', {
       cwd: javaDir
     }))[0]
-    if (!relativeMainApplicationPath) return logger.warn(FAIL_MSG('MainApplication.java'))
+
+    const relativeMainApplicationPathKotlin = (await asyncGlob('**/*/MainApplication.kt', {
+      cwd: javaDir
+    }))[0]
+
+    const relativeMainApplicationPathOther = (await asyncGlob('**/*/MainApplication', {
+      cwd: javaDir
+    }))[0]
+
+    const relativeMainApplicationPath = relativeMainApplicationPathJava || relativeMainApplicationPathKotlin || relativeMainApplicationPathOther
+
+    if (!relativeMainApplicationPath) {
+      return logger.warn(FAIL_MSG('MainApplication.java, MainApplication.kt or MainApplication'))
+    }
     mainApplicationPath = path.join(javaDir, relativeMainApplicationPath)
   } catch (e) {
-    logger.warn(FAIL_MSG('MainApplication.java'))
+    logger.warn(FAIL_MSG('MainApplication.java, MainApplication.kt or MainApplication'))
     return
   }
 
@@ -127,13 +140,13 @@ export async function insertAndroid (projectRoot: string, logger: Logger): Promi
     const mainApplicationWithImport = mainApplication.replace('import', `${BUGSNAG_JAVA_IMPORT}\nimport`)
     const onCreateRes = JAVA_APP_ON_CREATE_REGEX.exec(mainApplicationWithImport)
     if (!onCreateRes) {
-      logger.warn(FAIL_MSG('MainApplication.java'))
+      logger.warn(FAIL_MSG('MainApplication.java, MainApplication.kt or MainApplication'))
       return
     }
 
     await fs.writeFile(mainApplicationPath, mainApplicationWithImport.replace(onCreateRes[1], `${onCreateRes[1]}${BUGSNAG_JAVA_INIT}${onCreateRes[2]}`), 'utf8')
     logger.success('Done')
   } catch (e) {
-    logger.error(FAIL_MSG('MainApplication.java'))
+    logger.error(FAIL_MSG('MainApplication.java, MainApplication.kt or MainApplication'))
   }
 }
