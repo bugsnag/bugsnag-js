@@ -137,24 +137,31 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
     // Default to two spaces if indent cannot be detected
     const existingIndent = detectIndent(data).indent || '  '
 
-    let androidUploadCommand = 'bugsnag-cli upload react-native-android'
-    let iosUploadCommand = 'bugsnag-cli upload react-native-ios'
-    let buildCommand = 'bugsnag-cli create-build'
+    let createBuildCommand = 'bugsnag-cli create-build'
+    let rnAndroidUploadCommand = 'bugsnag-cli upload react-native-android'
+    let androidUploadCommand = 'bugsnag-cli upload android'
+    let rnIosUploadCommand = 'bugsnag-cli upload react-native-ios'
+    let dsymUploadCommand = 'bugsnag-cli upload dsym'
 
     if (uploadUrl) {
+      rnAndroidUploadCommand += ` --upload-api-root-url=${uploadUrl}`
       androidUploadCommand += ` --upload-api-root-url=${uploadUrl}`
-      iosUploadCommand += ` --upload-api-root-url=${uploadUrl}`
+      rnIosUploadCommand += ` --upload-api-root-url=${uploadUrl}`
+      dsymUploadCommand += ` --upload-api-root-url=${uploadUrl}`
     }
 
     if (buildUrl) {
-      buildCommand += ` --build-api-root-url=${buildUrl}`
+      createBuildCommand += ` --build-api-root-url=${buildUrl}`
     }
 
     packageJson.scripts = {
       ...packageJson.scripts,
-      'bugsnag:create-build': buildCommand,
+      'bugsnag:create-build': createBuildCommand,
       'bugsnag:upload-android': androidUploadCommand,
-      'bugsnag:upload-ios': iosUploadCommand
+      'bugsnag:upload-rn-android': rnAndroidUploadCommand,
+      'bugsnag:upload-dsym': dsymUploadCommand,
+      'bugsnag:upload-rn-ios': rnIosUploadCommand,
+      'bugsnag:upload': 'npm run bugsnag:upload-android && npm run bugsnag:upload-rn-android && npm run bugsnag:upload-rn-ios && npm run bugsnag:upload-dsym'
     }
 
     const updatedPackageJson = JSON.stringify(packageJson, null, existingIndent)
