@@ -28,8 +28,12 @@ const HERMES_INSTRUCTIONS = `You are running a version of React Native that we c
 
 const BUGSNAG_CLI_INSTRUCTIONS = `The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
 
-    bugsnag:upload-android
-    bugsnag:upload-ios
+    bugsnag:create-build        - Creates a new build
+    bugsnag:upload-android      - Uploads Android source maps
+    bugsnag:upload-rn-android   - Uploads React Native Android source maps
+    bugsnag:upload-dsym         - Uploads iOS dSYMs
+    bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
+    bugsnag:upload              - Runs all of the above tasks
 
     See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
 
@@ -161,7 +165,7 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
       'bugsnag:upload-rn-android': rnAndroidUploadCommand,
       'bugsnag:upload-dsym': dsymUploadCommand,
       'bugsnag:upload-rn-ios': rnIosUploadCommand,
-      'bugsnag:upload': 'npm run bugsnag:upload-android && npm run bugsnag:upload-rn-android && npm run bugsnag:upload-rn-ios && npm run bugsnag:upload-dsym'
+      'bugsnag:upload': androidUploadCommand + ' && ' + rnAndroidUploadCommand + ' && ' + dsymUploadCommand + ' && ' + rnIosUploadCommand
     }
 
     const updatedPackageJson = JSON.stringify(packageJson, null, existingIndent)
