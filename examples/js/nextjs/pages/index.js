@@ -4,9 +4,9 @@ const Index = () => (
   <div style={{ maxWidth: 700, margin: '0 auto' }}>
     <h2>Bugsnag next.js Example</h2>
     <p>
-      This example demonstrates how to record exceptions in your code with Bugsnag.
-      There are several scenario pages below that result in various kinds of unhandled
-       and handled exceptions.
+      This example demonstrates how to record exceptions in your code with
+      Bugsnag. There are several scenario pages below that result in various
+      kinds of unhandled and handled exceptions.
     </p>
     <p>
       <strong>Important:</strong> exceptions in development mode take a
@@ -53,8 +53,8 @@ const Index = () => (
             Open in a new tab
           </a>{' '}
           or{' '}
-          <Link href="/ssr/scenario1">
-            <a>Perform client side navigation</a>
+          <Link href="/ssr/scenario1" prefetch={false}>
+            Perform client side navigation
           </Link>
         </li>
         <li>
@@ -71,8 +71,7 @@ const Index = () => (
           </a>
         </li>
         <li>
-          getServerSideProps manually captures an exception from a try/catch.
-          {' '}
+          getServerSideProps manually captures an exception from a try/catch.{' '}
           <a href="/ssr/scenario4" target="_blank">
             Open in a new tab
           </a>
@@ -83,8 +82,8 @@ const Index = () => (
         <li>
           There is a top-of-module Promise that rejects, but its result is not
           awaited.{' '}
-          <Link href="/client/scenario1">
-            <a>Perform client side navigation</a>
+          <Link href="/client/scenario1" prefetch={false}>
+            Perform client side navigation
           </Link>{' '}
           or{' '}
           <a href="/client/scenario1" target="_blank">
@@ -93,8 +92,8 @@ const Index = () => (
         </li>
         <li>
           There is a top-of-module exception. _error.js should render.{' '}
-          <Link href="/client/scenario2">
-            <a>Perform client side navigation</a>
+          <Link href="/client/scenario2" prefetch={false}>
+            Perform client side navigation
           </Link>{' '}
           or{' '}
           <a href="/client/scenario2" target="_blank">
@@ -105,8 +104,8 @@ const Index = () => (
           There is an exception during React lifecycle that is caught by
           Next.js's React Error Boundary. In this case, when the component
           mounts. This should cause _error.js to render.{' '}
-          <Link href="/client/scenario3">
-            <a>Perform client side navigation</a>
+          <Link href="/client/scenario3" prefetch={false}>
+            Perform client side navigation
           </Link>{' '}
           or{' '}
           <a href="/client/scenario3" target="_blank">
@@ -116,8 +115,8 @@ const Index = () => (
         <li>
           There is an unhandled Promise rejection during React lifecycle. In
           this case, when the component mounts.{' '}
-          <Link href="/client/scenario4">
-            <a>Perform client side navigation</a>
+          <Link href="/client/scenario4" prefetch={false}>
+            Perform client side navigation
           </Link>{' '}
           or{' '}
           <a href="/client/scenario4" target="_blank">
@@ -126,8 +125,8 @@ const Index = () => (
         </li>
         <li>
           An Error is thrown from an event handler.{' '}
-          <Link href="/client/scenario5">
-            <a>Perform client side navigation</a>
+          <Link href="/client/scenario5" prefetch={false}>
+            Perform client side navigation
           </Link>{' '}
           or{' '}
           <a href="/client/scenario5" target="_blank">
