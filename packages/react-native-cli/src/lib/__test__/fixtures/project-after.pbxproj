@@ -570,7 +570,7 @@
 			outputPaths = (
 			);
 			shellPath = /bin/sh;
-			shellScript = "npm run bugsnag:upload-ios -- --overwrite";
+			shellScript = "npm run bugsnag:upload-rn-ios -- --overwrite";
 		};
 /* End PBXShellScriptBuildPhase section */
 

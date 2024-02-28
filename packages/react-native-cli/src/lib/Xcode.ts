@@ -89,13 +89,13 @@ async function addUploadSourceMapsTask (
 ): Promise<boolean> {
   for (const shellBuildPhaseKey in buildPhaseMap) {
     const phase = buildPhaseMap[shellBuildPhaseKey]
-    if (typeof phase.shellScript === 'string' && (phase.shellScript.includes('bugsnag-react-native-xcode.sh') || phase.shellScript.includes('npm run bugsnag:upload-ios'))) {
+    if (typeof phase.shellScript === 'string' && (phase.shellScript.includes('bugsnag-react-native-xcode.sh') || phase.shellScript.includes('npm run bugsnag:upload-rn-ios'))) {
       logger.warn('An "Upload source maps to Bugsnag" build phase already exists')
       return false
     }
   }
 
-  const shellScript = 'npm run bugsnag:upload-ios -- --overwrite'
+  const shellScript = 'npm run bugsnag:upload-rn-ios -- --overwrite'
 
   proj.addBuildPhase(
     [],
