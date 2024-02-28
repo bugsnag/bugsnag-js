@@ -1,0 +1,48 @@
+h1 {
+    color: #1E3F66;
+    text-align: center;
+    padding: 10px 24px 30px;
+}
+
+h2 {
+  color: #1E3F66;
+  text-align: center;
+}
+
+p {
+  text-align: center;
+  padding: 10px 24px;
+}
+
+button {
+  background-color: #1E3F66; /* Green background */
+  border: 1px solid blue; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  width: 30%; /* Set a width if needed */
+  display: block; /* Make the buttons appear below each other */
+  align-items: center;
+  margin:0 auto;
+  display:block;
+}
+
+.btn-group button {
+    background-color: #1E3F66; /* Green background */
+    border: 1px solid blue; /* Green border */
+    color: white; /* White text */
+    padding: 10px 24px; /* Some padding */
+    width: 50%; /* Set a width if needed */
+    display: block; /* Make the buttons appear below each other */
+    align-items: center;
+    margin:0 auto;
+    display:block;
+  }
+  
+  .btn-group button:not(:last-child) {
+    border-bottom: none; /* Prevent double borders */
+  }
+  
+  /* Add a background color on hover */
+  .btn-group button:hover {
+    background-color: #2E5984;
+  }

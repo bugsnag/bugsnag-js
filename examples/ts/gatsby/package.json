@@ -1,0 +1,32 @@
+{
+  "name": "gatsby-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "gatsby-test",
+  "author": "hannah-smartbear",
+  "keywords": [
+    "gatsby"
+  ],
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bugsnag/js": "^7.20.0",
+    "@bugsnag/plugin-react": "^7.19.0",
+    "@parcel/workers": "^2.8.3",
+    "gatsby": "^5.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.8",
+    "@types/react": "^18.0.29",
+    "@types/react-dom": "^18.0.11",
+    "typescript": "^5.0.2"
+  }
+}
