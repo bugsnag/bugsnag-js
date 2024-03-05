@@ -185,7 +185,7 @@ test('insertIos(): no identifiable app launch method', async () => {
   expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "AppDelegate.mm" automatically.'))
 })
 
-test('insertAndroid(): success', async () => {
+test('insertAndroid(): success (java)', async () => {
   const globMock = glob as unknown as jest.MockedFunction<typeof glob>
   globMock.mockImplementation((glob, opts, cb) => cb(null, ['com/bugsnagreactnativeclitest/MainApplication.java']))
 
@@ -207,7 +207,29 @@ test('insertAndroid(): success', async () => {
   )
 })
 
-test('insertAndroid(): success, tolerates some differences in source', async () => {
+test('insertAndroid(): success (kotlin)', async () => {
+  const globMock = glob as unknown as jest.MockedFunction<typeof glob>
+  globMock.mockImplementation((glob, opts, cb) => cb(null, ['com/bugsnagreactnativeclitest/MainApplication.kt']))
+
+  const mainApplication = await loadFixture(path.join(__dirname, 'fixtures', 'MainApplication-before.kt'))
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValue(mainApplication)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+
+  await insertAndroid('/random/path', logger)
+  expect(readFileMock).toHaveBeenCalledWith(
+    '/random/path/android/app/src/main/java/com/bugsnagreactnativeclitest/MainApplication.kt',
+    'utf8'
+  )
+  expect(writeFileMock).toHaveBeenCalledWith(
+    '/random/path/android/app/src/main/java/com/bugsnagreactnativeclitest/MainApplication.kt',
+    await loadFixture(path.join(__dirname, 'fixtures', 'MainApplication-after.kt')),
+    'utf8'
+  )
+})
+
+test('insertAndroid(): success, tolerates some differences in source (java)', async () => {
   const globMock = glob as unknown as jest.MockedFunction<typeof glob>
   globMock.mockImplementation((glob, opts, cb) => cb(null, ['com/bugsnagreactnativeclitest/MainApplication.java']))
 
@@ -229,7 +251,29 @@ test('insertAndroid(): success, tolerates some differences in source', async () 
   )
 })
 
-test('insertAndroid(): already present', async () => {
+test('insertAndroid(): success, tolerates some differences in source (kotlin)', async () => {
+  const globMock = glob as unknown as jest.MockedFunction<typeof glob>
+  globMock.mockImplementation((glob, opts, cb) => cb(null, ['com/bugsnagreactnativeclitest/MainApplication.kt']))
+
+  const mainApplication = await loadFixture(path.join(__dirname, 'fixtures', 'MainApplication-before-2.kt'))
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValue(mainApplication)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+
+  await insertAndroid('/random/path', logger)
+  expect(readFileMock).toHaveBeenCalledWith(
+    '/random/path/android/app/src/main/java/com/bugsnagreactnativeclitest/MainApplication.kt',
+    'utf8'
+  )
+  expect(writeFileMock).toHaveBeenCalledWith(
+    '/random/path/android/app/src/main/java/com/bugsnagreactnativeclitest/MainApplication.kt',
+    await loadFixture(path.join(__dirname, 'fixtures', 'MainApplication-after-2.kt')),
+    'utf8'
+  )
+})
+
+test('insertAndroid(): already present (java)', async () => {
   const globMock = glob as unknown as jest.MockedFunction<typeof glob>
   globMock.mockImplementation((glob, opts, cb) => cb(null, ['com/bugsnagreactnativeclitest/MainApplication.java']))
 
@@ -242,6 +286,26 @@ test('insertAndroid(): already present', async () => {
   await insertAndroid('/random/path', logger)
   expect(readFileMock).toHaveBeenCalledWith(
     '/random/path/android/app/src/main/java/com/bugsnagreactnativeclitest/MainApplication.java',
+    'utf8'
+  )
+  expect(writeFileMock).not.toHaveBeenCalled()
+
+  expect(logger.warn).toHaveBeenCalledWith('Bugsnag is already included, skipping')
+})
+
+test('insertAndroid(): already present (kotlin)', async () => {
+  const globMock = glob as unknown as jest.MockedFunction<typeof glob>
+  globMock.mockImplementation((glob, opts, cb) => cb(null, ['com/bugsnagreactnativeclitest/MainApplication.kt']))
+
+  const mainApplication = await loadFixture(path.join(__dirname, 'fixtures', 'MainApplication-after.kt'))
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValue(mainApplication)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+
+  await insertAndroid('/random/path', logger)
+  expect(readFileMock).toHaveBeenCalledWith(
+    '/random/path/android/app/src/main/java/com/bugsnagreactnativeclitest/MainApplication.kt',
     'utf8'
   )
   expect(writeFileMock).not.toHaveBeenCalled()
@@ -265,7 +329,7 @@ test('insertAndroid(): failure to locate file', async () => {
   )
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java" automatically.'))
+  expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication" automatically.'))
 })
 
 test('insertAndroid(): failure to locate package directory', async () => {
@@ -279,7 +343,7 @@ test('insertAndroid(): failure to locate package directory', async () => {
   expect(readFileMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java" automatically.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication" automatically.'))
 })
 
 test('insertAndroid(): project directory error', async () => {
@@ -293,7 +357,7 @@ test('insertAndroid(): project directory error', async () => {
   expect(readFileMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java" automatically.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication" automatically.'))
 })
 
 test('insertAndroid(): no identifiable onCreate method', async () => {
@@ -311,5 +375,5 @@ test('insertAndroid(): no identifiable onCreate method', async () => {
   )
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication.java" automatically.'))
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Failed to update "MainApplication" automatically.'))
 })

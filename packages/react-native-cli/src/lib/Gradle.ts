@@ -1,6 +1,8 @@
 import { Logger } from '../Logger'
 import { promises as fs } from 'fs'
 import path from 'path'
+import { detectInstalledVersion } from './Npm'
+import semver from 'semver'
 
 const GRADLE_PLUGIN_IMPORT = (version: string) => `classpath("com.bugsnag:bugsnag-android-gradle-plugin:${version}")`
 const GRADLE_PLUGIN_IMPORT_REGEX = /classpath\(["']com\.bugsnag:bugsnag-android-gradle-plugin:.*["']\)/
@@ -12,6 +14,9 @@ const BUGSNAG_CONFIGURATION_BLOCK = 'bugsnag {\n}\n'
 const BUGSNAG_CONFIGURATION_BLOCK_REGEX = /^\s*bugsnag {[^}]*?}/m
 const UPLOAD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*endpoint[^}]*?}/m
 const BUILD_ENDPOINT_REGEX = /^\s*bugsnag {[^}]*releasesEndpoint[^}]*?}/m
+const GRADLE_VERSION_FAIL_MSG = `Cannot determine an appropriate version of the Bugsnag Android Gradle plugin for use in this project.
+
+Please see ${DOCS_LINK} for information on Gradle and the Android Gradle Plugin (AGP) compatibility`
 
 export async function getSuggestedBugsnagGradleVersion (projectRoot: string, logger: Logger): Promise<string> {
   let fileContents: string
@@ -30,14 +35,25 @@ export async function getSuggestedBugsnagGradleVersion (projectRoot: string, log
   } else if (major === 7) {
     return '7.+'
   } else {
-    const versionMatchResult = fileContents.match(/classpath\(["']com.android.tools.build:gradle["']\)/)
-    if (versionMatchResult) {
-      return '7.+'
-    }
-    logger.warn(`Cannot determine an appropriate version of the Bugsnag Android Gradle plugin for use in this project.
+    // if the AGP version isn't set explicitly in the build.gradle file,
+    // try to suggest a version based on the detected react-native version
+    const noVersionMatchResult = fileContents.match(/classpath\(["']com.android.tools.build:gradle["']\)/)
+    let reactNativeVersion
+    try {
+      reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
+    } catch (e) {}
 
-Please see ${DOCS_LINK} for information on Gradle and the Android Gradle Plugin (AGP) compatibility`)
-    return ''
+    if (!noVersionMatchResult || !reactNativeVersion) {
+      logger.warn(GRADLE_VERSION_FAIL_MSG)
+      return ''
+    }
+
+    // RN 0.73+ requires AGP 8.+
+    if (semver.lt(reactNativeVersion, '0.73.0')) {
+      return '7.+'
+    } else {
+      return '8.+'
+    }
   }
 }
 
