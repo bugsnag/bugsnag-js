@@ -18,6 +18,10 @@ const BUGSNAG_JAVA_IMPORT = 'import com.bugsnag.android.Bugsnag;'
 const BUGSNAG_JAVA_INIT = 'Bugsnag.start(this);'
 const JAVA_APP_ON_CREATE_REGEX = /(public void onCreate\s*\(\)\s*\{[^]*super\.onCreate\(\);(\s*))\S/
 
+const BUGSNAG_KOTLIN_IMPORT = 'import com.bugsnag.android.Bugsnag'
+const BUGSNAG_KOTLIN_INIT = 'Bugsnag.start(this)'
+const KOTLIN_APP_ON_CREATE_REGEX = /(override fun onCreate\s*\(\)\s*\{[^]*super\.onCreate\(\)(\s*))\S/
+
 const DOCS_LINK = 'https://docs.bugsnag.com/platforms/react-native/react-native/#basic-configuration'
 const FAIL_MSG = (filename: string) =>
 `Failed to update "${filename}" automatically. The file may not exist or it may be in an unexpected format or location.
@@ -114,39 +118,39 @@ export async function insertAndroid (projectRoot: string, logger: Logger): Promi
       cwd: javaDir
     }))[0]
 
-    const relativeMainApplicationPathOther = (await asyncGlob('**/*/MainApplication', {
-      cwd: javaDir
-    }))[0]
-
-    const relativeMainApplicationPath = relativeMainApplicationPathJava || relativeMainApplicationPathKotlin || relativeMainApplicationPathOther
+    const relativeMainApplicationPath = relativeMainApplicationPathJava || relativeMainApplicationPathKotlin
 
     if (!relativeMainApplicationPath) {
-      return logger.warn(FAIL_MSG('MainApplication.java, MainApplication.kt or MainApplication'))
+      return logger.warn(FAIL_MSG('MainApplication'))
     }
     mainApplicationPath = path.join(javaDir, relativeMainApplicationPath)
   } catch (e) {
-    logger.warn(FAIL_MSG('MainApplication.java, MainApplication.kt or MainApplication'))
+    logger.warn(FAIL_MSG('MainApplication'))
     return
   }
 
   try {
-    const mainApplication = await fs.readFile(mainApplicationPath, 'utf8')
+    const isKotlin = path.extname(mainApplicationPath) === '.kt'
+    const bugsnagImport = isKotlin ? BUGSNAG_KOTLIN_IMPORT : BUGSNAG_JAVA_IMPORT
+    const bugsnagInit = isKotlin ? BUGSNAG_KOTLIN_INIT : BUGSNAG_JAVA_INIT
+    const onCreateRegex = isKotlin ? KOTLIN_APP_ON_CREATE_REGEX : JAVA_APP_ON_CREATE_REGEX
 
-    if (mainApplication.includes(BUGSNAG_JAVA_IMPORT) || mainApplication.includes(BUGSNAG_JAVA_INIT)) {
+    const mainApplication = await fs.readFile(mainApplicationPath, 'utf8')
+    if (mainApplication.includes(bugsnagImport) || mainApplication.includes(bugsnagInit)) {
       logger.warn('Bugsnag is already included, skipping')
       return
     }
 
-    const mainApplicationWithImport = mainApplication.replace('import', `${BUGSNAG_JAVA_IMPORT}\nimport`)
-    const onCreateRes = JAVA_APP_ON_CREATE_REGEX.exec(mainApplicationWithImport)
+    const mainApplicationWithImport = mainApplication.replace('import', `${bugsnagImport}\nimport`)
+    const onCreateRes = onCreateRegex.exec(mainApplicationWithImport)
     if (!onCreateRes) {
-      logger.warn(FAIL_MSG('MainApplication.java, MainApplication.kt or MainApplication'))
+      logger.warn(FAIL_MSG('MainApplication'))
       return
     }
 
-    await fs.writeFile(mainApplicationPath, mainApplicationWithImport.replace(onCreateRes[1], `${onCreateRes[1]}${BUGSNAG_JAVA_INIT}${onCreateRes[2]}`), 'utf8')
+    await fs.writeFile(mainApplicationPath, mainApplicationWithImport.replace(onCreateRes[1], `${onCreateRes[1]}${bugsnagInit}${onCreateRes[2]}`), 'utf8')
     logger.success('Done')
   } catch (e) {
-    logger.error(FAIL_MSG('MainApplication.java, MainApplication.kt or MainApplication'))
+    logger.error(FAIL_MSG('MainApplication'))
   }
 }
