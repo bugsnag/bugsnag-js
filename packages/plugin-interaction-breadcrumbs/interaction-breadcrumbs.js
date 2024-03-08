@@ -21,8 +21,7 @@ module.exports = (win = window) => ({
   }
 })
 
-const trimStart = /^\s+/
-const trimEnd = /(^|[^\s])\s+$/
+const trim = /^\s*([^\s].{0,139}[^\s])?\s*/s
 
 function getNodeText (el) {
   let text = el.textContent || el.innerText || ''
@@ -31,7 +30,7 @@ function getNodeText (el) {
     text = el.value
   }
 
-  text = text.replace(trimStart, '').replace(trimEnd, '$1')
+  text = text.replace(trim, '$1')
 
   if (text.length > 140) {
     return text.slice(0, 135) + '(...)'
