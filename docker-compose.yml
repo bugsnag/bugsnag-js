@@ -23,6 +23,7 @@ x-common-environment: &common-environment
   BROWSER_STACK_DEVICES_USERNAME:
   BROWSER_STACK_DEVICES_ACCESS_KEY:
   SKIP_NAVIGATION_SCENARIOS:
+  MAZE_SCENARIO_BUGSNAG_API_KEY:
 
 services:
   minimal-packager:
