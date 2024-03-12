@@ -21,7 +21,7 @@ module.exports = (win = window) => ({
   }
 })
 
-const trim = /^\s*([^\s].{0,139}[^\s])?\s*/s
+const trim = /^\s*([^\s][\s\S]{0,139}[^\s])?\s*/
 
 function getNodeText (el) {
   let text = el.textContent || el.innerText || ''
