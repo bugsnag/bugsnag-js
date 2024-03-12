@@ -157,7 +157,7 @@ steps:
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode13.app"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
         artifact_paths: build/rn0_66.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_66
@@ -174,7 +174,7 @@ steps:
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode13.app"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
         artifact_paths: build/rn0_67.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_67
@@ -191,7 +191,7 @@ steps:
         env:
           DEBUG: true
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode13.app"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
         artifact_paths: build/rn0_69.ipa
         commands:
           - test/react-native-cli/scripts/init-and-build-test.sh rn0_69

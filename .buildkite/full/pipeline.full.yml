@@ -25,8 +25,10 @@ steps:
 
   #
   # Trigger Expo pipelines
+  # TODO: Skip pending PLAT-11676 and PLAT-11745
   #
   - label: "@bugsnag/expo latest"
+    skip: PLAT-11676 and PLAT-11745
     depends_on: "publish-js"
     trigger: "bugsnag-expo"
     build:
