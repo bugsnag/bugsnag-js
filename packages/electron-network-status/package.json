@@ -11,7 +11,7 @@
     "@bugsnag/plugin-electron-client-state-manager": "^8.0.0-alpha.1"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^8"
+    "@bugsnag/core": "^8.0.0-alpha.1"
   },
   "repository": {
     "type": "git",
