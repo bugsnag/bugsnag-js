@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-client-state-persistence",
-  "version": "8.0.0-alpha.3",
+  "version": "8.0.0-alpha.4",
   "main": "client-state-persistence.js",
   "description": "@bugsnag/electron plugin to sync information between JS and native layer",
   "homepage": "https://www.bugsnag.com/",
@@ -39,9 +39,9 @@
     "bindings": "^1.5.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.3",
-    "@bugsnag/electron-test-helpers": "^8.0.0-alpha.3",
-    "@bugsnag/plugin-electron-client-state-manager": "^8.0.0-alpha.3",
+    "@bugsnag/core": "^8.0.0-alpha.4",
+    "@bugsnag/electron-test-helpers": "^8.0.0-alpha.4",
+    "@bugsnag/plugin-electron-client-state-manager": "^8.0.0-alpha.4",
     "@types/bindings": "^1.5.0"
   },
   "peerDependencies": {
