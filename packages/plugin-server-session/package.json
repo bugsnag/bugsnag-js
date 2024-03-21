@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-server-session",
-  "version": "8.0.0-alpha.3",
+  "version": "8.0.0-alpha.4",
   "main": "session.js",
   "description": "@bugsnag/js plugin to enable session tracking in server applications",
   "homepage": "https://www.bugsnag.com/",
@@ -20,9 +20,9 @@
     "backo": "^1.1.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.3"
+    "@bugsnag/core": "^8.0.0-alpha.4"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^8"
+    "@bugsnag/core": "^8.0.0-alpha.1"
   }
 }
