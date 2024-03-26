@@ -55,15 +55,16 @@ steps:
       - docker-compose#v4.12.0:
           run: minimal-packager
     artifact_paths: min_packages.tar
-
   - label: ":docker: Build and publish JS packages"
     key: "publish-js"
     timeout_in_minutes: 30
     agents:
-      queue: "macos-12-arm"
+      queue: "macos-14"
     env:
-      NODE_VERSION: "14"
+      NODE_VERSION: "18"
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
     command:
+      - "bundle install"
       - "node scripts/publish.js $$PUBLISH_URL"
     retry:
       automatic:
