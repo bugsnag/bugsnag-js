@@ -164,8 +164,8 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
       'bugsnag:upload-android': androidUploadCommand,
       'bugsnag:upload-rn-android': rnAndroidUploadCommand,
       'bugsnag:upload-dsym': dsymUploadCommand,
-      'bugsnag:upload-rn-ios': rnIosUploadCommand,
-      'bugsnag:upload': androidUploadCommand + ' && ' + rnAndroidUploadCommand + ' && ' + dsymUploadCommand + ' && ' + rnIosUploadCommand
+      'bugsnag:upload-rn-ios': rnIosUploadCommand
+      // 'bugsnag:upload': androidUploadCommand + ' && ' + rnAndroidUploadCommand + ' && ' + dsymUploadCommand + ' && ' + rnIosUploadCommand
     }
 
     const updatedPackageJson = JSON.stringify(packageJson, null, existingIndent)
