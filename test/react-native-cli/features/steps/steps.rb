@@ -79,6 +79,8 @@ def parse_package_json
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
 
+  puts stdout_lines
+
   after = stdout_lines[length_before..stdout_lines.length]
 
   puts after
