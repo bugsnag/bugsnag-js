@@ -1,5 +1,20 @@
 # Changelog
 
+## v8.0.0 (TBD)
+
+### Fixed
+
+- (plugin-angular) Prevent excess change detection cycles when calling `Bugsnag.notify` [#1861](https://github.com/bugsnag/bugsnag-js/pull/1861)
+
+### Changed
+
+- (node) enable breadcrumbs and context-scoped calls [#1927](https://github.com/bugsnag/bugsnag-js/pull/1927)
+- (plugin-contextualize) reimplement without relying on the deprecated node Domain API. From Node 16+ unhandled promise rejections are also supported [#1924](https://github.com/bugsnag/bugsnag-js/pull/1924)
+- (plugin-navigation-breadcrumbs) calling `pushState` or `replaceState` no longer triggers a new session when `autoTrackSessions` is enabled [#1820](https://github.com/bugsnag/bugsnag-js/pull/1820)
+- (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) *Breaking change*: The `request` metadata field in network breadcrumbs has been renamed to `url` and is no longer pre-pended with the HTTP method [#1988](https://github.com/bugsnag/bugsnag-js/pull/1988)
+- (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Added `method` metadata field to network breadcrumbs [#1988](https://github.com/bugsnag/bugsnag-js/pull/1988)
+- (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Added `duration` metadata field to network breadcrumbs [#1903](https://github.com/bugsnag/bugsnag-js/pull/1903)
+
 ## TBD
 
 ### Changed

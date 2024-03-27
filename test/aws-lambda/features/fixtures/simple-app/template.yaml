@@ -27,6 +27,19 @@ Resources:
             Path: /async/unhandled/exception
             Method: get
 
+  AsyncAsyncUnhandledExceptionFunctionNode14:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: async-unhandled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        AsyncAsyncUnhandledException:
+          Type: Api
+          Properties:
+            Path: /async/async/unhandled/exception
+            Method: get
+
   AsyncHandledExceptionFunctionNode14:
     Type: AWS::Serverless::Function
     Properties:

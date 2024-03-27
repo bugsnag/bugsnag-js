@@ -3,17 +3,24 @@ BeforeAll do
   Maze.config.enforce_bugsnag_integrity = false
 end
 
-Before('@skip_before_node_6') do |_scenario|
-  node_version = ENV['NODE_VERSION'].to_i
-  skip_this_scenario("Skipping scenario on Node #{node_version}") if node_version < 6
-end
+(12..30).each do |version|
+  Before("@skip_node_#{version}") do
+    actual_version = ENV['NODE_VERSION'].to_i
 
-Before('@skip_before_node_8') do |_scenario|
-  node_version = ENV['NODE_VERSION'].to_i
-  skip_this_scenario("Skipping scenario on Node #{node_version}") if node_version < 8
-end
+    if actual_version == version
+      skip_this_scenario(
+        "Skipping scenario on Node #{actual_version}"
+      )
+    end
+  end
 
-Before('@skip_before_node_16') do |_scenario|
-  node_version = ENV['NODE_VERSION'].to_i
-  skip_this_scenario("Skipping scenario on Node #{node_version}") if node_version < 16
+  Before("@skip_before_node_#{version}") do
+    actual_version = ENV['NODE_VERSION'].to_i
+
+    if actual_version < version
+      skip_this_scenario(
+        "Skipping scenario on Node #{actual_version}"
+      )
+    end
+  end
 end

@@ -213,6 +213,7 @@ class Client {
       this._logger.debug('Session not started due to onSession callback')
       return this
     }
+
     return this._sessionDelegate.startSession(this, session)
   }
 

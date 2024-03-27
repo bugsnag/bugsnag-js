@@ -32,12 +32,33 @@ module.exports = net => ({
         return request
       }
 
+      let requestStart
+
+      // For chunked requests the request begins on the first write operation,
+      // otherwise the request begins when the request is finalised
+      const originalWrite = request.write
+      request.write = (...args) => {
+        if (request.chunkedEncoding && !requestStart) requestStart = new Date()
+        originalWrite.apply(request, args)
+      }
+
+      const originalEnd = request.end
+      request.end = (...args) => {
+        if (!requestStart) requestStart = new Date()
+        originalEnd.apply(request, args)
+      }
+
       request.on('response', response => {
         const success = response.statusCode < 400
 
         client.leaveBreadcrumb(
           `net.request ${success ? 'succeeded' : 'failed'}`,
-          { request: `${method} ${url}`, status: response.statusCode },
+          {
+            method: String(method),
+            url: String(url),
+            status: response.statusCode,
+            duration: getDuration(requestStart)
+          },
           BREADCRUMB_REQUEST
         )
       })
@@ -45,7 +66,11 @@ module.exports = net => ({
       request.on('abort', () => {
         client.leaveBreadcrumb(
           'net.request aborted',
-          { request: `${method} ${url}` },
+          {
+            method: String(method),
+            url: String(url),
+            duration: getDuration(requestStart)
+          },
           BREADCRUMB_REQUEST
         )
       })
@@ -53,7 +78,12 @@ module.exports = net => ({
       request.on('error', (error) => {
         client.leaveBreadcrumb(
           'net.request error',
-          { request: `${method} ${url}`, error: error.message },
+          {
+            method: String(method),
+            url: String(url),
+            error: error.message,
+            duration: getDuration(requestStart)
+          },
           BREADCRUMB_REQUEST
         )
       })
@@ -62,3 +92,5 @@ module.exports = net => ({
     }
   }
 })
+
+const getDuration = (startTime) => startTime && new Date() - startTime

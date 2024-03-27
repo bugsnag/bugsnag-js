@@ -1,4 +1,5 @@
 @skip_before_node_6
+@skip_node_18
 Feature: Webpack bundling support for node apps
 
 Background:
