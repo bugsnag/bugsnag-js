@@ -81,8 +81,12 @@ def parse_package_json
 
   after = stdout_lines[length_before..stdout_lines.length]
 
+  puts after
+
   # Drop lines until we get to the start of the JSON
   json = after.drop_while { |line| line != '{' }
+
+  puts json
 
   JSON.parse(json.join("\n"))
 end
