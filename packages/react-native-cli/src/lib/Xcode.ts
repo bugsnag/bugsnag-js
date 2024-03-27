@@ -1,7 +1,7 @@
 import { Logger } from '../Logger'
 import { promises as fs } from 'fs'
 import path from 'path'
-import xcode, { Project } from 'xcode'
+import xcode from 'xcode'
 import semver from 'semver'
 
 const DOCS_LINK = 'https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces/#ios'
