@@ -143,9 +143,9 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
 
     let createBuildCommand = 'bugsnag-cli create-build'
     let rnAndroidUploadCommand = 'bugsnag-cli upload react-native-android'
-    let androidUploadCommand = 'bugsnag-cli upload android'
+    let androidUploadCommand = 'bugsnag-cli upload android android/'
     let rnIosUploadCommand = 'bugsnag-cli upload react-native-ios'
-    let dsymUploadCommand = 'bugsnag-cli upload dsym'
+    let dsymUploadCommand = 'bugsnag-cli upload dsym ios/'
 
     if (uploadUrl) {
       rnAndroidUploadCommand += ` --upload-api-root-url=${uploadUrl}`
@@ -164,8 +164,8 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
       'bugsnag:upload-android': androidUploadCommand,
       'bugsnag:upload-rn-android': rnAndroidUploadCommand,
       'bugsnag:upload-dsym': dsymUploadCommand,
-      'bugsnag:upload-rn-ios': rnIosUploadCommand
-      // 'bugsnag:upload': androidUploadCommand + ' && ' + rnAndroidUploadCommand + ' && ' + dsymUploadCommand + ' && ' + rnIosUploadCommand
+      'bugsnag:upload-rn-ios': rnIosUploadCommand,
+      'bugsnag:upload': androidUploadCommand + ' && ' + rnAndroidUploadCommand + ' && ' + dsymUploadCommand + ' && ' + rnIosUploadCommand
     }
 
     const updatedPackageJson = JSON.stringify(packageJson, null, existingIndent)
