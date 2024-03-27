@@ -512,3 +512,31 @@ test('getSuggestedBugsnagGradleVersion(): success with bracketed AGP version', a
   const version = await getSuggestedBugsnagGradleVersion('/random/path', logger)
   expect(version).toBe('7.+')
 })
+
+test('getSuggestedBugsnagGradleVersion(): success with unspecified AGP version', async () => {
+  const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'root-build-before-without-agp-version.gradle'))
+
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValueOnce(buildGradle)
+  readFileMock.mockResolvedValueOnce('{"dependencies": { "react-native": "0.73.0"} }')
+
+  let version = await getSuggestedBugsnagGradleVersion('/random/path', logger)
+  expect(version).toBe('8.+')
+
+  readFileMock.mockResolvedValueOnce(buildGradle)
+  readFileMock.mockResolvedValueOnce('{"dependencies": { "react-native": "0.72.11"} }')
+
+  version = await getSuggestedBugsnagGradleVersion('/random/path', logger)
+  expect(version).toBe('7.+')
+})
+
+test('getSuggestedBugsnagGradleVersion(): null with unspecified AGP and react native versions', async () => {
+  const buildGradle = await loadFixture(path.join(__dirname, 'fixtures', 'root-build-before-without-agp-version.gradle'))
+
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValueOnce(buildGradle)
+  readFileMock.mockResolvedValueOnce('')
+
+  const version = await getSuggestedBugsnagGradleVersion('/random/path', logger)
+  expect(version).toBe('')
+})

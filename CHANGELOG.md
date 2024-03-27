@@ -1,5 +1,21 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (plugin-interaction-breadcrumbs) Improved performance of click event breadcrumbs [#2094](https://github.com/bugsnag/bugsnag-js/pull/2094)
+
+## v7.22.6 (2024-03-05)
+
+### Changed
+
+- (react-native) Update bugsnag-cocoa from v6.28.0 to [v6.28.1](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6281-2024-02-28)
+
+### Fixed
+
+- (react-native) Fix React Native CLI for RN 0.73 [#2091](https://github.com/bugsnag/bugsnag-js/pull/2091) [#2092](https://github.com/bugsnag/bugsnag-js/pull/2092)
+
 ## v7.22.5 (2024-02-15)
 
 ### Changed
