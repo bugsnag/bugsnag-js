@@ -75,7 +75,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
       const { iosIntegration } = await prompts({
         type: 'confirm',
         name: 'iosIntegration',
-        message: 'Do you want to automatically upload JavaScript source maps as part of the Xcode build?',
+        message: 'Do you want to update your Xcode build phase to output JavaScript source maps?',
         initial: true
       }, { onCancel })
 
@@ -143,9 +143,9 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
 
     let createBuildCommand = 'bugsnag-cli create-build'
     let rnAndroidUploadCommand = 'bugsnag-cli upload react-native-android'
-    let androidUploadCommand = 'bugsnag-cli upload android'
+    let androidUploadCommand = 'bugsnag-cli upload android android/'
     let rnIosUploadCommand = 'bugsnag-cli upload react-native-ios'
-    let dsymUploadCommand = 'bugsnag-cli upload dsym'
+    let dsymUploadCommand = 'bugsnag-cli upload dsym ios/'
 
     if (uploadUrl) {
       rnAndroidUploadCommand += ` --upload-api-root-url=${uploadUrl}`

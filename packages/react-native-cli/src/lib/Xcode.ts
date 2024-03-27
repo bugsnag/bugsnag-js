@@ -35,12 +35,8 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
   logger.info('Ensuring React Native build phase outputs source maps')
 
   const didUpdate = await updateBuildReactNativeTask(buildPhaseMap, iosDir, reactNativeVersion, logger)
-  logger.info('Adding build phase to upload source maps to Bugsnag')
-  const didAdd = await addUploadSourceMapsTask(proj, buildPhaseMap, endpoint, logger)
 
-  const didChange = didUpdate || didAdd
-
-  if (!didChange) return
+  if (!didUpdate) return
 
   await fs.writeFile(pbxProjPath, proj.writeSync(), 'utf8')
   logger.success('Written changes to Xcode project')
@@ -79,33 +75,6 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<
   await updateXcodeEnv(iosDir, logger)
 
   return didAnythingUpdate
-}
-
-async function addUploadSourceMapsTask (
-  proj: Project,
-  buildPhaseMap: Record<string, Record<string, unknown>>,
-  endpoint: string|undefined,
-  logger: Logger
-): Promise<boolean> {
-  for (const shellBuildPhaseKey in buildPhaseMap) {
-    const phase = buildPhaseMap[shellBuildPhaseKey]
-    if (typeof phase.shellScript === 'string' && (phase.shellScript.includes('bugsnag-react-native-xcode.sh') || phase.shellScript.includes('npm run bugsnag:upload-rn-ios'))) {
-      logger.warn('An "Upload source maps to Bugsnag" build phase already exists')
-      return false
-    }
-  }
-
-  const shellScript = 'npm run bugsnag:upload-rn-ios -- --overwrite'
-
-  proj.addBuildPhase(
-    [],
-    'PBXShellScriptBuildPhase',
-    'Upload source maps to Bugsnag',
-    null,
-    { shellPath: '/bin/sh', shellScript }
-  )
-
-  return true
 }
 
 function addExtraInputFiles (phaseId: string, existingInputFiles: string[], logger: Logger): [string[], boolean] {
