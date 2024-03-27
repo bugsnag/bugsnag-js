@@ -50,9 +50,6 @@ send -- \r
 expect "What is your Bugsnag project API key?"
 send -- "1234567890ABCDEF1234567890ABCDEF\r"
 
-expect "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps for iOS and Android?"
-send -- y
-
 expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
 send -- 2.1.0-alpha\r
 
