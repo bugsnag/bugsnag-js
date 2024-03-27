@@ -7,7 +7,7 @@ interface BrowserConfig extends Config {
   trackInlineScripts?: boolean
 }
 
-interface BrowserBugsnagStatic extends BugsnagStatic {
+export interface BrowserBugsnagStatic extends BugsnagStatic {
   start(apiKeyOrOpts: string | BrowserConfig): Client
   createClient(apiKeyOrOpts: string | BrowserConfig): Client
 }
