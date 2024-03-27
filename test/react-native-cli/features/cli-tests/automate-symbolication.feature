@@ -19,7 +19,22 @@ Scenario: successfully modify project
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     When RN version is 0.68 or lower dismiss the warning message
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the interactive shell to output the following lines in stdout
+        """
+        The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
+
+        bugsnag:create-build        - Creates a new build
+        bugsnag:upload-android      - Uploads Android source maps
+        bugsnag:upload-rn-android   - Uploads React Native Android source maps
+        bugsnag:upload-dsym         - Uploads iOS dSYMs
+        bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
+        bugsnag:upload              - Runs all of the above tasks
+
+        See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
+        """
+    And I wait for the current stdout line to match the regex "Hit enter to continue"
+    When I input a return interactively
+    And I wait for the current stdout line to match the regex "Do you want to update your Xcode build phase to output JavaScript source maps\?"
     When I input "y" interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -56,7 +71,22 @@ Scenario: successfully modify project, choosing bugsnag-cli version
     When I input "1.2.0" interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     When RN version is 0.68 or lower dismiss the warning message
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the interactive shell to output the following lines in stdout
+        """
+        The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
+
+        bugsnag:create-build        - Creates a new build
+        bugsnag:upload-android      - Uploads Android source maps
+        bugsnag:upload-rn-android   - Uploads React Native Android source maps
+        bugsnag:upload-dsym         - Uploads iOS dSYMs
+        bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
+        bugsnag:upload              - Runs all of the above tasks
+
+        See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
+        """
+    And I wait for the current stdout line to match the regex "Hit enter to continue"
+    When I input a return interactively
+    And I wait for the current stdout line to match the regex "Do you want to update your Xcode build phase to output JavaScript source maps\?"
     When I input "y" interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -97,7 +127,22 @@ Scenario: successfully modify project with custom endpoints
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     When RN version is 0.68 or lower dismiss the warning message
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the interactive shell to output the following lines in stdout
+        """
+        The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
+
+        bugsnag:create-build        - Creates a new build
+        bugsnag:upload-android      - Uploads Android source maps
+        bugsnag:upload-rn-android   - Uploads React Native Android source maps
+        bugsnag:upload-dsym         - Uploads iOS dSYMs
+        bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
+        bugsnag:upload              - Runs all of the above tasks
+
+        See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
+        """
+    And I wait for the current stdout line to match the regex "Hit enter to continue"
+    When I input a return interactively
+    And I wait for the current stdout line to match the regex "Do you want to update your Xcode build phase to output JavaScript source maps\?"
     When I input "y" interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -135,7 +180,22 @@ Scenario: opt not to modify the Android project
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     When RN version is 0.68 or lower dismiss the warning message
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the interactive shell to output the following lines in stdout
+        """
+        The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
+
+        bugsnag:create-build        - Creates a new build
+        bugsnag:upload-android      - Uploads Android source maps
+        bugsnag:upload-rn-android   - Uploads React Native Android source maps
+        bugsnag:upload-dsym         - Uploads iOS dSYMs
+        bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
+        bugsnag:upload              - Runs all of the above tasks
+
+        See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
+        """
+    And I wait for the current stdout line to match the regex "Hit enter to continue"
+    When I input a return interactively
+    And I wait for the current stdout line to match the regex "Do you want to update your Xcode build phase to output JavaScript source maps\?"
     When I input "y" interactively
     And I wait for the interactive shell to output the following lines in stdout
         """
@@ -172,7 +232,22 @@ Scenario: opt not to modify the iOS project
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
     When RN version is 0.68 or lower dismiss the warning message
-    And I wait for the current stdout line to match the regex "Do you want to automatically upload JavaScript source maps as part of the Xcode build\?"
+    And I wait for the interactive shell to output the following lines in stdout
+        """
+        The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
+
+        bugsnag:create-build        - Creates a new build
+        bugsnag:upload-android      - Uploads Android source maps
+        bugsnag:upload-rn-android   - Uploads React Native Android source maps
+        bugsnag:upload-dsym         - Uploads iOS dSYMs
+        bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
+        bugsnag:upload              - Runs all of the above tasks
+
+        See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
+        """
+    And I wait for the current stdout line to match the regex "Hit enter to continue"
+    When I input a return interactively
+    And I wait for the current stdout line to match the regex "Do you want to update your Xcode build phase to output JavaScript source maps\?"
     When I input "n" interactively
     Then the last interactive command exited successfully
     And bugsnag cli library is in the package.json file
