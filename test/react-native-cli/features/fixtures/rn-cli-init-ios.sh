@@ -64,7 +64,7 @@ if {[expr $rnVersionInt3 < 0.68]} {
 expect "See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details."
 send -- \r
 
-expect "Do you want to automatically upload JavaScript source maps as part of the Xcode build?"
+expect "Do you want to update your Xcode build phase to output JavaScript source maps?"
 send -- y
 
 expect "This will enable you to see full native stacktraces. It can't be done automatically."
