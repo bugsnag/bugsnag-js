@@ -13,6 +13,8 @@ Scenario: successfully modify project
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
@@ -47,6 +49,8 @@ Scenario: successfully modify project, choosing bugsnag-cli version
     And I wait for the current stdout line to match the regex "Do you want to continue anyway\?"
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
+    When I input a return interactively
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
     When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input "1.2.0" interactively
@@ -87,6 +91,8 @@ Scenario: successfully modify project with custom endpoints
     When I input "https://upload.example.com" interactively
     And I wait for the current stdout line to match the regex "What is your Bugsnag build endpoint\?"
     When I input "https://build.example.com" interactively
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
@@ -123,6 +129,8 @@ Scenario: opt not to modify the Android project
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
@@ -158,6 +166,8 @@ Scenario: opt not to modify the iOS project
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    When I input a return interactively
     And I wait for the current stdout line to match the regex "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
     When I input a return interactively
     Then I wait for the shell to output a match for the regex "@bugsnag/cli dependency is installed" to stdout
@@ -183,6 +193,8 @@ Scenario: opt not to modify either project
     When I input "y" interactively
     And I wait for the current stdout line to match the regex "Are you using Bugsnag on-premise\?"
     When I input a return interactively
+    And I wait for the current stdout line to match the regex "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps\?"
+    When I input "n" interactively
     And I wait for the current stdout line to match the regex "\/app #"
     Then the last interactive command exited successfully
     And bugsnag source maps library is not in the package.json file
