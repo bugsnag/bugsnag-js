@@ -22,6 +22,15 @@ describe('node notifier', () => {
     })
   })
 
+  describe('calling methods before start', () => {
+    it('is a no-op and logs to the console', () => {
+      const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+      Bugsnag.leaveBreadcrumb('test')
+
+      expect(spy).toHaveBeenCalledWith('Bugsnag.leaveBreadcrumb() was called before Bugsnag.start()')
+    })
+  })
+
   describe('addMetadata()', () => {
     it('adds metadata to the client', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
