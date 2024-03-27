@@ -23,6 +23,7 @@ x-common-environment: &common-environment
   BROWSER_STACK_DEVICES_USERNAME:
   BROWSER_STACK_DEVICES_ACCESS_KEY:
   SKIP_NAVIGATION_SCENARIOS:
+  MAZE_SCENARIO_BUGSNAG_API_KEY:
 
 services:
   minimal-packager:
@@ -32,16 +33,6 @@ services:
     volumes:
       - .:/app/build
 
-  publisher:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.publisher
-      args:
-        - BUILDKITE=${BUILDKITE}
-        - REG_BASIC_CREDENTIAL
-        - REG_NPM_EMAIL
-        - PUBLISH_URL
-        - BRANCH_NAME
   ci:
     build:
       context: .
@@ -275,6 +266,7 @@ services:
       AWS_SESSION_TOKEN:
       AWS_SECRET_ACCESS_KEY:
       VERSION:
+      DIST_TAG:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
     volumes:
       - ~/.gitconfig:/home/releaser/.gitconfig
