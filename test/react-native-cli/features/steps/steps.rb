@@ -75,7 +75,7 @@ def parse_package_json
   length_before = stdout_lines.length
 
   steps %Q{
-    When I input "ls" interactively
+    When I input "ls ." interactively
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
 
@@ -88,11 +88,11 @@ def parse_package_json
   puts after
 
   # Drop lines until we get to the start of the JSON
-  json = after.drop_while { |line| line != '{' }
-
-  puts json
-
-  JSON.parse(json.join("\n"))
+  # json = after.drop_while { |line| line != '{' }
+  #
+  # puts json
+  #
+  # JSON.parse(json.join("\n"))
 end
 
 def read_package_json_as_json
@@ -112,7 +112,7 @@ Then('bugsnag source maps library is in the package.json file') do
 end
 
 Then('bugsnag cli library is in the package.json file') do
-  json = read_package_json_as_json
+  json = parse_package_json
 
   Maze.check.include(json, 'devDependencies')
   Maze.check.include(json['devDependencies'], '@bugsnag/cli')
@@ -127,7 +127,7 @@ Then('bugsnag source maps library version {string} is in the package.json file')
 end
 
 Then('bugsnag cli library version {string} is in the package.json file') do |expected|
-  json = read_package_json_as_json
+  json = parse_package_json
 
   Maze.check.include(json, 'devDependencies')
   Maze.check.include(json['devDependencies'], '@bugsnag/cli')
