@@ -81,6 +81,8 @@ def parse_package_json
 
   sleep 5
 
+  puts stdout_lines
+
   after = stdout_lines[length_before..stdout_lines.length]
 
   # Drop lines until we get to the start of the JSON
