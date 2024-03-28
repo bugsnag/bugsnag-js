@@ -79,7 +79,10 @@ Object.keys(Client.prototype).forEach((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
     // if we are in an async context, use the client from that context
-    const client = Bugsnag._client._clientContext.getStore() || Bugsnag._client
+    let client = Bugsnag._client
+    if (client && client._clientContext && client._clientContext.getStore()) {
+      client = client._clientContext.getStore()
+    }
 
     if (!client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
 
