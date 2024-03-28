@@ -26,10 +26,14 @@ const HERMES_INSTRUCTIONS = `You are running a version of React Native that we c
 
 `
 
-const BUGSNAG_CLI_INSTRUCTIONS = `bugsnag:upload-android task added to your package.json - run this task to upload Android source maps after a build.
-
+const BUGSNAG_CLI_INSTRUCTIONS = `The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
+    bugsnag:create-build        - Creates a new build
+    bugsnag:upload-android      - Uploads Android source maps
+    bugsnag:upload-rn-android   - Uploads React Native Android source maps
+    bugsnag:upload-dsym         - Uploads iOS dSYMs
+    bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
+    bugsnag:upload              - Runs all of the above tasks
     See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
-
 `
 
 export default async function run (projectRoot: string, urls: OnPremiseUrls): Promise<boolean> {
@@ -171,21 +175,31 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
     // Default to two spaces if indent cannot be detected
     const existingIndent = detectIndent(data).indent || '  '
 
-    let uploadCommand = 'bugsnag-cli upload react-native-android'
-    let buildCommand = 'bugsnag-cli create-build'
+    let createBuildCommand = 'bugsnag-cli create-build'
+    let rnAndroidUploadCommand = 'bugsnag-cli upload react-native-android'
+    let androidUploadCommand = 'bugsnag-cli upload android android/'
+    let rnIosUploadCommand = 'bugsnag-cli upload react-native-ios'
+    let dsymUploadCommand = 'bugsnag-cli upload dsym ios/'
 
     if (uploadUrl) {
-      uploadCommand += ` --upload-api-root-url=${uploadUrl}`
+      rnAndroidUploadCommand += ` --upload-api-root-url=${uploadUrl}`
+      androidUploadCommand += ` --upload-api-root-url=${uploadUrl}`
+      rnIosUploadCommand += ` --upload-api-root-url=${uploadUrl}`
+      dsymUploadCommand += ` --upload-api-root-url=${uploadUrl}`
     }
 
     if (buildUrl) {
-      buildCommand += ` --build-api-root-url=${buildUrl}`
+      createBuildCommand += ` --build-api-root-url=${buildUrl}`
     }
 
     packageJson.scripts = {
       ...packageJson.scripts,
-      'bugsnag:create-build': buildCommand,
-      'bugsnag:upload-android': uploadCommand
+      'bugsnag:create-build': createBuildCommand,
+      'bugsnag:upload-android': androidUploadCommand,
+      'bugsnag:upload-rn-android': rnAndroidUploadCommand,
+      'bugsnag:upload-dsym': dsymUploadCommand,
+      'bugsnag:upload-rn-ios': rnIosUploadCommand,
+      'bugsnag:upload': androidUploadCommand + ' && ' + rnAndroidUploadCommand + ' && ' + dsymUploadCommand + ' && ' + rnIosUploadCommand
     }
 
     const updatedPackageJson = JSON.stringify(packageJson, null, existingIndent)
