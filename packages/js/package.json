@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/js",
-  "version": "8.0.0-alpha.5",
+  "version": "8.0.0-alpha.6",
   "main": "node/notifier.js",
   "browser": "browser/notifier.js",
   "types": "types.d.ts",
@@ -33,15 +33,15 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/browser": "^8.0.0-alpha.5",
-    "@bugsnag/node": "^8.0.0-alpha.5"
+    "@bugsnag/browser": "^8.0.0-alpha.6",
+    "@bugsnag/node": "^8.0.0-alpha.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0"
   },
   "peerDependencies": {
-    "@bugsnag/plugin-express": "^8.0.0-alpha.4",
     "@bugsnag/plugin-contextualize": "^8.0.0-alpha.4",
+    "@bugsnag/plugin-express": "^8.0.0-alpha.4",
     "@bugsnag/plugin-koa": "^8.0.0-alpha.4",
     "@bugsnag/plugin-restify": "^8.0.0-alpha.4"
   },
