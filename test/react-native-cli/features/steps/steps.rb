@@ -79,11 +79,9 @@ def parse_package_json
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
 
-  puts stdout_lines
+  sleep 5
 
   after = stdout_lines[length_before..stdout_lines.length]
-
-  puts after
 
   # Drop lines until we get to the start of the JSON
   json = after.drop_while { |line| line != '{' }
