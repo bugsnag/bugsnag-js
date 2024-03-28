@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-angular",
-  "version": "8.0.0-alpha.4",
+  "version": "8.0.0-alpha.5",
   "description": "Angular integration for bugsnag-js",
   "main": "dist/esm5/index.js",
   "browser": "dist/esm5/index.js",
@@ -34,7 +34,7 @@
     "@angular/compiler": "^7.2.15",
     "@angular/compiler-cli": "^7.2.15",
     "@angular/core": "^7.2.15",
-    "@bugsnag/js": "^8.0.0-alpha.4",
+    "@bugsnag/js": "^8.0.0-alpha.5",
     "rxjs": "^5.5.8",
     "typescript": "^3.2.4",
     "zone.js": "^0.8.26"

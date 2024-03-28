@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/node",
-  "version": "8.0.0-alpha.4",
+  "version": "8.0.0-alpha.5",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",
@@ -24,21 +24,21 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-node": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-app-duration": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-contextualize": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-intercept": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-node-device": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-node-in-project": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-node-surrounding-code": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-node-uncaught-exception": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-node-unhandled-rejection": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-server-session": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-stackframe-path-normaliser": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-strip-project-root": "^8.0.0-alpha.4"
+    "@bugsnag/delivery-node": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-app-duration": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-contextualize": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-intercept": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-node-device": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-node-in-project": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-node-surrounding-code": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-node-uncaught-exception": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-node-unhandled-rejection": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-server-session": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-stackframe-path-normaliser": "^8.0.0-alpha.5",
+    "@bugsnag/plugin-strip-project-root": "^8.0.0-alpha.5"
   },
   "dependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.4",
+    "@bugsnag/core": "^8.0.0-alpha.5",
     "byline": "^5.0.0",
     "error-stack-parser": "^2.0.2",
     "iserror": "^0.0.2",
@@ -46,8 +46,8 @@
     "stack-generator": "^2.0.3"
   },
   "peerDependencies": {
-    "@bugsnag/plugin-express": "^8.0.0-alpha.4",
     "@bugsnag/plugin-contextualize": "^8.0.0-alpha.4",
+    "@bugsnag/plugin-express": "^8.0.0-alpha.4",
     "@bugsnag/plugin-koa": "^8.0.0-alpha.4",
     "@bugsnag/plugin-restify": "^8.0.0-alpha.4"
   },
