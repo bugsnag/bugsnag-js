@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-xml-http-request",
-  "version": "8.0.0-alpha.5",
+  "version": "8.0.0-alpha.6",
   "main": "delivery.js",
   "description": "@bugsnag/js delivery mechanism for most browsers",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.5"
+    "@bugsnag/core": "^8.0.0-alpha.6"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"
