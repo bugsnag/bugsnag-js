@@ -33,6 +33,9 @@ steps:
           - 10
           - 12
           - 14
+          - 16
+          - 18
+          - 20
         plugins:
           docker-compose#v4.12.0:
             run: node-maze-runner
