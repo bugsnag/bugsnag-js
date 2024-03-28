@@ -93,6 +93,11 @@ def parse_package_json
   JSON.parse(json.join("\n"))
 end
 
+def read_package_json_as_json
+  json = File.read('package.json')
+  JSON.parse(json)
+end
+
 Then('bugsnag source maps library is in the package.json file') do
   json = parse_package_json
 
@@ -101,7 +106,7 @@ Then('bugsnag source maps library is in the package.json file') do
 end
 
 Then('bugsnag cli library is in the package.json file') do
-  json = parse_package_json
+  json = read_package_json_as_json
 
   Maze.check.include(json, 'devDependencies')
   Maze.check.include(json['devDependencies'], '@bugsnag/cli')
@@ -116,7 +121,7 @@ Then('bugsnag source maps library version {string} is in the package.json file')
 end
 
 Then('bugsnag cli library version {string} is in the package.json file') do |expected|
-  json = parse_package_json
+  json = read_package_json_as_json
 
   Maze.check.include(json, 'devDependencies')
   Maze.check.include(json['devDependencies'], '@bugsnag/cli')
