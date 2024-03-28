@@ -75,7 +75,7 @@ def parse_package_json
   length_before = stdout_lines.length
 
   steps %Q{
-    When I input "ls ." interactively
+    When I input "ls package.json" interactively
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
 
