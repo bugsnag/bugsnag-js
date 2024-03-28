@@ -75,7 +75,7 @@ def parse_package_json
   length_before = stdout_lines.length
 
   steps %Q{
-    When I input "pwd" interactively
+    When I input "ls" interactively
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
 
@@ -84,6 +84,8 @@ def parse_package_json
   puts stdout_lines
 
   after = stdout_lines[length_before..stdout_lines.length]
+
+  puts after
 
   # Drop lines until we get to the start of the JSON
   json = after.drop_while { |line| line != '{' }
