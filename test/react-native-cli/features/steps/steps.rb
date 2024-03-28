@@ -94,6 +94,8 @@ def parse_package_json
 end
 
 def read_package_json_as_json
+  #output the current working directory
+  puts `pwd`
   json = File.read('package.json')
   JSON.parse(json)
 end
