@@ -38,5 +38,25 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/plugin-express": "^8.0.0-alpha.4",
+    "@bugsnag/plugin-contextualize": "^8.0.0-alpha.4",
+    "@bugsnag/plugin-koa": "^8.0.0-alpha.4",
+    "@bugsnag/plugin-restify": "^8.0.0-alpha.4"
+  },
+  "peerDependenciesMeta": {
+    "@bugsnag/plugin-express": {
+      "optional": true
+    },
+    "@bugsnag/plugin-contextualize": {
+      "optional": true
+    },
+    "@bugsnag/plugin-koa": {
+      "optional": true
+    },
+    "@bugsnag/plugin-restify": {
+      "optional": true
+    }
   }
 }
