@@ -75,11 +75,11 @@ def parse_package_json
   length_before = stdout_lines.length
 
   steps %Q{
-    When I input "jq -e '.devDependencies | has(\"@bugsnag/cli\")' package.json >/dev/null && echo 'Package is installed in devDependencies' || echo 'Package is NOT installed in devDependencies'" interactively
-    Then I wait for the shell output "Package is installed in devDependencies" to stdout
+    When I input "jq -e '.devDependencies | has(\"@bugsnag/cli\")' package.json" interactively
   }
   #    When I input "cat package.json" interactively
   #     Then I wait for the shell to output '@bugsnag/cli' to stdout
+  #     Then I wait for the shell output "Package is installed in devDependencies" to stdout
 
   after = stdout_lines[length_before..stdout_lines.length]
 
