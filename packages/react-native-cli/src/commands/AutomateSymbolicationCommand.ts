@@ -27,48 +27,28 @@ const HERMES_INSTRUCTIONS = `You are running a version of React Native that we c
 `
 
 const BUGSNAG_CLI_INSTRUCTIONS = `The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
+
     bugsnag:create-build        - Creates a new build
     bugsnag:upload-android      - Uploads Android source maps
     bugsnag:upload-rn-android   - Uploads React Native Android source maps
     bugsnag:upload-dsym         - Uploads iOS dSYMs
     bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
     bugsnag:upload              - Runs all of the above tasks
+
     See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
+
 `
 
 export default async function run (projectRoot: string, urls: OnPremiseUrls): Promise<boolean> {
   try {
-    const { iosIntegration } = await prompts({
+    const { bugsnagCliIntegration } = await prompts({
       type: 'confirm',
-      name: 'iosIntegration',
-      message: 'Do you want to automatically upload JavaScript source maps as part of the Xcode build?',
-      initial: true
-    }, { onCancel })
-
-    if (iosIntegration) {
-      logger.info('Modifying the Xcode project')
-      await updateXcodeProject(projectRoot, urls[UrlType.UPLOAD], logger)
-    }
-
-    await prompts({
-      type: 'text',
-      name: 'dsymUploadInstructions',
-      message: DSYM_INSTRUCTIONS,
-      initial: 'Hit enter to continue …'
-    }, { onCancel })
-
-    const { androidIntegration } = await prompts({
-      type: 'confirm',
-      name: 'androidIntegration',
+      name: 'bugsnagCliIntegration',
       message: 'Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps?',
       initial: true
     }, { onCancel })
 
-    if (iosIntegration) {
-      await installJavaScriptPackage(projectRoot)
-    }
-
-    if (androidIntegration) {
+    if (bugsnagCliIntegration) {
       await installBugsnagCliPackage(projectRoot, urls)
       const reactNativeVersion = await detectInstalledVersion('react-native', projectRoot)
 
@@ -83,16 +63,7 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
         }
       }
 
-      const { packageJsonIntegration } = await prompts({
-        type: 'confirm',
-        name: 'packageJsonIntegration',
-        message: 'Do you want to add an NPM task to your package.json that you can run to upload Android source maps?',
-        initial: true
-      }, { onCancel })
-
-      if (packageJsonIntegration) {
-        await writeToPackageJson(join(projectRoot, 'package.json'), urls[UrlType.UPLOAD], urls[UrlType.BUILD])
-      }
+      await writeToPackageJson(join(projectRoot, 'package.json'), urls[UrlType.UPLOAD], urls[UrlType.BUILD])
 
       await prompts({
         type: 'text',
@@ -100,6 +71,25 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
         message: BUGSNAG_CLI_INSTRUCTIONS,
         initial: 'Hit enter to continue …'
       }, { onCancel })
+
+      const { iosIntegration } = await prompts({
+        type: 'confirm',
+        name: 'iosIntegration',
+        message: 'Do you want to update your Xcode build phase to output JavaScript source maps?',
+        initial: true
+      }, { onCancel })
+
+      if (iosIntegration) {
+        logger.info('Modifying the Xcode project')
+        await updateXcodeProject(projectRoot, urls[UrlType.UPLOAD], reactNativeVersion as string, logger)
+
+        await prompts({
+          type: 'text',
+          name: 'dsymUploadInstructions',
+          message: DSYM_INSTRUCTIONS,
+          initial: 'Hit enter to continue …'
+        }, { onCancel })
+      }
     }
 
     return true
@@ -141,30 +131,6 @@ async function installBugsnagCliPackage (projectRoot: string, urls: OnPremiseUrl
   await install(packageManager, '@bugsnag/cli', version, true, projectRoot)
 
   logger.success('@bugsnag/cli dependency is installed')
-}
-
-async function installJavaScriptPackage (projectRoot: string): Promise<void> {
-  const alreadyInstalled = await detectInstalled('@bugsnag/source-maps', projectRoot)
-
-  if (alreadyInstalled) {
-    logger.warn('@bugsnag/source-maps is already installed, skipping')
-    return
-  }
-
-  logger.info('Adding @bugsnag/source-maps dependency')
-
-  const packageManager = await guessPackageManager(projectRoot)
-
-  const { version } = await prompts({
-    type: 'text',
-    name: 'version',
-    message: 'If you want the latest version of @bugsnag/source-maps hit enter, otherwise type the version you want',
-    initial: 'latest'
-  }, { onCancel })
-
-  await install(packageManager, '@bugsnag/source-maps', version, true, projectRoot)
-
-  logger.success('@bugsnag/source-maps dependency is installed')
 }
 
 async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, buildUrl?: string): Promise<void> {
