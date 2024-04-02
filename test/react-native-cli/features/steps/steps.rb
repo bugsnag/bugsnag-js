@@ -75,7 +75,7 @@ def parse_package_json
   length_before = stdout_lines.length
 
   steps %Q{
-    When I input "jq -e \'.devDependencies | has(\"@bugsnag/cli\")\' package.json" interactively
+    When I input "jq -e \'.devDependencies \| has\(\"@bugsnag/cli\"\)\' package.json" interactively
   }
   #    When I input "cat package.json" interactively
   #     Then I wait for the shell to output '@bugsnag/cli' to stdout
