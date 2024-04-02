@@ -81,10 +81,6 @@ def parse_package_json
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
 
-
-
-  new_json = read_package_json_as_json
-
   puts 'stdout_lines: ' + stdout_lines.to_s
 
   after = stdout_lines[length_before..stdout_lines.length]
