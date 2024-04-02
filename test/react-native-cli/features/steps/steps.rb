@@ -76,7 +76,7 @@ def parse_package_json
 
   steps %Q{
     When I input "cat package.json" interactively
-    Then I wait for the shell to output '\"@bugsnag/cli\":' to stdout
+    Then I wait for the shell to output '@bugsnag/cli' to stdout
   }
 
   after = stdout_lines[length_before..stdout_lines.length]
