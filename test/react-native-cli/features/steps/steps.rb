@@ -76,6 +76,7 @@ def parse_package_json
 
   steps %Q{
     When I input "pwd" interactively
+    When I input "ls -lah" interactively
     When I input "cat package.json" interactively
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
