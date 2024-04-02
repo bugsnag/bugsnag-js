@@ -75,9 +75,12 @@ def parse_package_json
   length_before = stdout_lines.length
 
   steps %Q{
+    When I input "pwd" interactively
     When I input "cat package.json" interactively
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
+
+  puts 'stdout_lines: ' + stdout_lines.to_s
 
   after = stdout_lines[length_before..stdout_lines.length]
 
@@ -96,6 +99,9 @@ end
 
 Then('bugsnag cli library is in the package.json file') do
   json = parse_package_json
+
+  # log the output of json
+  puts 'json: ' + json.to_s
 
   Maze.check.include(json, 'devDependencies')
   Maze.check.include(json['devDependencies'], '@bugsnag/cli')
