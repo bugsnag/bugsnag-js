@@ -75,13 +75,13 @@ def parse_package_json
   length_before = stdout_lines.length
 
   steps %Q{
-    When I input "pwd" interactively
-    When I input "ls -lah" interactively
     When I input "cat package.json" interactively
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
 
-  puts 'stdout_lines: ' + stdout_lines.to_s
+  new_json = read_package_json_as_json
+
+  puts 'stdout_lines: ' + new_json
 
   after = stdout_lines[length_before..stdout_lines.length]
 
@@ -89,6 +89,12 @@ def parse_package_json
   json = after.drop_while { |line| line != '{' }
 
   JSON.parse(json.join("\n"))
+end
+
+def read_package_json_as_json
+  path = '/app/package.json'
+  json = JSON.parse(File.read(path))
+  puts json
 end
 
 Then('bugsnag source maps library is in the package.json file') do
