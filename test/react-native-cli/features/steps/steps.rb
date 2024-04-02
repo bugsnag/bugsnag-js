@@ -98,7 +98,8 @@ Then('bugsnag cli library is in the package.json file') do
 
   puts `pwd`
 
-  puts `ls -lah $(pwd)/features/fixtures/${current_fixture}`
+  puts `ls -lah $(pwd)/features/fixtures/#{current_fixture}/package.json`
+  puts `cat $(pwd)/features/fixtures/#{current_fixture}/package.json`
 
 
   json = parse_package_json
