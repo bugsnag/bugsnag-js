@@ -98,6 +98,9 @@ Then('bugsnag cli library is in the package.json file') do
 
   puts `pwd`
 
+  puts `ls -lah $(pwd)/features/fixtures/${current_fixture}`
+
+
   json = parse_package_json
 
   Maze.check.include(json, 'devDependencies')
