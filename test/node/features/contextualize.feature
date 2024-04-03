@@ -17,9 +17,10 @@ Scenario: using contextualize to add context to an error
   And the exception "message" equals "manual notify"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/contextualize.js"
-  And the "lineNumber" of stack frame 0 equals 15
+  And the "lineNumber" of stack frame 0 equals 16
   And the event "metaData.subsystem.name" equals "manual notify"
   And the event has a "manual" breadcrumb named "manual notify"
+  And the event has a "log" breadcrumb named "Console output"
 
   And I discard the oldest error
 
@@ -31,10 +32,11 @@ Scenario: using contextualize to add context to an error
   And the exception "message" equals "ENOENT: no such file or directory, open 'does not exist'"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/contextualize.js"
-  And the "lineNumber" of stack frame 0 equals 20
+  And the "lineNumber" of stack frame 0 equals 21
   And the event "metaData.subsystem.name" equals "fs reader"
   And the event has a "manual" breadcrumb named "opening file"
   And the event does not have a "manual" breadcrumb with message "manual notify"
+  And the event does not have a "log" breadcrumb
 
 @skip_before_node_16
 Scenario: using contextualize with an unhandled rejection (with context added)

@@ -35,7 +35,8 @@
     "@bugsnag/plugin-node-unhandled-rejection": "^8.0.0-alpha.4",
     "@bugsnag/plugin-server-session": "^8.0.0-alpha.4",
     "@bugsnag/plugin-stackframe-path-normaliser": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-strip-project-root": "^8.0.0-alpha.4"
+    "@bugsnag/plugin-strip-project-root": "^8.0.0-alpha.4",
+    "@bugsnag/plugin-console-breadcrumbs": "^8.0.0-alpha.4"
   },
   "dependencies": {
     "@bugsnag/core": "^8.0.0-alpha.4",

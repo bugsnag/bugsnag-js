@@ -13,7 +13,9 @@ exports.load = (client) => {
   map(CONSOLE_LOG_METHODS, method => {
     const original = console[method]
     console[method] = (...args) => {
-      client.leaveBreadcrumb('Console output', reduce(args, (accum, arg, i) => {
+      // if we are in an async context, use the client from that context
+      const c = client._clientContext && client._clientContext.getStore() ? client._clientContext.getStore() : client
+      c.leaveBreadcrumb('Console output', reduce(args, (accum, arg, i) => {
         // do the best/simplest stringification of each argument
         let stringified = '[Unknown value]'
         // this may fail if the input is:
