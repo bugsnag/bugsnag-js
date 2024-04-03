@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-uncaught-exception",
-  "version": "8.0.0-alpha.4",
+  "version": "8.0.0-alpha.6",
   "main": "uncaught-exception.js",
   "description": "@bugsnag/js plugin to capture and report uncaught exceptions",
   "homepage": "https://www.bugsnag.com/",
@@ -18,7 +18,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.4"
+    "@bugsnag/core": "^8.0.0-alpha.6"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"
