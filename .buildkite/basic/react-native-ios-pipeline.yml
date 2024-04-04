@@ -68,12 +68,12 @@ steps:
         key: "rn-0-73-new-arch-ipa"
         timeout_in_minutes: 60
         agents:
-          queue: "macos-12-arm"
+          queue: "macos-13-arm"
         env:
           NODE_VERSION: "18"
           REACT_NATIVE_VERSION: "rn0.73"
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          DEVELOPER_DIR: "/Applications/Xcode-15.2.0.app"
           RCT_NEW_ARCH_ENABLED: "1"
           ARTEFACT_NAME: "rn0.73-new-arch"
         artifact_paths: build/rn0.73-new-arch.ipa
