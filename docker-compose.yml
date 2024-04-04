@@ -113,6 +113,29 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.android-builder-base-java-17
 
+  aws-sam-maze-runner:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.aws-sam
+    environment:
+      - DEBUG
+      - BRANCH_NAME
+      - BUILDKITE
+      - REGISTRY_URL
+      - REACT_NATIVE_VERSION
+      - RN_NEW_ARCH
+      - NOTIFIER_VERSION
+      - ARTEFACT_NAME
+      - JS_SOURCE_DIR
+    networks:
+      default:
+        aliases:
+          - maze-runner
+    volumes:
+      - ./build:/app/build
+      - ./test:/app/test
+      - ./features:/app/features
+
   react-native-android-builder-java-11-node-16:
     build:
       context: .

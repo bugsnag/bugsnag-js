@@ -73,15 +73,14 @@ steps:
 
   - label: ":aws-lambda: AWS Lambda tests"
     timeout_in_minutes: 35
-    agents:
-      queue: "opensource-mac-cocoa-10.15"
-    commands:
-      # force the NPM registry as the default on CI is artifactory, which can't
-      # currently install from our lockfile
-      - npm ci --registry https://registry.npmjs.org
-      - cd test/aws-lambda
-      - bundle install
-      - bundle exec maze-runner
+    plugins:
+      - docker-compose#v4.12.0:
+          pull: aws-sam-maze-runner
+          run: aws-sam-maze-runner
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 1
 
   #
   # Core tests and checks

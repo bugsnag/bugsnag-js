@@ -1,0 +1,16 @@
+# The maze-runner node tests
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli as aws-maze-runner
+WORKDIR /app/
+
+COPY package*.json ./
+COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
+COPY bin ./bin
+COPY packages ./packages
+COPY test/aws-lambda ./test/aws-lambda
+
+RUN curl -sL https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
+RUN unzip aws-sam-cli-linux-x86_64.zip
+RUN ./sam-installation/install
+RUN sam --version
+
+WORKDIR /app/test/aws-lambda
