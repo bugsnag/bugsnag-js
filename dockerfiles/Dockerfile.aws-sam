@@ -8,8 +8,8 @@ COPY bin ./bin
 COPY packages ./packages
 COPY test/aws-lambda ./test/aws-lambda
 
-RUN curl -sL https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
-RUN unzip aws-sam-cli-linux-x86_64.zip
+RUN curl -sLO https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
+RUN unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
 RUN ./sam-installation/install
 RUN sam --version
 
