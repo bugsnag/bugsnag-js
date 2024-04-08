@@ -3,11 +3,13 @@ const Event = require('@bugsnag/core/event')
 const Breadcrumb = require('@bugsnag/core/breadcrumb')
 const Session = require('@bugsnag/core/session')
 
+const createClient = require('./createClient')
+
 const { schema, mergeOptions } = require('../config/renderer')
 
 Event.__type = 'electronrendererjs'
 
-module.exports = (rendererOpts) => {
+const createRenderer = (rendererOpts) => {
   if (!window.__bugsnag_ipc__) throw new Error('Bugsnag was not loaded in the main process')
 
   const internalPlugins = [
@@ -80,7 +82,16 @@ module.exports = (rendererOpts) => {
   return bugsnag
 }
 
+// Construct the client
+const Bugsnag = createClient(createRenderer, 'renderer')
+
+// commonjs
+module.exports = Bugsnag
+
 module.exports.Client = Client
 module.exports.Event = Event
-module.exports.Session = Session
 module.exports.Breadcrumb = Breadcrumb
+module.exports.Session = Session
+
+// ESM
+module.exports.default = Bugsnag
