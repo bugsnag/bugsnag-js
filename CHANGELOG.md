@@ -4,7 +4,7 @@
 
 ### Changed
 
-- (metadata-delegate) Preventing prototype pollution vulnerabilities
+- (metadata-delegate) Preventing prototype pollution vulnerabilities [#2115](https://github.com/bugsnag/bugsnag-js/pull/2115)
 
 ## TBD
 
