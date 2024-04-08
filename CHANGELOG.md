@@ -4,6 +4,12 @@
 
 ### Changed
 
+- (metadata-delegate) Preventing prototype pollution vulnerabilities
+
+## TBD
+
+### Changed
+
 - (plugin-interaction-breadcrumbs) Improved performance of click event breadcrumbs [#2094](https://github.com/bugsnag/bugsnag-js/pull/2094)
 
 ## v7.22.6 (2024-03-05)

@@ -41,6 +41,11 @@ const clear = (state, section, key) => {
     return
   }
 
+  // preventing the __proto__ property from being used as a key
+  if (section === '__proto__' || section === 'constructor' || section === 'prototype') {
+    return
+  }
+
   // clear a single value from a section
   if (state[section]) {
     delete state[section][key]
