@@ -23,7 +23,7 @@ describe('metadata delegate', () => {
           }
         }
       }
-    ])('should not overwrite constructor keys', ({ key, expected }) => {
+    ])('should not overwrite constructor or prototype keys', ({ key, expected }) => {
       const state = {}
 
       add(state, key, 'foo', 'bar')
