@@ -6,32 +6,31 @@ import { add, clear } from '../lib/metadata-delegate'
 
 describe('metadata delegate', () => {
   describe('clear', () => {
-    it('should not overwrite prototype keys', () => {
+    it.each([
+      {
+        key: 'constructor',
+        expected: {
+          constructor: {
+            foo: 'bar'
+          }
+        }
+      },
+      {
+        key: 'prototype',
+        expected: {
+          prototype: {
+            foo: 'bar'
+          }
+        }
+      }
+    ])('should not overwrite constructor keys', ({ key, expected }) => {
       const state = {}
 
-      add(state, 'prototype', 'foo', 'bar')
+      add(state, key, 'foo', 'bar')
 
-      clear(state, 'prototype', 'foo')
+      clear(state, key, 'foo')
 
-      expect(state).toStrictEqual({
-        prototype: {
-          foo: 'bar'
-        }
-      })
-    })
-
-    it('should not overwrite constructor keys', () => {
-      const state = {}
-
-      add(state, 'constructor', 'foo', 'bar')
-
-      clear(state, 'constructor', 'foo')
-
-      expect(state).toEqual({
-        constructor: {
-          foo: 'bar'
-        }
-      })
+      expect(state).toEqual(expected)
     })
   })
 })
