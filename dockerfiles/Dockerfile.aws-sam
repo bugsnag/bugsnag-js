@@ -43,6 +43,7 @@ RUN sam --version
 
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 RUN . ~/.bashrc && nvm install 20
+RUN . ~/.bashrc && nvm use 20
 
 COPY --from=node-feature-builder /app/*.tgz /app/
 
