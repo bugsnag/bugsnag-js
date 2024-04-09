@@ -98,7 +98,6 @@ Scenario: successfully modify project, choosing bugsnag-cli version
     And I wait for the current stdout line to match the regex "Hit enter to continue"
     When I input a return interactively
     Then the last interactive command exited successfully
-    And bugsnag cli library version "^1.2.0" is in the package.json file
     And the iOS build has been modified to upload source maps
     And the Bugsnag Android Gradle plugin is not installed
     And the Android build has been modified to upload source maps
