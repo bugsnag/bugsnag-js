@@ -9,14 +9,29 @@ COPY package*.json ./
 RUN npm install
 
 COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
+ADD min_packages.tar .
 COPY bin ./bin
 COPY packages ./packages
 RUN npx lerna bootstrap
 RUN npm run build
 
-RUN npm pack --verbose packages/js
-RUN npm pack --verbose packages/node
-RUN npm pack --verbose packages/plugin-aws-lambda
+RUN npm pack --verbose packages/core/
+RUN npm pack --verbose packages/delivery-node/
+RUN npm pack --verbose packages/in-flight/
+RUN npm pack --verbose packages/js/
+RUN npm pack --verbose packages/node/
+RUN npm pack --verbose packages/plugin-app-duration/
+RUN npm pack --verbose packages/plugin-aws-lambda/
+RUN npm pack --verbose packages/plugin-contextualize/
+RUN npm pack --verbose packages/plugin-express/
+RUN npm pack --verbose packages/plugin-intercept/
+RUN npm pack --verbose packages/plugin-node-device/
+RUN npm pack --verbose packages/plugin-node-in-project/
+RUN npm pack --verbose packages/plugin-node-surrounding-code/
+RUN npm pack --verbose packages/plugin-node-uncaught-exception/
+RUN npm pack --verbose packages/plugin-node-unhandled-rejection/
+RUN npm pack --verbose packages/plugin-server-session/
+RUN npm pack --verbose packages/plugin-strip-project-root/
 
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli as aws-maze-runner
 WORKDIR /app/
