@@ -42,27 +42,10 @@ def heading(message)
   HEADING
 end
 
-# Bootstrap and build Bugsnag packages so they're ready to install
-def bootstrap
-  Dir.chdir(ROOT) do
-    system("npm run bootstrap")
-    system("npm run build")
-  end
-end
-
 # Run "npm pack" on the required packages and strip the version suffix so they
 # can be depended on in a package.json file
 def pack
   puts heading("Packing Bugsnag packages")
-
-  BUGSNAG_PACKAGES.each do |package|
-    path = "#{ROOT}/packages/#{package}"
-    flags = DEBUG ? "--verbose" : "--quiet"
-
-    success = system("npm pack #{flags} #{path}/")
-
-    raise "Failed to pack #{package}" unless success
-  end
 
   # Strip the version suffix from the packages
   Dir["#{FileUtils.pwd}/bugsnag-*.tgz"].each do |package|
@@ -139,7 +122,6 @@ def tidy_up
 end
 
 begin
-  bootstrap
   pack
   install_and_build
 ensure

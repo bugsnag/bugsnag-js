@@ -71,17 +71,6 @@ steps:
         - exit_status: "*"
           limit: 1
 
-  - label: ":aws-lambda: AWS Lambda tests"
-    timeout_in_minutes: 35
-    plugins:
-      - docker-compose#v4.12.0:
-          pull: aws-sam-maze-runner
-          run: aws-sam-maze-runner
-    retry:
-      automatic:
-        - exit_status: "*"
-          limit: 1
-
   #
   # Core tests and checks
   #
@@ -103,6 +92,32 @@ steps:
           push:
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
             - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 1
+
+  - label: ":aws-lambda: Build AWS Lambda CI image"
+    timeout_in_minutes: 20
+    key: "aws-lambda-image"
+    depends_on: "package-js"
+    plugins:
+      - docker-compose#v4.12.0:
+          build:
+            - aws-sam-maze-runner
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 1
+
+  - label: ":aws-lambda: AWS Lambda tests"
+    timeout_in_minutes: 35
+    depends_on: "aws-lambda-image"
+    plugins:
+      - docker-compose#v4.12.0:
+          run:
+            - aws-sam-maze-runner
     retry:
       automatic:
         - exit_status: "*"
