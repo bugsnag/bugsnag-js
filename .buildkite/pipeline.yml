@@ -109,12 +109,12 @@ steps:
             - aws-sam-maze-runner
           image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           cache-from:
-            - aws-lambda-ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:aws-lambda-ci-${BRANCH_NAME}
-            - aws-lambda-ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:aws-lambda-ci
+            - aws-sam-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:aws-lambda-ci-${BRANCH_NAME}
+            - aws-sam-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:aws-lambda-ci
       - docker-compose#v4.12.0:
           push:
-            - aws-lambda-ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:aws-lambda-ci-${BRANCH_NAME}
-            - aws-lambda-ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:aws-lambda-ci
+            - aws-sam-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:aws-lambda-ci-${BRANCH_NAME}
+            - aws-sam-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:aws-lambda-ci
     retry:
       automatic:
         - exit_status: "*"
