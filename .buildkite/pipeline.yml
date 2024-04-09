@@ -102,6 +102,8 @@ steps:
     key: "aws-lambda-image"
     depends_on: "package-js"
     plugins:
+      - artifacts#v1.5.0:
+          download: min_packages.tar
       - docker-compose#v4.12.0:
           build:
             - aws-sam-maze-runner
