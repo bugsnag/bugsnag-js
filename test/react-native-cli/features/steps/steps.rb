@@ -47,8 +47,8 @@ def find_cli_helper_script
   # Handle both Dockerized and local Maze Runner executions
   script = 'react-native-cli-helper.js'
   possible_locations = %W[
-  #{__dir__}/../../scripts/#{script}
-  #{__dir__}/../../../../scripts/#{script}
+    #{__dir__}/../../scripts/#{script}
+    #{__dir__}/../../../../scripts/#{script}
   ]
   path = possible_locations.find { |path| File.exist?(path) }
   if path.nil?
