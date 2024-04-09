@@ -47,8 +47,8 @@ def find_cli_helper_script
   # Handle both Dockerized and local Maze Runner executions
   script = 'react-native-cli-helper.js'
   possible_locations = %W[
-    #{__dir__}/../../scripts/#{script}
-    #{__dir__}/../../../../scripts/#{script}
+  #{__dir__}/../../scripts/#{script}
+  #{__dir__}/../../../../scripts/#{script}
   ]
   path = possible_locations.find { |path| File.exist?(path) }
   if path.nil?
@@ -75,33 +75,16 @@ def parse_package_json
   length_before = stdout_lines.length
 
   steps %Q{
-    When I input "ls package.json" interactively
+    When I input "cat package.json" interactively
     Then I wait for the shell to output '"dependencies": \{' to stdout
   }
 
-  sleep 5
-
-  puts stdout_lines
-
   after = stdout_lines[length_before..stdout_lines.length]
 
-  puts after
-
   # Drop lines until we get to the start of the JSON
-  # json = after.drop_while { |line| line != '{' }
-  #
-  # puts json
-  #
-  # JSON.parse(json.join("\n"))
-end
+  json = after.drop_while { |line| line != '{' }
 
-def read_package_json_as_json
-  #output the current working directory
-  puts `pwd`
-  # list files in current directory
-  puts `ls`
-  json = File.read('package.json')
-  JSON.parse(json)
+  JSON.parse(json.join("\n"))
 end
 
 Then('bugsnag source maps library is in the package.json file') do
