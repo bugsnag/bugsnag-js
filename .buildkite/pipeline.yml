@@ -125,8 +125,7 @@ steps:
     depends_on: "aws-lambda-image"
     plugins:
       - docker-compose#v4.12.0:
-          pull:
-            - aws-sam-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:aws-lambda-ci-${BRANCH_NAME}
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
           run:
             - aws-sam-maze-runner
     retry:
