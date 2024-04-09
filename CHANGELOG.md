@@ -2,6 +2,10 @@
 
 ## v7.22.7 (2024-04-17)
 
+### Added
+
+- (electron) Added support for Webpack 5 by exporting separate clients for renderer and main processes [#2116](https://github.com/bugsnag/bugsnag-js/pull/2116)
+
 ### Changed
 
 - (metadata-delegate) Preventing prototype pollution vulnerabilities [#2115](https://github.com/bugsnag/bugsnag-js/pull/2115)
