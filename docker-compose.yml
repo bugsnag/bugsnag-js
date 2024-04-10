@@ -118,15 +118,8 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.aws-sam
     environment:
-      - DEBUG
-      - BRANCH_NAME
-      - BUILDKITE
-      - REGISTRY_URL
-      - REACT_NATIVE_VERSION
-      - RN_NEW_ARCH
-      - NOTIFIER_VERSION
-      - ARTEFACT_NAME
-      - JS_SOURCE_DIR
+      <<: *common-environment
+      SAM_CLI_CONTAINER_CONNECTION_TIMEOUT: 60
     networks:
       default:
         aliases:
