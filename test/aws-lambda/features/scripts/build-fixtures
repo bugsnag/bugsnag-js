@@ -10,8 +10,8 @@ SPECIFIC_FIXTURE = ARGV.first
 # Allow debugging by logging more verbosely and not tidying up packed packages
 DEBUG = ["1", "true", true].include?(ENV.fetch("DEBUG", false))
 
-# The root of bugsnag-js
-ROOT = File.realpath("#{__dir__}/../../../../")
+# The root to locate the packed packages
+ROOT = File.realpath("/app/")
 
 # Bugsnag packages that we need to pack & install into the fixtures
 BUGSNAG_PACKAGES = [
@@ -44,6 +44,12 @@ end
 
 # Install the packed packages in each fixture and build the fixture
 def install_and_build
+  # Strip the version suffix from the packages
+  Dir["#{ROOT}/bugsnag-*.tgz"].each do |package|
+    package_with_no_version = package.gsub(/-\d+\.\d+\.\d+.*(?=\.tgz)/, '')
+    File.rename(package, package_with_no_version)
+  end
+
   Dir["#{__dir__}/../fixtures/*"].each do |fixture|
     fixture = File.realpath(fixture)
     fixture_name = File.basename(fixture)
@@ -75,7 +81,7 @@ def install_and_build
       destinations.each do |destination|
         puts "Installing packages to #{fixture_name}/#{File.basename(destination)}"
 
-        FileUtils.copy(Dir["#{FileUtils.pwd}/bugsnag-*.tgz"], destination)
+        FileUtils.copy(Dir["#{ROOT}/bugsnag-*.tgz"], destination)
       end
 
       puts heading("Building #{fixture_name}")
