@@ -120,10 +120,6 @@ services:
     environment:
       <<: *common-environment
       SAM_CLI_CONTAINER_CONNECTION_TIMEOUT: 60
-    networks:
-      default:
-        aliases:
-          - maze-runner
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
