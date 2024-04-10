@@ -30,10 +30,10 @@ Scenario Outline: unhandled promise rejections are reported
 
     Examples:
         | lambda                                 | type     | node-version |
-        | AsyncPromiseRejectionFunctionNode14    | async    | 14           |
-        | AsyncPromiseRejectionFunctionNode12    | async    | 12           |
-        | CallbackPromiseRejectionFunctionNode14 | callback | 14           |
-        | CallbackPromiseRejectionFunctionNode12 | callback | 12           |
+        | AsyncPromiseRejectionFunctionNode20    | async    | 20           |
+        | AsyncPromiseRejectionFunctionNode18    | async    | 18           |
+        | CallbackPromiseRejectionFunctionNode20 | callback | 20           |
+        | CallbackPromiseRejectionFunctionNode18 | callback | 18           |
 
 @simple-app
 Scenario Outline: unhandled promise rejections are not reported when autoDetectErrors is false
@@ -51,10 +51,10 @@ Scenario Outline: unhandled promise rejections are not reported when autoDetectE
 
     Examples:
         | lambda                                 | type     |
-        | AsyncPromiseRejectionFunctionNode14    | async    |
-        | AsyncPromiseRejectionFunctionNode12    | async    |
-        | CallbackPromiseRejectionFunctionNode14 | callback |
-        | CallbackPromiseRejectionFunctionNode12 | callback |
+        | AsyncPromiseRejectionFunctionNode20    | async    |
+        | AsyncPromiseRejectionFunctionNode18    | async    |
+        | CallbackPromiseRejectionFunctionNode20 | callback |
+        | CallbackPromiseRejectionFunctionNode18 | callback |
 
 @serverless-express-app
 Scenario: promise rejections are reported when using serverless-express
@@ -78,7 +78,7 @@ Scenario: promise rejections are reported when using serverless-express
     And the "file" of stack frame 0 equals "app.js"
     And the event "metaData.AWS Lambda context.functionName" equals "ExpressFunction"
     And the event "metaData.AWS Lambda context.awsRequestId" is not null
-    And the event "device.runtimeVersions.node" matches "^14\.\d+\.\d+$"
+    And the event "device.runtimeVersions.node" matches "^20\.\d+\.\d+$"
     When I wait to receive a session
     Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
     And the session "id" is not null

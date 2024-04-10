@@ -26,10 +26,10 @@ Scenario Outline: handled exceptions are reported
 
     Examples:
         | lambda                                 | type     | node-version |
-        | AsyncHandledExceptionFunctionNode14    | async    | 14           |
-        | AsyncHandledExceptionFunctionNode12    | async    | 12           |
-        | CallbackHandledExceptionFunctionNode14 | callback | 14           |
-        | CallbackHandledExceptionFunctionNode12 | callback | 12           |
+        | AsyncHandledExceptionFunctionNode20    | async    | 20           |
+        | AsyncHandledExceptionFunctionNode18    | async    | 18           |
+        | CallbackHandledExceptionFunctionNode20 | callback | 20           |
+        | CallbackHandledExceptionFunctionNode18 | callback | 18           |
 
 @simple-app
 Scenario Outline: handled exceptions are still reported when autoDetectErrors is false
@@ -58,10 +58,10 @@ Scenario Outline: handled exceptions are still reported when autoDetectErrors is
 
     Examples:
         | lambda                                 | type     | node-version |
-        | AsyncHandledExceptionFunctionNode14    | async    | 14           |
-        | AsyncHandledExceptionFunctionNode12    | async    | 12           |
-        | CallbackHandledExceptionFunctionNode14 | callback | 14           |
-        | CallbackHandledExceptionFunctionNode12 | callback | 12           |
+        | AsyncHandledExceptionFunctionNode20    | async    | 20           |
+        | AsyncHandledExceptionFunctionNode18    | async    | 18           |
+        | CallbackHandledExceptionFunctionNode20 | callback | 20           |
+        | CallbackHandledExceptionFunctionNode18 | callback | 18           |
 
 @serverless-express-app
 Scenario: handled exceptions are reported when using serverless-express
@@ -81,7 +81,7 @@ Scenario: handled exceptions are reported when using serverless-express
     And the "file" of stack frame 0 equals "app.js"
     And the event "metaData.AWS Lambda context.functionName" equals "ExpressFunction"
     And the event "metaData.AWS Lambda context.awsRequestId" is not null
-    And the event "device.runtimeVersions.node" matches "^14\.\d+\.\d+$"
+    And the event "device.runtimeVersions.node" matches "^20\.\d+\.\d+$"
     When I wait to receive a session
     Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
     And the session "id" is not null

@@ -105,93 +105,93 @@ Resources:
             Path: /callback/promise/rejection
             Method: get
 
-  # AsyncUnhandledExceptionFunctionNode12:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: async/
-  #     Handler: unhandled-exception.lambdaHandler
-  #     Runtime: nodejs12.x
-  #     Events:
-  #       AsyncUnhandledException:
-  #         Type: Api
-  #         Properties:
-  #           Path: /async/unhandled/exception
-  #           Method: get
+  AsyncUnhandledExceptionFunctionNode18:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: unhandled-exception.lambdaHandler
+      Runtime: nodejs18.x
+      Events:
+        AsyncUnhandledException:
+          Type: Api
+          Properties:
+            Path: /async/unhandled/exception
+            Method: get
 
-  # AsyncHandledExceptionFunctionNode12:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: async/
-  #     Handler: handled-exception.lambdaHandler
-  #     Runtime: nodejs12.x
-  #     Events:
-  #       AsyncHandledException:
-  #         Type: Api
-  #         Properties:
-  #           Path: /async/handled/exception
-  #           Method: get
+  AsyncHandledExceptionFunctionNode18:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: handled-exception.lambdaHandler
+      Runtime: nodejs18.x
+      Events:
+        AsyncHandledException:
+          Type: Api
+          Properties:
+            Path: /async/handled/exception
+            Method: get
 
-  # AsyncPromiseRejectionFunctionNode12:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: async/
-  #     Handler: promise-rejection.lambdaHandler
-  #     Runtime: nodejs12.x
-  #     Events:
-  #       AsyncPromiseRejection:
-  #         Type: Api
-  #         Properties:
-  #           Path: /async/promise/rejection
-  #           Method: get
+  AsyncPromiseRejectionFunctionNode18:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/
+      Handler: promise-rejection.lambdaHandler
+      Runtime: nodejs18.x
+      Events:
+        AsyncPromiseRejection:
+          Type: Api
+          Properties:
+            Path: /async/promise/rejection
+            Method: get
 
-  # CallbackUnhandledExceptionFunctionNode12:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: callback/
-  #     Handler: unhandled-exception.lambdaHandler
-  #     Runtime: nodejs12.x
-  #     Events:
-  #       CallbackUnhandledException:
-  #         Type: Api
-  #         Properties:
-  #           Path: /callback/unhandled/exception
-  #           Method: get
+  CallbackUnhandledExceptionFunctionNode18:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: unhandled-exception.lambdaHandler
+      Runtime: nodejs18.x
+      Events:
+        CallbackUnhandledException:
+          Type: Api
+          Properties:
+            Path: /callback/unhandled/exception
+            Method: get
 
-  # CallbackThrownUnhandledExceptionFunctionNode12:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: callback/
-  #     Handler: thrown-unhandled-exception.lambdaHandler
-  #     Runtime: nodejs12.x
-  #     Events:
-  #       CallbackThrownUnhandledException:
-  #         Type: Api
-  #         Properties:
-  #           Path: /callback/thrown/unhandled/exception
-  #           Method: get
+  CallbackThrownUnhandledExceptionFunctionNode18:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: thrown-unhandled-exception.lambdaHandler
+      Runtime: nodejs18.x
+      Events:
+        CallbackThrownUnhandledException:
+          Type: Api
+          Properties:
+            Path: /callback/thrown/unhandled/exception
+            Method: get
 
-  # CallbackHandledExceptionFunctionNode12:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: callback/
-  #     Handler: handled-exception.lambdaHandler
-  #     Runtime: nodejs12.x
-  #     Events:
-  #       CallbackHandledException:
-  #         Type: Api
-  #         Properties:
-  #           Path: /callback/handled/exception
-  #           Method: get
+  CallbackHandledExceptionFunctionNode18:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: handled-exception.lambdaHandler
+      Runtime: nodejs18.x
+      Events:
+        CallbackHandledException:
+          Type: Api
+          Properties:
+            Path: /callback/handled/exception
+            Method: get
 
-  # CallbackPromiseRejectionFunctionNode12:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: callback/
-  #     Handler: promise-rejection.lambdaHandler
-  #     Runtime: nodejs12.x
-  #     Events:
-  #       CallbackPromiseRejection:
-  #         Type: Api
-  #         Properties:
-  #           Path: /callback/promise/rejection
-  #           Method: get
+  CallbackPromiseRejectionFunctionNode18:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/
+      Handler: promise-rejection.lambdaHandler
+      Runtime: nodejs18.x
+      Events:
+        CallbackPromiseRejection:
+          Type: Api
+          Properties:
+            Path: /callback/promise/rejection
+            Method: get

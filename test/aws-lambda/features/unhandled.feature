@@ -30,12 +30,12 @@ Scenario Outline: unhandled exceptions are reported
 
     Examples:
         | lambda                                         | type     | file                          | node-version | trace-length |
-        | AsyncUnhandledExceptionFunctionNode14          | async    | unhandled-exception.js        | 14           | 4            |
-        | AsyncUnhandledExceptionFunctionNode12          | async    | unhandled-exception.js        | 12           | 4            |
-        | CallbackUnhandledExceptionFunctionNode14       | callback | unhandled-exception.js        | 14           | 7            |
-        | CallbackUnhandledExceptionFunctionNode12       | callback | unhandled-exception.js        | 12           | 7            |
-        | CallbackThrownUnhandledExceptionFunctionNode14 | callback | thrown-unhandled-exception.js | 14           | 7            |
-        | CallbackThrownUnhandledExceptionFunctionNode12 | callback | thrown-unhandled-exception.js | 12           | 7            |
+        | AsyncUnhandledExceptionFunctionNode20          | async    | unhandled-exception.js        | 20           | 4            |
+        | AsyncUnhandledExceptionFunctionNode18          | async    | unhandled-exception.js        | 18           | 4            |
+        | CallbackUnhandledExceptionFunctionNode20       | callback | unhandled-exception.js        | 20           | 7            |
+        | CallbackUnhandledExceptionFunctionNode18       | callback | unhandled-exception.js        | 18           | 7            |
+        | CallbackThrownUnhandledExceptionFunctionNode20 | callback | thrown-unhandled-exception.js | 20           | 7            |
+        | CallbackThrownUnhandledExceptionFunctionNode18 | callback | thrown-unhandled-exception.js | 18           | 7            |
 
 @simple-app
 Scenario Outline: no error is reported when autoDetectErrors is false
@@ -46,12 +46,12 @@ Scenario Outline: no error is reported when autoDetectErrors is false
 
     Examples:
         | lambda                                         | type     |
-        | AsyncUnhandledExceptionFunctionNode14          | async    |
-        | AsyncUnhandledExceptionFunctionNode12          | async    |
-        | CallbackUnhandledExceptionFunctionNode14       | callback |
-        | CallbackUnhandledExceptionFunctionNode12       | callback |
-        | CallbackThrownUnhandledExceptionFunctionNode14 | callback |
-        | CallbackThrownUnhandledExceptionFunctionNode12 | callback |
+        | AsyncUnhandledExceptionFunctionNode20          | async    |
+        | AsyncUnhandledExceptionFunctionNode18          | async    |
+        | CallbackUnhandledExceptionFunctionNode20       | callback |
+        | CallbackUnhandledExceptionFunctionNode18       | callback |
+        | CallbackThrownUnhandledExceptionFunctionNode20 | callback |
+        | CallbackThrownUnhandledExceptionFunctionNode18 | callback |
 
 @serverless-express-app
 Scenario Outline: unhandled exceptions are reported when using serverless-express
@@ -74,7 +74,7 @@ Scenario Outline: unhandled exceptions are reported when using serverless-expres
     And the "file" of stack frame 0 equals "app.js"
     And the event "metaData.AWS Lambda context.functionName" equals "ExpressFunction"
     And the event "metaData.AWS Lambda context.awsRequestId" is not null
-    And the event "device.runtimeVersions.node" matches "^14\.\d+\.\d+$"
+    And the event "device.runtimeVersions.node" matches "^20\.\d+\.\d+$"
     When I wait to receive a session
     Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
     And the session "id" is not null
@@ -104,7 +104,7 @@ Scenario: unhandled asynchronous exceptions are reported when using serverless-e
     And the "file" of stack frame 0 equals "app.js"
     And the event "metaData.AWS Lambda context.functionName" equals "ExpressFunction"
     And the event "metaData.AWS Lambda context.awsRequestId" is not null
-    And the event "device.runtimeVersions.node" matches "^14\.\d+\.\d+$"
+    And the event "device.runtimeVersions.node" matches "^20\.\d+\.\d+$"
     When I wait to receive a session
     Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
     And the session "id" is not null
