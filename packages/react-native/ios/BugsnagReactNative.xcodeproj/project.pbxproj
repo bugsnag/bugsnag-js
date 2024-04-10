@@ -327,9 +327,9 @@
 		E7462A782489461A00F92D67 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E7462A822489461A00F92D67 /* Bugsnag.framework */,
-				E7462A842489461A00F92D67 /* Bugsnag.framework */,
-				E7462A862489461A00F92D67 /* Bugsnag.framework */,
+				E7462A822489461A00F92D67 /* BugsnagReactNative.framework */,
+				E7462A842489461A00F92D67 /* BugsnagReactNative.framework */,
+				E7462A862489461A00F92D67 /* BugsnagReactNative.framework */,
 				E7462A882489461A00F92D67 /* libBugsnagStatic.a */,
 				E7462A8A2489461A00F92D67 /* Bugsnag-iOSTests.xctest */,
 				E7462A8C2489461A00F92D67 /* Bugsnag-macOSTests.xctest */,
@@ -514,24 +514,24 @@
 			remoteRef = E72B3248241FC479005FB2CA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E7462A822489461A00F92D67 /* Bugsnag.framework */ = {
+		E7462A822489461A00F92D67 /* BugsnagReactNative.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = Bugsnag.framework;
+			path = BugsnagReactNative.framework;
 			remoteRef = E7462A812489461A00F92D67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E7462A842489461A00F92D67 /* Bugsnag.framework */ = {
+		E7462A842489461A00F92D67 /* BugsnagReactNative.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = Bugsnag.framework;
+			path = BugsnagReactNative.framework;
 			remoteRef = E7462A832489461A00F92D67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E7462A862489461A00F92D67 /* Bugsnag.framework */ = {
+		E7462A862489461A00F92D67 /* BugsnagReactNative.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = Bugsnag.framework;
+			path = BugsnagReactNative.framework;
 			remoteRef = E7462A852489461A00F92D67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
