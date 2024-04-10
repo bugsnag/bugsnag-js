@@ -33,7 +33,7 @@ RUN npm pack --verbose packages/plugin-node-unhandled-rejection/
 RUN npm pack --verbose packages/plugin-server-session/
 RUN npm pack --verbose packages/plugin-strip-project-root/
 
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli as aws-sam-maze-runner
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v9-cli as aws-sam-maze-runner
 WORKDIR /app/
 
 RUN curl -sLO https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
