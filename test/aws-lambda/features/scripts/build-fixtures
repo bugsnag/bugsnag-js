@@ -42,18 +42,6 @@ def heading(message)
   HEADING
 end
 
-# Run "npm pack" on the required packages and strip the version suffix so they
-# can be depended on in a package.json file
-def pack
-  puts heading("Packing Bugsnag packages")
-
-  # Strip the version suffix from the packages
-  Dir["#{FileUtils.pwd}/bugsnag-*.tgz"].each do |package|
-    package_with_no_version = package.gsub(/-\d+\.\d+\.\d+.*(?=\.tgz)/, '')
-    File.rename(package, package_with_no_version)
-  end
-end
-
 # Install the packed packages in each fixture and build the fixture
 def install_and_build
   Dir["#{__dir__}/../fixtures/*"].each do |fixture|
@@ -112,20 +100,8 @@ def install_and_build
   end
 end
 
-# Tidy up PWD by removing all the packed packages created by "pack"
-def tidy_up
-  return if DEBUG
-
-  puts heading("Tidying up PWD")
-
-  FileUtils.remove(Dir["#{FileUtils.pwd}/bugsnag-*.tgz"])
-end
-
 begin
-  pack
   install_and_build
 ensure
-  tidy_up
-
   puts "Done!"
 end

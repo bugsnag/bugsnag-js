@@ -41,10 +41,8 @@ RUN unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
 RUN ./sam-installation/install
 RUN sam --version
 
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-RUN . ~/.bashrc && nvm install 20
-RUN . ~/.bashrc && nvm use 20
-
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
+    apt-get install -y nodejs
 COPY --from=node-feature-builder /app/*.tgz /app/
 
 COPY test/aws-lambda test/aws-lambda
