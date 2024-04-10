@@ -121,6 +121,7 @@ services:
       <<: *common-environment
       SAM_CLI_CONTAINER_CONNECTION_TIMEOUT: 60
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-js-maze-runner}"
+      CONTAINER_HOST: "host.docker.internal"
     networks:
       default:
         aliases:
