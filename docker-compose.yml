@@ -132,9 +132,7 @@ services:
         aliases:
           - maze-runner
     volumes:
-      - ./build:/app/build
-      - ./test:/app/test
-      - ./features:/app/features
+      - /var/run/docker.sock:/var/run/docker.sock
 
   react-native-android-builder-java-11-node-16:
     build:
