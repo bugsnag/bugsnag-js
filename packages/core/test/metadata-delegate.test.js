@@ -5,10 +5,32 @@ import { add, clear } from '../lib/metadata-delegate'
 // so tests are only for prototype and constructor
 
 describe('metadata delegate', () => {
+  describe('add', () => {
+    it.each([
+      {
+        key: 'constructor',
+        expected: {}
+      },
+      {
+        key: 'prototype',
+        expected: {}
+      }
+    ])('should not add constructor or prototype keys', ({ key, expected }) => {
+      const state = {}
+      add(state, key, 'foo', 'bar')
+      expect(state).toEqual(expected)
+    })
+  })
+
   describe('clear', () => {
     it.each([
       {
         key: 'constructor',
+        state: {
+          constructor: {
+            foo: 'bar'
+          }
+        },
         expected: {
           constructor: {
             foo: 'bar'
@@ -17,19 +39,19 @@ describe('metadata delegate', () => {
       },
       {
         key: 'prototype',
+        state: {
+          prototype: {
+            foo: 'bar'
+          }
+        },
         expected: {
           prototype: {
             foo: 'bar'
           }
         }
       }
-    ])('should not overwrite constructor or prototype keys', ({ key, expected }) => {
-      const state = {}
-
-      add(state, key, 'foo', 'bar')
-
+    ])('should not overwrite constructor or prototype keys', ({ key, state, expected }) => {
       clear(state, key, 'foo')
-
       expect(state).toEqual(expected)
     })
   })
