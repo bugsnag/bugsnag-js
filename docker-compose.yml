@@ -119,9 +119,9 @@ services:
       dockerfile: dockerfiles/Dockerfile.aws-sam
     environment:
       <<: *common-environment
-      SAM_CLI_CONTAINER_CONNECTION_TIMEOUT: 60
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-js-maze-runner}"
       VOLUME_BASEDIR: "${PWD}/test/aws-lambda"
+      CONTAINER_HOST: "host.docker.internal"
     networks:
       default:
         aliases:
