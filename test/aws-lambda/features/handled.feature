@@ -3,7 +3,7 @@ Feature: Handled exceptions are reported correctly in lambda functions
 @simple-app
 Scenario Outline: handled exceptions are reported
     Given I setup the environment
-    When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/handled-exception.json" event
+    When I invoke the "simple-app/<lambda>" lambda in "features/fixtures" with the "simple-app/events/<type>/handled-exception.json" event
     Then the lambda response "body.message" equals "Did not crash!"
     And the lambda response "statusCode" equals 200
     And the SAM exit code equals 0
@@ -35,7 +35,7 @@ Scenario Outline: handled exceptions are reported
 Scenario Outline: handled exceptions are still reported when autoDetectErrors is false
     Given I setup the environment
     And I set environment variable "BUGSNAG_AUTO_DETECT_ERRORS" to "false"
-    When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/handled-exception.json" event
+    When I invoke the "simple-app/<lambda>" lambda in "features/fixtures" with the "simple-app/events/<type>/handled-exception.json" event
     Then the lambda response "body.message" equals "Did not crash!"
     And the lambda response "statusCode" equals 200
     And the SAM exit code equals 0
@@ -66,7 +66,7 @@ Scenario Outline: handled exceptions are still reported when autoDetectErrors is
 @serverless-express-app
 Scenario: handled exceptions are reported when using serverless-express
     Given I setup the environment
-    When I invoke the "ExpressFunction" lambda in "features/fixtures/serverless-express-app" with the "events/handled.json" event
+    When I invoke the "serverless-express-app/ExpressFunction" lambda in "features/fixtures" with the "serverless-express-app/events/handled.json" event
     Then the lambda response "body.message" equals "did not crash :)"
     And the lambda response "statusCode" equals 200
     And the SAM exit code equals 0

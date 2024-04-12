@@ -45,5 +45,4 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
     apt-get install -y nodejs
 COPY --from=node-feature-builder /app/*.tgz /app/
 
-COPY test/aws-lambda test/aws-lambda
 WORKDIR /app/test/aws-lambda

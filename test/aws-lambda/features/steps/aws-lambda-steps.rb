@@ -5,3 +5,4 @@ Given('I setup the environment') do
     And I set environment variable "BUGSNAG_SESSIONS_ENDPOINT" to "http://host.docker.internal:9339/sessions"
   }
 end
+

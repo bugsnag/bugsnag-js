@@ -121,13 +121,16 @@ services:
       <<: *common-environment
       SAM_CLI_CONTAINER_CONNECTION_TIMEOUT: 60
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-js-maze-runner}"
-      CONTAINER_HOST: "host.docker.internal"
+      VOLUME_BASEDIR: "${PWD}/test/aws-lambda/features/fixtures"
     networks:
       default:
         aliases:
           - maze-runner
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./test/aws-lambda:/app/test/aws-lambda
 
   react-native-android-builder-java-11-node-16:
     build:
