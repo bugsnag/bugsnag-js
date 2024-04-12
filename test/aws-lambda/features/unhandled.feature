@@ -3,7 +3,7 @@ Feature: Unhandled exceptions are reported correctly in lambda functions
 @simple-app
 Scenario Outline: unhandled exceptions are reported
     Given I setup the environment
-    When I invoke the "simple-app/<lambda>" lambda in "features/fixtures" with the "simple-app/events/<type>/unhandled-exception.json" event
+    When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/unhandled-exception.json" event
     Then the lambda response "errorMessage" equals "Oh no!"
     And the lambda response "errorType" equals "Error"
     And the lambda response "trace" is an array with <trace-length> elements
@@ -41,7 +41,7 @@ Scenario Outline: unhandled exceptions are reported
 Scenario Outline: no error is reported when autoDetectErrors is false
     Given I setup the environment
     And I set environment variable "BUGSNAG_AUTO_DETECT_ERRORS" to "false"
-    When I invoke the "simple-app/<lambda>" lambda in "features/fixtures" with the "simple-app/events/<type>/unhandled-exception.json" event
+    When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/unhandled-exception.json" event
     Then I should receive no errors
 
     Examples:
@@ -56,7 +56,7 @@ Scenario Outline: no error is reported when autoDetectErrors is false
 @serverless-express-app
 Scenario Outline: unhandled exceptions are reported when using serverless-express
     Given I setup the environment
-    When I invoke the "serverless-express-app/ExpressFunction" lambda in "features/fixtures" with the "serverless-express-app/events/<event-name>.json" event
+    When I invoke the "ExpressFunction" lambda in "features/fixtures/serverless-express-app" with the "events/<event-name>.json" event
     Then the lambda response "body.message" equals "<message>"
     And the lambda response "body.type" equals "Error"
     And the lambda response "body.stacktrace" is an array with 11 elements
@@ -90,7 +90,7 @@ Scenario Outline: unhandled exceptions are reported when using serverless-expres
 @serverless-express-app
 Scenario: unhandled asynchronous exceptions are reported when using serverless-express
     Given I setup the environment
-    When I invoke the "serverless-express-app/ExpressFunction" lambda in "features/fixtures" with the "serverless-express-app/events/unhandled-async.json" event
+    When I invoke the "ExpressFunction" lambda in "features/fixtures/serverless-express-app" with the "events/unhandled-async.json" event
     Then the lambda response is empty
     And the SAM exit code equals 0
     When I wait to receive an error

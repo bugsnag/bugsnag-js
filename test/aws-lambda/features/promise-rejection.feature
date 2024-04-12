@@ -3,7 +3,7 @@ Feature: Unhandled promise rejections are reported correctly in lambda functions
 @simple-app
 Scenario Outline: unhandled promise rejections are reported
     Given I setup the environment
-    When I invoke the "<lambda>" lambda in "simple-app/features/fixtures" with the "simple-app/events/<type>/promise-rejection.json" event
+    When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/promise-rejection.json" event
     Then the lambda response "errorMessage" equals "Error: yikes"
     And the lambda response "errorType" equals "Runtime.UnhandledPromiseRejection"
     And the lambda response "trace" is an array with 4 elements
@@ -39,7 +39,7 @@ Scenario Outline: unhandled promise rejections are reported
 Scenario Outline: unhandled promise rejections are not reported when autoDetectErrors is false
     Given I setup the environment
     And I set environment variable "BUGSNAG_AUTO_DETECT_ERRORS" to "false"
-    When I invoke the "simple-app/<lambda>" lambda in "features/fixtures" with the "simple-app/events/<type>/promise-rejection.json" event
+    When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/promise-rejection.json" event
     Then the lambda response "errorMessage" equals "Error: yikes"
     And the lambda response "errorType" equals "Runtime.UnhandledPromiseRejection"
     And the lambda response "trace" is an array with 6 elements
@@ -59,7 +59,7 @@ Scenario Outline: unhandled promise rejections are not reported when autoDetectE
 @serverless-express-app
 Scenario: promise rejections are reported when using serverless-express
     Given I setup the environment
-    When I invoke the "serverless-express-app/ExpressFunction" lambda in "features/fixtures" with the "serverless-express-app/events/promise-rejection.json" event
+    When I invoke the "ExpressFunction" lambda in "features/fixtures/serverless-express-app" with the "events/promise-rejection.json" event
     Then the lambda response "errorMessage" equals "Error: abc"
     And the lambda response "errorType" equals "Runtime.UnhandledPromiseRejection"
     And the lambda response "trace" is an array with 4 elements

@@ -3,7 +3,7 @@ Feature: Sessions are reported correctly in lambda functions
 @simple-app
 Scenario Outline: sessions are reported
     Given I setup the environment
-    When I invoke the "simple-app/<lambda>" lambda in "features/fixtures"
+    When I invoke the "<lambda>" lambda in "features/fixtures/simple-app"
     And I wait to receive a session
     Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
     And the session "id" is not null
@@ -30,7 +30,7 @@ Scenario Outline: sessions are reported
 Scenario Outline: no session is sent when autoTrackSessions is false
     Given I setup the environment
     And I set environment variable "BUGSNAG_AUTO_TRACK_SESSIONS" to "false"
-    When I invoke the "simple-app/<lambda>" lambda in "features/fixtures"
+    When I invoke the "<lambda>" lambda in "features/fixtures/simple-app"
     Then I should receive no sessions
     When I wait to receive an error
     Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
