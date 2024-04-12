@@ -15,7 +15,7 @@ describe('metadata delegate', () => {
         key: 'prototype',
         expected: {}
       }
-    ])('should not add constructor or prototype keys', ({ key, expected }) => {
+    ])('should not add $key keys', ({ key, expected }) => {
       const state = {}
       add(state, key, 'foo', 'bar')
       expect(state).toEqual(expected)
@@ -50,7 +50,7 @@ describe('metadata delegate', () => {
           }
         }
       }
-    ])('should not overwrite constructor or prototype keys', ({ key, state, expected }) => {
+    ])('should not overwrite $key keys', ({ key, state, expected }) => {
       clear(state, key, 'foo')
       expect(state).toEqual(expected)
     })
