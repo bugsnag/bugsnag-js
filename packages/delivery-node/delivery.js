@@ -19,7 +19,7 @@ module.exports = (client) => ({
     }
 
     try {
-      client._logger.info(`About to send ${body}`)
+      client._logger.info(`About to send event`)
 
       request({
         url: client._config.endpoints.notify,
@@ -32,11 +32,12 @@ module.exports = (client) => ({
         body,
         agent: client._config.agent
       }, (err, body) => {
-        client._logger.info(`Delivery finished ${err}`)
+        client._logger.info(`Event delivery finished ${err}`)
 
         _cb(err)
       })
     } catch (e) {
+      client._logger.info(`Event delivery failed ${e}`)
       _cb(e)
     }
   },
@@ -52,6 +53,7 @@ module.exports = (client) => ({
     }
 
     try {
+      client._logger.info(`About to send session`)
       request({
         url: client._config.endpoints.sessions,
         headers: {
@@ -62,8 +64,13 @@ module.exports = (client) => ({
         },
         body: payload.session(session, client._config.redactedKeys),
         agent: client._config.agent
-      }, err => _cb(err))
+      }, err => {
+        client._logger.info(`Session delivery finished ${err}`)
+
+        _cb(err)
+      })
     } catch (e) {
+      client._logger.info(`Session delivery failed ${e}`)
       _cb(e)
     }
   }

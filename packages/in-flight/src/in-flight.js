@@ -16,7 +16,7 @@ module.exports = {
     patchNotify(client)
 
     let delivery = client._delivery
-    patchDelivery(delivery)
+    patchDelivery(delivery, client._logger)
 
     // ensure we also monkey-patch any new delivery that might be set
     Object.defineProperty(client, '_delivery', {
@@ -95,17 +95,17 @@ function patchNotify (client) {
 // into 1 request made every x seconds
 // therefore the only thing that knows when a session request is started and
 // when it finishes is the delivery delegate itself
-function patchDelivery (delivery) {
+function patchDelivery (delivery, logger) {
   const originalSendSession = delivery.sendSession
 
   delivery.sendSession = function (session, callback = noop) {
     const id = cuid()
-    client._logger.info(`[in-flight] tracking new session request ${id}`)
+    logger.info(`[in-flight] tracking new session request ${id}`)
     inFlightRequests.set(id, true)
 
     const _callback = function () {
       inFlightRequests.delete(id)
-      client._logger.info(`[in-flight] session request finished ${id}`)
+      logger.info(`[in-flight] session request finished ${id}`)
       callback.apply(null, arguments)
     }
 
