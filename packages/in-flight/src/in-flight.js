@@ -43,7 +43,7 @@ module.exports = {
       )
 
       const resolveIfNoRequests = function () {
-        console.log(`There are ${inFlightRequests.size} in flight request(s)`)
+        console.log(`There are ${inFlightRequests.size} in flight request(s): ${JSON.stringify(Object.fromEntries(inFlightRequests.entries()))}`)
 
         if (inFlightRequests.size === 0) {
           clearTimeout(rejectTimeout)
@@ -68,11 +68,11 @@ function patchNotify (client) {
 
   client._notify = function (event, onError, callback = noop) {
     const id = cuid()
-    client._logger.info(`[in-flight] tracking new request ${id}`)
+    client._logger.info(`[in-flight] tracking new event request ${id}`)
     inFlightRequests.set(id, true)
 
     const _callback = function () {
-      client._logger.info(`[in-flight] request finished ${id}`)
+      client._logger.info(`[in-flight] event request finished ${id}`)
       inFlightRequests.delete(id)
       callback.apply(null, arguments)
     }
@@ -100,10 +100,12 @@ function patchDelivery (delivery) {
 
   delivery.sendSession = function (session, callback = noop) {
     const id = cuid()
+    client._logger.info(`[in-flight] tracking new session request ${id}`)
     inFlightRequests.set(id, true)
 
     const _callback = function () {
       inFlightRequests.delete(id)
+      client._logger.info(`[in-flight] session request finished ${id}`)
       callback.apply(null, arguments)
     }
 

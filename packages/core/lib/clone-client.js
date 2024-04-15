@@ -39,6 +39,6 @@ module.exports = (client) => {
 }
 
 module.exports.registerCallback = callback => {
-  console.log('registering callback')
+  console.log(`registering onCloneCallback (currently ${onCloneCallbacks.length}`)
   onCloneCallbacks.push(callback)
 }
