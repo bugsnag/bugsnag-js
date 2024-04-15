@@ -43,7 +43,7 @@ module.exports = {
       )
 
       const resolveIfNoRequests = function () {
-        client._logger.info(`There are ${inFlightRequests.size} in flight request(s)`)
+        console.log(`There are ${inFlightRequests.size} in flight request(s)`)
 
         if (inFlightRequests.size === 0) {
           clearTimeout(rejectTimeout)
