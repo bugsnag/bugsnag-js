@@ -1,4 +1,7 @@
 BeforeAll do
+
+  puts(system('docker -v'))
+
   success = system(File.realpath("#{__dir__}/../scripts/build-fixtures"))
 
   unless success
