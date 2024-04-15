@@ -17,6 +17,7 @@ app.get('/handled', (request, response) => {
 })
 
 app.get('/unhandled', (request, response) => {
+  Bugsnag._client._logger.info('About to throw an error from /unhandled')
   throw new Error('broken :(')
 })
 
@@ -27,6 +28,7 @@ app.get('/unhandled-async', (request, response) => {
 })
 
 app.get('/unhandled-next', (request, response, next) => {
+  Bugsnag._client._logger.info('About to throw an error from /unhandled-next')
   next(new Error('borked'))
 })
 

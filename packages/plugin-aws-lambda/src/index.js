@@ -111,9 +111,16 @@ function wrapHandler (client, flushTimeoutMs, lambdaTimeoutNotifyMs, handler) {
       client.startSession()
     }
 
+    client.addOnError(event => {
+      client._logger.info(`Event captured: ${event}`)
+    })
+
     try {
+      client._logger.info("Starting user's handler")
       return await _handler(event, context)
     } catch (err) {
+      client._logger.info(`Caught error ${err}`)
+
       if (client._config.autoDetectErrors && client._config.enabledErrorTypes.unhandledExceptions) {
         const handledState = {
           severity: 'error',
