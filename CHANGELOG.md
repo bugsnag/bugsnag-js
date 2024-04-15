@@ -14,7 +14,7 @@
 - (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) *Breaking change*: The `request` metadata field in network breadcrumbs has been renamed to `url` and is no longer pre-pended with the HTTP method [#1988](https://github.com/bugsnag/bugsnag-js/pull/1988)
 - (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Added `method` metadata field to network breadcrumbs [#1988](https://github.com/bugsnag/bugsnag-js/pull/1988)
 - (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Added `duration` metadata field to network breadcrumbs [#1903](https://github.com/bugsnag/bugsnag-js/pull/1903)
-- (react-native) Update bugsnag-android from v5.32.2 to [v6.4.0](https://github.com/bugsnag/bugsnag-android/blob/v6.4.0/CHANGELOG.md#630-2024-03-19)
+- (react-native) Update bugsnag-android from v5.32.2 to [v6.4.0](https://github.com/bugsnag/bugsnag-android/blob/v6.4.0/CHANGELOG.md#640-2024-04-15)
 
 ## TBD
 
