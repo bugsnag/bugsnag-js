@@ -28,8 +28,10 @@ module.exports = (client) => {
   clone._delivery = client._delivery
   clone._sessionDelegate = client._sessionDelegate
 
-  onCloneCallbacks.forEach(callback => {
-    client._logger.info('calling onCloneCallback')
+  client._logger.info(`there are ${onCloneCallbacks} onCloneCallbacks`)
+
+  onCloneCallbacks.forEach((callback, i) => {
+    client._logger.info(`calling onCloneCallback #${i}`)
     callback(clone)
   })
 
