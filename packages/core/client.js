@@ -287,10 +287,13 @@ class Client {
 
   notify (maybeError, onError, postReportCallback = noop) {
     const event = Event.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
+    this._logger.info(`notify called with ${event}`)
+
     this._notify(event, onError, postReportCallback)
   }
 
   _notify (event, onError, postReportCallback = noop) {
+    this._logger.info(`_notify called with ${event}`)
     event.app = assign({}, event.app, {
       releaseStage: this._config.releaseStage,
       version: this._config.appVersion,
@@ -348,11 +351,16 @@ class Client {
         event._session = this._session
       }
 
+      this._logger.info(`sending event to delivery`)
+
       this._delivery.sendEvent({
         apiKey: event.apiKey || this._config.apiKey,
         notifier: this._notifier,
         events: [event]
-      }, (err) => postReportCallback(err, event))
+      }, (err) => {
+        this._logger.info(`in post report callback (err: ${err})`)
+        postReportCallback(err, event)
+      })
     })
   }
 }
