@@ -19,6 +19,8 @@ module.exports = (client) => ({
     }
 
     try {
+      client._logger.info(`About to send ${body}`)
+
       request({
         url: client._config.endpoints.notify,
         headers: {
@@ -29,7 +31,11 @@ module.exports = (client) => ({
         },
         body,
         agent: client._config.agent
-      }, (err, body) => _cb(err))
+      }, (err, body) => {
+        client._logger.info(`Delivery finished ${err}`)
+
+        _cb(err)
+      })
     } catch (e) {
       _cb(e)
     }

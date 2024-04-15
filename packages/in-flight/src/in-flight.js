@@ -68,9 +68,11 @@ function patchNotify (client) {
 
   client._notify = function (event, onError, callback = noop) {
     const id = cuid()
+    client._logger.info(`[in-flight] tracking new request ${id}`)
     inFlightRequests.set(id, true)
 
     const _callback = function () {
+      client._logger.info(`[in-flight] request finished ${id}`)
       inFlightRequests.delete(id)
       callback.apply(null, arguments)
     }
