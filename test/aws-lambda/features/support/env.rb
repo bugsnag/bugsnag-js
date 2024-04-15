@@ -1,6 +1,6 @@
 BeforeAll do
 
-  puts(system('docker -v'))
+  puts(system('getent hosts host.docker.internal'))
 
   success = system(File.realpath("#{__dir__}/../scripts/build-fixtures"))
 
