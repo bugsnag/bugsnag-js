@@ -3,6 +3,7 @@ const assign = require('./es-utils/assign')
 const onCloneCallbacks = []
 
 module.exports = (client) => {
+  client._logger.info('cloning client')
   const clone = new client.Client({}, {}, [], client._notifier)
 
   clone._config = client._config
@@ -27,9 +28,15 @@ module.exports = (client) => {
   clone._delivery = client._delivery
   clone._sessionDelegate = client._sessionDelegate
 
-  onCloneCallbacks.forEach(callback => { callback(clone) })
+  onCloneCallbacks.forEach(callback => {
+    client._logger.info('calling onCloneCallback')
+    callback(clone)
+  })
 
   return clone
 }
 
-module.exports.registerCallback = callback => { onCloneCallbacks.push(callback) }
+module.exports.registerCallback = callback => {
+  console.log('registering callback')
+  onCloneCallbacks.push(callback)
+}
