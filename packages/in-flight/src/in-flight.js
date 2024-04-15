@@ -24,7 +24,7 @@ module.exports = {
         return delivery
       },
       set (newDeliviery) {
-        patchDelivery(newDeliviery)
+        patchDelivery(newDeliviery, client._logger)
         delivery = newDeliviery
       }
     })
