@@ -1,7 +1,7 @@
 {
   "name": "@bugsnag/plugin-express",
   "version": "8.0.0-alpha.6",
-  "main": "dist/bugsnag-express.js",
+  "main": "src/express.js",
   "types": "types/bugsnag-express.d.ts",
   "description": "@bugsnag/js error handling middleware for Express (and Connect) web servers",
   "homepage": "https://www.bugsnag.com/",
@@ -13,13 +13,13 @@
     "access": "public"
   },
   "files": [
-    "dist",
+    "src",
     "types"
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
     "build": "npm run clean && npm run build:dist",
-    "build:dist": "../../bin/bundle src/express.js --node --exclude=iserror --standalone=bugsnag-express | ../../bin/extract-source-map dist/bugsnag-express.js"
+    "build:dist": "../../bin/bundle src/express.js --node --exclude=iserror,@bugsnag/core --standalone=bugsnag-express | ../../bin/extract-source-map dist/bugsnag-express.js"
   },
   "author": "Bugsnag",
   "license": "MIT",
