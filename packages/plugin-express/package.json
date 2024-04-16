@@ -24,8 +24,5 @@
   "devDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.6",
     "@types/express": "^4.17.6"
-  },
-  "dependencies": {
-    "iserror": "^0.0.2"
   }
 }
