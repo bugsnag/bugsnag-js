@@ -1,19 +1,21 @@
 const bugsnagInFlight = require('@bugsnag/in-flight')
-const BugsnagPluginAwsLambdaSession = require('./session')
+const BugsnagPluginBrowserSession = require('@bugsnag/plugin-browser-session')
 const LambdaTimeoutApproaching = require('./lambda-timeout-approaching')
-const isServerPluginLoaded = require('./is-server-plugin-loaded')
 
 // JS timers use a signed 32 bit integer for the millisecond parameter. SAM's
 // "local invoke" has a bug that means it exceeds this amount, resulting in
 // warnings. See https://github.com/aws/aws-sam-cli/issues/2519
 const MAX_TIMER_VALUE = Math.pow(2, 31) - 1
 
+const SERVER_PLUGIN_NAMES = ['express', 'koa', 'restify']
+const isServerPluginLoaded = client => SERVER_PLUGIN_NAMES.some(name => client.getPlugin(name))
+
 const BugsnagPluginAwsLambda = {
   name: 'awsLambda',
 
   load (client) {
     bugsnagInFlight.trackInFlight(client)
-    client._loadPlugin(BugsnagPluginAwsLambdaSession)
+    client._loadPlugin(BugsnagPluginBrowserSession)
 
     // Reset the app duration between invocations, if the plugin is loaded
     const appDurationPlugin = client.getPlugin('appDuration')
