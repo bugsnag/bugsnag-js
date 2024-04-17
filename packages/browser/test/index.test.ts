@@ -162,7 +162,9 @@ describe('browser notifier', () => {
       maxBreadcrumbs: 20,
       enabledBreadcrumbTypes: ['manual', 'log', 'request'],
       user: null,
-      metadata: {},
+      metadata: {
+        debug: { foo: 'bar' }
+      },
       logger: undefined,
       redactedKeys: ['foo', /bar/],
       collectUserIp: true,
@@ -179,6 +181,7 @@ describe('browser notifier', () => {
       }
       expect(event.breadcrumbs.length).toBe(0)
       expect(event.originalError.message).toBe('123')
+      expect(event.getMetadata('debug')).toEqual({ foo: 'bar' })
       done()
     })
   })
