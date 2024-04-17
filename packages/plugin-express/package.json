@@ -1,7 +1,7 @@
 {
   "name": "@bugsnag/plugin-express",
   "version": "8.0.0-alpha.7",
-  "main": "dist/bugsnag-express.js",
+  "main": "src/express.js",
   "types": "types/bugsnag-express.d.ts",
   "description": "@bugsnag/js error handling middleware for Express (and Connect) web servers",
   "homepage": "https://www.bugsnag.com/",
