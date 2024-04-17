@@ -1,12 +1,17 @@
 # Changelog
 
-## TBD
+## v7.22.7 (2024-04-17)
 
 ### Changed
 
 - (metadata-delegate) Preventing prototype pollution vulnerabilities [#2115](https://github.com/bugsnag/bugsnag-js/pull/2115)
 - (plugin-interaction-breadcrumbs) Improved performance of click event breadcrumbs [#2094](https://github.com/bugsnag/bugsnag-js/pull/2094)
 - (react-native) Rename Bugsnag.framework to BugsnagReactNative.framework [#2117](https://github.com/bugsnag/bugsnag-js/pull/2117)
+- (browser) Export BrowserBugsnagStatic [#2112](https://github.com/bugsnag/bugsnag-js/pull/2112)
+
+### Fixed
+
+- (react-native) Move BugsnagReactNative from objective-c to objective c++ [#2113](https://github.com/bugsnag/bugsnag-js/pull/2113)
 
 ## v7.22.6 (2024-03-05)
 
