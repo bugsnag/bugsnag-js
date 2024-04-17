@@ -53,6 +53,22 @@ const Bugsnag = {
 
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
+    Object.keys(Client.prototype).forEach((m) => {
+      if (/^_/.test(m)) return
+      const original = bugsnag[m]
+      bugsnag[m] = function () {
+        // if we are in an async context, use the client from that context
+        const contextClient = bugsnag._clientContext && bugsnag._clientContext.getStore() ? bugsnag._clientContext.getStore() : null
+        const client = contextClient || bugsnag
+        const originalMethod = contextClient ? contextClient[m] : original
+
+        client._depth += 1
+        const ret = originalMethod.apply(client, arguments)
+        client._depth -= 1
+        return ret
+      }
+    })
+
     // Used to store and retrieve the request-scoped client which makes it easy to obtain the request-scoped client
     // from anywhere in the codebase e.g. when calling Bugsnag.leaveBreadcrumb() or even within the global unhandled
     // promise rejection handler.

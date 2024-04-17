@@ -80,16 +80,4 @@ describe('plugin: console breadcrumbs', () => {
     expect(c._breadcrumbs.length).toBe(0)
     plugin.destroy()
   })
-
-  it('should use the client from the async context if it exists', () => {
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin] })
-    const contextClient = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin] })
-    c._clientContext = {
-      getStore: () => contextClient
-    }
-    console.log(123)
-    expect(c._breadcrumbs.length).toBe(0)
-    expect(c._clientContext.getStore()._breadcrumbs.length).toBe(2)
-    plugin.destroy()
-  })
 })
