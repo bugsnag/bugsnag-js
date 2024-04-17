@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-app-duration",
-  "version": "7.19.0",
+  "version": "7.22.7",
   "main": "app.js",
   "description": "@bugsnag/js plugin to set app duration in browsers and node",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.19.0"
+    "@bugsnag/core": "^7.22.7"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
