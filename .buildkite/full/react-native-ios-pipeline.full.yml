@@ -14,7 +14,7 @@ steps:
         env:
           REACT_NATIVE_VERSION: rn0.66
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode13.app"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
         artifact_paths: build/rn0.66.ipa
         commands:
           - npm run test:build-react-native-ios
@@ -31,7 +31,7 @@ steps:
         env:
           REACT_NATIVE_VERSION: rn0.67
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode13.app"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
         artifact_paths: build/rn0.67.ipa
         commands:
           - npm run test:build-react-native-ios
@@ -48,7 +48,7 @@ steps:
         env:
           REACT_NATIVE_VERSION: rn0.68-hermes
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode13.app"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
         artifact_paths: build/rn0.68-hermes.ipa
         commands:
           - npm run test:build-react-native-ios
@@ -65,7 +65,7 @@ steps:
         env:
           REACT_NATIVE_VERSION: rn0.69
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode13.app"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
         artifact_paths: build/rn0.69.ipa
         commands:
           - npm run test:build-react-native-ios
@@ -122,7 +122,7 @@ steps:
           JS_SOURCE_DIR: "react_navigation_js"
           ARTEFACT_NAME: "r_navigation_0.69"
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode13.app"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
         artifact_paths: build/r_navigation_0.69.ipa
         commands:
           - npm run test:build-react-native-ios
@@ -143,7 +143,7 @@ steps:
           JS_SOURCE_DIR: "react_native_navigation_js"
           ARTEFACT_NAME: "r_native_navigation_0.66"
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode13.app"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
         artifact_paths: build/r_native_navigation_0.66.ipa
         commands:
           - npm run test:build-react-native-ios
