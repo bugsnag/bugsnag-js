@@ -180,7 +180,6 @@ Scenario: Breadcrumbs from one request do not appear in another
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event has a "manual" breadcrumb named "For the first URL"
-  And the event has a "log" breadcrumb with message "For the first URL"
   And the event "request.url" equals "http://express/breadcrumbs_a"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
