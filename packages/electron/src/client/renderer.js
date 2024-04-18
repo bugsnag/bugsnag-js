@@ -9,7 +9,7 @@ const { schema, mergeOptions } = require('../config/renderer')
 
 Event.__type = 'electronrendererjs'
 
-const createRenderer = (rendererOpts) => {
+const createRendererClient = (rendererOpts) => {
   if (!window.__bugsnag_ipc__) throw new Error('Bugsnag was not loaded in the main process')
 
   const internalPlugins = [
@@ -83,7 +83,7 @@ const createRenderer = (rendererOpts) => {
 }
 
 // Construct the client
-const Bugsnag = createClient(createRenderer, 'renderer')
+const Bugsnag = createClient(createRendererClient, 'renderer')
 
 // commonjs
 module.exports = Bugsnag

@@ -16,7 +16,7 @@ const { schema } = require('../config/main')
 
 Event.__type = 'electronnodejs'
 
-const createMain = (opts) => {
+const createMainClient = (opts) => {
   // check api key has been provided as we need it to create the FileStore
   // which happens before the API key is validated
   if (typeof opts.apiKey !== 'string') {
@@ -84,7 +84,7 @@ const createMain = (opts) => {
 }
 
 // Construct the client
-const Bugsnag = createClient(createMain, 'main')
+const Bugsnag = createClient(createMainClient, 'main')
 
 // commonjs
 module.exports = Bugsnag

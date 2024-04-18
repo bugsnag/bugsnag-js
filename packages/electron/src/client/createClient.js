@@ -1,6 +1,6 @@
 const Client = require('@bugsnag/core/client')
 
-const createClient = (createClient, process) => {
+const createClient = (createProcessClient, process) => {
   const Bugsnag = {
     _client: null,
     lastRunInfo: null,
@@ -14,8 +14,8 @@ const createClient = (createClient, process) => {
       if (typeof opts === 'string') opts = { apiKey: opts }
       if (!opts) opts = {}
 
-      // create the relevant client for the detected environment
-      Bugsnag._client = createClient(opts)
+      // create the relevant client for the provided process
+      Bugsnag._client = createProcessClient(opts)
 
       Object.defineProperty(Bugsnag, 'lastRunInfo', {
         get: process === 'main'
