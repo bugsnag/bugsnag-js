@@ -55,7 +55,7 @@ const Bugsnag = {
 
     /**
      * Patch all calls to the client in order to forwards them to the context client if it exists
-     * 
+     *
      * This is useful for when client methods are called later, such as in the console breadcrumbs
      * plugin where we want to call `leaveBreadcrumb` on the request-scoped client, if it exists.
      */
