@@ -1,0 +1,36 @@
+{
+  "name": "@bugsnag/plugin-azure-functions",
+  "version": "7.11.0",
+  "main": "dist/bugsnag-azure-functions.js",
+  "types": "types/bugsnag-plugin-azure-functions.d.ts",
+  "description": "Azure Functions support for @bugsnag/node",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "clean": "rm -fr dist && mkdir dist",
+    "build": "npm run clean && ../../bin/bundle src/index.js --node --standalone=BugsnagPluginAzureFunctions | ../../bin/extract-source-map dist/bugsnag-azure-functions.js",
+    "postversion": "npm run build"
+  },
+  "author": "Dan Polivy",
+  "license": "MIT",
+  "dependencies": {
+    "@bugsnag/in-flight": "^7.11.0",
+    "@bugsnag/plugin-browser-session": "^7.11.0"
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^7.11.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^7.0.0"
+  }
+}
