@@ -1,6 +1,6 @@
 {
   "main": "./.webpack/main",
-  "name": "Runner",
+  "name": "runner",
   "version": "1.0.2",
   "scripts": {
     "start": "electron-forge start",
