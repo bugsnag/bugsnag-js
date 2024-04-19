@@ -60,7 +60,6 @@ const Bugsnag = {
      * plugin where we want to call `leaveBreadcrumb` on the request-scoped client, if it exists.
      */
     Object.keys(Client.prototype).forEach((m) => {
-      if (/^_/.test(m)) return
       const original = bugsnag[m]
       bugsnag[m] = function () {
         // if we are in an async context, use the client from that context
