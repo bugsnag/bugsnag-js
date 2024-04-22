@@ -41,6 +41,8 @@ Given('I launch an app with configuration:', launchConfig, (data) => {
     setup[key] = config
   })
 
+  console.log('launching app with setup:', setup)
+
   return global.automator.start({
     BUGSNAG_CONFIG: setup.bugsnag,
     BUGSNAG_PRELOAD: setup.preload,
