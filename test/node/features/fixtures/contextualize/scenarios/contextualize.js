@@ -11,6 +11,7 @@ Bugsnag.start({
 var contextualize = Bugsnag.getPlugin('contextualize')
 
 contextualize(function () {
+  console.log('manual notify')
   Bugsnag.leaveBreadcrumb('manual notify', { message: 'manual notify' })
   Bugsnag.notify(new Error('manual notify'))
 }, function (event) {
@@ -25,3 +26,4 @@ contextualize(function () {
 }, function (event) {
   event.addMetadata('subsystem', { name: 'fs reader' })
 })
+

@@ -1,14 +1,14 @@
 {
   "name": "@bugsnag/electron-network-status",
-  "version": "8.0.0-alpha.6",
+  "version": "8.0.0-alpha.7",
   "main": "network-status.js",
   "description": "@bugsnag/electron package for watching network status",
   "author": "Bugsnag",
   "license": "MIT",
   "homepage": "https://www.bugsnag.com/",
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.6",
-    "@bugsnag/plugin-electron-client-state-manager": "^8.0.0-alpha.6"
+    "@bugsnag/core": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-electron-client-state-manager": "^8.0.0-alpha.7"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"
