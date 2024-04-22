@@ -2,122 +2,166 @@ steps:
 
   - group: "React Native (Android) Tests"
     steps:
-      #
-      # Android builder
-      #
-      - label: ":docker: Build RN Android Builder image (Java 17, Node 18)"
-        key: "android-builder-image-java-17-node-18"
+      - label: ':android: Build RN {{matrix}} test fixture APK (Old Arch)'
+        key: "build-react-native-android-fixture-old-arch"
         timeout_in_minutes: 30
-        plugins:
-          - docker-compose#v4.12.0:
-              build: react-native-android-builder-java-17-node-18
-              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-              cache-from:  react-native-android-builder-java-17-node-18:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-          - docker-compose#v4.12.0:
-              push: react-native-android-builder-java-17-node-18:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
-      #
-      # Test fixtures
-      #
-      - label: ":android: Build RN 0.73 (Old Arch) apk"
-        key: "rn-0-73-old-arch-apk"
-        depends_on:
-          - "android-builder-image-java-17-node-18"
-        timeout_in_minutes: 60
+        agents:
+          queue: macos-12-arm
         env:
-          REACT_NATIVE_VERSION: "rn0.73"
-          RN_NEW_ARCH: "false"
-          ARTEFACT_NAME: "rn0.73-old-arch"
-        plugins:
-          - docker-compose#v4.12.0:
-              pull: react-native-android-builder-java-17-node-18
-              run: react-native-android-builder-java-17-node-18
+          JAVA_VERSION: "17"
+          NODE_VERSION: "18"
+          RN_VERSION: "{{matrix}}"
+          BUILD_ANDROID: "true"
         artifact_paths:
-          - build/rn0.73-old-arch.apk
+          - "test/react-native/features/fixtures/generated/old-arch/**/reactnative.apk"
+        commands:
+          - "bundle install"
+          - "node scripts/generate-react-native-fixture.js"
+        matrix:
+          - "0.73"
         retry:
           automatic:
             - exit_status: "*"
               limit: 1
 
-      - label: ":android: Build RN 0.73 (New Arch) apk"
-        key: "rn-0-73-new-arch-apk"
-        depends_on:
-          - "android-builder-image-java-17-node-18"
-        timeout_in_minutes: 60
+      - label: ':android: Build RN {{matrix}} test fixture APK (New Arch)'
+        key: "build-react-native-android-fixture-new-arch"
+        timeout_in_minutes: 30
+        agents:
+          queue: macos-12-arm
         env:
-          REACT_NATIVE_VERSION: "rn0.73"
-          RN_NEW_ARCH: "true"
-          ARTEFACT_NAME: "rn0.73-new-arch"
-        plugins:
-          - docker-compose#v4.12.0:
-              pull: react-native-android-builder-java-17-node-18
-              run: react-native-android-builder-java-17-node-18
+          JAVA_VERSION: "17"
+          NODE_VERSION: "18"
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "true"
+          BUILD_ANDROID: "true"
         artifact_paths:
-          - build/rn0.73-new-arch.apk
+          - "test/react-native/features/fixtures/generated/new-arch/**/reactnative.apk"
+        commands:
+          - "bundle install"
+          - "node scripts/generate-react-native-fixture.js"
+        matrix:
+          - "0.73"
         retry:
           automatic:
             - exit_status: "*"
               limit: 1
+      # #
+      # # Android builder
+      # #
+      # - label: ":docker: Build RN Android Builder image (Java 17, Node 18)"
+      #   key: "android-builder-image-java-17-node-18"
+      #   timeout_in_minutes: 30
+      #   plugins:
+      #     - docker-compose#v4.12.0:
+      #         build: react-native-android-builder-java-17-node-18
+      #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+      #         cache-from:  react-native-android-builder-java-17-node-18:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+      #     - docker-compose#v4.12.0:
+      #         push: react-native-android-builder-java-17-node-18:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
+      #   retry:
+      #     automatic:
+      #       - exit_status: "*"
+      #         limit: 1
 
-      #
-      # End-to-end tests
-      #
-      - label: ":bitbar: :android: RN 0.73 (Old Arch) Android 12 end-to-end tests"
-        depends_on: "rn-0-73-old-arch-apk"
-        timeout_in_minutes: 60
-        plugins:
-          artifacts#v1.9.0:
-            download: "build/rn0.73-old-arch.apk"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.7.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            command:
-              - --app=build/rn0.73-old-arch.apk
-              - --app-activity=com.reactnative.MainActivity
-              - --app-package=com.reactnative
-              - --farm=bb
-              - --device=ANDROID_12
-              - --a11y-locator
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-        env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
-        concurrency: 25
-        concurrency_group: "bitbar"
-        concurrency_method: eager
+      # #
+      # # Test fixtures
+      # #
+      # - label: ":android: Build RN 0.73 (Old Arch) apk"
+      #   key: "rn-0-73-old-arch-apk"
+      #   depends_on:
+      #     - "android-builder-image-java-17-node-18"
+      #   timeout_in_minutes: 60
+      #   env:
+      #     REACT_NATIVE_VERSION: "rn0.73"
+      #     RN_NEW_ARCH: "false"
+      #     ARTEFACT_NAME: "rn0.73-old-arch"
+      #   plugins:
+      #     - docker-compose#v4.12.0:
+      #         pull: react-native-android-builder-java-17-node-18
+      #         run: react-native-android-builder-java-17-node-18
+      #   artifact_paths:
+      #     - build/rn0.73-old-arch.apk
+      #   retry:
+      #     automatic:
+      #       - exit_status: "*"
+      #         limit: 1
 
-      - label: ":bitbar: :android: RN 0.73 (New Arch) Android 12 end-to-end tests"
-        depends_on: "rn-0-73-new-arch-apk"
-        timeout_in_minutes: 60
-        plugins:
-          artifacts#v1.9.0:
-            download: "build/rn0.73-new-arch.apk"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.7.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            command:
-              - --app=build/rn0.73-new-arch.apk
-              - --app-activity=com.reactnative.MainActivity
-              - --app-package=com.reactnative
-              - --farm=bb
-              - --device=ANDROID_12
-              - --a11y-locator
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-        env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
-        concurrency: 25
-        concurrency_group: "bitbar"
-        concurrency_method: eager
+      # - label: ":android: Build RN 0.73 (New Arch) apk"
+      #   key: "rn-0-73-new-arch-apk"
+      #   depends_on:
+      #     - "android-builder-image-java-17-node-18"
+      #   timeout_in_minutes: 60
+      #   env:
+      #     REACT_NATIVE_VERSION: "rn0.73"
+      #     RN_NEW_ARCH: "true"
+      #     ARTEFACT_NAME: "rn0.73-new-arch"
+      #   plugins:
+      #     - docker-compose#v4.12.0:
+      #         pull: react-native-android-builder-java-17-node-18
+      #         run: react-native-android-builder-java-17-node-18
+      #   artifact_paths:
+      #     - build/rn0.73-new-arch.apk
+      #   retry:
+      #     automatic:
+      #       - exit_status: "*"
+      #         limit: 1
+
+      # #
+      # # End-to-end tests
+      # #
+      # - label: ":bitbar: :android: RN 0.73 (Old Arch) Android 12 end-to-end tests"
+      #   depends_on: "rn-0-73-old-arch-apk"
+      #   timeout_in_minutes: 60
+      #   plugins:
+      #     artifacts#v1.9.0:
+      #       download: "build/rn0.73-old-arch.apk"
+      #       upload: ./test/react-native/maze_output/**/*
+      #     docker-compose#v4.7.0:
+      #       pull: react-native-maze-runner
+      #       run: react-native-maze-runner
+      #       service-ports: true
+      #       command:
+      #         - --app=build/rn0.73-old-arch.apk
+      #         - --app-activity=com.reactnative.MainActivity
+      #         - --app-package=com.reactnative
+      #         - --farm=bb
+      #         - --device=ANDROID_12
+      #         - --a11y-locator
+      #         - --fail-fast
+      #         - --no-tunnel
+      #         - --aws-public-ip
+      #   env:
+      #     SKIP_NAVIGATION_SCENARIOS: "true"
+      #     HERMES: "true"
+      #   concurrency: 25
+      #   concurrency_group: "bitbar"
+      #   concurrency_method: eager
+
+      # - label: ":bitbar: :android: RN 0.73 (New Arch) Android 12 end-to-end tests"
+      #   depends_on: "rn-0-73-new-arch-apk"
+      #   timeout_in_minutes: 60
+      #   plugins:
+      #     artifacts#v1.9.0:
+      #       download: "build/rn0.73-new-arch.apk"
+      #       upload: ./test/react-native/maze_output/**/*
+      #     docker-compose#v4.7.0:
+      #       pull: react-native-maze-runner
+      #       run: react-native-maze-runner
+      #       service-ports: true
+      #       command:
+      #         - --app=build/rn0.73-new-arch.apk
+      #         - --app-activity=com.reactnative.MainActivity
+      #         - --app-package=com.reactnative
+      #         - --farm=bb
+      #         - --device=ANDROID_12
+      #         - --a11y-locator
+      #         - --fail-fast
+      #         - --no-tunnel
+      #         - --aws-public-ip
+      #   env:
+      #     SKIP_NAVIGATION_SCENARIOS: "true"
+      #     HERMES: "true"
+      #   concurrency: 25
+      #   concurrency_group: "bitbar"
+      #   concurrency_method: eager
