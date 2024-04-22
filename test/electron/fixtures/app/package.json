@@ -1,6 +1,6 @@
 {
   "name": "electron-test-runner",
-  "productName": "electron-test-runner",
+  "productName": "Runner",
   "version": "1.0.2",
   "description": "My Electron application description",
   "main": ".webpack/main",
