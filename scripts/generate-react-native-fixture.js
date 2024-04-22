@@ -169,6 +169,19 @@ if (process.env.BUILD_ANDROID === 'true' || process.env.BUILD_ANDROID === '1') {
 }
 
 if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
+  // use dynamic frameworks (this is required to use bugsnag-cocoa from the scenarios package)
+  let podfileContents = fs.readFileSync(`${fixtureDir}/ios/Podfile`, 'utf8')
+  podfileContents = podfileContents.replace(/target 'reactnative' do/, 'use_frameworks!\ntarget \'reactnative\' do')
+
+  // disable Flipper
+  if (podfileContents.includes('use_flipper!')) {
+    podfileContents = podfileContents.replace(/use_flipper!/, '# use_flipper!')
+  } else if (podfileContents.includes(':flipper_configuration')) {
+    podfileContents = podfileContents.replace(/:flipper_configuration/, '# :flipper_configuration')
+  }
+
+  fs.writeFileSync(`${fixtureDir}/ios/Podfile`, podfileContents)
+
   fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })
 
   // install pods
