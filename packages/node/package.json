@@ -44,5 +44,25 @@
     "iserror": "^0.0.2",
     "pump": "^3.0.0",
     "stack-generator": "^2.0.3"
+  },
+  "peerDependencies": {
+    "@bugsnag/plugin-contextualize": "^8.0.0-alpha.6",
+    "@bugsnag/plugin-express": "^8.0.0-alpha.6",
+    "@bugsnag/plugin-koa": "^8.0.0-alpha.6",
+    "@bugsnag/plugin-restify": "^8.0.0-alpha.6"
+  },
+  "peerDependenciesMeta": {
+    "@bugsnag/plugin-express": {
+      "optional": true
+    },
+    "@bugsnag/plugin-contextualize": {
+      "optional": true
+    },
+    "@bugsnag/plugin-koa": {
+      "optional": true
+    },
+    "@bugsnag/plugin-restify": {
+      "optional": true
+    }
   }
 }
