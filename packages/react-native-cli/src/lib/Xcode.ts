@@ -118,6 +118,7 @@ async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean>
     }
   } catch (error) {
     if (error.code === 'ENOENT') {
+      logger.info(`Creating a new .xcode.env file at ${envFilePath}`)
       const newData = `export NODE_BINARY=$(command -v node)\n\n# React Native Source Map File\nexport SOURCE_MAP_PATH=$(pwd)/build/sourcemaps\nif [ ! -d "$SOURCE_MAP_PATH" ]; then\n\tmkdir -p "$SOURCE_MAP_PATH";\nfi\nexport ${searchString}$(pwd)/build/sourcemaps/main.jsbundle.map`
 
       await fs.writeFile(envFilePath, newData, 'utf8')
