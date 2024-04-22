@@ -62,7 +62,7 @@ async function updateBuildReactNativeTask (buildPhaseMap: Record<string, Record<
             didAnythingUpdate = true
           }
         } else {
-          // If we're dealing with RN < 0.69.0 add the extra pacakge arguments to the xcode build phase as use of the .xcode.env file is not supported.
+          // If we're dealing with RN < 0.69.0 add the extra package arguments to the xcode build phase as use of the .xcode.env file is not supported.
           [phase.shellScript, didThisUpdate] = addExtraPackagerArgs(shellBuildPhaseKey, phase.shellScript, logger)
           if (didThisUpdate) {
             didAnythingUpdate = true
