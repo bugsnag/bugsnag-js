@@ -7,12 +7,22 @@ readdirSync('./preloads').forEach(name => {
 })
 
 module.exports = {
+  // Put your normal webpack config below here
   devtool: 'hidden-source-map',
   entry: entrypoints,
   output: {
     filename: '[name].js'
   },
+  resolve: {
+    fallback: {
+      fs: false,
+      path: false
+    }
+  },
   plugins: [
     new webpack.ProgressPlugin()
-  ]
+  ],
+  module: {
+    rules: require('./webpack.rules')
+  }
 }

@@ -7,8 +7,13 @@ readdirSync('./configs').forEach(name => {
 })
 
 module.exports = {
-  devtool: 'hidden-source-map',
+  /**
+   * This is the main entry point for your application, it's the first file
+   * that runs in the main process.
+   */
   entry: entrypoints,
+  // Put your normal webpack config below here
+  devtool: 'hidden-source-map',
   output: {
     filename: '[name].js'
   },
@@ -29,21 +34,6 @@ module.exports = {
     })
   ],
   module: {
-    rules: [
-      {
-        test: /\.node$/,
-        use: 'node-loader'
-      },
-      {
-        test: /\.(m?js|node)$/,
-        parser: { amd: false },
-        use: {
-          loader: '@marshallofsound/webpack-asset-relocator-loader',
-          options: {
-            outputAssetBase: 'native_modules'
-          }
-        }
-      }
-    ]
+    rules: require('./webpack.rules')
   }
 }
