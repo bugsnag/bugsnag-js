@@ -330,7 +330,7 @@ describe('node notifier', () => {
         })
 
         // @ts-ignore
-        expect(Bugsnag._client._breadcrumbs.length).toBe(0)
+        expect(Bugsnag._client._breadcrumbs).toHaveLength(0)
       })
     })
   })
