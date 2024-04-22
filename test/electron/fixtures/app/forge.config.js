@@ -38,7 +38,7 @@ module.exports = {
           entryPoints: [
             {
               html: './src/index.html',
-              js: './src/renderer.js',
+              js: './renderer.js',
               name: 'main_window'
             }
           ]

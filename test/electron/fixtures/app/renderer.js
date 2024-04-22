@@ -24,7 +24,7 @@ document.getElementById('renderer-unhandled-promise-rejection').onclick = () => 
 }
 
 // eslint-disable-next-line
-  document.getElementById('renderer-uncaught-exception').onclick = () => foo()
+document.getElementById('renderer-uncaught-exception').onclick = () => foo()
 
 document.getElementById('renderer-notify').onclick = () => {
   try {
