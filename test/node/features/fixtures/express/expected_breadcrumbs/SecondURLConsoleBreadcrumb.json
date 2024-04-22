@@ -1,0 +1,9 @@
+{
+    "type": "log",
+    "name": "Console output",
+    "timestamp": "^\\d{4}\\-\\d{2}\\-\\d{2}T\\d{2}:\\d{2}:[\\d\\.]+Z?$",
+    "metaData": {
+        "severity": "log",
+        "[0]": "For the second URL"
+    }
+}
