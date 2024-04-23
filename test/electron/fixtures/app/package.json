@@ -1,15 +1,12 @@
 {
-  "name": "electron-test-runner",
-  "productName": "Runner",
+  "main": ".webpack/main",
+  "name": "Runner",
   "version": "1.0.2",
   "description": "My Electron application description",
-  "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "make": "electron-forge make"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",
@@ -26,13 +23,11 @@
     "electron": "*",
     "node-loader": "^2.0.0"
   },
-  "keywords": [],
-  "author": {
-    "name": "Ben Wilson",
-    "email": "ben.wilson@smartbear.com"
-  },
   "license": "MIT",
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0"
+  },
+  "config": {
+    "forge": "./forge.config.js"
   }
 }

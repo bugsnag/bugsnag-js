@@ -12,13 +12,16 @@ module.exports = {
   output: {
     filename: '[name].js'
   },
-  plugins: [
-    new webpack.ProgressPlugin()
-  ],
   resolve: {
     fallback: {
       fs: false,
-      path: false
+      path: require.resolve('path-browserify')
     }
+  },
+  plugins: [
+    new webpack.ProgressPlugin()
+  ],
+  module: {
+    rules: require('./webpack.rules')
   }
 }
