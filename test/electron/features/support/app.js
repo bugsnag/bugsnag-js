@@ -17,7 +17,7 @@ class TestApp {
     await this._exec(npmRunner, ['run', 'package'], env)
   }
 
-  async installDeps (bugsnagVersion, electronVersion = '^11.4.0') {
+  async installDeps (bugsnagVersion, electronVersion = '^20.0.0') {
     // install this first. electron has a lengthy postinstall script, and doing
     // a bare `npm install` first will wildcard to the latest / last version
     // installed, doubling the install time

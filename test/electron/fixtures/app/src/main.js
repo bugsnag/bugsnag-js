@@ -4,12 +4,12 @@ const {
   unhandledRejection,
   crash,
   notify
-} = require('./src/errors')
+} = require('./errors')
 const Bugsnag = require('@bugsnag/electron/main')
 const configFile = process.env.BUGSNAG_CONFIG || 'default'
 // eslint-disable-next-line no-undef
 const bugsnagConfig = __non_webpack_require__(`./${configFile}`)
-const preloadFile = process.env.BUGSNAG_PRELOAD || 'default.js'
+const preloadFile = process.env.BUGSNAG_PRELOAD || 'default'
 
 // eslint-disable-next-line no-undef
 const config = { ...baseBugsnagConfig, ...bugsnagConfig() }
@@ -25,6 +25,11 @@ Bugsnag.addOnError(event => {
   ])
 })
 
+// eslint-disable-next-line no-undef
+const preload = join(__dirname, preloadRelativeDir, preloadFile, 'index.js')
+
+console.log('HELLO!' + preload)
+
 function createWindow () {
   const win = new BrowserWindow({
     width: 800,
@@ -32,12 +37,11 @@ function createWindow () {
     webPreferences: {
       contextIsolation: true,
       sandbox: true,
-      // eslint-disable-next-line no-undef
-      preload: join(__dirname, preloadRelativeDir, preloadFile),
+      preload: preload,
       nodeIntegration: false
     }
   })
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
 
   // eslint-disable-next-line no-undef
   win.loadFile(join(__dirname, htmlRelativePath))

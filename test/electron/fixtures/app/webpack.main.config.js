@@ -1,9 +1,9 @@
 const { readdirSync } = require('fs')
 const webpack = require('webpack')
 const { join, parse } = require('path')
-const entrypoints = { index: './main.js' }
-readdirSync('./configs').forEach(name => {
-  entrypoints[parse(name).name] = `./configs/${name}`
+const entrypoints = { index: './src/main.js' }
+readdirSync('./src/configs').forEach(name => {
+  entrypoints[parse(name).name] = `./src/configs/${name}`
 })
 
 module.exports = {

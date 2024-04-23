@@ -2,8 +2,8 @@ const { readdirSync } = require('fs')
 const { parse } = require('path')
 const webpack = require('webpack')
 const entrypoints = {}
-readdirSync('./preloads').forEach(name => {
-  entrypoints[parse(name).name] = `./preloads/${name}`
+readdirSync('./src/preloads').forEach(name => {
+  entrypoints[parse(name).name] = `./src/preloads/${name}`
 })
 
 module.exports = {
@@ -14,14 +14,12 @@ module.exports = {
   },
   resolve: {
     fallback: {
-      fs: false,
-      path: require.resolve('path-browserify')
+      fs: require.resolve('browserify-fs'),
+      path: require.resolve('path-browserify'),
+      stream: require.resolve('stream-browserify')
     }
   },
   plugins: [
     new webpack.ProgressPlugin()
-  ],
-  module: {
-    rules: require('./webpack.rules')
-  }
+  ]
 }
