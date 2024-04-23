@@ -20,7 +20,6 @@
     "@electron-forge/plugin-webpack": "^7.4.0",
     "@electron/fuses": "^1.8.0",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
-    "browserify-fs": "^1.0.0",
     "electron": "*",
     "node-loader": "^2.0.0"
   },
