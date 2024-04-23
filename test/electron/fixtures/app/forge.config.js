@@ -5,23 +5,27 @@ module.exports = {
   packagerConfig: {
     asar: true
   },
-  rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {}
-    },
-    {
-      name: '@electron-forge/maker-zip',
-      platforms: ['darwin']
+      config: {
+        name: 'Runner'
+      }
     },
     {
       name: '@electron-forge/maker-deb',
       config: {}
     },
     {
+      name: '@electron-forge/maker-dmg'
+    },
+    {
       name: '@electron-forge/maker-rpm',
       config: {}
+    },
+    {
+      name: '@electron-forge/maker-zip',
+      platforms: ['darwin']
     }
   ],
   plugins: [
@@ -37,7 +41,7 @@ module.exports = {
           config: './webpack.renderer.config.js',
           entryPoints: [
             {
-              html: './src/index.html',
+              html: './index.html',
               js: './renderer.js',
               name: 'main_window'
             }

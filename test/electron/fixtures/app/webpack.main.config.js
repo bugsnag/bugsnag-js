@@ -7,13 +7,8 @@ readdirSync('./configs').forEach(name => {
 })
 
 module.exports = {
-  /**
-   * This is the main entry point for your application, it's the first file
-   * that runs in the main process.
-   */
-  entry: entrypoints,
-  // Put your normal webpack config below here
   devtool: 'hidden-source-map',
+  entry: entrypoints,
   output: {
     filename: '[name].js'
   },

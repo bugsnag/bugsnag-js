@@ -4,7 +4,7 @@ const {
   unhandledRejection,
   crash,
   notify
-} = require('./src/errors.js')
+} = require('./src/errors')
 const configFile = process.env.BUGSNAG_CONFIG || 'default'
 // eslint-disable-next-line no-undef
 const bugsnagConfig = __non_webpack_require__(`./${configFile}`)
