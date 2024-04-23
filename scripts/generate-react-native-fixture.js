@@ -13,9 +13,6 @@ if (!process.env.REGISTRY_URL) {
   process.exit(1)
 }
 
-console.log('generate script registry URL:', process.env.REGISTRY_URL)
-console.log('generate script publish URL:', process.env.PUBLISH_URL)
-
 const notifierVersion = process.env.NOTIFIER_VERSION || common.determineVersion()
 
 const rnVersion = process.env.RN_VERSION
@@ -83,8 +80,11 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
   const RNInitArgs = ['react-native@latest', 'init', 'reactnative', '--package-name', 'com.bugsnag.fixtures.reactnative', '--directory', fixtureDir, '--version', rnVersion, '--npm', '--skip-install']
   execFileSync('npx', RNInitArgs, { stdio: 'inherit' })
 
-  // replace the App.tsx file with our own App.js file
-  fs.unlinkSync(resolve(fixtureDir, 'App.tsx'))
+  // replace the App.js/App.tsx file with our own App.js file
+  fs.readdirSync(resolve(fixtureDir))
+    .filter((file) => /App\.[tj]sx?$/.test(file))
+    .map((file) => fs.unlinkSync(resolve(fixtureDir, file)))
+
   fs.copyFileSync(
     resolve(replacementFilesDir, 'App.js'),
     resolve(fixtureDir, 'App.js')
