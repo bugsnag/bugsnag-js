@@ -77,7 +77,7 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
   }
 
   // create the test fixture
-  const RNInitArgs = ['react-native@latest', 'init', 'reactnative', '--package-name', 'com.bugsnag.fixtures.reactnative', '--directory', fixtureDir, '--version', rnVersion, '--npm', '--skip-install']
+  const RNInitArgs = [`react-native@${process.env.RN_VERSION}`, 'init', 'reactnative', '--directory', fixtureDir, '--version', rnVersion, '--npm', '--skip-install']
   execFileSync('npx', RNInitArgs, { stdio: 'inherit' })
 
   // replace the App.js/App.tsx file with our own App.js file
@@ -107,6 +107,11 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
     resolve(replacementFilesDir, 'ios/exportOptions.plist'),
     resolve(fixtureDir, 'exportOptions.plist')
   )
+
+  // update pbxproj
+  let pbxProjContents = fs.readFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, 'utf8')
+  pbxProjContents = pbxProjContents.replaceAll('org.reactjs.native.example', 'com.bugsnag.fixtures')
+  fs.writeFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, pbxProjContents)
 
   // // copy the .env file
   // fs.copyFileSync(
