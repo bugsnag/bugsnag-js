@@ -41,21 +41,23 @@ async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoin
 }
 
 export async function launchScenario () {
-  let command
+  // let command
 
-  const test = true
+  // const test = true
 
-  if (test) {
-    command = {
-      action: 'run-scenario',
-      scenario_name: 'AppNativeHandledScenario',
-      api_key: '5127ad76bf13e61202ae2e7ac8d249a1',
-      notify: 'https://notify.bugsnag.com',
-      sessions: 'https://sessions.bugsnag.com'
-    }
-  } else {
-    command = await getCurrentCommand()
-  }
+  // if (test) {
+  //   command = {
+  //     action: 'run-scenario',
+  //     scenario_name: 'AppNativeHandledScenario',
+  //     api_key: '5127ad76bf13e61202ae2e7ac8d249a1',
+  //     notify: 'https://notify.bugsnag.com',
+  //     sessions: 'https://sessions.bugsnag.com'
+  //   }
+  // } else {
+  //   command = await getCurrentCommand()
+  // }
+
+  const command = await getCurrentCommand()
 
   switch (command.action) {
     case 'run-scenario':
