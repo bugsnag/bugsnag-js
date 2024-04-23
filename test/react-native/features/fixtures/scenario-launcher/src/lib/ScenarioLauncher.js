@@ -5,7 +5,8 @@ import { getCurrentCommand } from './CommandRunner'
 import { NativeInterface } from './native'
 import Bugsnag from '@bugsnag/react-native'
 
-async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoint) {
+async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoint, scenarioData) {
+  console.log('ScenarioLauncher.runScenario')
   const nativeConfig = {
     apiKey,
     autoTrackSessions: false,
@@ -20,7 +21,7 @@ async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoin
   console.log('Constructing scenario:', scenarioName)
 
   // create the scenario and allow it to modify the configuration
-  const scenario = new Scenarios[scenarioName](nativeConfig, jsConfig)
+  const scenario = new Scenarios[scenarioName](nativeConfig, jsConfig, scenarioData)
 
   console.log('Starting native Bugsnag with config:', JSON.stringify(nativeConfig))
 
@@ -38,6 +39,37 @@ async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoin
 
   // run the scenario
   setTimeout(() => scenario.run(), 1)
+}
+
+async function startBugsnag (scenarioName, apiKey, notifyEndpoint, sessionEndpoint, scenarioData) {
+  console.log('ScenarioLauncher.startBugsnag')
+  const nativeConfig = {
+    apiKey,
+    autoTrackSessions: false,
+    endpoints: {
+      notify: notifyEndpoint,
+      sessions: sessionEndpoint
+    }
+  }
+
+  const jsConfig = {}
+
+  console.log('Constructing scenario:', scenarioName)
+
+  // create the scenario and allow it to modify the configuration
+  const scenario = new Scenarios[scenarioName](nativeConfig, jsConfig, scenarioData)
+
+  console.log('Starting native Bugsnag with config:', JSON.stringify(nativeConfig))
+
+  console.log('typeof NativeInterface: ', typeof NativeInterface, NativeInterface !== null)
+
+  // start the native client
+  await NativeInterface.startBugsnag(nativeConfig)
+
+  console.log('Starting js Bugsnag with config:', JSON.stringify(jsConfig))
+
+  // start the js client
+  Bugsnag.start(jsConfig)
 }
 
 export async function launchScenario () {
@@ -65,7 +97,17 @@ export async function launchScenario () {
         command.scenario_name,
         command.api_key,
         command.notify,
-        command.sessions
+        command.sessions,
+        command.scenario_data
+      )
+
+    case 'start-bugsnag':
+      return await startBugsnag(
+        command.scenario_name,
+        command.api_key,
+        command.notify,
+        command.sessions,
+        command.scenario_data
       )
 
     default:
