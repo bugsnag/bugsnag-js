@@ -22,6 +22,8 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
+          - "0.71"
+          - "0.72"
           - "0.73"
         retry:
           automatic:
