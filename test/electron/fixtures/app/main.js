@@ -5,6 +5,7 @@ const {
   crash,
   notify
 } = require('./src/errors')
+const Bugsnag = require('@bugsnag/electron/main')
 const configFile = process.env.BUGSNAG_CONFIG || 'default'
 // eslint-disable-next-line no-undef
 const bugsnagConfig = __non_webpack_require__(`./${configFile}`)
@@ -12,8 +13,6 @@ const preloadFile = process.env.BUGSNAG_PRELOAD || 'default.js'
 
 // eslint-disable-next-line no-undef
 const config = { ...baseBugsnagConfig, ...bugsnagConfig() }
-
-const Bugsnag = require('@bugsnag/electron/main')
 
 Bugsnag.start(config)
 

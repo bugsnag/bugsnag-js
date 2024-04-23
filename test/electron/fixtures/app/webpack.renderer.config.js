@@ -12,13 +12,13 @@ module.exports = {
   output: {
     filename: '[name].js'
   },
+  plugins: [
+    new webpack.ProgressPlugin()
+  ],
   resolve: {
     fallback: {
       fs: false,
       path: false
     }
-  },
-  plugins: [
-    new webpack.ProgressPlugin()
-  ]
+  }
 }
