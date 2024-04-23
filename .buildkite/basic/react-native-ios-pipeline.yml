@@ -22,8 +22,6 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.71"
-          - "0.72"
           - "0.73"
         retry:
           automatic:
@@ -52,88 +50,65 @@ steps:
           automatic:
             - exit_status: "*"
               limit: 1
-
-      # - label: ":ios: Build RN 0.72 (Old Arch) ipa"
-      #   key: "rn-0-72-old-arch-ipa"
-      #   timeout_in_minutes: 60
-      #   agents:
-      #     queue: "macos-12-arm"
-      #   env:
-      #     REACT_NATIVE_VERSION: "rn0.72"
-      #     LANG: "en_US.UTF-8"
-      #     DEVELOPER_DIR: "/Applications/Xcode14.app"
-      #     RCT_NEW_ARCH_ENABLED: "0"
-      #     ARTEFACT_NAME: "rn0.72-old-arch"
-      #   artifact_paths: build/rn0.72-old-arch.ipa
-      #   commands:
-      #     - npm run test:build-react-native-ios
-      #   retry:
-      #     automatic:
-      #       - exit_status: "*"
-      #         limit: 1
-
-      # - label: ":ios: Build RN 0.72 (New Arch) ipa"
-      #   key: "rn-0-72-new-arch-ipa"
-      #   timeout_in_minutes: 60
-      #   agents:
-      #     queue: "macos-12-arm"
-      #   env:
-      #     REACT_NATIVE_VERSION: "rn0.72"
-      #     LANG: "en_US.UTF-8"
-      #     DEVELOPER_DIR: "/Applications/Xcode14.app"
-      #     RCT_NEW_ARCH_ENABLED: "1"
-      #     ARTEFACT_NAME: "rn0.72-new-arch"
-      #   artifact_paths: build/rn0.72-new-arch.ipa
-      #   commands:
-      #     - npm run test:build-react-native-ios
-      #   retry:
-      #     automatic:
-      #       - exit_status: "*"
-      #         limit: 1
-
-      # - label: ":ios: Build RN 0.73 (Old Arch) ipa"
-      #   key: "rn-0-73-old-arch-ipa"
-      #   timeout_in_minutes: 60
-      #   agents:
-      #     queue: "macos-12-arm"
-      #   env:
-      #     NODE_VERSION: "18"
-      #     REACT_NATIVE_VERSION: "rn0.73"
-      #     LANG: "en_US.UTF-8"
-      #     DEVELOPER_DIR: "/Applications/Xcode14.app"
-      #     RCT_NEW_ARCH_ENABLED: "0"
-      #     ARTEFACT_NAME: "rn0.73-old-arch"
-      #   artifact_paths: build/rn0.73-old-arch.ipa
-      #   commands:
-      #     - npm run test:build-react-native-ios
-      #   retry:
-      #     automatic:
-      #       - exit_status: "*"
-      #         limit: 1
-
-      # - label: ":ios: Build RN 0.73 (New Arch) ipa"
-      #   key: "rn-0-73-new-arch-ipa"
-      #   timeout_in_minutes: 60
-      #   agents:
-      #     queue: "macos-12-arm"
-      #   env:
-      #     NODE_VERSION: "18"
-      #     REACT_NATIVE_VERSION: "rn0.73"
-      #     LANG: "en_US.UTF-8"
-      #     DEVELOPER_DIR: "/Applications/Xcode14.app"
-      #     RCT_NEW_ARCH_ENABLED: "1"
-      #     ARTEFACT_NAME: "rn0.73-new-arch"
-      #   artifact_paths: build/rn0.73-new-arch.ipa
-      #   commands:
-      #     - npm run test:build-react-native-ios
-      #   retry:
-      #     automatic:
-      #       - exit_status: "*"
-      #         limit: 1
-
       #
       # End-to-end tests
       #
+      - label: ":bitbar: :mac: RN {{matrix}} iOS 16 (Old Arch) end-to-end tests"
+        depends_on: "build-react-native-ios-fixture-old-arch"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa
+              - --farm=bs
+              - --device=IOS_16
+              - --a11y-locator
+              - --fail-fast
+        retry:
+          manual:
+            permit_on_passed: true
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+        matrix:
+          - "0.73"
+
+      - label: ":bitbar: :mac: RN {{matrix}} iOS 16 (New Arch) end-to-end tests"
+        depends_on: "build-react-native-ios-fixture-new-arch"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
+              - --farm=bs
+              - --device=IOS_16
+              - --a11y-locator
+              - --fail-fast
+        env:
+          RCT_NEW_ARCH_ENABLED: "1"
+          SKIP_NAVIGATION_SCENARIOS: "true"
+        retry:
+          manual:
+            permit_on_passed: true
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+        matrix:
+          - "0.73"
       # - label: ":ios: RN 0.72 (Old Arch) iOS 14 end-to-end tests"
       #   depends_on: "rn-0-72-old-arch-ipa"
       #   timeout_in_minutes: 60
