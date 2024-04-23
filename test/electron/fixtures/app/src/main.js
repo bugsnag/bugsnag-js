@@ -25,23 +25,17 @@ Bugsnag.addOnError(event => {
   ])
 })
 
-// eslint-disable-next-line no-undef
-const preload = join(__dirname, preloadRelativeDir, preloadFile, 'index.js')
-
-console.log('HELLO!' + preload)
-
 function createWindow () {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      contextIsolation: true,
-      sandbox: true,
-      preload: preload,
-      nodeIntegration: false
+      sandbox: false,
+      // eslint-disable-next-line no-undef
+      preload: join(__dirname, preloadRelativeDir, preloadFile, 'index.js')
     }
   })
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 
   // eslint-disable-next-line no-undef
   win.loadFile(join(__dirname, htmlRelativePath))
