@@ -35,7 +35,7 @@ Feature: Native Errors
     And minidump request 0 contains a file form field named "upload_file_minidump"
     And minidump request 0 contains a form field named "event" matching "minidump-plus-handled-event.json"
 
-  # Skip pending JIRA_TICKET
+  # Skip pending PLAT-12057
   # Scenario: Minidumps are retried when the network becomes available
   #   When I launch an app
   #   Then the total requests received by the server matches:
@@ -75,7 +75,7 @@ Feature: Native Errors
       | events    | 0 |
       | sessions  | 3 |
 
-  # Skip pending JIRA_TICKET
+  # Skip pending PLAT-12057
   # Scenario: Minidumps are queued for delivery until the network is available
   #   When I launch an app with no network
   #   And I click "main-process-crash"
