@@ -7,6 +7,7 @@
 - (metadata-delegate) Preventing prototype pollution vulnerabilities [#2115](https://github.com/bugsnag/bugsnag-js/pull/2115)
 - (plugin-interaction-breadcrumbs) Improved performance of click event breadcrumbs [#2094](https://github.com/bugsnag/bugsnag-js/pull/2094)
 - (react-native) Rename Bugsnag.framework to BugsnagReactNative.framework [#2117](https://github.com/bugsnag/bugsnag-js/pull/2117)
+  (react-native-cli) Update the react native cli to install and configure the `@bugsnag/cli` package to upload javascript source maps for react native iOS [#2073](https://github.com/bugsnag/bugsnag-js/pull/2073)
 
 ## v7.22.6 (2024-03-05)
 
