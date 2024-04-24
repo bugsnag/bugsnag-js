@@ -66,17 +66,19 @@ steps:
             service-ports: true
             command:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_16
               - --a11y-locator
               - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         retry:
           manual:
             permit_on_passed: true
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
           - "0.73"
@@ -94,18 +96,20 @@ steps:
             service-ports: true
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
-              - --farm=bs
+              - --farm=bb
               - --device=IOS_16
               - --a11y-locator
               - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           RCT_NEW_ARCH_ENABLED: "1"
           SKIP_NAVIGATION_SCENARIOS: "true"
         retry:
           manual:
             permit_on_passed: true
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
           - "0.73"
