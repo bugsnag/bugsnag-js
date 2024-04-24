@@ -93,8 +93,8 @@
           "errorClass": "ReferenceError",
           "errorMessage": "foo is not defined",
           "stacktrace": [{
-            "file": "./src/errors.js",
-            "lineNumber": 6,
+            "file": ".webpack/main/index.js",
+            "lineNumber": 2,
             "code": "{TYPE:undefined}"
           }],
           "type": "electronnodejs"

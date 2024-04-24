@@ -97,7 +97,7 @@
           "stacktrace": [
             {
               "lineNumber": 1,
-              "file": "./renderer.js"
+              "file": ".webpack/renderer/main_window/index.js"
             }
           ],
           "type": "electronrendererjs"

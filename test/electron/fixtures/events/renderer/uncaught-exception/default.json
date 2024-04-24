@@ -94,7 +94,7 @@
           "stacktrace": [
             {
               "file": ".webpack/renderer/main_window/index.js",
-              "lineNumber": 27,
+              "lineNumber": 1,
               "code": {
                 "1": "{TYPE:string}"
               }
