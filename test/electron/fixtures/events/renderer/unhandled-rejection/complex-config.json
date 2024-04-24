@@ -103,7 +103,7 @@
           "errorMessage": "invalid",
           "stacktrace": [
             {
-              "file": "./renderer.js",
+              "file": ".webpack/renderer/main_window/index.js",
               "lineNumber": 23,
               "code": {
                 "1": "{TYPE:string}"

@@ -101,8 +101,8 @@
           "errorClass": "Error",
           "stacktrace": [
             {
-              "lineNumber": 31,
-              "file": "./renderer.js",
+              "lineNumber": 1,
+              "file": ".webpack/renderer/main_window/index.js",
               "code": {
                 "1": "{TYPE:string}"
               }

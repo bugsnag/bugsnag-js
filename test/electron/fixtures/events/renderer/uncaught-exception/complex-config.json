@@ -103,7 +103,7 @@
           "errorMessage": "foo is not defined",
           "stacktrace": [
             {
-              "file": "./renderer.js",
+              "file": ".webpack/renderer/main_window/index.js",
               "lineNumber": 27,
               "code": {
                 "1": "{TYPE:string}"

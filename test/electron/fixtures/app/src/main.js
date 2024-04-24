@@ -9,7 +9,6 @@ const Bugsnag = require('@bugsnag/electron/main')
 const configFile = process.env.BUGSNAG_CONFIG || 'default'
 // eslint-disable-next-line no-undef
 const bugsnagConfig = __non_webpack_require__(`./${configFile}`)
-// const preloadFile = process.env.BUGSNAG_PRELOAD || 'default'
 
 // eslint-disable-next-line no-undef
 const config = { ...baseBugsnagConfig, ...bugsnagConfig() }
@@ -35,11 +34,12 @@ function createWindow () {
     }
   })
 
-  // eslint-disable-next-line no-undef
-  mainWindow.loadFile(join(__dirname, htmlRelativePath))
-
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+
+  // and load the index.html of the app.
+  // eslint-disable-next-line no-undef
+  mainWindow.loadFile(join(__dirname, htmlRelativePath))
 }
 
 // This method will be called when Electron has finished
