@@ -21,8 +21,6 @@ jobs:
       run: |
         sudo apt-get --assume-yes update
         sudo apt-get --assume-yes install build-essential xvfb libnss3 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libasound2 libgbm1
-        # electron-forge requires yarn for some reason
-        npm install --global yarn
       if: ${{ env.ACT && contains(matrix.os, 'ubuntu-20.04') }}
     - name: Get npm cache directory
       id: npm-cache-dir
@@ -43,7 +41,7 @@ jobs:
     - run: npm ci --no-audit --progress=false
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-    # - run: npx lerna bootstrap
+    - run: npx lerna bootstrap
     - run: npm run build:electron
       shell: bash
     - run: sudo apt-get install cppcheck --assume-yes
