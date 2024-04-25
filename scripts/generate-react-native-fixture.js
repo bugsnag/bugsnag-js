@@ -49,7 +49,6 @@ const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtur
 // ]
 
 const DEPENDENCIES = [
-  '@react-native-community/netinfo',
   // 'react-native-dotenv',
   'react-native-file-access@3.0.4' // Why this version specifically?
 ]
