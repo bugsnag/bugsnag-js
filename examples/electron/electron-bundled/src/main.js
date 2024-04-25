@@ -1,4 +1,4 @@
-const Bugsnag = require('@bugsnag/electron')
+const Bugsnag = require('@bugsnag/electron/main')
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 

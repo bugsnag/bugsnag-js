@@ -8,13 +8,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        electron: [ '^12.0.0', '^20.0.0', '^25.0.0', '^26.0.0' ]
-        node-version: [12, 14]
-        os: [ ubuntu-22.04, windows-2019 ]
+        electron: [ '^20.0.0', '^24.0.0', '^26.0.0', '^28.0.0', '^30.0.0' ]
+        node-version: [18]
+        os: [ ubuntu-latest ]
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
     - name: (Act) install build tools and dependencies
@@ -29,7 +29,7 @@ jobs:
       if: ${{ !env.ACT }}
       run: |
         echo "::set-output name=dir::$(npm config get cache)"
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       id: npm-cache
       if: ${{ !env.ACT }}
       with:
@@ -66,7 +66,7 @@ jobs:
         START_LOCAL_NPM: 1
         VERBOSE: 1
         ELECTRON_VERSION: ${{ matrix.electron }}
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: cucumber-failures

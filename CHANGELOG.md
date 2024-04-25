@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Added
+
+- (electron) Added support for Webpack 5 by exporting separate clients for renderer and main processes [#2116](https://github.com/bugsnag/bugsnag-js/pull/2116)
+
 ## v7.22.7 (2024-04-17)
 
 ### Changed
