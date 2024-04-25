@@ -19,8 +19,8 @@ jobs:
         sudo apt-get install libcurl4-openssl-dev net-tools
 
     - uses: aws-actions/setup-sam@v2
-        with:
-          use-installer: true
+      with:
+        use-installer: true
 
     - uses: ruby/setup-ruby@v1
       with:
