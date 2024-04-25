@@ -32,13 +32,13 @@ steps:
         key: "build-react-native-ios-fixture-new-arch"
         timeout_in_minutes: 30
         agents:
-          queue: "macos-13-arm"
+          queue: "macos-12-arm"
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"
-          DEVELOPER_DIR: "/Applications/Xcode-15.2.0.app"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
@@ -69,7 +69,6 @@ steps:
               - --farm=bb
               - --device=IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
         retry:
@@ -99,7 +98,6 @@ steps:
               - --farm=bb
               - --device=IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
         env:
