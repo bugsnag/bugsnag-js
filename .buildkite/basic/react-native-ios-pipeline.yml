@@ -10,12 +10,12 @@ steps:
         key: "build-react-native-ios-fixture-old-arch"
         timeout_in_minutes: 30
         agents:
-          queue: "macos-12-arm"
+          queue: "macos-13-arm"
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
           BUILD_IOS: "true"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          DEVELOPER_DIR: "/Applications/Xcode-15.2.0.app"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
@@ -32,13 +32,13 @@ steps:
         key: "build-react-native-ios-fixture-new-arch"
         timeout_in_minutes: 30
         agents:
-          queue: "macos-12-arm"
+          queue: "macos-13-arm"
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          DEVELOPER_DIR: "/Applications/Xcode-15.2.0.app"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
