@@ -38,6 +38,10 @@ module.exports = {
       const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
       common.run(command, true)
 
+      // Install react-native-file-access
+      const RNFACommand = `npm install react-native-file-access@3.0.4  --registry ${registryUrl}`
+      common.run(RNFACommand, true)
+
       // Install any required secondary files
       if (fs.existsSync('./install.sh')) {
         console.log('Installing secondary requirements')
@@ -99,6 +103,10 @@ module.exports = {
       console.log(`Installing notifier: ${version}`)
       const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl}`
       common.run(command, true)
+
+      // Install react-native-file-access
+      const RNFACommand = `npm install react-native-file-access@3.0.4  --registry ${registryUrl}`
+      common.run(RNFACommand, true)
 
       // Install any required secondary files
       if (fs.existsSync('./install.sh')) {
