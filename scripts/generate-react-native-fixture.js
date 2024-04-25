@@ -111,13 +111,13 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
   let pbxProjContents = fs.readFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, 'utf8')
   pbxProjContents = pbxProjContents.replaceAll('org.reactjs.native.example', 'com.bugsnag.fixtures')
 
-  pbxProjContents = pbxProjContents.replaceAll('CURRENT_PROJECT_VERSION = 1;', 'CURRENT_PROJECT_VERSION = 1;\nDEVELOPMENT_TEAM = 7W9PZ27Y5F;')
+  // pbxProjContents = pbxProjContents.replaceAll('CURRENT_PROJECT_VERSION = 1;', 'CURRENT_PROJECT_VERSION = 1;\nDEVELOPMENT_TEAM = 7W9PZ27Y5F;')
 
   fs.writeFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, pbxProjContents)
 
-  // use dynamic frameworks (this is required to use bugsnag-cocoa from the scenarios package)
+  // use static frameworks (this is required to use bugsnag-cocoa from the scenarios package)
   let podfileContents = fs.readFileSync(`${fixtureDir}/ios/Podfile`, 'utf8')
-  podfileContents = podfileContents.replace(/target 'reactnative' do/, 'use_frameworks!\ntarget \'reactnative\' do')
+  podfileContents = podfileContents.replace(/target 'reactnative' do/, 'use_frameworks! :linkage => :static\ntarget \'reactnative\' do')
 
   // disable Flipper
   if (podfileContents.includes('use_flipper!')) {

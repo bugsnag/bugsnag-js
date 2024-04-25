@@ -155,11 +155,11 @@ steps:
     commands:
       - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
 
-  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-  #   depends_on:
-  #     - "publish-js"
-  #   commands:
-  #     - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+      - "publish-js"
+    commands:
+      - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
 
   #
   # Conditionally trigger full pipeline
