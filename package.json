@@ -57,7 +57,7 @@
     "formidable": "^1.2.2",
     "glob": "^7.1.6",
     "jest": "^26.4.2",
-    "lerna": "^5.6.2",
+    "lerna": "^6.6.2",
     "metro-react-native-babel-preset": "^0.58.0",
     "ncp": "^2.0.0",
     "node-fetch": "^2.6.0",
