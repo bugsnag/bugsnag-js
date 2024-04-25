@@ -27,6 +27,9 @@ async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoin
 
   console.log('typeof NativeInterface: ', typeof NativeInterface, NativeInterface !== null)
 
+  // clear persistent data
+  NativeInterface.clearPersistentData()
+
   // start the native client
   await NativeInterface.startBugsnag(nativeConfig)
 
