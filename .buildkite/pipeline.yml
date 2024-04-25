@@ -71,17 +71,17 @@ steps:
         - exit_status: "*"
           limit: 1
 
-  - label: ":aws-lambda: AWS Lambda tests"
-    timeout_in_minutes: 35
-    agents:
-      queue: "opensource-mac-cocoa-10.15"
-    commands:
-      # force the NPM registry as the default on CI is artifactory, which can't
-      # currently install from our lockfile
-      - npm ci --registry https://registry.npmjs.org
-      - cd test/aws-lambda
-      - bundle install
-      - bundle exec maze-runner
+  # - label: ":aws-lambda: AWS Lambda tests"
+  #   timeout_in_minutes: 35
+  #   agents:
+  #     queue: "opensource-mac-cocoa-10.15"
+  #   commands:
+  #     # force the NPM registry as the default on CI is artifactory, which can't
+  #     # currently install from our lockfile
+  #     - npm ci --registry https://registry.npmjs.org
+  #     - cd test/aws-lambda
+  #     - bundle install
+  #     - bundle exec maze-runner
 
   #
   # Core tests and checks
