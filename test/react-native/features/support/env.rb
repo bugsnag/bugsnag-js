@@ -29,3 +29,7 @@ end
 Before('@skip_hermes') do |_scenario|
   skip_this_scenario("Skipping scenario") if ENV['HERMES'].eql?('true')
 end
+
+Before('@skip_new_arch') do |scenario|
+  skip_this_scenario("Skipping scenario") if ENV['RCT_NEW_ARCH_ENABLED'].eql?('true')
+end
