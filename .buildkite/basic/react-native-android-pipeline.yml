@@ -66,6 +66,7 @@ steps:
               - --farm=bb
               - --device=ANDROID_12
               - --a11y-locator
+              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
         retry:
@@ -95,6 +96,7 @@ steps:
               - --farm=bb
               - --device=ANDROID_12
               - --a11y-locator
+              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
         retry:

@@ -69,6 +69,7 @@ steps:
               - --farm=bb
               - --device=IOS_16
               - --a11y-locator
+              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
         retry:
