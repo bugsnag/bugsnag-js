@@ -24,6 +24,7 @@ Scenario: Handled JS error with native stacktrace
     | run |
   And the error payload field "events.0.exceptions.0.stacktrace.2.method" equals one of:
     | com.reactnative.module.BugsnagModule.runScenario |
+    | com.reactnative.scenarios.BugsnagTestInterfaceImpl.runScenario |
     | runScenario |
 
   # the javascript part follows
@@ -49,6 +50,7 @@ Scenario: Unhandled JS error with native stacktrace
     | SourceFile |
   And the error payload field "events.0.exceptions.0.stacktrace.2.file" equals one of:
     | BugsnagModule.java |
+    | BugsnagTestInterfaceImpl.java |
     | SourceFile |
   And the error payload field "events.0.exceptions.0.stacktrace.0.method" equals one of:
     | com.reactnative.scenarios.Scenario.generateException |
@@ -58,6 +60,7 @@ Scenario: Unhandled JS error with native stacktrace
     | run |
   And the error payload field "events.0.exceptions.0.stacktrace.2.method" equals one of:
     | com.reactnative.module.BugsnagModule.runScenario |
+    | com.reactnative.scenarios.BugsnagTestInterfaceImpl.runScenario |
     | runScenario |
 
   # the javascript part follows
