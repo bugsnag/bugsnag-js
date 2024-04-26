@@ -11,8 +11,7 @@ const val CONFIG_FILE_TIMEOUT = 5000
 class ConfigFileReader {
 
     fun getMazeRunnerAddress(context: Context): String {
-        val externalFilesDir = context.getExternalFilesDir(null)
-        val configFile = File(externalFilesDir, "fixture_config.json")
+        val configFile = File("/data/local/tmp/fixture_config.json")
         var mazeAddress: String? = null
         Log.i("Bugsnag", "Attempting to read Maze Runner address from config file ${configFile.path}")
 

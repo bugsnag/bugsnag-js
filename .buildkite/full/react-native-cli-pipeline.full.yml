@@ -74,7 +74,7 @@ steps:
       #
       # Built app test fixtures - Android
       #
-      - label: ":docker: Build RN Android Builder image"
+      - label: ":docker: Build RN CLI Android Builder image"
         key: "android-builder-cli-image"
         timeout_in_minutes: 30
         plugins:
@@ -89,7 +89,7 @@ steps:
             - exit_status: "*"
               limit: 1
 
-      - label: ":android: Init and build RN 0.66 apk"
+      - label: ":android: Init and build RN CLI 0.66 apk"
         key: "rn-cli-0-66-apk"
         depends_on:
           - "android-builder-cli-image"
@@ -108,7 +108,7 @@ steps:
             - exit_status: "*"
               limit: 1
 
-      - label: ":android: Init and build RN 0.67 apk (Non-hermes)"
+      - label: ":android: Init and build RN CLI 0.67 apk (Non-hermes)"
         key: "rn-cli-0-67-apk"
         depends_on:
           - "android-builder-cli-image"
@@ -127,7 +127,7 @@ steps:
             - exit_status: "*"
               limit: 1
 
-      - label: ":android: Init and build RN 0.69 apk (Non-hermes)"
+      - label: ":android: Init and build RN CLI 0.69 apk (Non-hermes)"
         key: "rn-cli-0-69-apk"
         depends_on:
           - "android-builder-cli-image"
@@ -149,7 +149,7 @@ steps:
       #
       # Built app test fixtures - iOS
       #
-      - label: ":ios: Init and build RN 0.66 ipa"
+      - label: ":ios: Init and build RN CLI 0.66 ipa"
         key: "rn-cli-0-66-ipa"
         timeout_in_minutes: 30
         agents:
@@ -166,7 +166,7 @@ steps:
             - exit_status: "*"
               limit: 1
 
-      - label: ":ios: Init and build RN 0.67 ipa (Non-hermes)"
+      - label: ":ios: Init and build RN CLI 0.67 ipa (Non-hermes)"
         key: "rn-cli-0-67-ipa"
         timeout_in_minutes: 30
         agents:
@@ -183,7 +183,7 @@ steps:
             - exit_status: "*"
               limit: 1
 
-      - label: ":ios: Init and build RN 0.69 ipa (Non-hermes)"
+      - label: ":ios: Init and build RN CLI 0.69 ipa (Non-hermes)"
         key: "rn-cli-0-69-ipa"
         timeout_in_minutes: 30
         agents:
@@ -203,7 +203,7 @@ steps:
       #
       # Init, build and notify end-to-end tests - Android
       #
-      - label: ":bitbar: :android: RN 0.66 Android end-to-end tests"
+      - label: ":bitbar: :android: RN CLI 0.66 Android end-to-end tests"
         depends_on: "rn-cli-0-66-apk"
         timeout_in_minutes: 10
         plugins:
@@ -228,7 +228,7 @@ steps:
         concurrency_group: 'bitbar'
         concurrency_method: eager
 
-      - label: ":bitbar: :android: RN 0.67 Android end-to-end tests (Non-hermes)"
+      - label: ":bitbar: :android: RN CLI 0.67 Android end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-67-apk"
         timeout_in_minutes: 10
         plugins:
@@ -253,7 +253,7 @@ steps:
         concurrency_group: 'bitbar'
         concurrency_method: eager
 
-      - label: ":runner: RN 0.69 Android end-to-end tests (Non-hermes)"
+      - label: ":runner: RN CLI 0.69 Android end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-69-apk"
         timeout_in_minutes: 10
         plugins:
@@ -281,7 +281,7 @@ steps:
       #
       # Init, build and notify end-to-end tests - iOS
       #
-      - label: ":browserstack: :ios: RN 0.66 iOS end-to-end tests"
+      - label: ":browserstack: :ios: RN CLI 0.66 iOS end-to-end tests"
         depends_on: "rn-cli-0-66-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -302,7 +302,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.67 iOS end-to-end tests (Non-hermes)"
+      - label: ":browserstack: :ios: RN CLI 0.67 iOS end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-67-ipa"
         timeout_in_minutes: 10
         plugins:
@@ -323,7 +323,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.69 iOS end-to-end tests (Non-hermes)"
+      - label: ":browserstack: :ios: RN CLI 0.69 iOS end-to-end tests (Non-hermes)"
         depends_on: "rn-cli-0-69-ipa"
         timeout_in_minutes: 10
         plugins:
