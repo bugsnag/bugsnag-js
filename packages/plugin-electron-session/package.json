@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-session",
-  "version": "7.22.3",
+  "version": "7.22.7",
   "main": "session.js",
   "description": "@bugsnag/electron plugin for sessions",
   "repository": {
@@ -14,11 +14,11 @@
     "session.js"
   ],
   "dependencies": {
-    "@bugsnag/plugin-browser-session": "^7.22.3"
+    "@bugsnag/plugin-browser-session": "^7.22.7"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.19.0",
-    "@bugsnag/electron-test-helpers": "^7.22.2"
+    "@bugsnag/core": "^7.22.7",
+    "@bugsnag/electron-test-helpers": "^7.22.7"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2"

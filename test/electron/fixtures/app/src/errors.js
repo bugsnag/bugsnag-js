@@ -1,4 +1,4 @@
-const Bugsnag = require('@bugsnag/electron')
+const Bugsnag = require('@bugsnag/electron/main')
 
 module.exports = {
   uncaughtException () {

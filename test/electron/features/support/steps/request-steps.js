@@ -35,7 +35,7 @@ Given('I launch an app', launchConfig, async () => {
 })
 
 Given('I launch an app with configuration:', launchConfig, (data) => {
-  const setup = { bugsnag: 'default', preload: 'default.js', renderer_config: '{}' }
+  const setup = { bugsnag: 'default', preload: 'default', renderer_config: '{}' }
   data.raw().forEach(row => {
     const [key, config] = row
     setup[key] = config

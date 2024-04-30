@@ -1,7 +1,7 @@
 {
   "name": "@bugsnag/core",
   "main": "index.js",
-  "version": "7.19.0",
+  "version": "7.22.7",
   "types": "types/index.d.ts",
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
