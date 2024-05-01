@@ -29,15 +29,15 @@ server.use(function (req, res, next) {
   next()
 })
 
-server.get('/', function (req, res) {
+server.get('/', function (req, res, next) {
   res.end('ok')
 })
 
-server.get('/sync', function (req, res) {
+server.get('/sync', function (req, res, next) {
   throw new Error('sync')
 })
 
-server.get('/async', function (req, res) {
+server.get('/async', function (req, res, next) {
   setTimeout(function () {
     throw new Error('async')
   }, 100)
