@@ -31,15 +31,15 @@ server.use(function (req, res, next) {
   next()
 })
 
-server.get('/', function (req, res) {
+server.get('/', function (req, res, next) {
   res.end('ok')
 })
 
-server.get('/sync/:message', function (req, res) {
+server.get('/sync/:message', function (req, res, next) {
   throw new Error(req.params.message)
 })
 
-server.get('/async', function (req, res) {
+server.get('/async', function (req, res, next) {
   setTimeout(function () {
     throw new Error('async')
   }, 100)
