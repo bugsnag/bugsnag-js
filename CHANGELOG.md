@@ -5,6 +5,7 @@
 ### Added
 
 - (electron) Added support for Webpack 5 by exporting separate clients for renderer and main processes [#2116](https://github.com/bugsnag/bugsnag-js/pull/2116)
+- (react-native-cli) Update the react native cli to install and configure the `@bugsnag/cli` package to upload javascript source maps for react native iOS [#2073](https://github.com/bugsnag/bugsnag-js/pull/2073)
 
 ## v7.22.7 (2024-04-17)
 
