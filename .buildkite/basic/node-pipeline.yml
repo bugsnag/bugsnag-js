@@ -38,3 +38,4 @@ steps:
             use-aliases: true
         env:
           NODE_VERSION: "{{matrix}}"
+          DEBUG: "1"
