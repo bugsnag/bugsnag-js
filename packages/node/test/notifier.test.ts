@@ -22,6 +22,15 @@ describe('node notifier', () => {
     })
   })
 
+  describe('calling methods before start', () => {
+    it('is a no-op and logs to the console', () => {
+      const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+      Bugsnag.leaveBreadcrumb('test')
+
+      expect(spy).toHaveBeenCalledWith('Bugsnag.leaveBreadcrumb() was called before Bugsnag.start()')
+    })
+  })
+
   describe('addMetadata()', () => {
     it('adds metadata to the client', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
@@ -31,7 +40,7 @@ describe('node notifier', () => {
     })
 
     describe('when in an async context', () => {
-      it('adds meta data to the cloned client not not the base client', () => {
+      it('adds meta data to the cloned client not the base client', () => {
         Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
         const contextualize = Bugsnag.getPlugin('contextualize')
 
@@ -58,7 +67,7 @@ describe('node notifier', () => {
     })
 
     describe('when in an async context', () => {
-      it('retrieves metadata previously set on the cloned client not not the base client', () => {
+      it('retrieves metadata previously set on the cloned client not the base client', () => {
         Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
         const contextualize = Bugsnag.getPlugin('contextualize')
 
@@ -88,7 +97,7 @@ describe('node notifier', () => {
     })
 
     describe('when in an async context', () => {
-      it('clears metadata previously set on the cloned client not not the base client', () => {
+      it('clears metadata previously set on the cloned client not the base client', () => {
         Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
         Bugsnag.addMetadata('test', { meta: 'data' })
         const contextualize = Bugsnag.getPlugin('contextualize')
@@ -115,7 +124,7 @@ describe('node notifier', () => {
     })
 
     describe('when in an async context', () => {
-      it('adds a feature flag to the cloned client not not the base client', () => {
+      it('adds a feature flag to the cloned client not the base client', () => {
         Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
         const contextualize = Bugsnag.getPlugin('contextualize')
 
@@ -143,7 +152,7 @@ describe('node notifier', () => {
     })
 
     describe('when in an async context', () => {
-      it('adds feature flags to the cloned client not not the base client', () => {
+      it('adds feature flags to the cloned client not the base client', () => {
         Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
         const contextualize = Bugsnag.getPlugin('contextualize')
 
@@ -175,7 +184,7 @@ describe('node notifier', () => {
     })
 
     describe('when in an async context', () => {
-      it('clears a feature flag previously set on the cloned client not not the base client', () => {
+      it('clears a feature flag previously set on the cloned client not the base client', () => {
         Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
         Bugsnag.addFeatureFlags([{ name: 'test' }, { name: 'other' }])
         const contextualize = Bugsnag.getPlugin('contextualize')
@@ -209,7 +218,7 @@ describe('node notifier', () => {
     })
 
     describe('when in an async context', () => {
-      it('clears feature flags previously set on the cloned client not not the base client', () => {
+      it('clears feature flags previously set on the cloned client not the base client', () => {
         Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
         Bugsnag.addFeatureFlags([{ name: 'test' }, { name: 'other' }])
         const contextualize = Bugsnag.getPlugin('contextualize')
@@ -239,7 +248,7 @@ describe('node notifier', () => {
     })
 
     describe('when in an async context', () => {
-      it('sets the context on the cloned client not not the base client', () => {
+      it('sets the context on the cloned client not the base client', () => {
         Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
         const contextualize = Bugsnag.getPlugin('contextualize')
 
@@ -262,7 +271,7 @@ describe('node notifier', () => {
     })
 
     describe('when in an async context', () => {
-      it('sets the context on the cloned client not not the base client', () => {
+      it('sets the context on the cloned client not the base client', () => {
         Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
         const contextualize = Bugsnag.getPlugin('contextualize')
 
@@ -285,7 +294,7 @@ describe('node notifier', () => {
     })
 
     describe('when in an async context', () => {
-      it('adds a breadcrumb to the cloned client not not the base client', () => {
+      it('adds a breadcrumb to the cloned client not the base client', () => {
         Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
         const contextualize = Bugsnag.getPlugin('contextualize')
 
@@ -297,6 +306,31 @@ describe('node notifier', () => {
 
         // @ts-ignore
         expect(Bugsnag._client._breadcrumbs.length).toBe(0)
+      })
+    })
+  })
+
+  describe('console breadcrumbs', () => {
+    it('adds a breadcrumb to the client on console.log', () => {
+      Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
+      console.log('test')
+      // @ts-ignore
+      expect(Bugsnag._client._breadcrumbs[0].message).toBe('Console output')
+    })
+
+    describe('when in an async context', () => {
+      it('adds a breadcrumb to the cloned client on console.log, not the base client', () => {
+        Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
+        const contextualize = Bugsnag.getPlugin('contextualize')
+
+        contextualize(() => {
+          console.log('test')
+          // @ts-ignore
+          expect(Bugsnag._client._clientContext.getStore()._breadcrumbs[0].message).toBe('Console output')
+        })
+
+        // @ts-ignore
+        expect(Bugsnag._client._breadcrumbs).toHaveLength(0)
       })
     })
   })

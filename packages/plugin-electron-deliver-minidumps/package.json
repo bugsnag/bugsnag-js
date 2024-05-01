@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-deliver-minidumps",
-  "version": "8.0.0-alpha.4",
+  "version": "8.0.0-alpha.7",
   "main": "deliver-minidumps.js",
   "description": "@bugsnag/electron plugin to deliver minidumps to Bugsnag",
   "homepage": "https://www.bugsnag.com/",
@@ -22,8 +22,8 @@
     "form-data": "^4.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.4",
-    "@bugsnag/electron-network-status": "^8.0.0-alpha.4"
+    "@bugsnag/core": "^8.0.0-alpha.7",
+    "@bugsnag/electron-network-status": "^8.0.0-alpha.7"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1",

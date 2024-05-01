@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-browser-device",
-  "version": "8.0.0-alpha.4",
+  "version": "8.0.0-alpha.7",
   "main": "device.js",
   "description": "@bugsnag/js plugin to set device info in browsers",
   "homepage": "https://www.bugsnag.com/",
@@ -20,7 +20,7 @@
     "@bugsnag/cuid": "^3.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.4"
+    "@bugsnag/core": "^8.0.0-alpha.7"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"

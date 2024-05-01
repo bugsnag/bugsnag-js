@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browser",
-  "version": "8.0.0-alpha.4",
+  "version": "8.0.0-alpha.7",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for browser JavaScript",
@@ -30,25 +30,25 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-x-domain-request": "^8.0.0-alpha.4",
-    "@bugsnag/delivery-xml-http-request": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-app-duration": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-browser-context": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-browser-device": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-browser-request": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-browser-session": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-client-ip": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-console-breadcrumbs": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-inline-script-content": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-interaction-breadcrumbs": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-navigation-breadcrumbs": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-network-breadcrumbs": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-simple-throttle": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-strip-query-string": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-window-onerror": "^8.0.0-alpha.4",
-    "@bugsnag/plugin-window-unhandled-rejection": "^8.0.0-alpha.4"
+    "@bugsnag/delivery-x-domain-request": "^8.0.0-alpha.7",
+    "@bugsnag/delivery-xml-http-request": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-app-duration": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-browser-context": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-browser-device": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-browser-request": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-browser-session": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-client-ip": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-console-breadcrumbs": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-inline-script-content": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-interaction-breadcrumbs": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-navigation-breadcrumbs": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-network-breadcrumbs": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-simple-throttle": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-strip-query-string": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-window-onerror": "^8.0.0-alpha.7",
+    "@bugsnag/plugin-window-unhandled-rejection": "^8.0.0-alpha.7"
   },
   "dependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.4"
+    "@bugsnag/core": "^8.0.0-alpha.7"
   }
 }

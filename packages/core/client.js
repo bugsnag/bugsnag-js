@@ -186,7 +186,6 @@ class Client {
     // stuff like __proto__ etc. (only store the result if the plugin had a
     // name)
     if (plugin.name) this._plugins[`~${plugin.name}~`] = result
-    return this
   }
 
   getPlugin (name) {

@@ -179,6 +179,16 @@ app.get('/breadcrumbs_b', function (req, res) {
   throw new Error('Error in /breadcrumbs_b')
 })
 
+app.get('/console_breadcrumbs_a', function (req, res) {
+  console.log('For the first URL')
+  throw new Error('Error in /console_breadcrumbs_a')
+})
+
+app.get('/console_breadcrumbs_b', function (req, res) {
+  console.log('For the second URL')
+  throw new Error('Error in /console_breadcrumbs_b')
+})
+
 app.post('/context-loss',
 (req, res, next) => {
   // Context is lost in this middleware because next gets
