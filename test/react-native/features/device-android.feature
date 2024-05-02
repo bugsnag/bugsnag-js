@@ -50,7 +50,6 @@ Scenario: Unhandled JS error
 
 Scenario: Handled native error
   When I run "DeviceNativeHandledScenario"
-  And I configure Bugsnag for "DeviceNativeHandledScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "java.lang.RuntimeException"
   And the exception "message" equals "DeviceNativeHandledScenario"

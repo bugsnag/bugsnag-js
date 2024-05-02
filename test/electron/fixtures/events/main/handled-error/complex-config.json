@@ -107,8 +107,8 @@
           "errorMessage": "something bad",
           "errorClass": "ReferenceError",
           "stacktrace": [{
-            "file": "./src/errors.js",
-            "lineNumber": 18,
+            "file": ".webpack/main/index.js",
+            "lineNumber": 2,
             "code": {
               "1": "{TYPE:string}"
             }

@@ -112,6 +112,44 @@ steps:
             - exit_status: "*"
               limit: 1
 
+      - label: ":ios: Build RN 0.72 (Old Arch) ipa"
+        key: "rn-0-72-old-arch-ipa"
+        timeout_in_minutes: 60
+        agents:
+          queue: "macos-12-arm"
+        env:
+          REACT_NATIVE_VERSION: "rn0.72"
+          LANG: "en_US.UTF-8"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          RCT_NEW_ARCH_ENABLED: "0"
+          ARTEFACT_NAME: "rn0.72-old-arch"
+        artifact_paths: build/rn0.72-old-arch.ipa
+        commands:
+          - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
+
+      - label: ":ios: Build RN 0.72 (New Arch) ipa"
+        key: "rn-0-72-new-arch-ipa"
+        timeout_in_minutes: 60
+        agents:
+          queue: "macos-12-arm"
+        env:
+          REACT_NATIVE_VERSION: "rn0.72"
+          LANG: "en_US.UTF-8"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          RCT_NEW_ARCH_ENABLED: "1"
+          ARTEFACT_NAME: "rn0.72-new-arch"
+        artifact_paths: build/rn0.72-new-arch.ipa
+        commands:
+          - npm run test:build-react-native-ios
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
+
       - label: ":ios: Build react-navigation 0.69 ipa"
         key: "react-navigation-0-69-ipa"
         timeout_in_minutes: 60
@@ -155,7 +193,7 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":browserstack: :ios: RN 0.66 iOS 14 end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.66 iOS 16 end-to-end tests"
         depends_on: "rn-0-66-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -178,7 +216,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.67 iOS 14 end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.67 iOS 16 end-to-end tests"
         depends_on: "rn-0-67-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -202,7 +240,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.69 iOS 14 end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.69 iOS 16 end-to-end tests"
         depends_on: "rn-0-69-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -226,7 +264,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
       #
-      - label: ":browserstack: :ios: RN 0.68 (hermes) iOS 14 end-to-end tests"
+      - label: ":browserstack: :ios: RN 0.68 (hermes) iOS 16 end-to-end tests"
         depends_on: "rn-0-68-hermes-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -250,7 +288,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":ios: RN 0.71 (Old Arch) iOS 14 end-to-end tests"
+      - label: ":ios: RN 0.71 (Old Arch) iOS 16 end-to-end tests"
         depends_on: "rn-0-71-old-arch-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -274,7 +312,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":ios: RN 0.71 (New Arch) iOS 14 end-to-end tests"
+      - label: ":ios: RN 0.71 (New Arch) iOS 16 end-to-end tests"
         depends_on: "rn-0-71-new-arch-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -298,7 +336,55 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: react-navigation 0.69 iOS 14 end-to-end tests"
+      - label: ":ios: RN 0.72 (Old Arch) iOS 16 end-to-end tests"
+        depends_on: "rn-0-72-old-arch-ipa"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.5.0:
+            download: "build/rn0.72-old-arch.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            use-aliases: true
+            command:
+              - --app=build/rn0.72-old-arch.ipa
+              - --farm=bs
+              - --device=IOS_16
+              - --a11y-locator
+              - --fail-fast
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+          HERMES: "true"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+
+      - label: ":ios: RN 0.72 (New Arch) iOS 16 end-to-end tests"
+        depends_on: "rn-0-72-new-arch-ipa"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.5.0:
+            download: "build/rn0.72-new-arch.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            use-aliases: true
+            command:
+              - --app=build/rn0.72-new-arch.ipa
+              - --farm=bs
+              - --device=IOS_16
+              - --a11y-locator
+              - --fail-fast
+        env:
+          SKIP_NAVIGATION_SCENARIOS: "true"
+          HERMES: "true"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+
+      - label: ":browserstack: :ios: react-navigation 0.69 iOS 16 end-to-end tests"
         depends_on: "react-navigation-0-69-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -321,7 +407,7 @@ steps:
         concurrency_method: eager
 
       # See: PLAT-5173
-      - label: ":browserstack: :ios: react-native-navigation 0.66 iOS 13 end-to-end tests"
+      - label: ":browserstack: :ios: react-native-navigation 0.66 iOS 16 end-to-end tests"
         skip: "See PLAT-5173"
         depends_on: "react-native-navigation-0-66-ipa"
         timeout_in_minutes: 60

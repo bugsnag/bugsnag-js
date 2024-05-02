@@ -14,6 +14,11 @@ const add = (state, section, keyOrObj, maybeVal) => {
   // exit if we don't have an updates object at this point
   if (!updates) return
 
+  // preventing the __proto__ property from being used as a key
+  if (section === '__proto__' || section === 'constructor' || section === 'prototype') {
+    return
+  }
+
   // ensure a section with this name exists
   if (!state[section]) state[section] = {}
 
@@ -38,6 +43,11 @@ const clear = (state, section, key) => {
   // clear an entire section
   if (!key) {
     delete state[section]
+    return
+  }
+
+  // preventing the __proto__ property from being used as a key
+  if (section === '__proto__' || section === 'constructor' || section === 'prototype') {
     return
   }
 

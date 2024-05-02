@@ -2,6 +2,11 @@
   "name": "@bugsnag/electron",
   "version": "8.0.0-alpha.7",
   "main": "src/notifier.js",
+  "exports": {
+    ".": "./src/notifier.js",
+    "./main": "./src/client/main.js",
+    "./renderer": "./src/client/renderer.js"
+  },
   "types": "types/notifier.d.ts",
   "description": "@bugsnag/electron notifier",
   "homepage": "https://www.bugsnag.com/",

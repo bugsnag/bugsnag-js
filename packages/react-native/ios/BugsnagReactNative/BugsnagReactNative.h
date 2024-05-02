@@ -5,6 +5,8 @@
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <BugsnagReactNativeSpec/BugsnagReactNativeSpec.h>
+
+#import "BugsnagReactNativeEmitter.h"
 #endif
 
 @class BugsnagConfiguration;
