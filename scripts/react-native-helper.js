@@ -11,10 +11,8 @@ module.exports = {
       const rnVersion = process.env.REACT_NATIVE_VERSION
       const registryUrl = process.env.REGISTRY_URL
 
-      let jsSourceDir = 'scenario_js'
-      if (process.env.JS_SOURCE_DIR) {
-        jsSourceDir = process.env.JS_SOURCE_DIR
-      }
+      const jsSourceDir = process.env.JS_SOURCE_DIR || 'scenario_js'
+      const installRNFileAccess = jsSourceDir === 'scenario_js'
 
       let artefactName = rnVersion
       if (process.env.ARTEFACT_NAME) {
@@ -37,6 +35,12 @@ module.exports = {
       // Install notifier
       const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl} --legacy-peer-deps`
       common.run(command, true)
+
+      // Install react-native-file-access
+      if (installRNFileAccess) {
+        const RNFACommand = `npm install react-native-file-access@3.0.4  --registry ${registryUrl}`
+        common.run(RNFACommand, true)
+      }
 
       // Install any required secondary files
       if (fs.existsSync('./install.sh')) {
@@ -99,6 +103,10 @@ module.exports = {
       console.log(`Installing notifier: ${version}`)
       const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl} --legacy-peer-deps`
       common.run(command, true)
+
+      // Install react-native-file-access
+      const RNFACommand = `npm install react-native-file-access@3.0.4  --registry ${registryUrl}`
+      common.run(RNFACommand, true)
 
       // Install any required secondary files
       if (fs.existsSync('./install.sh')) {

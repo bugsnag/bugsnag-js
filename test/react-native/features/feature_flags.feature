@@ -11,8 +11,7 @@ Scenario: Sends handled exception which includes feature flags
   And event 0 does not contain the feature flag "should_not_be_reported_3"
 
 Scenario: Sends handled exception which includes feature flags added in the notify callback
-  When I configure the app to run in the "callback" state
-  And I run "FeatureFlagsScenario"
+  When I run "FeatureFlagsScenario" with data "callback"
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the event "unhandled" is false
@@ -23,8 +22,7 @@ Scenario: Sends handled exception which includes feature flags added in the noti
   And event 0 does not contain the feature flag "should_not_be_reported_3"
 
 Scenario: Sends unhandled exception which includes feature flags added in the notify callback
-  When I configure the app to run in the "unhandled callback" state
-  And I run "FeatureFlagsScenario" and relaunch the crashed app
+  When I run "FeatureFlagsScenario" with data "unhandled callback" and relaunch the crashed app
   And I configure Bugsnag for "FeatureFlagsScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
@@ -36,8 +34,7 @@ Scenario: Sends unhandled exception which includes feature flags added in the no
   And event 0 does not contain the feature flag "should_not_be_reported_3"
 
 Scenario: Sends no feature flags after clearFeatureFlags()
-  When I configure the app to run in the "cleared" state
-  And I run "FeatureFlagsScenario"
+  When I run "FeatureFlagsScenario" with data "cleared"
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
   And the event "unhandled" is false

@@ -1,0 +1,35 @@
+{
+  "name": "@bugsnag/react-native-scenarios",
+  "version": "1.0.0",
+  "description": "Test scenarios for the Bugsnag React Native library",
+  "main": "src/index.js",
+  "files": [
+    "src",
+    "android",
+    "ios",
+    "BugsnagTestInterface.podspec",
+    "!android/build",
+    "!ios/build"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "BugSnag",
+  "license": "MIT",
+  "optionalDependencies": {
+    "react-native-navigation": "*"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-file-access": "*"
+  },
+  "codegenConfig": {
+    "name": "BugsnagTestInterfaceSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.reactnative.scenarios"
+    }
+  }
+}
