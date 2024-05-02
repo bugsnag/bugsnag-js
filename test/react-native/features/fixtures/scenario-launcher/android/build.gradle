@@ -1,0 +1,60 @@
+def isNewArchitectureEnabled() {
+    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
+  }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
+if (isNewArchitectureEnabled()) {
+    apply plugin: 'com.facebook.react'
+}
+
+
+android {
+    buildToolsVersion safeExtGet('buildToolsVersion', '28.0.3')
+    compileSdkVersion safeExtGet('compileSdkVersion', 28)
+
+    if (android.hasProperty('namespace')) {
+        namespace 'com.reactnative.scenarios'
+    }
+
+    defaultConfig {
+        minSdkVersion safeExtGet('minSdkVersion', 16)
+        targetSdkVersion safeExtGet('targetSdkVersion', 28)
+    }
+
+    sourceSets {
+        main {
+            if (isNewArchitectureEnabled()) {
+                java.srcDirs += ['src/newarch/java']
+            } else {
+                java.srcDirs += ['src/oldarch/java']
+            }
+        }
+    }
+}
+
+dependencies {
+    api "com.bugsnag:bugsnag-android:5.+"
+    implementation 'com.facebook.react:react-native:+'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        google()
+    }
+}

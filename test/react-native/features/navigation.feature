@@ -2,7 +2,7 @@
 Feature: Navigation plugin features
 
 Scenario: Navigating screens causes breadcrumbs and context to be updated
-  When I run "ReactNavigationBreadcrumbsEnabledScenario"
+  When I run the navigation scenario "ReactNavigationBreadcrumbsEnabledScenario"
   And I trigger a handled error
   And I wait to receive an error
   Then the exception "message" equals "HomeNavigationError"
@@ -22,7 +22,7 @@ Scenario: Navigating screens causes breadcrumbs and context to be updated
   When I trigger an unhandled error
   And I wait for 5 seconds
   And I relaunch the app after a crash
-  And I configure Bugsnag for "ReactNavigationBreadcrumbsEnabledScenario"
+  And I configure Bugsnag for the navigation scenario "ReactNavigationBreadcrumbsEnabledScenario"
   And I wait to receive an error
   Then the exception "message" equals "DetailsNavigationUnhandledError"
   And the event "unhandled" is true
@@ -31,7 +31,7 @@ Scenario: Navigating screens causes breadcrumbs and context to be updated
   And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeToDetailsNavigation.json"
 
 Scenario: Navigating when navigation breadcrumbs are disabled only updates context
-  When I run "ReactNavigationBreadcrumbsDisabledScenario"
+  When I run the navigation scenario "ReactNavigationBreadcrumbsDisabledScenario"
   And I trigger a handled error
   And I wait to receive an error
   Then the exception "message" equals "HomeNavigationError"
@@ -49,7 +49,7 @@ Scenario: Navigating when navigation breadcrumbs are disabled only updates conte
 
   When I trigger an unhandled error
   And I relaunch the app after a crash
-  And I configure Bugsnag for "ReactNavigationBreadcrumbsDisabledScenario"
+  And I configure Bugsnag for the navigation scenario "ReactNavigationBreadcrumbsDisabledScenario"
   And I wait to receive an error
   Then the exception "message" equals "DetailsNavigationUnhandledError"
   And the event "unhandled" is true
