@@ -143,7 +143,7 @@ async function writeToPackageJson (packageJsonPath: string, uploadUrl?: string, 
 
     let createBuildCommand = 'bugsnag-cli create-build'
     let rnAndroidUploadCommand = 'bugsnag-cli upload react-native-android'
-    let androidUploadCommand = 'bugsnag-cli upload android android/'
+    let androidUploadCommand = 'bugsnag-cli upload android-ndk android/'
     let rnIosUploadCommand = 'bugsnag-cli upload react-native-ios'
     let dsymUploadCommand = 'bugsnag-cli upload dsym ios/'
 
