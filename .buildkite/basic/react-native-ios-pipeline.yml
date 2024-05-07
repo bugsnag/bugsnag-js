@@ -14,7 +14,7 @@ steps:
         env:
           REACT_NATIVE_VERSION: "rn0.72"
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          XCODE_VERSION: "15.3.0"
           RCT_NEW_ARCH_ENABLED: "0"
           ARTEFACT_NAME: "rn0.72-old-arch"
         artifact_paths: build/rn0.72-old-arch.ipa
@@ -33,7 +33,7 @@ steps:
         env:
           REACT_NATIVE_VERSION: "rn0.72"
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          XCODE_VERSION: "15.3.0"
           RCT_NEW_ARCH_ENABLED: "1"
           ARTEFACT_NAME: "rn0.72-new-arch"
         artifact_paths: build/rn0.72-new-arch.ipa
@@ -51,11 +51,12 @@ steps:
           queue: "macos-14"
         env:
           NODE_VERSION: "18"
-          RN_VERSION: "{{matrix}}"
-          BUILD_IOS: "true"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
-        artifact_paths:
-          - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
+          REACT_NATIVE_VERSION: "rn0.73"
+          LANG: "en_US.UTF-8"
+          XCODE_VERSION: "15.3.0"
+          RCT_NEW_ARCH_ENABLED: "0"
+          ARTEFACT_NAME: "rn0.73-old-arch"
+        artifact_paths: build/rn0.73-old-arch.ipa
         commands:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
