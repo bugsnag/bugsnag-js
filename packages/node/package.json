@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/node",
-  "version": "7.22.7",
+  "version": "7.23.0",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",
@@ -33,7 +33,7 @@
     "@bugsnag/plugin-node-surrounding-code": "^7.22.7",
     "@bugsnag/plugin-node-uncaught-exception": "^7.22.7",
     "@bugsnag/plugin-node-unhandled-rejection": "^7.22.7",
-    "@bugsnag/plugin-server-session": "^7.22.7",
+    "@bugsnag/plugin-server-session": "^7.23.0",
     "@bugsnag/plugin-stackframe-path-normaliser": "^7.22.7",
     "@bugsnag/plugin-strip-project-root": "^7.22.7"
   },

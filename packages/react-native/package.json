@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/react-native",
-  "version": "7.22.7",
+  "version": "7.23.0",
   "main": "src/notifier.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for React Native applications",
@@ -62,7 +62,7 @@
     "@bugsnag/plugin-react-native-global-error-handler": "^7.22.7",
     "@bugsnag/plugin-react-native-hermes": "^7.22.7",
     "@bugsnag/plugin-react-native-session": "^7.22.7",
-    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.22.7",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.23.0",
     "iserror": "^0.0.2"
   },
   "scripts": {

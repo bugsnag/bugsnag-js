@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-server-session",
-  "version": "7.22.7",
+  "version": "7.23.0",
   "main": "session.js",
   "description": "@bugsnag/js plugin to enable session tracking in server applications",
   "homepage": "https://www.bugsnag.com/",
