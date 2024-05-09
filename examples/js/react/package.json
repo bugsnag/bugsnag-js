@@ -1,14 +1,14 @@
 {
   "name": "bugsnag-js-example",
-  "version": "0.1.0",
+  "version": "1.2.3",
   "private": true,
   "dependencies": {
     "@bugsnag/js": "^7.0.0",
     "@bugsnag/plugin-react": "^7.0.0",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "react-scripts": "2.1.1",
-    "serve": "^11.3.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "^5.0.1",
+    "serve": "^14.2.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -25,5 +25,9 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
+  }
 }

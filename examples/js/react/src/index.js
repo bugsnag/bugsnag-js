@@ -6,8 +6,9 @@ import './index.css'
 import App from './App'
 
 Bugsnag.start({
-  apiKey: 'YOUR_API_KEY',
-  plugins: [new BugsnagPluginReact(React)]
+  apiKey: 'a3246c88da8cbd540f9c3976967208cd',
+  plugins: [new BugsnagPluginReact(React)],
+  appVersion: '1.2.3',
 })
 
 const ErrorBoundary = Bugsnag.getPlugin('react')
