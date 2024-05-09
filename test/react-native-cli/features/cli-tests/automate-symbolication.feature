@@ -23,12 +23,13 @@ Scenario: successfully modify project
         """
         The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
 
-        bugsnag:create-build        - Creates a new build
-        bugsnag:upload-android      - Uploads Android source maps
-        bugsnag:upload-rn-android   - Uploads React Native Android source maps
-        bugsnag:upload-dsym         - Uploads iOS dSYMs
-        bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
-        bugsnag:upload              - Runs all of the above tasks
+        bugsnag:create-build              - Creates a new build
+        bugsnag:upload-android-ndk        - Uploads Android NDK source maps
+        bugsnag:upload-android-proguard   - Uploads Android Proguard source maps
+        bugsnag:upload-rn-android         - Uploads React Native Android source maps
+        bugsnag:upload-dsym               - Uploads iOS dSYMs
+        bugsnag:upload-rn-ios             - Uploads React Native iOS source maps
+        bugsnag:upload                    - Runs all of the above tasks
 
         See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
         """
@@ -74,12 +75,13 @@ Scenario: successfully modify project, choosing bugsnag-cli version
         """
         The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
 
-        bugsnag:create-build        - Creates a new build
-        bugsnag:upload-android      - Uploads Android source maps
-        bugsnag:upload-rn-android   - Uploads React Native Android source maps
-        bugsnag:upload-dsym         - Uploads iOS dSYMs
-        bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
-        bugsnag:upload              - Runs all of the above tasks
+        bugsnag:create-build              - Creates a new build
+        bugsnag:upload-android-ndk        - Uploads Android NDK source maps
+        bugsnag:upload-android-proguard   - Uploads Android Proguard source maps
+        bugsnag:upload-rn-android         - Uploads React Native Android source maps
+        bugsnag:upload-dsym               - Uploads iOS dSYMs
+        bugsnag:upload-rn-ios             - Uploads React Native iOS source maps
+        bugsnag:upload                    - Runs all of the above tasks
 
         See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
         """
@@ -129,12 +131,13 @@ Scenario: successfully modify project with custom endpoints
         """
         The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
 
-        bugsnag:create-build        - Creates a new build
-        bugsnag:upload-android      - Uploads Android source maps
-        bugsnag:upload-rn-android   - Uploads React Native Android source maps
-        bugsnag:upload-dsym         - Uploads iOS dSYMs
-        bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
-        bugsnag:upload              - Runs all of the above tasks
+        bugsnag:create-build              - Creates a new build
+        bugsnag:upload-android-ndk        - Uploads Android NDK source maps
+        bugsnag:upload-android-proguard   - Uploads Android Proguard source maps
+        bugsnag:upload-rn-android         - Uploads React Native Android source maps
+        bugsnag:upload-dsym               - Uploads iOS dSYMs
+        bugsnag:upload-rn-ios             - Uploads React Native iOS source maps
+        bugsnag:upload                    - Runs all of the above tasks
 
         See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
         """
@@ -181,12 +184,13 @@ Scenario: opt not to modify the Android project
         """
         The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
 
-        bugsnag:create-build        - Creates a new build
-        bugsnag:upload-android      - Uploads Android source maps
-        bugsnag:upload-rn-android   - Uploads React Native Android source maps
-        bugsnag:upload-dsym         - Uploads iOS dSYMs
-        bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
-        bugsnag:upload              - Runs all of the above tasks
+        bugsnag:create-build              - Creates a new build
+        bugsnag:upload-android-ndk        - Uploads Android NDK source maps
+        bugsnag:upload-android-proguard   - Uploads Android Proguard source maps
+        bugsnag:upload-rn-android         - Uploads React Native Android source maps
+        bugsnag:upload-dsym               - Uploads iOS dSYMs
+        bugsnag:upload-rn-ios             - Uploads React Native iOS source maps
+        bugsnag:upload                    - Runs all of the above tasks
 
         See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
         """
@@ -232,12 +236,13 @@ Scenario: opt not to modify the iOS project
         """
         The following tasks have been added to your package.json and can be run after a build to upload source maps to BugSnag:
 
-        bugsnag:create-build        - Creates a new build
-        bugsnag:upload-android      - Uploads Android source maps
-        bugsnag:upload-rn-android   - Uploads React Native Android source maps
-        bugsnag:upload-dsym         - Uploads iOS dSYMs
-        bugsnag:upload-rn-ios       - Uploads React Native iOS source maps
-        bugsnag:upload              - Runs all of the above tasks
+        bugsnag:create-build              - Creates a new build
+        bugsnag:upload-android-ndk        - Uploads Android NDK source maps
+        bugsnag:upload-android-proguard   - Uploads Android Proguard source maps
+        bugsnag:upload-rn-android         - Uploads React Native Android source maps
+        bugsnag:upload-dsym               - Uploads iOS dSYMs
+        bugsnag:upload-rn-ios             - Uploads React Native iOS source maps
+        bugsnag:upload                    - Runs all of the above tasks
 
         See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details.
         """
