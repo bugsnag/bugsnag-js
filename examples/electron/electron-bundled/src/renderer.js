@@ -27,7 +27,7 @@
  */
 
 import './index.css';
-import Bugsnag from '@bugsnag/electron'
+import Bugsnag from '@bugsnag/electron/renderer'
 
 Bugsnag.start()
 

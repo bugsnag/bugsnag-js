@@ -1,11 +1,39 @@
-When('I run {string}') do |event_type|
-  steps %Q{
-    Given the element "scenario_name" is present within 60 seconds
-    When I clear and send the keys "#{event_type}" to the element "scenario_name"
-    And I click the element "clear_data"
-    And I click the element "start_bugsnag"
-    And I click the element "run_scenario"
+def execute_command(action, scenario_name = '', scenario_data = '')
+  address = if Maze.config.farm == :bb
+              if Maze.config.aws_public_ip
+                Maze.public_address
+              else
+                'local:9339'
+              end
+            else
+              case Maze::Helper.get_current_platform
+                when 'android'
+                  'localhost:9339'
+                else
+                  'bs-local.com:9339'
+              end
+            end
+
+  command = {
+    action: action,
+    scenario_name: scenario_name,
+    notify: "http://#{address}/notify",
+    sessions: "http://#{address}/sessions",
+    api_key: $api_key,
+    scenario_data: scenario_data
   }
+
+  $logger.debug("Queuing command: #{command}")
+  Maze::Server.commands.add command
+
+  # Ensure fixture has read the command
+  count = 900
+  sleep 0.1 until Maze::Server.commands.remaining.empty? || (count -= 1) < 1
+  raise 'Test fixture did not GET /command' unless Maze::Server.commands.remaining.empty?
+end
+
+When('I run {string}') do |scenario_name|
+  execute_command 'run-scenario', scenario_name
 end
 
 When('I run {string} and relaunch the crashed app') do |event_type|
@@ -64,18 +92,19 @@ When('I clear any error dialogue') do
   driver.click_element('android:id/aerr_restart') if driver.wait_for_element('android:id/aerr_restart', 3)
 end
 
-When('I configure Bugsnag for {string}') do |event_type|
-  steps %Q{
-    Given the element "scenario_name" is present within 60 seconds
-    When I clear and send the keys "#{event_type}" to the element "scenario_name"
-    And I click the element "start_bugsnag"
-  }
+When('I configure Bugsnag for {string}') do |scenario_name|
+  execute_command 'start-bugsnag', scenario_name
 end
 
-When('I configure the app to run in the {string} state') do |event_metadata|
+When('I run {string} with data {string}') do |scenario_name, scenario_data|
+  execute_command 'run-scenario', scenario_name, scenario_data
+end
+
+When('I run {string} with data {string} and relaunch the crashed app') do |scenario_name, scenario_data|
   steps %Q{
-    Given the element "scenario_metadata" is present
-    And I clear and send the keys "#{event_metadata}" to the element "scenario_metadata"
+    When I run "#{scenario_name}" with data "#{scenario_data}"
+    And I clear any error dialogue
+    And I relaunch the app after a crash
   }
 end
 

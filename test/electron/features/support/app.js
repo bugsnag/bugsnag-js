@@ -4,7 +4,7 @@ const { spawn } = require('child_process')
 const defaultFixturePath = join(__dirname, '../../fixtures/app')
 
 const npmRunner = process.platform === 'win32' ? 'npm.cmd' : 'npm'
-const installArgs = ['install', '--progress=false', '--no-audit', '--no-optional', '--no-save', '--legacy-peer-deps']
+const installArgs = ['install', '--progress=false', '--no-audit', '--omit=optional', '--no-save', '--legacy-peer-deps']
 const log = (msg, ...args) => console.log(`  [TestApp] ${msg}`, ...args)
 
 class TestApp {
@@ -17,7 +17,7 @@ class TestApp {
     await this._exec(npmRunner, ['run', 'package'], env)
   }
 
-  async installDeps (bugsnagVersion, electronVersion = '^11.4.0') {
+  async installDeps (bugsnagVersion, electronVersion = '^20.0.0') {
     // install this first. electron has a lengthy postinstall script, and doing
     // a bare `npm install` first will wildcard to the latest / last version
     // installed, doubling the install time

@@ -9,13 +9,14 @@ const {
   NativeClient
 } = require('@bugsnag/plugin-electron-client-state-persistence')
 
+const createClient = require('./createClient')
 const makeDelivery = require('@bugsnag/delivery-electron')
 const { FileStore } = require('@bugsnag/electron-filestore')
 const { schema } = require('../config/main')
 
 Event.__type = 'electronnodejs'
 
-module.exports = (opts) => {
+const createMainClient = (opts) => {
   // check api key has been provided as we need it to create the FileStore
   // which happens before the API key is validated
   if (typeof opts.apiKey !== 'string') {
@@ -82,7 +83,16 @@ module.exports = (opts) => {
   return bugsnag
 }
 
+// Construct the client
+const Bugsnag = createClient(createMainClient, 'main')
+
+// commonjs
+module.exports = Bugsnag
+
 module.exports.Client = Client
 module.exports.Event = Event
-module.exports.Session = Session
 module.exports.Breadcrumb = Breadcrumb
+module.exports.Session = Session
+
+// ESM
+module.exports.default = Bugsnag

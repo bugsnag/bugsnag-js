@@ -24,7 +24,7 @@ Scenario: Handled JS error
   # Skipped - PLAT-11345
   # And the error payload field "events.0.device.freeDisk" is greater than 0
   And the event "device.modelNumber" is not null
-  And the event "device.model" matches "^iPhone(\d|[,\.])+$"
+  And the event "device.model" matches "^iPhone|iPad(\d|[,\.])+$"
   And the error payload field "events.0.device.totalMemory" is greater than 0
 
 Scenario: Unhandled JS error
@@ -51,7 +51,7 @@ Scenario: Unhandled JS error
   # Skipped - PLAT-11345
   # And the error payload field "events.0.device.freeDisk" is greater than 0
   And the event "device.modelNumber" is not null
-  And the event "device.model" matches "^iPhone(\d|[,\.])+$"
+  And the event "device.model" matches "^iPhone|iPad(\d|[,\.])+$"
   And the error payload field "events.0.device.totalMemory" is greater than 0
 
 Scenario: Handled native error
@@ -77,7 +77,7 @@ Scenario: Handled native error
   # Skipped - PLAT-11345
   # And the error payload field "events.0.device.freeDisk" is greater than 0
   And the event "device.modelNumber" is not null
-  And the event "device.model" matches "^iPhone(\d|[,\.])+$"
+  And the event "device.model" matches "^iPhone|iPad(\d|[,\.])+$"
   And the error payload field "events.0.device.totalMemory" is greater than 0
 
 Scenario: Unhandled native error
@@ -103,5 +103,5 @@ Scenario: Unhandled native error
   # Skipped - PLAT-11345
   # And the error payload field "events.0.device.freeDisk" is greater than 0
   And the event "device.modelNumber" is not null
-  And the event "device.model" matches "^iPhone(\d|[,\.])+$"
+  And the event "device.model" matches "^iPhone|iPad(\d|[,\.])+$"
   And the error payload field "events.0.device.totalMemory" is greater than 0
