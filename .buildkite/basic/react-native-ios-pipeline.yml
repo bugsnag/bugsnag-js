@@ -6,57 +6,18 @@ steps:
       #
       # Test fixtures
       #
-      - label: ":ios: Build RN 0.72 (Old Arch) ipa"
-        key: "rn-0-72-old-arch-ipa"
-        timeout_in_minutes: 60
-        agents:
-          queue: "macos-14"
-        env:
-          REACT_NATIVE_VERSION: "rn0.72"
-          LANG: "en_US.UTF-8"
-          XCODE_VERSION: "15.3.0"
-          RCT_NEW_ARCH_ENABLED: "0"
-          ARTEFACT_NAME: "rn0.72-old-arch"
-        artifact_paths: build/rn0.72-old-arch.ipa
-        commands:
-          - npm run test:build-react-native-ios
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
-      - label: ":ios: Build RN 0.72 (New Arch) ipa"
-        key: "rn-0-72-new-arch-ipa"
-        timeout_in_minutes: 60
-        agents:
-          queue: "macos-14"
-        env:
-          REACT_NATIVE_VERSION: "rn0.72"
-          LANG: "en_US.UTF-8"
-          XCODE_VERSION: "15.3.0"
-          RCT_NEW_ARCH_ENABLED: "1"
-          ARTEFACT_NAME: "rn0.72-new-arch"
-        artifact_paths: build/rn0.72-new-arch.ipa
-        commands:
-          - npm run test:build-react-native-ios
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
-      - label: ":ios: Build RN 0.73 (Old Arch) ipa"
-        key: "rn-0-73-old-arch-ipa"
-        timeout_in_minutes: 60
+      - label: ':mac: Build RN {{matrix}} test fixture ipa (Old Arch)'
+        key: "build-react-native-ios-fixture-old-arch"
+        timeout_in_minutes: 30
         agents:
           queue: "macos-14"
         env:
           NODE_VERSION: "18"
-          REACT_NATIVE_VERSION: "rn0.73"
-          LANG: "en_US.UTF-8"
+          RN_VERSION: "{{matrix}}"
+          BUILD_IOS: "true"
           XCODE_VERSION: "15.3.0"
-          RCT_NEW_ARCH_ENABLED: "0"
-          ARTEFACT_NAME: "rn0.73-old-arch"
-        artifact_paths: build/rn0.73-old-arch.ipa
+        artifact_paths:
+          - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
