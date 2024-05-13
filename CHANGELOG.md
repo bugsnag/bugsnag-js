@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (plugin-react) Modified the polynomial regular expression to remove the ambiguity
+
 ## [7.23.0] - 2024-05-09
 
 ### Added
