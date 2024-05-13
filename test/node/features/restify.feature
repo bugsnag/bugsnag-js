@@ -1,4 +1,4 @@
-@skip_node_18
+@skip_node_12
 Feature: @bugsnag/plugin-restify
 
 Background:
