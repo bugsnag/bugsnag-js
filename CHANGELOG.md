@@ -4,7 +4,7 @@
 
 ### Changed
 
-- (plugin-react) Modified the polynomial regular expression to remove the ambiguity
+- (plugin-react) Modified the polynomial regular expression to remove the ambiguity [#2135](https://github.com/bugsnag/bugsnag-js/pull/2135)
 
 ## [7.23.0] - 2024-05-09
 
