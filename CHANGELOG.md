@@ -16,7 +16,7 @@
 - (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Added `duration` metadata field to network breadcrumbs [#1903](https://github.com/bugsnag/bugsnag-js/pull/1903)
 - (react-native) Update bugsnag-android from v5.32.2 to [v6.4.0](https://github.com/bugsnag/bugsnag-android/blob/v6.4.0/CHANGELOG.md#640-2024-04-15)
 
-## TBD
+## [7.23.0] - 2024-05-09
 
 ### Added
 
