@@ -34,7 +34,6 @@
     "@typescript-eslint/parser": "^2.19.2",
     "aws-sdk": "^2.1303.0",
     "babel-jest": "^29.7.0",
-    "babel-preset-react-native": "^4.0.1",
     "babelify": "^10.0.0",
     "browser-pack-flat": "^3.2.0",
     "browserify": "^16.2.2",
