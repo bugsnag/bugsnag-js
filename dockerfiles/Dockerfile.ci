@@ -15,4 +15,5 @@ COPY scripts ./scripts
 COPY test ./test
 COPY packages ./packages
 RUN npm ci
+RUN npm run bootstrap
 RUN npm run build
