@@ -25,7 +25,7 @@
     // The exception name gets recorded as the error's `errorClass`.
     //
     NSString *discardPattern = @"^RCTFatalException: Unhandled JS Exception: ";
-    NSString *TMDiscardPattern = @"^facebook::jsi::Error";
+    NSString *TMDiscardPattern = @"^N8facebook3jsi7JSErrorE";
     
     NSMutableSet *discardClasses = [client.configuration.discardClasses mutableCopy] ?: [NSMutableSet set];
     [discardClasses addObject:[NSRegularExpression regularExpressionWithPattern:discardPattern options:0 error:nil]];
