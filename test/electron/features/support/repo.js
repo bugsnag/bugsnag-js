@@ -11,6 +11,7 @@ const run = promisify(exec)
 // ZlibError in `npm pack`
 const publish = async (version, retries = 2) => {
   const opts = { env: { ...process.env, VERSION_IDENTIFIER: version } }
+  console.log('version log', version);
   return run(`npm run local-npm:publish-all${publishSuffix}`, opts)
     .catch(async (err) => {
       if (retries > 0) {
