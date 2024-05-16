@@ -28,29 +28,29 @@ steps:
             - exit_status: "*"
               limit: 1
 
-      # Skipped pending PLAT-12064
-      # - label: ':mac: Build RN {{matrix}} test fixture ipa (New Arch)'
-      #   key: "build-react-native-ios-fixture-new-arch"
-      #   timeout_in_minutes: 30
-      #   agents:
-      #     queue: "macos-12-arm"
-      #   env:
-      #     NODE_VERSION: "18"
-      #     RN_VERSION: "{{matrix}}"
-      #     RCT_NEW_ARCH_ENABLED: "1"
-      #     BUILD_IOS: "true"
-      #     DEVELOPER_DIR: "/Applications/Xcode14.app"
-      #   artifact_paths:
-      #     - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
-      #   commands:
-      #     - "bundle install"
-      #     - "node scripts/generate-react-native-fixture.js"
-      #   matrix:
-      #     - "0.73"
-      #   retry:
-      #     automatic:
-      #       - exit_status: "*"
-      #         limit: 1
+      - label: ':mac: Build RN {{matrix}} test fixture ipa (New Arch)'
+        key: "build-react-native-ios-fixture-new-arch"
+        timeout_in_minutes: 30
+        agents:
+          queue: "macos-12-arm"
+        env:
+          NODE_VERSION: "18"
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "1"
+          BUILD_IOS: "true"
+          DEVELOPER_DIR: "/Applications/Xcode14.app"
+        artifact_paths:
+          - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
+        commands:
+          - "bundle install"
+          - "node scripts/generate-react-native-fixture.js"
+        matrix:
+          - "0.73"
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
+
       #
       # End-to-end tests
       #
@@ -84,35 +84,34 @@ steps:
         matrix:
           - "0.73"
 
-      # Skipped pending PLAT-12064
-      # - label: ":bitbar: :mac: RN {{matrix}} iOS 16 (New Arch) end-to-end tests"
-      #   depends_on: "build-react-native-ios-fixture-new-arch"
-      #   timeout_in_minutes: 60
-      #   plugins:
-      #     artifacts#v1.9.0:
-      #       download: "test/react-native/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa"
-      #       upload: ./test/react-native/maze_output/**/*
-      #     docker-compose#v4.12.0:
-      #       pull: react-native-maze-runner
-      #       run: react-native-maze-runner
-      #       service-ports: true
-      #       command:
-      #         - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
-      #         - --farm=bb
-      #         - --device=IOS_16
-      #         - --a11y-locator
-      #         - --fail-fast
-      #         - --no-tunnel
-      #         - --aws-public-ip
-      #   env:
-      #     RCT_NEW_ARCH_ENABLED: "true"
-      #     SKIP_NAVIGATION_SCENARIOS: "true"
-      #   retry:
-      #     manual:
-      #       permit_on_passed: true
-      #   concurrency: 25
-      #   concurrency_group: "bitbar"
-      #   concurrency_method: eager
-      #   matrix:
-      #     - "0.73"
+      - label: ":bitbar: :mac: RN {{matrix}} iOS 16 (New Arch) end-to-end tests"
+        depends_on: "build-react-native-ios-fixture-new-arch"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
+              - --farm=bb
+              - --device=IOS_16
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
+        env:
+          RCT_NEW_ARCH_ENABLED: "true"
+          SKIP_NAVIGATION_SCENARIOS: "true"
+        retry:
+          manual:
+            permit_on_passed: true
+        concurrency: 25
+        concurrency_group: "bitbar"
+        concurrency_method: eager
+        matrix:
+          - "0.73"
 
