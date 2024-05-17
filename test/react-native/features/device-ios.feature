@@ -85,7 +85,7 @@ Scenario: Unhandled native error
   And I configure Bugsnag for "DeviceNativeUnhandledScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "NSException"
-  And the exception "message" equals "fail"
+  And the exception "message" equals "DeviceNativeUnhandledScenario"
   And the event "unhandled" is true
 
   And the event "device.id" matches "^(\d|[abcdef]){40}$"
