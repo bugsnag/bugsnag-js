@@ -1,0 +1,4 @@
+steps:
+  - label: ":large_red_circle: B2"
+    commands:
+      - echo "B2"

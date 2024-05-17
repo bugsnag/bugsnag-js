@@ -1,0 +1,4 @@
+steps:
+  - label: ":large_green_circle: F3 :large_green_circle:"
+    commands:
+      - echo "F3"

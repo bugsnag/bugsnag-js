@@ -1,0 +1,4 @@
+steps:
+  - label: ":large_yellow_circle: BASE :large_yellow_circle:"
+    commands:
+      - echo "BASE"

@@ -1,0 +1,4 @@
+steps:
+  - label: ":large_blue_circle: F1 :large_blue_circle:"
+    commands:
+      - echo "F1"
