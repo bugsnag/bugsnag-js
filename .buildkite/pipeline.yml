@@ -8,7 +8,7 @@ steps:
           - path:
               - "packages/**/*"
             config:
-              command: "buildkite-agent pipeline upload .buildkite/base.yml"
+              - command: "buildkite-agent pipeline upload .buildkite/base.yml"
         # Any changes to appropriate packages or appropriate tests should trigger RN
           - path:
               - "packages/core/**/*"
@@ -16,7 +16,7 @@ steps:
               - "test/react-native/**/*"
               # ETC
             config:
-              command: "buildkite-agent pipeline upload .buildkite/basic/b_1.yml"
+              - command: "buildkite-agent pipeline upload .buildkite/basic/b_1.yml"
         # Any changes to appropriate packages or appropriate tests should trigger Node
           - path:
               - "packages/core/**/*"
@@ -24,7 +24,7 @@ steps:
               - "test/node/**/*"
               # ETC
             config:
-              command: "buildkite-agent pipeline upload .buildkite/basic/b_2.yml"
+              - command: "buildkite-agent pipeline upload .buildkite/basic/b_2.yml"
         # Any changes to appropriate packages or appropriate tests should trigger browser
           - path:
               - "packages/core/**/*"
@@ -32,4 +32,4 @@ steps:
               - "test/browser/**/*"
               # ETC
             config:
-              command: "buildkite-agent pipeline upload .buildkite/basic/b_3.yml"
+              - command: "buildkite-agent pipeline upload .buildkite/basic/b_3.yml"
