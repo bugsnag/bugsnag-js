@@ -98,5 +98,8 @@
     "local-npm:publish-all": "lerna publish \"$VERSION_IDENTIFIER\" --yes --force-publish --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'",
     "local-npm:publish-all-win32": "lerna publish %VERSION_IDENTIFIER% --yes --force-publish --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'",
     "test:electron": "xvfb-maybe --auto-servernum -- cucumber-js test/electron/features --retry 3 --retry-tag-filter @flaky"
+  },
+  "overrides": {
+    "@lerna/conventional-commits": "^6.4.1"
   }
 }
