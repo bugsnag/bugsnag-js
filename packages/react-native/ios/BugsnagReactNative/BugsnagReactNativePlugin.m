@@ -25,17 +25,14 @@
     // The exception name gets recorded as the error's `errorClass`.
     //
     NSString *discardPattern = @"^RCTFatalException: Unhandled JS Exception: ";
-    // NSString *TMDiscardPattern = @"^facebook::jsi::JSError";
     
     NSMutableSet *discardClasses = [client.configuration.discardClasses mutableCopy] ?: [NSMutableSet set];
     [discardClasses addObject:[NSRegularExpression regularExpressionWithPattern:discardPattern options:0 error:nil]];
-    // [discardClasses addObject:[NSRegularExpression regularExpressionWithPattern:TMDiscardPattern options:0 error:nil]];
     client.configuration.discardClasses = discardClasses;
 
-    [client.configuration addOnSendErrorBlock:^BOOL (BugsnagEvent *event) {
-        // return NO if event.errors[0].errorMessage contains the string "Exception in HostFunction: Unhandled JS Exception"
-        return ![event.errors[0].errorMessage containsString:@"Exception in HostFunction: Unhandled JS Exception"];
-    }];
+    // [client.configuration addOnSendErrorBlock:^BOOL (BugsnagEvent *event) {
+    //     return ![event.errors[0].errorMessage containsString:@"Exception in HostFunction: Unhandled JS Exception"];
+    // }];
 
 }
 
