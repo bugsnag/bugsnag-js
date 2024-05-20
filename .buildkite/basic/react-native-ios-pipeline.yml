@@ -23,6 +23,7 @@ steps:
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           - "0.73"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
@@ -46,6 +47,7 @@ steps:
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           - "0.73"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
@@ -82,6 +84,7 @@ steps:
         concurrency_method: eager
         matrix:
           - "0.73"
+          - "0.74"
 
       - label: ":bitbar: :mac: RN {{matrix}} iOS 16 (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch"
@@ -112,4 +115,5 @@ steps:
         concurrency_method: eager
         matrix:
           - "0.73"
+          - "0.74"
 
