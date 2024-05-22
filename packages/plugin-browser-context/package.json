@@ -1,7 +1,7 @@
 {
   "name": "@bugsnag/plugin-browser-context",
   "version": "7.22.7",
-  "main": "context.js",
+  "main": "dist/index.js",
   "description": "@bugsnag/js plugin to set event context in browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,7 +12,7 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist/*"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -21,5 +21,9 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
+  },
+  "scripts": {
+    "build": "rollup --config",
+    "clean": "rm -rf dist/*"
   }
 }
