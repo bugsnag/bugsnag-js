@@ -11,6 +11,7 @@ RUN npm install --legacy-peer-deps
 COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 ADD min_packages.tar .
 COPY bin ./bin
+COPY .rollup ./.rollup
 COPY packages ./packages
 RUN npm run bootstrap --legacy-peer-deps
 RUN npm run build
