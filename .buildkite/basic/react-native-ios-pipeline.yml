@@ -10,12 +10,12 @@ steps:
         key: "build-react-native-ios-fixture-old-arch"
         timeout_in_minutes: 30
         agents:
-          queue: "macos-12-arm"
+          queue: "macos-14"
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
           BUILD_IOS: "true"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          XCODE_VERSION: "15.3.0"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
