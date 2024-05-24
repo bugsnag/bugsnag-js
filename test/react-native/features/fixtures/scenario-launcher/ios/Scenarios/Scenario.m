@@ -38,4 +38,8 @@
      reject:(RCTPromiseRejectBlock)reject {
 }
 
+- (void)runSync {
+}
+
+
 @end

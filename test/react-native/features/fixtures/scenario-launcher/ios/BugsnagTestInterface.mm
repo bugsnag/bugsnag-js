@@ -30,6 +30,13 @@ RCT_EXPORT_METHOD(runScenario:(NSString *)scenario
   resolve(nil);
 }
 
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(runScenarioSync:(NSString *)scenario)
+{
+  Scenario *targetScenario = [Scenario createScenarioNamed:scenario];
+  [targetScenario runSync];
+  return nil;
+}
+
 RCT_EXPORT_METHOD(startBugsnag:(NSDictionary *)options
                        resolve:(RCTPromiseResolveBlock)resolve
                         reject:(RCTPromiseRejectBlock)reject)

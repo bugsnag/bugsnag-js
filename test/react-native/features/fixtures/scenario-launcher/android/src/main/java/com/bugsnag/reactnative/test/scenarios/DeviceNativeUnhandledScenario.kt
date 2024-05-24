@@ -8,4 +8,8 @@ class DeviceNativeUnhandledScenario(context: Context): Scenario(context) {
     override fun run(promise: Promise) {
         throw generateException()
     }
+
+    override fun runSync() {
+        throw generateException()
+    }
 }

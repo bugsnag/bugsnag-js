@@ -5,6 +5,7 @@ import { TurboModuleRegistry } from 'react-native'
 export interface Spec extends TurboModule {
   startBugsnag(options: UnsafeObject): Promise<void>
   runScenario(scenario: string): Promise<void>
+  runScenarioSync(scenario: string): void
   clearPersistentData(): void
 }
 

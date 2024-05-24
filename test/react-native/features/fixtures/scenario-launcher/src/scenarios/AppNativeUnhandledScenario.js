@@ -9,6 +9,6 @@ export class AppNativeUnhandledScenario extends Scenario {
   }
 
   run () {
-    NativeInterface.runScenario('AppNativeUnhandledScenario')
+    NativeInterface.runScenarioSync('AppNativeUnhandledScenario')
   }
 }

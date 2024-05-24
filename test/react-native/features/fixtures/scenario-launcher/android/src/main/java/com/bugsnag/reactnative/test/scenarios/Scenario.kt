@@ -14,6 +14,9 @@ abstract class Scenario(
     open fun run(promise: Promise) {
     }
 
+    open fun runSync() {
+    }
+
     /**
      * Returns a throwable with the message as the current classname
      */

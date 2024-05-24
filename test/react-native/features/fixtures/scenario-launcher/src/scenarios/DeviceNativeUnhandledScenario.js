@@ -3,6 +3,6 @@ import { NativeInterface } from '../lib/native'
 
 export class DeviceNativeUnhandledScenario extends Scenario {
   run () {
-    NativeInterface.runScenario('DeviceNativeUnhandledScenario')
+    NativeInterface.runScenarioSync('DeviceNativeUnhandledScenario')
   }
 }

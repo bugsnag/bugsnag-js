@@ -7,4 +7,8 @@
   @throw [[NSException alloc] initWithName:@"NSException" reason:@"DeviceNativeUnhandledScenario" userInfo:nil];
 }
 
+- (void)runSync {
+  @throw [[NSException alloc] initWithName:@"NSException" reason:@"DeviceNativeUnhandledScenario" userInfo:nil];
+}
+
 @end

@@ -14,6 +14,8 @@
             resolve:(RCTPromiseResolveBlock)resolve
              reject:(RCTPromiseRejectBlock)reject;
 
+- (void)runScenarioSync:(NSString *)scenario;
+
 - (void)clearPersistentData;
 
 @end

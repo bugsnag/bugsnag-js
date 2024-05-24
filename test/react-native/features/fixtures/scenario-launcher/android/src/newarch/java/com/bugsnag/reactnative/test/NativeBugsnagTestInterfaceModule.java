@@ -43,6 +43,11 @@ public class NativeBugsnagTestInterfaceModule extends NativeBugsnagTestInterface
   }
 
   @Override
+  public void runScenarioSync(String scenario) {
+    impl.runScenarioSync(scenario);
+  }
+
+  @Override
   public void clearPersistentData() {
     impl.clearPersistentData();
   }
