@@ -1,6 +1,6 @@
 Feature: App data
 
-Scenario: Handled JS error
+Scenario: App data in Handled JS error
   When I run "AppJsHandledScenario"
   Then I wait to receive an error
   And the exception "errorClass" equals "Error"
@@ -23,7 +23,7 @@ Scenario: Handled JS error
   | android | android |
   | ios     | iOS     |
 
-Scenario: Unhandled JS error
+Scenario: App data in Unhandled JS error
   When I run "AppJsUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "AppJsUnhandledScenario"
   Then I wait to receive an error
@@ -47,7 +47,7 @@ Scenario: Unhandled JS error
   | android | android |
   | ios     | iOS   |
 
-Scenario: Handled native error
+Scenario: App data in Handled native error
   When I run "AppNativeHandledScenario"
   Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the platform-dependent string:
@@ -72,7 +72,9 @@ Scenario: Handled native error
   | android | android |
   | ios     | iOS     |
 
-Scenario: Unhandled native error
+# Skipped on iOS New Arch pending PLAT-12184
+@skip_ios_new_arch
+Scenario: App data in Unhandled native error
   When I run "AppNativeUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "AppNativeUnhandledScenario"
   Then I wait to receive an error
@@ -97,6 +99,24 @@ Scenario: Unhandled native error
   And the event "app.type" equals the platform-dependent string:
   | android | android |
   | ios     | iOS     |
+
+# TODO: remove this scenario when PLAT-12184 is resolved
+@ios_only @skip_old_arch
+Scenario: App data in Unhandled native error
+  When I run "AppNativeUnhandledScenario" and relaunch the crashed app
+  And I configure Bugsnag for "AppNativeUnhandledScenario"
+  Then I wait to receive an error
+  And the event "exceptions.0.errorClass" equals "N8facebook3jsi7JSErrorE"
+  And the exception "message" starts with "Exception in HostFunction: AppNativeUnhandledScenario"
+  And the event "unhandled" is true
+  And the event "app.version" equals "1.2.3"
+  And the event "app.releaseStage" equals "production"
+  And the event "app.inForeground" is true
+  And the event "app.duration" is not null
+  And the event "app.durationInForeground" is not null
+  And the event "app.codeBundleId" equals "1.2.3-r00110011"
+  And the event "app.id" equals "com.bugsnag.fixtures.reactnative"
+  And the event "app.type" equals "iOS"
 
 Scenario: Setting appType in configuration
   When I run "AppConfigAppTypeScenario"
