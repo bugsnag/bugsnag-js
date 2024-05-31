@@ -44,11 +44,15 @@
 - (void)clearFeatureFlag:(NSString *)name;
 - (void)clearFeatureFlags;
 
-- (void)dispatch:(NSDictionary *)payload
+- (NSNumber *)dispatch:(NSDictionary *)payload;
+
+- (void)dispatchAsync:(NSDictionary *)payload
          resolve:(RCTPromiseResolveBlock)resolve
           reject:(RCTPromiseRejectBlock)reject;
 
-- (void)getPayloadInfo:(NSDictionary *)payloadInfo
+- (NSDictionary *)getPayloadInfo:(NSDictionary *)payloadInfo;
+
+- (void)getPayloadInfoAsync:(NSDictionary *)payloadInfo
                resolve:(RCTPromiseResolveBlock)resolve
                 reject:(RCTPromiseRejectBlock)reject;
 

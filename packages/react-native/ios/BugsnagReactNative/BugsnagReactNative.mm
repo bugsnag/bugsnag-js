@@ -9,6 +9,22 @@
 #import <BugsnagReactNativeSpec/BugsnagReactNativeSpec.h>
 #endif
 
+// BSG_EXPORT_METHOD exposes methods as blocking synchronous methods in the new architecture and
+// as asynchronous methods in the old architecture.
+//
+// Methods written in BSG_EXPORT_METHOD must be ended using BSG_END_EXPORT_METHOD so that the correct
+// return type is used. (void for asynchronous and id for synchronous methods)
+//
+// Note that this should only be used for methods that are marked as void in JS. Methods that return
+// a value or a promise should be exposed as synchronous or asynchronous explicitly in both architectures.
+#ifdef RCT_NEW_ARCH_ENABLED
+#define BSG_EXPORT_METHOD RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD
+#define BSG_END_EXPORT_METHOD return nil;
+#else
+#define BSG_EXPORT_METHOD RCT_EXPORT_METHOD
+#define BSG_END_EXPORT_METHOD
+#endif
+
 @interface BugsnagReactNative ()
 @property (nonatomic) BugsnagConfigSerializer *configSerializer;
 @end
@@ -36,37 +52,40 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
     return [self.configSerializer serialize:config];
 }
 
-RCT_EXPORT_METHOD(addMetadata:(NSString *)section
+BSG_EXPORT_METHOD(addMetadata:(NSString *)section
                      withData:(NSDictionary *)data) {
     [Bugsnag addMetadata:data toSection:section];
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(clearMetadata:(NSString *)section
+BSG_EXPORT_METHOD(clearMetadata:(NSString *)section
                      withKey:(NSString *)key) {
     if (key == nil) {
         [Bugsnag clearMetadataFromSection:section];
     } else {
         [Bugsnag clearMetadataFromSection:section withKey:key];
     }
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(updateContext:(NSString *)context) {
+BSG_EXPORT_METHOD(updateContext:(NSString *)context) {
     [Bugsnag setContext:context];
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(updateCodeBundleId:(NSString *)codeBundleId) {
-    Bugsnag.client.codeBundleId = codeBundleId;
+BSG_EXPORT_METHOD(updateCodeBundleId:(NSString *)codeBundleId) {
+    Bugsnag.client.codeBundleId = codeBundleId; 
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(updateUser:(NSString *)userId
+BSG_EXPORT_METHOD(updateUser:(NSString *)userId
                    withEmail:(NSString *)email
                     withName:(NSString *)name) {
     [Bugsnag setUser:userId withEmail:email andName:name];
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(dispatch:(NSDictionary *)payload
-                   resolve:(RCTPromiseResolveBlock)resolve
-                    reject:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(dispatch:(NSDictionary *)payload) {
     BugsnagEventDeserializer *deserializer = [BugsnagEventDeserializer new];
     BugsnagEvent *event = [deserializer deserializeEvent:payload];
 
@@ -74,10 +93,16 @@ RCT_EXPORT_METHOD(dispatch:(NSDictionary *)payload
         NSLog(@"Sending event from JS: %@", event);
         return true;
     }];
-    resolve(@{});
+    return [NSNumber numberWithBool:YES];
 }
 
-RCT_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
+RCT_EXPORT_METHOD(dispatchAsync:(NSDictionary *)payload
+                   resolve:(RCTPromiseResolveBlock)resolve
+                    reject:(RCTPromiseRejectBlock)reject) {
+    resolve([self dispatch:payload]);
+}
+
+BSG_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
     NSString *message = options[@"message"];
     if (message != nil) {
         BSGBreadcrumbType type = BSGBreadcrumbTypeFromString(options[@"type"]);
@@ -86,25 +111,30 @@ RCT_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
                                    metadata:metadata
                                     andType:type];
     }
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(startSession) {
+BSG_EXPORT_METHOD(startSession) {
     [Bugsnag startSession];
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(pauseSession) {
+BSG_EXPORT_METHOD(pauseSession) {
     [Bugsnag pauseSession];
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(resumeSession) {
+BSG_EXPORT_METHOD(resumeSession) {
     [Bugsnag resumeSession];
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(resumeSessionOnStartup) {
+BSG_EXPORT_METHOD(resumeSessionOnStartup) {
     [Bugsnag resumeSession];
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(addFeatureFlags:(NSArray *)readableArray) {
+BSG_EXPORT_METHOD(addFeatureFlags:(NSArray *)readableArray) {
     NSMutableArray *array = [NSMutableArray new];
     if(readableArray == nil) {
         for(NSDictionary *feature in readableArray) {
@@ -119,28 +149,30 @@ RCT_EXPORT_METHOD(addFeatureFlags:(NSArray *)readableArray) {
     }
 
     [Bugsnag addFeatureFlags:array];
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(addFeatureFlag:(NSString *)name
+BSG_EXPORT_METHOD(addFeatureFlag:(NSString *)name
                      withVariant:(NSString *)variant) {
     if(name != nil) {
         [Bugsnag addFeatureFlagWithName:name variant:variant];
     }
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(clearFeatureFlag:(NSString *)name) {
+BSG_EXPORT_METHOD(clearFeatureFlag:(NSString *)name) {
     if(name != nil) {
         [Bugsnag clearFeatureFlagWithName:name];
     }
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(clearFeatureFlags) {
+BSG_EXPORT_METHOD(clearFeatureFlags) {
     [Bugsnag clearFeatureFlags];
+    BSG_END_EXPORT_METHOD
 }
 
-RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
-                         resolve:(RCTPromiseResolveBlock)resolve
-                          reject:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getPayloadInfo:(NSDictionary *)options) {
     BugsnagClient *client = [Bugsnag client];
     NSMutableDictionary *info = [NSMutableDictionary new];
     NSDictionary *systemInfo = BSGGetSystemInfo();
@@ -174,7 +206,13 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
         NSArray<BugsnagThread *> *threads = [BugsnagThread allThreads:recordAllThreads callStackReturnAddresses:callStack];
         [BugsnagThread serializeThreads:threads];
     });
-    resolve(info);
+    return info;
+}
+
+RCT_EXPORT_METHOD(getPayloadInfoAsync:(NSDictionary *)options
+                         resolve:(RCTPromiseResolveBlock)resolve
+                          reject:(RCTPromiseRejectBlock)reject) {
+    resolve([self getPayloadInfo:options]);
 }
 
 - (void)addRuntimeVersionInfo:(NSDictionary *)info {
@@ -191,6 +229,7 @@ RCT_EXPORT_METHOD(getPayloadInfo:(NSDictionary *)options
     Bugsnag.client.notifier.url = @"https://github.com/bugsnag/bugsnag-js";
     Bugsnag.client.notifier.dependencies = @[[[BugsnagNotifier alloc] init]];
 }
+
 
 #ifdef RCT_NEW_ARCH_ENABLED
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:

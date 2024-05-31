@@ -27,9 +27,13 @@ export interface Spec extends TurboModule {
 
   updateUser(id: string | undefined | null, email: string | undefined | null, name: string | undefined | null): void
 
-  dispatch(payload: UnsafeObject): Promise<boolean>
+  dispatch(payload: UnsafeObject): boolean
 
-  getPayloadInfo(payload: UnsafeObject): Promise<unknown>
+  dispatchAsync(payload: UnsafeObject): Promise<boolean>
+
+  getPayloadInfo(payload: UnsafeObject): Object
+
+  getPayloadInfoAsync(payload: UnsafeObject): Promise<unknown>
 
   addFeatureFlag(name: string, variant: string | undefined | null): void
 
