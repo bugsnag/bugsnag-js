@@ -66,6 +66,14 @@
             "duration": "{TYPE:number}"
           }
         }
+      ],
+      "exceptions": [
+        {
+          "errorMessage": "something bad",
+          "errorClass": "ReferenceError",
+          "stacktrace": [],
+          "type": "electronnodejs"
+        }
       ]
     }
   ]
