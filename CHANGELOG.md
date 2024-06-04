@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- (react-native) Add privacy manifest resource bundle to podspec [#2149](https://github.com/bugsnag/bugsnag-js/pull/2149)
+
 ### Changed
 
 - (plugin-react) Modified the polynomial regular expression to remove the ambiguity [#2135](https://github.com/bugsnag/bugsnag-js/pull/2135)
