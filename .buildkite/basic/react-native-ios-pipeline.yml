@@ -79,6 +79,7 @@ steps:
             permit_on_passed: true
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
+          RN_VERSION: "{{matrix}}"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
@@ -108,6 +109,7 @@ steps:
         env:
           RCT_NEW_ARCH_ENABLED: "true"
           SKIP_NAVIGATION_SCENARIOS: "true"
+          RN_VERSION: "{{matrix}}"
         retry:
           manual:
             permit_on_passed: true

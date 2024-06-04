@@ -187,6 +187,7 @@ services:
       BITBAR_USERNAME:
       BITBAR_ACCESS_KEY:
       HERMES:
+      RN_VERSION:
     ports:
       - "9000-9499:9339"
     networks:
