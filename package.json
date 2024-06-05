@@ -77,7 +77,7 @@
     "xvfb-maybe": "^0.2.1"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap -- --legacy-peer-deps",
     "build": "lerna run build --scope '@bugsnag/node' --scope '@bugsnag/browser' && lerna run build --ignore '@bugsnag/node' --ignore '@bugsnag/browser'",
     "build:electron": "lerna run build --scope '@bugsnag/plugin-electron-ipc' --scope '@bugsnag/plugin-electron-app' --scope '@bugsnag/plugin-electron-client-state-persistence'",
     "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives --max-warnings=0 .",
@@ -100,6 +100,7 @@
     "test:electron": "xvfb-maybe --auto-servernum -- cucumber-js test/electron/features --retry 3 --retry-tag-filter @flaky"
   },
   "overrides": {
-    "@lerna/conventional-commits": "^6.4.1"
+    "@lerna/conventional-commits": "^6.4.1",
+    "node-gyp": "^10.1.0"
   }
 }
