@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- (react-native) Use synchronous native module calls when New Architecture is enabled [#2152](https://github.com/bugsnag/bugsnag-js/pull/2152)
+
 ## [7.24.0] - 2024-06-10
 
 ### Added
