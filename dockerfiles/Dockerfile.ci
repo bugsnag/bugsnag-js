@@ -5,8 +5,8 @@ RUN apk add --update bash python3 make gcc g++ musl-dev xvfb-run
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install --unsafe-perm --legacy-peer-deps
+COPY package*.json .npmrc ./
+RUN npm install --unsafe-perm
 
 COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 ADD min_packages.tar .
