@@ -61,7 +61,7 @@ const compareArray = (expected, actual, path) => {
   let found = 0 // counts matching indices and ensures ordering is correct
   const expectToFind = expected.length
   const keyPath = [path, '{index}'].join('.')
-  let differences
+  let differences = []
   for (const item of actual) {
     if (found === expectToFind) {
       break
