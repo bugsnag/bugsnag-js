@@ -218,6 +218,9 @@ steps:
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
+        retry:
+          manual:
+            permit_on_passed: true
 
       - label: ":bitbar: :ios: RN 0.67 iOS 16 end-to-end tests"
         depends_on: "rn-0-67-ipa"
@@ -245,6 +248,9 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          manual:
+            permit_on_passed: true
 
       - label: ":bitbar: :ios: RN 0.69 iOS 16 end-to-end tests"
         depends_on: "rn-0-69-ipa"
@@ -272,6 +278,9 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          manual:
+            permit_on_passed: true
       #
       - label: ":bitbar: :ios: RN 0.68 (hermes) iOS 16 end-to-end tests"
         depends_on: "rn-0-68-hermes-ipa"
@@ -299,6 +308,9 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          manual:
+            permit_on_passed: true
 
       - label: ":bitbar: :ios: RN 0.71 (Old Arch) iOS 16 end-to-end tests"
         depends_on: "rn-0-71-old-arch-ipa"
@@ -326,6 +338,9 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          manual:
+            permit_on_passed: true
 
       - label: ":bitbar: :ios: RN 0.71 (New Arch) iOS 16 end-to-end tests"
         depends_on: "rn-0-71-new-arch-ipa"
@@ -353,6 +368,9 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          manual:
+            permit_on_passed: true
 
       - label: ":bitbar: :ios: RN 0.72 (Old Arch) iOS 16 end-to-end tests"
         depends_on: "rn-0-72-old-arch-ipa"
@@ -380,6 +398,9 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          manual:
+            permit_on_passed: true
 
       - label: ":bitbar: :ios: RN 0.72 (New Arch) iOS 16 end-to-end tests"
         depends_on: "rn-0-72-new-arch-ipa"
@@ -407,6 +428,9 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          manual:
+            permit_on_passed: true
 
       - label: ":browserstack: :ios: react-navigation 0.69 iOS 16 end-to-end tests"
         depends_on: "react-navigation-0-69-ipa"
@@ -429,6 +453,9 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          manual:
+            permit_on_passed: true
 
       # See: PLAT-5173
       - label: ":browserstack: :ios: react-native-navigation 0.66 iOS 16 end-to-end tests"
@@ -453,3 +480,6 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          manual:
+            permit_on_passed: true
