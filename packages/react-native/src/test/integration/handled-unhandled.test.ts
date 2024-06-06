@@ -23,6 +23,7 @@ jest.mock('react-native', () => {
         _events: events,
         _clear: () => { while (events.length) events.pop() },
         resumeSession: () => {},
+        resumeSessionOnStartup: () => {},
         pauseSession: () => {},
         startSession: () => {}
       }

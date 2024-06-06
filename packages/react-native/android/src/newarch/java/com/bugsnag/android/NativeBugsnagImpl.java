@@ -62,6 +62,11 @@ public class NativeBugsnagImpl extends NativeBugsnagSpec {
   }
 
   @Override
+  public void resumeSessionOnStartup() {
+    impl.resumeSessionOnStartup();
+  }
+
+  @Override
   public void updateContext(@Nullable String context) {
     impl.updateContext(context);
   }
