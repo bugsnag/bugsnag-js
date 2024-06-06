@@ -12,6 +12,8 @@ export class UserJsConfigScenario extends Scenario {
   }
 
   run () {
-    Bugsnag.notify(new Error('UserJsConfigScenario'))
+    setTimeout(() => {
+      Bugsnag.notify(new Error('UserJsConfigScenario'))
+    }, 100)
   }
 }
