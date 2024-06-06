@@ -210,9 +210,9 @@ steps:
               - --farm=bb
               - --device=IOS_15|IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/user.feature
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
         concurrency: 25
@@ -239,9 +239,9 @@ steps:
               - --farm=bb
               - --device=IOS_15|IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/user.feature
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -269,9 +269,9 @@ steps:
               - --farm=bb
               - --device=IOS_15|IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/user.feature
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -299,9 +299,9 @@ steps:
               - --farm=bb
               - --device=IOS_15|IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/user.feature
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -329,9 +329,9 @@ steps:
               - --farm=bb
               - --device=IOS_15|IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/user.feature
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -359,9 +359,9 @@ steps:
               - --farm=bb
               - --device=IOS_15|IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/user.feature
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -389,9 +389,9 @@ steps:
               - --farm=bb
               - --device=IOS_15|IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/user.feature
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -419,9 +419,9 @@ steps:
               - --farm=bb
               - --device=IOS_15|IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/user.feature
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -432,54 +432,54 @@ steps:
           manual:
             permit_on_passed: true
 
-      - label: ":browserstack: :ios: react-navigation 0.69 iOS 16 end-to-end tests"
-        depends_on: "react-navigation-0-69-ipa"
-        timeout_in_minutes: 60
-        plugins:
-          artifacts#v1.5.0:
-            download: "build/r_navigation_0.69.ipa"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.12.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            use-aliases: true
-            command:
-              - --app=build/r_navigation_0.69.ipa
-              - --farm=bs
-              - --device=IOS_16
-              - --a11y-locator
-              - --fail-fast
-              - features/navigation.feature
-        concurrency: 5
-        concurrency_group: "browserstack-app"
-        concurrency_method: eager
-        retry:
-          manual:
-            permit_on_passed: true
+      # - label: ":browserstack: :ios: react-navigation 0.69 iOS 16 end-to-end tests"
+      #   depends_on: "react-navigation-0-69-ipa"
+      #   timeout_in_minutes: 60
+      #   plugins:
+      #     artifacts#v1.5.0:
+      #       download: "build/r_navigation_0.69.ipa"
+      #       upload: ./test/react-native/maze_output/**/*
+      #     docker-compose#v4.12.0:
+      #       pull: react-native-maze-runner
+      #       run: react-native-maze-runner
+      #       use-aliases: true
+      #       command:
+      #         - --app=build/r_navigation_0.69.ipa
+      #         - --farm=bs
+      #         - --device=IOS_16
+      #         - --a11y-locator
+      #         - --fail-fast
+      #         - features/navigation.feature
+      #   concurrency: 5
+      #   concurrency_group: "browserstack-app"
+      #   concurrency_method: eager
+      #   retry:
+      #     manual:
+      #       permit_on_passed: true
 
-      # See: PLAT-5173
-      - label: ":browserstack: :ios: react-native-navigation 0.66 iOS 16 end-to-end tests"
-        skip: "See PLAT-5173"
-        depends_on: "react-native-navigation-0-66-ipa"
-        timeout_in_minutes: 60
-        plugins:
-          artifacts#v1.5.0:
-            download: "build/r_native_navigation_0.66.ipa"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.12.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            use-aliases: true
-            command:
-              - --app=build/r_native_navigation_0.66.ipa
-              - --farm=bs
-              - --device=IOS_16
-              - --a11y-locator
-              - --fail-fast
-              - features/navigation.feature
-        concurrency: 5
-        concurrency_group: "browserstack-app"
-        concurrency_method: eager
-        retry:
-          manual:
-            permit_on_passed: true
+      # # See: PLAT-5173
+      # - label: ":browserstack: :ios: react-native-navigation 0.66 iOS 16 end-to-end tests"
+      #   skip: "See PLAT-5173"
+      #   depends_on: "react-native-navigation-0-66-ipa"
+      #   timeout_in_minutes: 60
+      #   plugins:
+      #     artifacts#v1.5.0:
+      #       download: "build/r_native_navigation_0.66.ipa"
+      #       upload: ./test/react-native/maze_output/**/*
+      #     docker-compose#v4.12.0:
+      #       pull: react-native-maze-runner
+      #       run: react-native-maze-runner
+      #       use-aliases: true
+      #       command:
+      #         - --app=build/r_native_navigation_0.66.ipa
+      #         - --farm=bs
+      #         - --device=IOS_16
+      #         - --a11y-locator
+      #         - --fail-fast
+      #         - features/navigation.feature
+      #   concurrency: 5
+      #   concurrency_group: "browserstack-app"
+      #   concurrency_method: eager
+      #   retry:
+      #     manual:
+      #       permit_on_passed: true

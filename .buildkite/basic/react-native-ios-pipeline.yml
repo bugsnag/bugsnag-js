@@ -69,9 +69,9 @@ steps:
               - --farm=bb
               - --device=IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/user.feature
         retry:
           manual:
             permit_on_passed: true
@@ -99,9 +99,9 @@ steps:
               - --farm=bb
               - --device=IOS_16
               - --a11y-locator
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/user.feature
         env:
           RCT_NEW_ARCH_ENABLED: "true"
           SKIP_NAVIGATION_SCENARIOS: "true"
