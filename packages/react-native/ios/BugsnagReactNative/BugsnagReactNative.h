@@ -9,6 +9,14 @@
 #import "BugsnagReactNativeEmitter.h"
 #endif
 
+// BSG_VOID_LIKE sets the correct return type for 'void-like' methods that are
+// synchronous in the new architecture (return id) and asynchronous in the old architecture (void)
+#ifdef RCT_NEW_ARCH_ENABLED
+#define BSG_VOID_LIKE id
+#else
+#define BSG_VOID_LIKE void
+#endif
+
 @class BugsnagConfiguration;
 
 @interface BugsnagReactNative: NSObject<RCTBridgeModule>
@@ -19,30 +27,30 @@
 
 - (NSDictionary *)configure:(NSDictionary *)readableMap;
 
-- (void)updateCodeBundleId:(NSString *)codeBundleId;
+- (BSG_VOID_LIKE)updateCodeBundleId:(NSString *)codeBundleId;
 
-- (void)addMetadata:(NSString *)section
+- (BSG_VOID_LIKE)addMetadata:(NSString *)section
            withData:(NSDictionary *)data;
 
-- (void)clearMetadata:(NSString *)section
+- (BSG_VOID_LIKE)clearMetadata:(NSString *)section
               withKey:(NSDictionary *)key;
 
-- (void)updateContext:(NSString *)context;
+- (BSG_VOID_LIKE)updateContext:(NSString *)context;
 
-- (void)updateUser:(NSString *)userId
+- (BSG_VOID_LIKE)updateUser:(NSString *)userId
          withEmail:(NSString *)email
           withName:(NSString *)name;
 
-- (void)startSession;
-- (void)pauseSession;
-- (void)resumeSession;
-- (void)resumeSessionOnStartup;
+- (BSG_VOID_LIKE)startSession;
+- (BSG_VOID_LIKE)pauseSession;
+- (BSG_VOID_LIKE)resumeSession;
+- (BSG_VOID_LIKE)resumeSessionOnStartup;
 
-- (void)addFeatureFlags:(NSArray *)readableArray;
-- (void)addFeatureFlag:(NSString *)name
+- (BSG_VOID_LIKE)addFeatureFlags:(NSArray *)readableArray;
+- (BSG_VOID_LIKE)addFeatureFlag:(NSString *)name
            withVariant:(NSString *)variant;
-- (void)clearFeatureFlag:(NSString *)name;
-- (void)clearFeatureFlags;
+- (BSG_VOID_LIKE)clearFeatureFlag:(NSString *)name;
+- (BSG_VOID_LIKE)clearFeatureFlags;
 
 - (NSNumber *)dispatch:(NSDictionary *)payload;
 
@@ -56,7 +64,7 @@
                resolve:(RCTPromiseResolveBlock)resolve
                 reject:(RCTPromiseRejectBlock)reject;
 
-- (void)leaveBreadcrumb:(NSDictionary *)options;
+- (BSG_VOID_LIKE)leaveBreadcrumb:(NSDictionary *)options;
 
 @end
 

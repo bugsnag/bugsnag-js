@@ -12,17 +12,17 @@
 // BSG_EXPORT_METHOD exposes methods as blocking synchronous methods in the new architecture and
 // as asynchronous methods in the old architecture.
 //
-// Methods written in BSG_EXPORT_METHOD must be ended using BSG_END_EXPORT_METHOD so that the correct
+// Methods written in BSG_EXPORT_METHOD must be ended using BSG_EXPORT_RETURN so that the correct
 // return type is used. (void for asynchronous and id for synchronous methods)
 //
 // Note that this should only be used for methods that are marked as void in JS. Methods that return
 // a value or a promise should be exposed as synchronous or asynchronous explicitly in both architectures.
 #ifdef RCT_NEW_ARCH_ENABLED
 #define BSG_EXPORT_METHOD RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD
-#define BSG_END_EXPORT_METHOD return nil;
+#define BSG_EXPORT_RETURN return nil;
 #else
 #define BSG_EXPORT_METHOD RCT_EXPORT_METHOD
-#define BSG_END_EXPORT_METHOD
+#define BSG_EXPORT_RETURN return;
 #endif
 
 @interface BugsnagReactNative ()
@@ -55,7 +55,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(configure:(NSDictionary *)readableMap) {
 BSG_EXPORT_METHOD(addMetadata:(NSString *)section
                      withData:(NSDictionary *)data) {
     [Bugsnag addMetadata:data toSection:section];
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(clearMetadata:(NSString *)section
@@ -65,24 +65,24 @@ BSG_EXPORT_METHOD(clearMetadata:(NSString *)section
     } else {
         [Bugsnag clearMetadataFromSection:section withKey:key];
     }
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(updateContext:(NSString *)context) {
     [Bugsnag setContext:context];
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(updateCodeBundleId:(NSString *)codeBundleId) {
     Bugsnag.client.codeBundleId = codeBundleId; 
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(updateUser:(NSString *)userId
                    withEmail:(NSString *)email
                     withName:(NSString *)name) {
     [Bugsnag setUser:userId withEmail:email andName:name];
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(dispatch:(NSDictionary *)payload) {
@@ -111,27 +111,27 @@ BSG_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
                                    metadata:metadata
                                     andType:type];
     }
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(startSession) {
     [Bugsnag startSession];
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(pauseSession) {
     [Bugsnag pauseSession];
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(resumeSession) {
     [Bugsnag resumeSession];
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(resumeSessionOnStartup) {
     [Bugsnag resumeSession];
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(addFeatureFlags:(NSArray *)readableArray) {
@@ -149,7 +149,7 @@ BSG_EXPORT_METHOD(addFeatureFlags:(NSArray *)readableArray) {
     }
 
     [Bugsnag addFeatureFlags:array];
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(addFeatureFlag:(NSString *)name
@@ -157,19 +157,19 @@ BSG_EXPORT_METHOD(addFeatureFlag:(NSString *)name
     if(name != nil) {
         [Bugsnag addFeatureFlagWithName:name variant:variant];
     }
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(clearFeatureFlag:(NSString *)name) {
     if(name != nil) {
         [Bugsnag clearFeatureFlagWithName:name];
     }
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(clearFeatureFlags) {
     [Bugsnag clearFeatureFlags];
-    BSG_END_EXPORT_METHOD
+    BSG_EXPORT_RETURN
 }
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getPayloadInfo:(NSDictionary *)options) {
