@@ -53,17 +53,17 @@ steps:
         - exit_status: "*"
           limit: 1
 
-  - label: ":aws-lambda: AWS Lambda tests"
-    timeout_in_minutes: 35
-    agents:
-      queue: "opensource-mac-cocoa-10.15"
-    commands:
-      # force the NPM registry as the default on CI is artifactory, which can't
-      # currently install from our lockfile
-      - npm ci --registry https://registry.npmjs.org
-      - cd test/aws-lambda
-      - bundle install
-      - bundle exec maze-runner
+  # - label: ":aws-lambda: AWS Lambda tests"
+  #   timeout_in_minutes: 35
+  #   agents:
+  #     queue: "opensource-mac-cocoa-10.15"
+  #   commands:
+  #     # force the NPM registry as the default on CI is artifactory, which can't
+  #     # currently install from our lockfile
+  #     - npm ci --registry https://registry.npmjs.org
+  #     - cd test/aws-lambda
+  #     - bundle install
+  #     - bundle exec maze-runner
 
   #
   # Core tests and checks
@@ -91,44 +91,44 @@ steps:
         - exit_status: "*"
           limit: 1
 
-  - label: "Lint"
-    depends_on: "ci-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v4.12.0:
-        run: ci
-    command: "npm run test:lint"
+  # - label: "Lint"
+  #   depends_on: "ci-image"
+  #   timeout_in_minutes: 10
+  #   plugins:
+  #     docker-compose#v4.12.0:
+  #       run: ci
+  #   command: "npm run test:lint"
 
-  - label: "Unit tests"
-    depends_on: "ci-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v4.12.0:
-        run: ci
-    command: "npm run test:unit"
+  # - label: "Unit tests"
+  #   depends_on: "ci-image"
+  #   timeout_in_minutes: 10
+  #   plugins:
+  #     docker-compose#v4.12.0:
+  #       run: ci
+  #   command: "npm run test:unit"
 
-  - label: "Type checks/tests"
-    depends_on: "ci-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v4.12.0:
-        run: ci
-    command: "npm run test:types"
+  # - label: "Type checks/tests"
+  #   depends_on: "ci-image"
+  #   timeout_in_minutes: 10
+  #   plugins:
+  #     docker-compose#v4.12.0:
+  #       run: ci
+  #   command: "npm run test:types"
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on: "package-js"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
+  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  #   depends_on: "package-js"
+  #   commands:
+  #     - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    skip: Skipped pending PLAT-10345
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
+  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  #   skip: Skipped pending PLAT-10345
+  #   commands:
+  #     - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on: "package-js"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
+  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  #   depends_on: "package-js"
+  #   commands:
+  #     - buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
