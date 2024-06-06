@@ -28,24 +28,6 @@ steps:
           limit: 1
 
   #
-  # Java 17 Android builder base - used by React Native (>= 0.73)
-  #
-  - label: ":docker: Build Java 17 Android Builder base image"
-    key: "android-builder-base-java-17"
-    timeout_in_minutes: 30
-    plugins:
-      - docker-compose#v4.12.0:
-          build: android-builder-base-java-17
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:  android-builder-base-java-17:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-17
-      - docker-compose#v4.12.0:
-          push: android-builder-base-java-17:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-17
-    retry:
-      automatic:
-        - exit_status: "*"
-          limit: 1
-
-  #
   # Publish/package notifier
   #
   - label: ":docker: Prepare package.json"
@@ -151,7 +133,6 @@ steps:
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
       - "publish-js"
-      - "android-builder-base-java-17"
     commands:
       - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
 
