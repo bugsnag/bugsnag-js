@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [7.24.0] - 2024-06-10
 
 ### Added
 
@@ -10,6 +10,10 @@
 
 - (plugin-react) Modified the polynomial regular expression to remove the ambiguity [#2135](https://github.com/bugsnag/bugsnag-js/pull/2135)
 - (react-native) ReactNative apps loaded in the background will no longer start a new session [#2154](https://github.com/bugsnag/bugsnag-js/pull/2154)
+  
+### Fixed
+
+- (react-native) Discard duplicate JS exceptions in iOS New Architecture [#2148](https://github.com/bugsnag/bugsnag-js/pull/2148)
 
 ## [7.23.0] - 2024-05-09
 
