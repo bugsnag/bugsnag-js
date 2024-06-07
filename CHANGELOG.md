@@ -9,6 +9,7 @@
 ### Changed
 
 - (plugin-react) Modified the polynomial regular expression to remove the ambiguity [#2135](https://github.com/bugsnag/bugsnag-js/pull/2135)
+- (react-native) ReactNative apps loaded in the background will no longer start a new session [#2154](https://github.com/bugsnag/bugsnag-js/pull/2154)
 
 ## [7.23.0] - 2024-05-09
 

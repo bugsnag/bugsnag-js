@@ -68,6 +68,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void resumeSessionOnStartup() {
+    impl.resumeSessionOnStartup();
+  }
+
+  @ReactMethod
   void updateContext(@Nullable String context) {
     impl.updateContext(context);
   }

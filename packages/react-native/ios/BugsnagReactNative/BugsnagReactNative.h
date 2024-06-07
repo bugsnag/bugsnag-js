@@ -36,6 +36,7 @@
 - (void)startSession;
 - (void)pauseSession;
 - (void)resumeSession;
+- (void)resumeSessionOnStartup;
 
 - (void)addFeatureFlags:(NSArray *)readableArray;
 - (void)addFeatureFlag:(NSString *)name

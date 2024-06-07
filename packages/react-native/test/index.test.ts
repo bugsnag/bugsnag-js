@@ -19,6 +19,7 @@ jest.mock('react-native', () => ({
       })),
       updateCodeBundleId: jest.fn(),
       resumeSession: jest.fn(),
+      resumeSessionOnStartup: jest.fn(),
       addFeatureFlags: jest.fn(),
       leaveBreadcrumb: jest.fn(),
       getPayloadInfo: jest.fn().mockReturnValue({}),

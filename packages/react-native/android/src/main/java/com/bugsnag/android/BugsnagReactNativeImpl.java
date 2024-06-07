@@ -142,6 +142,17 @@ class BugsnagReactNativeImpl {
     }
   }
 
+  void resumeSessionOnStartup() {
+    try {
+      Client client = Bugsnag.getClient();
+      if (Boolean.TRUE.equals(client.sessionTracker.isInForeground())) {
+        plugin.resumeSession();
+      }
+    } catch (Throwable exc) {
+      logFailure("resumeSessionOnStartup", exc);
+    }
+  }
+
   void updateContext(@Nullable String context) {
     try {
       plugin.updateContext(context);
