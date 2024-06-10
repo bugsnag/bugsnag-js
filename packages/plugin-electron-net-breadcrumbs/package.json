@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-net-breadcrumbs",
-  "version": "7.23.0",
+  "version": "7.24.0",
   "main": "net-breadcrumbs.js",
   "description": "@bugsnag/electron plugin to collect breadcrumbs from requests made with the net module",
   "repository": {

@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron",
-  "version": "7.23.0",
+  "version": "7.24.0",
   "main": "src/notifier.js",
   "exports": {
     ".": "./src/notifier.js",
@@ -33,7 +33,7 @@
     "@bugsnag/plugin-electron-deliver-minidumps": "^7.22.7",
     "@bugsnag/plugin-electron-device": "^7.22.7",
     "@bugsnag/plugin-electron-ipc": "^7.23.0",
-    "@bugsnag/plugin-electron-net-breadcrumbs": "^7.23.0",
+    "@bugsnag/plugin-electron-net-breadcrumbs": "^7.24.0",
     "@bugsnag/plugin-electron-network-status": "^7.22.7",
     "@bugsnag/plugin-electron-preload-error": "^7.22.7",
     "@bugsnag/plugin-electron-process-info": "^7.22.7",
