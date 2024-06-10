@@ -25,6 +25,8 @@ Scenario: Setting metadata (native handled)
   And the event "metaData.nativedata.even_more_data" equals "set via event"
   And the event "metaData.nativedata.cleared_data" is null
 
+# Skipped on iOS New Arch pending PLAT-12184
+@skip_ios_new_arch
 Scenario: Setting metadata (native unhandled)
   When I run "MetadataNativeUnhandledScenario"
   And I wait for 2 seconds
@@ -42,4 +44,19 @@ Scenario: Setting metadata (native unhandled)
   And the event "metaData.nativedata.even_more_data" equals the platform-dependent string:
   | android | set via event |
   | ios     | @skip         |
+  And the event "metaData.nativedata.cleared_data" is null
+
+# TODO: remove this scenario when PLAT-12184 is resolved
+@ios_only @skip_old_arch
+Scenario: Setting metadata (native unhandled)
+  When I run "MetadataNativeUnhandledScenario"
+  And I wait for 2 seconds
+  And I clear any error dialogue
+  And I relaunch the app after a crash
+  And I configure Bugsnag for "MetadataNativeUnhandledScenario"
+  Then I wait to receive an error
+  And the event "exceptions.0.errorClass" equals "N8facebook3jsi7JSErrorE"
+  And the exception "message" starts with "Exception in HostFunction: MetadataNativeUnhandledScenario"
+  And the event "metaData.nativedata.some_data" equals "set via config"
+  And the event "metaData.nativedata.some_more_data" equals "set via client"
   And the event "metaData.nativedata.cleared_data" is null

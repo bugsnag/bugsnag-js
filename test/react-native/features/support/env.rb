@@ -33,3 +33,11 @@ end
 Before('@skip_new_arch') do |scenario|
   skip_this_scenario("Skipping scenario") if ENV['RCT_NEW_ARCH_ENABLED'].eql?('true')
 end
+
+Before('@skip_old_arch') do |scenario|
+  skip_this_scenario("Skipping scenario") unless ENV['RCT_NEW_ARCH_ENABLED'].eql?('true')
+end
+
+Before('@skip_ios_new_arch') do |scenario|
+  skip_this_scenario("Skipping scenario") if Maze::Helper.get_current_platform == 'ios' && ENV['RCT_NEW_ARCH_ENABLED'].eql?('true')
+end

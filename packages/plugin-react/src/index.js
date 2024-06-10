@@ -41,10 +41,10 @@ then pass in React when available to construct your error boundary
 }
 
 const formatComponentStack = str => {
-  const lines = str.split(/\s*\n\s*/g)
+  const lines = str.split(/\n/g)
   let ret = ''
   for (let line = 0, len = lines.length; line < len; line++) {
-    if (lines[line].length) ret += `${ret.length ? '\n' : ''}${lines[line]}`
+    if (lines[line].length) ret += `${ret.length ? '\n' : ''}${lines[line].trim()}`
   }
   return ret
 }

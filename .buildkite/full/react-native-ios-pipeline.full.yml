@@ -193,7 +193,7 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":browserstack: :ios: RN 0.66 iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.66 iOS 16 end-to-end tests"
         depends_on: "rn-0-66-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -203,20 +203,23 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
+            service-ports: true
             use-aliases: true
             command:
               - --app=build/rn0.66.ipa
-              - --farm=bs
-              - --device=IOS_16
+              - --farm=bb
+              - --device=IOS_15|IOS_16
               - --a11y-locator
               - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: "bitbar"
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.67 iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.67 iOS 16 end-to-end tests"
         depends_on: "rn-0-67-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -226,13 +229,16 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
+            service-ports: true
             use-aliases: true
             command:
               - --app=build/rn0.67.ipa
-              - --farm=bs
-              - --device=IOS_16
+              - --farm=bb
+              - --device=IOS_15|IOS_16
               - --a11y-locator
               - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -240,7 +246,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":browserstack: :ios: RN 0.69 iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.69 iOS 16 end-to-end tests"
         depends_on: "rn-0-69-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -250,13 +256,16 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
+            service-ports: true
             use-aliases: true
             command:
               - --app=build/rn0.69.ipa
-              - --farm=bs
-              - --device=IOS_16
+              - --farm=bb
+              - --device=IOS_15|IOS_16
               - --a11y-locator
               - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -264,7 +273,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
       #
-      - label: ":browserstack: :ios: RN 0.68 (hermes) iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.68 (hermes) iOS 16 end-to-end tests"
         depends_on: "rn-0-68-hermes-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -274,13 +283,16 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
+            service-ports: true
             use-aliases: true
             command:
               - --app=build/rn0.68-hermes.ipa
-              - --farm=bs
-              - --device=IOS_16
+              - --farm=bb
+              - --device=IOS_15|IOS_16
               - --a11y-locator
               - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -288,7 +300,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":ios: RN 0.71 (Old Arch) iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.71 (Old Arch) iOS 16 end-to-end tests"
         depends_on: "rn-0-71-old-arch-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -298,13 +310,16 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
+            service-ports: true
             use-aliases: true
             command:
               - --app=build/rn0.71-old-arch.ipa
-              - --farm=bs
-              - --device=IOS_16
+              - --farm=bb
+              - --device=IOS_15|IOS_16
               - --a11y-locator
               - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -312,7 +327,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":ios: RN 0.71 (New Arch) iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.71 (New Arch) iOS 16 end-to-end tests"
         depends_on: "rn-0-71-new-arch-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -322,13 +337,16 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
+            service-ports: true
             use-aliases: true
             command:
               - --app=build/rn0.71-new-arch.ipa
-              - --farm=bs
-              - --device=IOS_16
+              - --farm=bb
+              - --device=IOS_15|IOS_16
               - --a11y-locator
               - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -336,7 +354,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":ios: RN 0.72 (Old Arch) iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.72 (Old Arch) iOS 16 end-to-end tests"
         depends_on: "rn-0-72-old-arch-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -346,13 +364,16 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
+            service-ports: true
             use-aliases: true
             command:
               - --app=build/rn0.72-old-arch.ipa
-              - --farm=bs
-              - --device=IOS_16
+              - --farm=bb
+              - --device=IOS_15|IOS_16
               - --a11y-locator
               - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -360,7 +381,7 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":ios: RN 0.72 (New Arch) iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.72 (New Arch) iOS 16 end-to-end tests"
         depends_on: "rn-0-72-new-arch-ipa"
         timeout_in_minutes: 60
         plugins:
@@ -370,13 +391,16 @@ steps:
           docker-compose#v4.12.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
+            service-ports: true
             use-aliases: true
             command:
               - --app=build/rn0.72-new-arch.ipa
-              - --farm=bs
-              - --device=IOS_16
+              - --farm=bb
+              - --device=IOS_15|IOS_16
               - --a11y-locator
               - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"

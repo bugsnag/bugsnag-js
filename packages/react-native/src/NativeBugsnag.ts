@@ -17,6 +17,8 @@ export interface Spec extends TurboModule {
 
   resumeSession(): void
 
+  resumeSessionOnStartup(): void
+
   updateContext(context: string | undefined | null): void
 
   addMetadata(section: string, metadata?: UnsafeObject): void

@@ -100,6 +100,10 @@ RCT_EXPORT_METHOD(resumeSession) {
     [Bugsnag resumeSession];
 }
 
+RCT_EXPORT_METHOD(resumeSessionOnStartup) {
+    [Bugsnag resumeSession];
+}
+
 RCT_EXPORT_METHOD(addFeatureFlags:(NSArray *)readableArray) {
     NSMutableArray *array = [NSMutableArray new];
     if(readableArray == nil) {

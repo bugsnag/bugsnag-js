@@ -73,7 +73,8 @@ Scenario: Unhandled JS error with native stacktrace
 #   And the error payload field "events.0.exceptions.1.stacktrace.1.lineNumber" equals 1
 #   And the error payload field "events.0.exceptions.1.stacktrace.2.lineNumber" equals 2
 
-@ios_only
+# Skipped pending PLAT-12063
+@ios_only @skip_new_arch
 Scenario: Handled JS error with native stacktrace
   When I run "NativeStackHandledScenario"
   Then I wait to receive an error
@@ -100,7 +101,8 @@ Scenario: Handled JS error with native stacktrace
   And the error payload field "events.0.exceptions.0.stacktrace.20.lineNumber" is not null
   And the error payload field "events.0.exceptions.0.stacktrace.20.type" is null
 
-@ios_only
+# Skipped pending PLAT-12063
+@ios_only @skip_new_arch
 Scenario: Unhandled JS error with native stacktrace
   When I run "NativeStackUnhandledScenario"
   Then I wait to receive an error
