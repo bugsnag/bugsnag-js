@@ -149,3 +149,47 @@ Then('the stacktrace contains {string} equal to {string}') do |field_path, expec
   end
   fail("No field_path #{field_path} found with value #{expected_value}") unless found
 end
+
+# Tests that the given payload value is correct for the target arch and RN version combination.
+# This step will assume the expected and payload values are strings.
+#
+# The DataTable used for this step should have the headers `arch` `version` and `value`
+# The `arch` column must contain either `old` or `new`
+# The `version` column should contain the version of the app to test the value against, or `default` for unspecified versions
+# The `value` column should contain the expected value for the given arch and version combination
+#
+#   | arch | version | value                      |
+#   | new  | 0.74    | Error                      |
+#   | new  | default | java.lang.RuntimeException |
+#   | old  | default | java.lang.RuntimeException |
+#
+# If the expected value is set to "@null", the check will be for null
+# If the expected value is set to "@not_null", the check will be for a non-null value
+Then('the event {string} equals the version-dependent string:') do |field_path, table|
+  payload = Maze::Server.errors.current[:body]
+  payload_value = Maze::Helper.read_key_path(payload, "events.0.#{field_path}")
+  expected_values = table.hashes
+
+  
+  arch = ENV['RCT_NEW_ARCH_ENABLED'] == 'true' ? 'new' : 'old'
+  arch_values = expected_values.select do |hash|
+    hash['arch'] == arch
+  end
+
+  raise("There is no expected value for the current arch \"#{arch}\"") if arch_values.empty?
+
+  current_version = ENV['RN_VERSION']
+  version_values = arch_values.select do |hash|
+    hash['version'] == current_version
+  end
+
+  if version_values.empty?
+    version_values = arch_values.select { |hash| hash['version'] == 'default' }
+  end
+
+  raise("There is no expected value for the current version \"#{current_version}\"") if version_values.empty?
+  raise("Multiple expected values found for arch \"#{arch}\" and version \"#{current_version}\"") if version_values.length() > 1
+
+  expected_value = version_values[0]['value']
+  assert_equal_with_nullability(expected_value, payload_value)
+end

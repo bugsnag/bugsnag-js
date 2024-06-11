@@ -11,10 +11,10 @@ jest.mock('react-native', () => {
           enabledBreadcrumbTypes: []
         }),
         leaveBreadcrumb: () => {},
-        dispatch: async (event: any) => {
+        dispatchAsync: async (event: any) => {
           events.push(event)
         },
-        getPayloadInfo: async () => ({
+        getPayloadInfoAsync: async () => ({
           threads: [],
           breadcrumbs: [],
           app: {},

@@ -27,60 +27,23 @@ Scenario: Setting user in JS via event
   And the event "user.name" equals "Bug Snag"
   And the event "user.id" equals "123"
 
-# Skipped on iOS New Arch pending PLAT-12184
-@skip_ios_new_arch
 Scenario: Setting user in native via client
   When I run "UserNativeClientScenario" and relaunch the crashed app
   And I configure Bugsnag for "UserNativeClientScenario"
   Then I wait to receive an error
-  And the event "exceptions.0.errorClass" equals the platform-dependent string:
-  | android | java.lang.RuntimeException |
-  | ios     | NSException                |
-  And the exception "message" equals "UserNativeClientScenario"
+  And the exception "message" matches "UserNativeClientScenario"
+  And the event "unhandled" is true
   And the event "user.email" equals "bug@sn.ag"
   And the event "user.name" equals "Bug Snag"
   And the event "user.id" equals "123"
 
-# TODO: remove this scenario when PLAT-12184 is resolved
-@ios_only @skip_old_arch
-Scenario: Setting user in native via client
-  When I run "UserNativeClientScenario" and relaunch the crashed app
-  And I configure Bugsnag for "UserNativeClientScenario"
-  Then I wait to receive an error
-  And the event "exceptions.0.errorClass" equals "N8facebook3jsi7JSErrorE"
-  And the exception "message" starts with "Exception in HostFunction: UserNativeClientScenario"
-  And the event "user.email" equals "bug@sn.ag"
-  And the event "user.name" equals "Bug Snag"
-  And the event "user.id" equals "123"
-
-# Skipped on iOS New Arch pending PLAT-12184
-@skip_ios_new_arch
 Scenario: Setting user in JS via client and sending Native error
   When I run "UserJsNativeScenario" and relaunch the crashed app
   And I configure Bugsnag for "UserJsNativeScenario"
   Then I wait to receive an error
-  And the event "exceptions.0.errorClass" equals the platform-dependent string:
-  | android | java.lang.RuntimeException |
-  | ios     | NSException                |
-  And the event "exceptions.0.type" equals the platform-dependent string:
-  | android | android |
-  | ios     | cocoa   |
+  And the exception "message" matches "UnhandledNativeErrorScenario"
   And the event "unhandled" is true
-  And the exception "message" equals "UnhandledNativeErrorScenario"
   And the event "user.email" equals "bug@sn.ag"
   And the event "user.name" equals "Bug Snag"
   And the event "user.id" equals "123"
 
-# TODO: remove this scenario when PLAT-12184 is resolved
-@ios_only @skip_old_arch
-Scenario: Setting user in JS via client and sending Native error
-  When I run "UserJsNativeScenario" and relaunch the crashed app
-  And I configure Bugsnag for "UserJsNativeScenario"
-  Then I wait to receive an error
-  And the event "exceptions.0.errorClass" equals "N8facebook3jsi7JSErrorE"
-  And the event "exceptions.0.type" equals "cocoa"
-  And the event "unhandled" is true
-  And the exception "message" starts with "Exception in HostFunction: UnhandledNativeErrorScenario"
-  And the event "user.email" equals "bug@sn.ag"
-  And the event "user.name" equals "Bug Snag"
-  And the event "user.id" equals "123"

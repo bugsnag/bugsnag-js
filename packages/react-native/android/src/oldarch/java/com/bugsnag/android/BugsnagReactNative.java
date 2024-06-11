@@ -93,13 +93,23 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  void dispatch(@NonNull ReadableMap payload, @NonNull Promise promise) {
-    impl.dispatch(payload, promise);
+  boolean dispatch(@NonNull ReadableMap payload) {
+    return impl.dispatch(payload);
   }
 
   @ReactMethod
-  void getPayloadInfo(@NonNull ReadableMap payload, @NonNull Promise promise) {
-    impl.getPayloadInfo(payload, promise);
+  void dispatchAsync(@NonNull ReadableMap payload, @NonNull Promise promise) {
+    impl.dispatchAsync(payload, promise);
+  }
+
+  @ReactMethod
+  WritableMap getPayloadInfo(@NonNull ReadableMap payload) {
+    return impl.getPayloadInfo(payload);
+  }
+
+  @ReactMethod
+  void getPayloadInfoAsync(@NonNull ReadableMap payload, @NonNull Promise promise) {
+    impl.getPayloadInfoAsync(payload, promise);
   }
 
   @ReactMethod

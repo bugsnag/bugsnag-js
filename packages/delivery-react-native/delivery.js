@@ -11,7 +11,10 @@ module.exports = (client, NativeClient) => ({
         nativeStack = event.originalError.nativeStackAndroid
       }
     }
-    NativeClient.dispatch({
+
+    const isTurboModuleEnabled = global.__turboModuleProxy != null
+
+    const eventPayload = {
       errors: event.errors,
       severity: event.severity,
       severityReason: event._handledState.severityReason,
@@ -27,7 +30,14 @@ module.exports = (client, NativeClient) => ({
       apiKey: event.apiKey,
       featureFlags: event.toJSON().featureFlags,
       nativeStack: nativeStack
-    }).then(() => cb()).catch(cb)
+    }
+
+    if (isTurboModuleEnabled) {
+      NativeClient.dispatch(eventPayload)
+      cb()
+    } else {
+      NativeClient.dispatchAsync(eventPayload).then(() => cb()).catch(cb)
+    }
   },
   sendSession: () => {
     client._logger.warn('@bugsnag/delivery-react-native sendSession() should never be called', new Error().stack)
