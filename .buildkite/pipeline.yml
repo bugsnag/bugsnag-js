@@ -121,7 +121,6 @@ steps:
       - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    skip: Skipped pending PLAT-10345
     commands:
       - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
 

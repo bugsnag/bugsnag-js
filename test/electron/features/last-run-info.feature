@@ -1,5 +1,7 @@
 Feature: lastRunInfo
 
+   # Skipped on macOS pending PLAT-12276
+  @not_macos
   Scenario: Last run info consecutive crashes on-launch
       # Crash the app during launch - twice
     Given I launch an app with configuration:
@@ -22,6 +24,8 @@ Feature: lastRunInfo
       | Content-Type      | application/json                 |
     Then the contents of an event request matches "launch-info/consecutive-launch-crashes.json"
 
+   # Skipped on macOS pending PLAT-12276
+  @not_macos
   Scenario: Last run info after crash
     Given I launch an app with configuration:
       | bugsnag | zero-launch-duration |
