@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browser",
-  "version": "7.22.7",
+  "version": "7.25.0-alpha.0",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for browser JavaScript",
@@ -31,25 +31,25 @@
   "license": "MIT",
   "devDependencies": {
     "@bugsnag/core": "^7.0.1",
-    "@bugsnag/delivery-x-domain-request": "^7.22.7",
-    "@bugsnag/delivery-xml-http-request": "^7.22.7",
-    "@bugsnag/plugin-app-duration": "^7.22.7",
-    "@bugsnag/plugin-browser-context": "^7.22.7",
-    "@bugsnag/plugin-browser-device": "^7.22.7",
-    "@bugsnag/plugin-browser-request": "^7.22.7",
-    "@bugsnag/plugin-browser-session": "^7.22.7",
-    "@bugsnag/plugin-client-ip": "^7.22.7",
-    "@bugsnag/plugin-console-breadcrumbs": "^7.22.7",
-    "@bugsnag/plugin-inline-script-content": "^7.22.7",
-    "@bugsnag/plugin-interaction-breadcrumbs": "^7.22.7",
-    "@bugsnag/plugin-navigation-breadcrumbs": "^7.22.7",
-    "@bugsnag/plugin-network-breadcrumbs": "^7.22.7",
-    "@bugsnag/plugin-simple-throttle": "^7.22.7",
-    "@bugsnag/plugin-strip-query-string": "^7.22.7",
-    "@bugsnag/plugin-window-onerror": "^7.22.7",
-    "@bugsnag/plugin-window-unhandled-rejection": "^7.22.7"
+    "@bugsnag/delivery-x-domain-request": "^7.25.0-alpha.0",
+    "@bugsnag/delivery-xml-http-request": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-app-duration": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-browser-context": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-browser-device": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-browser-request": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-browser-session": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-client-ip": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-console-breadcrumbs": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-inline-script-content": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-interaction-breadcrumbs": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-navigation-breadcrumbs": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-network-breadcrumbs": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-simple-throttle": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-strip-query-string": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-window-onerror": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-window-unhandled-rejection": "^7.25.0-alpha.0"
   },
   "dependencies": {
-    "@bugsnag/core": "^7.22.7"
+    "@bugsnag/core": "^7.25.0-alpha.0"
   }
 }
