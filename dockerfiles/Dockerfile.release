@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:18-alpine
 RUN apk add --update git bash python3 make gcc g++ openssh-client curl
 
 RUN addgroup -S admins
