@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- (core) Add new `setTraceCorrelation` method to events [#2159](https://github.com/bugsnag/bugsnag-js/pull/2159)
+
 ### Fixed
 
 - (react-native) Use synchronous native module calls when New Architecture is enabled [#2152](https://github.com/bugsnag/bugsnag-js/pull/2152)

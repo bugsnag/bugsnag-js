@@ -420,4 +420,13 @@ describe('@bugsnag/core/event', () => {
         }))
     })
   })
+
+  describe('event.setTraceCorrelation()', () => {
+    it('allows setting the span and trace id', () => {
+      const event = new Event('Err', 'bad', [])
+      event.setTraceCorrelation('test-trace-id', 'test-span-id')
+      const serialized = event.toJSON()
+      expect(serialized.correlation).toEqual({ traceId: 'test-trace-id', spanId: 'test-span-id' })
+    })
+  })
 })
