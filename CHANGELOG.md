@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- (delivery-xml-http-request) Add Access-Control-Max-Age header to CORS preflight responses [#2160](https://github.com/bugsnag/bugsnag-js/pull/2160)
+
 ### Fixed
 
 - (react-native) Use synchronous native module calls when New Architecture is enabled [#2152](https://github.com/bugsnag/bugsnag-js/pull/2152)
