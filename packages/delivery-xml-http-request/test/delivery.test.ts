@@ -66,7 +66,7 @@ describe('delivery:XMLHttpRequest', () => {
       expect(requests[0].headers['Bugsnag-Api-Key']).toEqual('aaaaaaaa')
       expect(requests[0].headers['Bugsnag-Payload-Version']).toEqual('4')
       expect(requests[0].headers['Bugsnag-Sent-At']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
-      expect(requests[0].headers['Access-Control-Max-Age']).toEqual('86400')
+      expect(requests[0].headers['Access-Control-Max-Age']).toEqual(86400)
       expect(requests[0].data).toBe(JSON.stringify(payload))
       done()
     })
