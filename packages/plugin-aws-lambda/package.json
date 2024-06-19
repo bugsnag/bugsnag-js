@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-aws-lambda",
-  "version": "7.22.7",
+  "version": "7.25.0-alpha.0",
   "main": "dist/bugsnag-aws-lambda.js",
   "types": "types/bugsnag-plugin-aws-lambda.d.ts",
   "description": "AWS Lambda support for @bugsnag/node",
@@ -23,11 +23,11 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/in-flight": "^7.22.7",
-    "@bugsnag/plugin-browser-session": "^7.22.7"
+    "@bugsnag/in-flight": "^7.25.0-alpha.0",
+    "@bugsnag/plugin-browser-session": "^7.25.0-alpha.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.22.7",
+    "@bugsnag/core": "^7.25.0-alpha.0",
     "@types/aws-lambda": "^8.10.76",
     "@vendia/serverless-express": "^4.10.1",
     "express": "^4.18.2"
