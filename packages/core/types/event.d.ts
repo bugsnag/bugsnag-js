@@ -55,7 +55,7 @@ declare class Event {
   public clearFeatureFlags(): void
 
   // trace correlation
-  public setTraceCorrelation(traceId: string, spanId: string): void
+  public setTraceCorrelation(traceId: string, spanId?: string): void
 }
 
 interface HandledState {

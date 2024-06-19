@@ -57,8 +57,8 @@ class Event {
      * @param spanId the ID of the span that the event occurred within
      */
   setTraceCorrelation (traceId, spanId) {
-    if (traceId != null) {
-      this._correlation = { traceId, spanId }
+    if (typeof traceId === 'string') {
+      this._correlation = { traceId, ...typeof spanId === 'string' ? { spanId } : { } }
     }
   }
 
