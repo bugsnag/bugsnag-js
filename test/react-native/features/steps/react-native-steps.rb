@@ -191,5 +191,8 @@ Then('the event {string} equals the version-dependent string:') do |field_path, 
   raise("Multiple expected values found for arch \"#{arch}\" and version \"#{current_version}\"") if version_values.length() > 1
 
   expected_value = version_values[0]['value']
-  assert_equal_with_nullability(expected_value, payload_value)
+  
+  unless expected_value.eql?('@skip')
+    assert_equal_with_nullability(expected_value, payload_value)
+  end
 end
