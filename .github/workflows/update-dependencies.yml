@@ -45,7 +45,7 @@ jobs:
         run: TARGET_SUBMODULE=$SUBMODULE TARGET_VERSION=$VERSION ./scripts/update-dependencies.rb
 
       - name: Commit and push changes
-        run: bundle exec bumpsnag commit_update $SUBMODULE $VERSION
+        run: bundle exec bumpsnag commit-update $SUBMODULE $VERSION
 
       - name: List current branch name
         id: current-branch
