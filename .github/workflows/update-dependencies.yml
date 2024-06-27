@@ -42,7 +42,7 @@ jobs:
         run: bundle install
 
       - name: Update references locally
-        run: TARGET_SUBMODULE=$SUBMODULE TARGET_VERSION=$VERSION bundle exec scripts/update-dependencies.rb
+        run: TARGET_SUBMODULE=$SUBMODULE TARGET_VERSION=$VERSION ./scripts/update-dependencies.rb
 
       - name: Commit and push changes
         run: bundle exec bumpsnag commit_update $SUBMODULE $VERSION

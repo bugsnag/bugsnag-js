@@ -1,7 +1,5 @@
 #! /usr/bin/env ruby
 
-require 'bumpsnag'
-
 target_submodule = ENV['TARGET_SUBMODULE']
 target_version = ENV['TARGET_VERSION']
 
