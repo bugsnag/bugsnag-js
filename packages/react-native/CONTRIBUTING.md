@@ -2,11 +2,11 @@
 
 ## Upgrading native notifier dependencies
 
-Both [`bugsnag-android`](https://github.com/bugnsag/bugsnag-android) and [`bugsnag-cocoa`](https://github.com/bugnsag/bugsnag-cocoa) are vendored into this repository as part of the `@bugsnag/react-native` package. When updates to those notifiers are released, a PR should be make to this repository to vendor the new version.
+Both [`bugsnag-android`](https://github.com/bugsnag/bugsnag-android) and [`bugsnag-cocoa`](https://github.com/bugsnag/bugsnag-cocoa) are vendored into this repository as part of the `@bugsnag/react-native` package. When updates to those notifiers are released, a PR should be make to this repository to vendor the new version.
 
 ### Android
 
-[bugsnag-android](https://github.com/bugnsag/bugsnag-android) AAR artefacts are located in `packages/react-native/android/com/bugsnag`
+[bugsnag-android](https://github.com/bugsnag/bugsnag-android) AAR artefacts are located in `packages/react-native/android/com/bugsnag`
 
 To update the version of the bundled artefacts:
 
@@ -16,7 +16,7 @@ To update the version of the bundled artefacts:
 
 #### iOS
 
-[bugsnag-cocoa](https://github.com/bugnsag/bugsnag-cocoa) source is vendored in `packages/react-native/ios/vendor/bugsnag-cocoa`.
+[bugsnag-cocoa](https://github.com/bugsnag/bugsnag-cocoa) source is vendored in `packages/react-native/ios/vendor/bugsnag-cocoa`.
 
 To update the version of the bundled notifier source:
 
