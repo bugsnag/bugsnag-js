@@ -61,7 +61,7 @@
           "timestamp": "{TIMESTAMP}",
           "metaData": {
             "method": "GET",
-            "url": "http://locahost:65536/",
+            "url": "http://locahost:994/",
             "status": "{TYPE:undefined}",
             "duration": "{TYPE:number}"
           }
