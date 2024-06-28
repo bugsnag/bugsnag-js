@@ -71,13 +71,7 @@
         {
           "errorMessage": "something bad",
           "errorClass": "ReferenceError",
-          "stacktrace": [{
-            "file": "./src/errors.js",
-            "lineNumber": 18,
-            "code": {
-              "1": "{TYPE:string}"
-            }
-          }],
+          "stacktrace": [],
           "type": "electronnodejs"
         }
       ]
