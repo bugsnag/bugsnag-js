@@ -91,7 +91,7 @@ const _createClient = (opts, jsOpts) => {
     NativeClient.updateCodeBundleId(opts.codeBundleId)
   }
 
-  if (bugsnag._config.autoTrackSessions) bugsnag.resumeSession()
+  if (bugsnag._config.autoTrackSessions) NativeClient.resumeSessionOnStartup()
 
   bugsnag._logger.debug('Loaded!')
 

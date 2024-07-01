@@ -33,3 +33,12 @@ end
 Before('@skip_new_arch') do |scenario|
   skip_this_scenario("Skipping scenario") if ENV['RCT_NEW_ARCH_ENABLED'].eql?('true')
 end
+
+Before('@skip_old_arch') do |scenario|
+  skip_this_scenario("Skipping scenario") unless ENV['RCT_NEW_ARCH_ENABLED'].eql?('true')
+end
+
+Before('@skip_new_arch_below_074') do |scenario|
+  current_version = ENV['RN_VERSION'].nil? ? 0 : ENV['RN_VERSION'].to_f
+  skip_this_scenario("Skipping scenario") if ENV['RCT_NEW_ARCH_ENABLED'].eql?('true') && current_version < 0.74
+end

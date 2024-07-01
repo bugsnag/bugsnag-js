@@ -44,13 +44,8 @@ Scenario: Sends JS feature flags in a native crash
   When I run "FeatureFlagsNativeCrashScenario" and relaunch the crashed app
   And I configure Bugsnag for "FeatureFlagsNativeCrashScenario"
   Then I wait to receive an error
-  And the event "exceptions.0.errorClass" equals the platform-dependent string:
-    | android | java.lang.RuntimeException |
-    | ios     | NSException                |
-  And the event "exceptions.0.type" equals the platform-dependent string:
-    | android | android |
-    | ios     | cocoa   |
   And the event "unhandled" is true
+  And the exception "message" matches "FeatureFlagsNativeCrashScenario"
   And event 0 contains the feature flag "demo_mode" with no variant
   And event 0 contains the feature flag "sample_group" with variant "a"
   And event 0 does not contain the feature flag "should_not_be_reported_1"

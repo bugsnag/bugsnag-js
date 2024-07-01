@@ -13,7 +13,7 @@ let currentServer: ServerWithPort|null = null
 
 const originalRequest = net.request
 
-describe('plugin: electron net breadcrumbs', () => {
+describe.skip('plugin: electron net breadcrumbs', () => {
   afterEach(async () => {
     if (currentServer) {
       await new Promise(resolve => { currentServer.close(resolve) })

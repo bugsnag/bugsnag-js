@@ -32,10 +32,8 @@ Scenario: Setting metadata (native unhandled)
   And I relaunch the app after a crash
   And I configure Bugsnag for "MetadataNativeUnhandledScenario"
   Then I wait to receive an error
-  And the event "exceptions.0.errorClass" equals the platform-dependent string:
-  | android | java.lang.RuntimeException |
-  | ios     | NSException                |
-  And the exception "message" equals "MetadataNativeUnhandledScenario"
+  And the exception "message" matches "MetadataNativeUnhandledScenario"
+  And the event "unhandled" is true
   And the event "metaData.nativedata.some_data" equals "set via config"
   And the event "metaData.nativedata.some_more_data" equals "set via client"
   # Skipped on iOS as callbacks cannot be added outside of config

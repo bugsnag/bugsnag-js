@@ -62,6 +62,11 @@ public class NativeBugsnagImpl extends NativeBugsnagSpec {
   }
 
   @Override
+  public void resumeSessionOnStartup() {
+    impl.resumeSessionOnStartup();
+  }
+
+  @Override
   public void updateContext(@Nullable String context) {
     impl.updateContext(context);
   }
@@ -82,13 +87,23 @@ public class NativeBugsnagImpl extends NativeBugsnagSpec {
   }
 
   @Override
-  public void dispatch(ReadableMap payload, Promise promise) {
-    impl.dispatch(payload, promise);
+  public boolean dispatch(ReadableMap payload) {
+    return impl.dispatch(payload);
   }
 
   @Override
-  public void getPayloadInfo(ReadableMap payload, Promise promise) {
-    impl.getPayloadInfo(payload, promise);
+  public void dispatchAsync(ReadableMap payload, Promise promise) {
+    impl.dispatchAsync(payload, promise);
+  }
+
+  @Override
+  public WritableMap getPayloadInfo(ReadableMap payload) {
+    return impl.getPayloadInfo(payload);
+  }
+
+  @Override
+  public void getPayloadInfoAsync(ReadableMap payload, Promise promise) {
+    impl.getPayloadInfoAsync(payload, promise);
   }
 
   @Override
