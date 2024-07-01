@@ -20,7 +20,31 @@
 
 ### Changed
 
+- (react-native) Update bugsnag-cocoa from v6.28.1 to [v6.29.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6290-2024-06-19)
+- (react-native) Update bugsnag-android from v5.32.2 to [v5.32.3](https://github.com/bugsnag/bugsnag-android/blob/v5.32.3/CHANGELOG.md#5323-2024-06-27)
+
+### Added
+
+- (core) Add new `setTraceCorrelation` method to events [#2159](https://github.com/bugsnag/bugsnag-js/pull/2159)
+
+### Fixed
+
+- (react-native) Use synchronous native module calls when New Architecture is enabled [#2152](https://github.com/bugsnag/bugsnag-js/pull/2152)
+
+## [7.24.0] - 2024-06-10
+
+### Added
+
+- (react-native) Add privacy manifest resource bundle to podspec [#2149](https://github.com/bugsnag/bugsnag-js/pull/2149)
+
+### Changed
+
 - (plugin-react) Modified the polynomial regular expression to remove the ambiguity [#2135](https://github.com/bugsnag/bugsnag-js/pull/2135)
+- (react-native) ReactNative apps loaded in the background will no longer start a new session [#2154](https://github.com/bugsnag/bugsnag-js/pull/2154)
+
+### Fixed
+
+- (react-native) Discard duplicate JS exceptions in iOS New Architecture [#2148](https://github.com/bugsnag/bugsnag-js/pull/2148)
 
 ## [7.23.0] - 2024-05-09
 

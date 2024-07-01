@@ -17,6 +17,8 @@ export interface Spec extends TurboModule {
 
   resumeSession(): void
 
+  resumeSessionOnStartup(): void
+
   updateContext(context: string | undefined | null): void
 
   addMetadata(section: string, metadata?: UnsafeObject): void
@@ -25,9 +27,13 @@ export interface Spec extends TurboModule {
 
   updateUser(id: string | undefined | null, email: string | undefined | null, name: string | undefined | null): void
 
-  dispatch(payload: UnsafeObject): Promise<boolean>
+  dispatch(payload: UnsafeObject): boolean
 
-  getPayloadInfo(payload: UnsafeObject): Promise<unknown>
+  dispatchAsync(payload: UnsafeObject): Promise<boolean>
+
+  getPayloadInfo(payload: UnsafeObject): Object
+
+  getPayloadInfoAsync(payload: UnsafeObject): Promise<unknown>
 
   addFeatureFlag(name: string, variant: string | undefined | null): void
 

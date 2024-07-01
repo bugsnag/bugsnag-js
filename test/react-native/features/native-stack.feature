@@ -1,6 +1,6 @@
 Feature: Native stacktrace is parsed for promise rejections
 
-# Skipped pending PLAT-12063
+# Skipped pending PLAT-12193
 @android_only @skip_new_arch
 Scenario: Handled JS error with native stacktrace
   When I run "NativeStackHandledScenario"
@@ -31,7 +31,7 @@ Scenario: Handled JS error with native stacktrace
   # the javascript part follows
   And the stacktrace contains "file" equal to "index.android.bundle"
 
-# Skipped pending PLAT-12063
+# Skipped pending PLAT-12193
 @android_only @skip_new_arch
 Scenario: Unhandled JS error with native stacktrace
   When I run "NativeStackUnhandledScenario"
@@ -73,7 +73,8 @@ Scenario: Unhandled JS error with native stacktrace
 #   And the error payload field "events.0.exceptions.1.stacktrace.1.lineNumber" equals 1
 #   And the error payload field "events.0.exceptions.1.stacktrace.2.lineNumber" equals 2
 
-@ios_only
+# Skipped on New Arch below 0.74 - see PLAT-12193
+@ios_only @skip_new_arch_below_074
 Scenario: Handled JS error with native stacktrace
   When I run "NativeStackHandledScenario"
   Then I wait to receive an error
@@ -95,12 +96,30 @@ Scenario: Handled JS error with native stacktrace
   And the error payload field "events.0.exceptions.0.stacktrace.0.type" equals "cocoa"
 
   # the javascript part follows
-  And the error payload field "events.0.exceptions.0.stacktrace.20.columnNumber" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.20.file" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.20.lineNumber" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.20.type" is null
+  # On 0.74 New Arch there is no JS stacktrace - see PLAT-12193
+  And the event "exceptions.0.stacktrace.20.columnNumber" equals the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | @skip                   |
+  | new  | default | @not_null               |
+  | old  | default | @not_null               |
+  And the event "exceptions.0.stacktrace.20.file" equals the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | @skip                   |
+  | new  | default | @not_null               |
+  | old  | default | @not_null               |
+  And the event "exceptions.0.stacktrace.20.lineNumber" equals the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | @skip                   |
+  | new  | default | @not_null               |
+  | old  | default | @not_null               |
+  And the event "exceptions.0.stacktrace.20.type" equals the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | @skip                   |
+  | new  | default | @null                   |
+  | old  | default | @null                   |
 
-@ios_only
+# Skipped on New Arch below 0.74 - see PLAT-12193
+@ios_only @skip_new_arch_below_074
 Scenario: Unhandled JS error with native stacktrace
   When I run "NativeStackUnhandledScenario"
   Then I wait to receive an error
@@ -121,7 +140,24 @@ Scenario: Unhandled JS error with native stacktrace
   And the error payload field "events.0.exceptions.0.stacktrace.0.type" equals "cocoa"
 
   # the javascript part follows
-  And the error payload field "events.0.exceptions.0.stacktrace.20.columnNumber" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.20.file" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.20.lineNumber" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.20.type" is null
+  # On 0.74 New Arch there is no JS stacktrace - see PLAT-12193
+  And the event "exceptions.0.stacktrace.20.columnNumber" equals the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | @skip                   |
+  | new  | default | @not_null               |
+  | old  | default | @not_null               |
+  And the event "exceptions.0.stacktrace.20.file" equals the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | @skip                   |
+  | new  | default | @not_null               |
+  | old  | default | @not_null               |
+  And the event "exceptions.0.stacktrace.20.lineNumber" equals the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | @skip                   |
+  | new  | default | @not_null               |
+  | old  | default | @not_null               |
+  And the event "exceptions.0.stacktrace.20.type" equals the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | @skip                   |
+  | new  | default | @null                   |
+  | old  | default | @null                   |

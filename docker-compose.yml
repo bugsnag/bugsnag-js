@@ -109,11 +109,6 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.android-builder-base-java-11
 
-  android-builder-base-java-17:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.android-builder-base-java-17
-
   react-native-android-builder-java-11-node-16:
     build:
       context: .
@@ -128,36 +123,6 @@ services:
       - BRANCH_NAME
       - BUILDKITE
       - REGISTRY_URL
-      - REACT_NATIVE_VERSION
-      - RN_NEW_ARCH
-      - NOTIFIER_VERSION
-      - ARTEFACT_NAME
-      - JS_SOURCE_DIR
-    networks:
-      default:
-        aliases:
-          - maze-runner
-    volumes:
-      - ./build:/app/build
-      - ./test:/app/test
-      - ./features:/app/features
-
-  react-native-android-builder-java-17-node-18:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.react-native-android-builder-java-17-node-18
-      args:
-        - REGISTRY_URL
-        - REGISTRY_URI
-        - REG_BASIC_CREDENTIAL
-        - REG_NPM_EMAIL
-        - MAVEN_REPO_URL
-    environment:
-      - DEBUG
-      - BRANCH_NAME
-      - BUILDKITE
-      - REGISTRY_URL
-      - REGISTRY_URI
       - REACT_NATIVE_VERSION
       - RN_NEW_ARCH
       - NOTIFIER_VERSION
@@ -216,12 +181,13 @@ services:
       - ./test/react-native-cli/features/:/app/features
 
   react-native-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v9-cli
     environment:
       <<: *common-environment
       BITBAR_USERNAME:
       BITBAR_ACCESS_KEY:
       HERMES:
+      RN_VERSION:
     ports:
       - "9000-9499:9339"
     networks:
@@ -235,7 +201,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   react-native-cli-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v9-cli
     environment:
       <<: *common-environment
       BITBAR_USERNAME:

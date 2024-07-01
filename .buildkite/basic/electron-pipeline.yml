@@ -6,9 +6,8 @@ steps:
   - label: "Electron {{matrix.electron_version}} tests - macOS - Node {{matrix.node_version}}"
     timeout_in_minutes: 40
     agents:
-      queue: macos-11
+      queue: macos-14
     env:
-      DEVELOPER_DIR: "/Applications/Xcode12.app"
       NODE_VERSION: "{{matrix.node_version}}"
       ELECTRON_VERSION: "{{matrix.electron_version}}"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
@@ -17,11 +16,13 @@ steps:
     matrix:
       setup:
         electron_version:
-          - "^12.0.0"
           - "^20.0.0"
+          - "^24.0.0"
+          - "^26.0.0"
+          - "^28.0.0"
+          - "^30.0.0"
         node_version:
-          - "12"
-          - "14"
+          - "18"
     commands:
       - echo "Running on Node `node -v`"
       - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save

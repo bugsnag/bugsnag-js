@@ -142,6 +142,17 @@ class BugsnagReactNativeImpl {
     }
   }
 
+  void resumeSessionOnStartup() {
+    try {
+      Client client = Bugsnag.getClient();
+      if (Boolean.TRUE.equals(client.sessionTracker.isInForeground())) {
+        plugin.resumeSession();
+      }
+    } catch (Throwable exc) {
+      logFailure("resumeSessionOnStartup", exc);
+    }
+  }
+
   void updateContext(@Nullable String context) {
     try {
       plugin.updateContext(context);
@@ -174,25 +185,33 @@ class BugsnagReactNativeImpl {
     }
   }
 
-  void dispatch(@NonNull ReadableMap payload, @NonNull Promise promise) {
+  boolean dispatch(@NonNull ReadableMap payload) {
     try {
       plugin.dispatch(payload.toHashMap());
-      promise.resolve(true);
+      return true;
     } catch (Throwable exc) {
       logFailure("dispatch", exc);
-      promise.resolve(false);
+      return false;
     }
   }
 
-  void getPayloadInfo(@NonNull ReadableMap payload, @NonNull Promise promise) {
+  void dispatchAsync(@NonNull ReadableMap payload, @NonNull Promise promise) {
+    promise.resolve(dispatch(payload));
+  }
+
+  WritableMap getPayloadInfo(@NonNull ReadableMap payload) {
     try {
       boolean unhandled = payload.getBoolean("unhandled");
       Map<String, Object> info = plugin.getPayloadInfo(unhandled);
-      promise.resolve(ReactNativeCompat.toWritableMap(info));
+      return ReactNativeCompat.toWritableMap(info);
     } catch (Throwable exc) {
       logFailure("dispatch", exc);
-      promise.resolve(null);
+      return new WritableNativeMap();
     }
+  }
+
+  void getPayloadInfoAsync(@NonNull ReadableMap payload, @NonNull Promise promise) {
+    promise.resolve(getPayloadInfo(payload));
   }
 
   void addFeatureFlag(@NonNull String name, @Nullable String variant) {
