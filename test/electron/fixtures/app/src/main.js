@@ -54,7 +54,7 @@ function makeSimpleGetRequest (fail = false) {
 }
 
 function networkRequestError () {
-  const request = net.request('http://locahost:65536/')
+  const request = net.request('http://locahost:994/')
   request.on('error', notify)
   request.end()
 }
