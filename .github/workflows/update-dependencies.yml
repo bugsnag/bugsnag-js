@@ -44,18 +44,18 @@ jobs:
       - name: Update references locally
         run: TARGET_SUBMODULE=$SUBMODULE TARGET_VERSION=$VERSION ./scripts/update-dependencies.rb
 
-      - name: Commit and push changes
-        run: bundle exec bumpsnag commit-update $SUBMODULE $VERSION
+      # - name: Commit and push changes
+      #   run: bundle exec bumpsnag commit-update $SUBMODULE $VERSION
 
-      - name: List current branch name
-        id: current-branch
-        run: echo "branch=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
+      # - name: List current branch name
+      #   id: current-branch
+      #   run: echo "branch=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Create pull request
-        if: ${{ steps.current-branch.outputs.branch != 'next'}}
-        run: >
-         gh pr create -B next
-         -H bumpsnag-$TARGET_SUBMODULE-$TARGET_VERSION
-         --title "Update $TARGET_SUBMODULE to version $TARGET_VERSION"
-         --body 'Created by bumpsnag'
-         --reviewer gingerbenw
+      # - name: Create pull request
+      #   if: ${{ steps.current-branch.outputs.branch != 'next'}}
+      #   run: >
+      #    gh pr create -B next
+      #    -H bumpsnag-$TARGET_SUBMODULE-$TARGET_VERSION
+      #    --title "Update $TARGET_SUBMODULE to version $TARGET_VERSION"
+      #    --body 'Created by bumpsnag'
+      #    --reviewer gingerbenw

@@ -11,7 +11,8 @@ end
 pp "Attempting upgrade of #{target_submodule} to #{target_version}"
 
 if target_submodule.eql?('bugsnag-android')
-  `packages/react-native/update-android.sh --version #{target_version}`
+  version = /(\d+\.\d+\.\d+)/.match(target_version)[1]
+  `packages/react-native/update-android.sh --version #{version}`
 elsif target_submodule.eql?('bugsnag-cocoa')
   `packages/react-native/update-ios.sh --version #{target_version}`
 else
