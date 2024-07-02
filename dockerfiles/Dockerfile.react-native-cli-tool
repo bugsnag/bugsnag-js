@@ -1,10 +1,10 @@
 # CI test image for building the CLI
-FROM node:14-alpine as react-native-cli-feature-builder
+FROM node:18-alpine as react-native-cli-feature-builder
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+COPY package*.json .npmrc ./
+RUN npm ci
 
 COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 COPY bin ./bin
@@ -12,7 +12,7 @@ COPY packages ./packages
 
 RUN npm run bootstrap
 
-RUN npx lerna run build --scope @bugsnag/react-native-cli
+RUN npm run build:react-native-cli
 RUN npm pack --verbose packages/react-native-cli/
 
 # The maze-runner test image
