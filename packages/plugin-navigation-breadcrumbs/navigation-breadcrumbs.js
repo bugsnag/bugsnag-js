@@ -27,9 +27,8 @@ module.exports = (win = window) => {
       }, true)
 
       // the only way to know about replaceState/pushState is to wrap them… >_<
-
+      if (win.history.pushState) wrapHistoryFn(client, win.history, 'pushState', win, true)
       if (win.history.replaceState) wrapHistoryFn(client, win.history, 'replaceState', win)
-      if (win.history.pushState) wrapHistoryFn(client, win.history, 'pushState', win)
     }
   }
 
@@ -63,14 +62,12 @@ const stateChangeToMetadata = (win, state, title, url) => {
   return { title, state, prevState: getCurrentState(win), to: url || currentPath, from: currentPath }
 }
 
-const wrapHistoryFn = (client, target, fn, win) => {
+const wrapHistoryFn = (client, target, fn, win, resetEventCount = false) => {
   const orig = target[fn]
   target[fn] = (state, title, url) => {
     client.leaveBreadcrumb(`History ${fn}`, stateChangeToMetadata(win, state, title, url), 'navigation')
     // if throttle plugin is in use, reset the event sent count
-    if (typeof client.resetEventCount === 'function') client.resetEventCount()
-    // if the client is operating in auto session-mode, a new route should trigger a new session
-    if (client._config.autoTrackSessions) client.startSession()
+    if (resetEventCount && typeof client.resetEventCount === 'function') client.resetEventCount()
     // Internet Explorer will convert `undefined` to a string when passed, causing an unintended redirect
     // to '/undefined'. therefore we only pass the url if it's not undefined.
     orig.apply(target, [state, title].concat(url !== undefined ? url : []))

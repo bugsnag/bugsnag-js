@@ -26,12 +26,12 @@ RUN npm pack --verbose packages/web-worker/
 COPY test/browser/features test/browser/features
 
 WORKDIR /app/test/browser/features/fixtures
-RUN npm install --no-package-lock --no-save ../../../../bugsnag-browser-*.tgz
-RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-react-*.tgz
-RUN npm install --no-package-lock --no-save ../../../../bugsnag-plugin-vue-*.tgz
-RUN npm install --no-package-lock --no-save ../../../../bugsnag-web-worker-*.tgz
+RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-browser-*.tgz
+RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-plugin-react-*.tgz
+RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-plugin-vue-*.tgz
+RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-web-worker-*.tgz
 WORKDIR plugin_angular/ng
-RUN npm install --no-package-lock --no-save \
+RUN npm install --no-package-lock --no-save --legacy-peer-deps \
   ../../../../../../bugsnag-plugin-angular-*.tgz  \
   ../../../../../../bugsnag-node-*.tgz \
   ../../../../../../bugsnag-browser-*.tgz \

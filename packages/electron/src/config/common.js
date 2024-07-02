@@ -22,20 +22,24 @@ module.exports.schema = {
     }
   },
   endpoints: {
-    defaultValue: () => ({
-      notify: 'https://notify.bugsnag.com',
-      sessions: 'https://sessions.bugsnag.com',
-      minidumps: 'https://notify.bugsnag.com'
-    }),
+    defaultValue: (endpoints) => {
+      // only apply the default value if no endpoints have been provided, otherwise prevent delivery by setting to null
+      if (typeof endpoints === 'undefined') {
+        return ({
+          notify: 'https://notify.bugsnag.com',
+          sessions: 'https://sessions.bugsnag.com',
+          minidumps: 'https://notify.bugsnag.com'
+        })
+      } else {
+        return ({ notify: null, sessions: null, minidumps: null })
+      }
+    },
     message: 'should be an object containing endpoint URLs { notify, sessions, minidumps }',
     validate: val =>
       // first, ensure it's an object
       (val && typeof val === 'object') &&
       (
-        // notify and sessions must always be set
-        // minidumps isn't required because it was added after the initial launch
-        // so would be a breaking change
-        stringWithLength(val.notify) && stringWithLength(val.sessions)
+        stringWithLength(val.notify) && stringWithLength(val.sessions) && stringWithLength(val.minidumps)
       ) &&
       // ensure no keys other than notify/session/minidumps are set on endpoints object
       Object.keys(val).filter(k => !['notify', 'sessions', 'minidumps'].includes(k)).length === 0
