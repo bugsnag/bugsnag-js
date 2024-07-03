@@ -1,15 +1,15 @@
 # Changelog
 
-## [Unreleased]
+## [7.25.0] - 2024-07-03
+
+### Added
+
+- (core) Add new `setTraceCorrelation` method to events [#2159](https://github.com/bugsnag/bugsnag-js/pull/2159)
 
 ### Changed
 
 - (react-native) Update bugsnag-cocoa from v6.28.1 to [v6.29.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6290-2024-06-19)
 - (react-native) Update bugsnag-android from v5.32.2 to [v5.32.3](https://github.com/bugsnag/bugsnag-android/blob/v5.32.3/CHANGELOG.md#5323-2024-06-27)
-
-### Added
-
-- (core) Add new `setTraceCorrelation` method to events [#2159](https://github.com/bugsnag/bugsnag-js/pull/2159)
 
 ### Fixed
 
