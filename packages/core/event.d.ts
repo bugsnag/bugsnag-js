@@ -25,6 +25,7 @@ export default class EventWithInternals extends Event {
   _featuresIndex: { [key: string]: number }
   _user: User
   _handledState: HandledState
+  _correlation?: { spanId: string, traceId: string }
   _session?: Session
   toJSON(): {
     payloadVersion: '4'
@@ -40,6 +41,7 @@ export default class EventWithInternals extends Event {
     request: Request
     breadcrumbs: Breadcrumb[]
     context: string | undefined
+    correlation: { spanId: string, traceId: string } | undefined
     groupingHash: string | undefined
     metaData: { [key: string]: any }
     user: User

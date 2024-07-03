@@ -70,6 +70,10 @@ Before('@not_windows', () => {
   if (process.platform === 'win32') return 'skipped'
 })
 
+Before('@not_macos', () => {
+  if (process.platform === 'darwin') return 'skipped'
+})
+
 Before(async () => {
   await global.server.start()
 })

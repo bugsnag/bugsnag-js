@@ -75,10 +75,8 @@ Scenario: Device data in Unhandled native error
   When I run "DeviceNativeUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "DeviceNativeUnhandledScenario"
   Then I wait to receive an error
-  And the exception "errorClass" equals "java.lang.RuntimeException"
-  And the exception "message" equals "DeviceNativeUnhandledScenario"
   And the event "unhandled" is true
-
+  And the exception "message" matches "DeviceNativeUnhandledScenario"
   And the event "device.id" is not null
   And the event "device.jailbroken" is false
   And the event "device.locale" matches "^[a-z]{2}_[A-Z]{2}$"

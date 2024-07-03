@@ -1,3 +1,4 @@
+@ios_only
 Feature: Reporting unhandled errors
 
 Scenario: Reporting an Unhandled error
@@ -17,31 +18,25 @@ Scenario: Reporting an Unhandled promise rejection
   And the event "unhandled" is true
   And the exception "message" equals "UnhandledJsPromiseRejectionScenario"
 
-# Skipped on iOS New Arch pending PLAT-12184
-@skip_ios_new_arch
 Scenario: Reporting an Unhandled Native error
   When I run "UnhandledNativeErrorScenario" and relaunch the crashed app
   And I configure Bugsnag for "UnhandledNativeErrorScenario"
   Then I wait to receive an error
-  And the event "exceptions.0.errorClass" equals the platform-dependent string:
-  | android | java.lang.RuntimeException |
-  | ios     | NSException                |
-  And the event "exceptions.0.type" equals the platform-dependent string:
-  | android | android |
-  | ios     | cocoa   |
-  And the event "unhandled" is true
-  And the exception "message" equals "UnhandledNativeErrorScenario"
+  And the event "exceptions.0.errorClass" equals the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | N8facebook3jsi7JSErrorE |
+  | new  | 0.73    | N8facebook3jsi7JSErrorE |
+  | new  | default | NSException             |
+  | old  | default | NSException             |
 
-# TODO: remove this scenario when PLAT-12184 is resolved
-@ios_only @skip_old_arch
-Scenario: Reporting an Unhandled Native error
-  When I run "UnhandledNativeErrorScenario" and relaunch the crashed app
-  And I configure Bugsnag for "UnhandledNativeErrorScenario"
-  Then I wait to receive an error
-  And the event "exceptions.0.errorClass" equals "N8facebook3jsi7JSErrorE"
   And the event "exceptions.0.type" equals "cocoa"
   And the event "unhandled" is true
-  And the exception "message" starts with "Exception in HostFunction: UnhandledNativeErrorScenario"
+  And the event "exceptions.0.message" equals the version-dependent string:
+  | arch | version | value                                                                                                                     |
+  | new  | 0.74    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
+  | new  | 0.73    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
+  | new  | default | UnhandledNativeErrorScenario                                                                                              |
+  | old  | default | UnhandledNativeErrorScenario                                                                                              |
 
 Scenario: Updating severity on an unhandled JS error
   When I run "UnhandledJsErrorSeverityScenario" and relaunch the crashed app
@@ -52,7 +47,7 @@ Scenario: Updating severity on an unhandled JS error
   And the event "unhandled" is true
   And the event "severity" equals "info"
 
-@ios_only @skip_new_arch
+@skip_new_arch
 Scenario: Reporting an unhandled Objective-C exception raise by RCTFatal
   When I run "RCTFatalScenario" and relaunch the crashed app
   And I configure Bugsnag for "RCTFatalScenario"

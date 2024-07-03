@@ -19,6 +19,7 @@ steps:
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           - "0.73"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
@@ -46,6 +47,7 @@ steps:
               limit: 1
         matrix:
           - "0.73"
+          - "0.74"
 
       #
       # End-to-end tests
@@ -65,6 +67,7 @@ steps:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk
               - --farm=bb
               - --device=ANDROID_12
+              - --appium-version=1.22
               - --a11y-locator
               - --fail-fast
               - --no-tunnel
@@ -74,11 +77,13 @@ steps:
             permit_on_passed: true
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
+          RN_VERSION: "{{matrix}}"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
           - "0.73"
+          - "0.74"
 
       - label: ":bitbar: :android: RN {{matrix}} Android 12 (New Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch"
@@ -95,6 +100,7 @@ steps:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk
               - --farm=bb
               - --device=ANDROID_12
+              - --appium-version=1.22
               - --a11y-locator
               - --fail-fast
               - --no-tunnel
@@ -105,9 +111,11 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           RCT_NEW_ARCH_ENABLED: "true"
+          RN_VERSION: "{{matrix}}"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
           - "0.73"
+          - "0.74"
 

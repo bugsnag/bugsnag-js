@@ -23,6 +23,7 @@ steps:
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           - "0.73"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
@@ -46,6 +47,7 @@ steps:
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           - "0.73"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
@@ -77,11 +79,13 @@ steps:
             permit_on_passed: true
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
+          RN_VERSION: "{{matrix}}"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
           - "0.73"
+          - "0.74"
 
       - label: ":bitbar: :mac: RN {{matrix}} iOS 16 (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch"
@@ -105,6 +109,7 @@ steps:
         env:
           RCT_NEW_ARCH_ENABLED: "true"
           SKIP_NAVIGATION_SCENARIOS: "true"
+          RN_VERSION: "{{matrix}}"
         retry:
           manual:
             permit_on_passed: true
@@ -113,4 +118,5 @@ steps:
         concurrency_method: eager
         matrix:
           - "0.73"
+          - "0.74"
 
