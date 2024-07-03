@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-console-breadcrumbs",
-  "version": "7.25.0-alpha.0",
+  "version": "7.25.0",
   "main": "console-breadcrumbs.js",
   "description": "@bugsnag/js plugin to record console log method calls as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0-alpha.0"
+    "@bugsnag/core": "^7.25.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

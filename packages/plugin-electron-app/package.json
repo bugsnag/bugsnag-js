@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-app",
-  "version": "7.25.0-alpha.0",
+  "version": "7.25.0",
   "main": "app.js",
   "description": "@bugsnag/electron plugin to collect app information",
   "repository": {
@@ -25,8 +25,8 @@
     "generate-compile-commands": "node-gyp configure --release -- -f gyp.generator.compile_commands_json.py; mv Release/compile_commands.json .; rm -rf Debug Release"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0-alpha.0",
-    "@bugsnag/electron-test-helpers": "^7.25.0-alpha.0"
+    "@bugsnag/core": "^7.25.0",
+    "@bugsnag/electron-test-helpers": "^7.25.0"
   },
   "dependencies": {
     "bindings": "^1.5.0"
