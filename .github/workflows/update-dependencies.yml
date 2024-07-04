@@ -22,6 +22,7 @@ jobs:
       VERSION: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.target_version || inputs.target_version }}
       BUNDLE_GITHUB__COM: ${{ secrets.BUNDLE_ACCESS_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REVIEWER: gingerbenw
     steps:
       - uses: actions/checkout@v4
         with:
@@ -58,4 +59,4 @@ jobs:
          -H bumpsnag-$SUBMODULE-$VERSION
          --title "Update $SUBMODULE to version $VERSION"
          --body 'Created by bumpsnag'
-         --reviewer gingerbenw
+         --reviewer $REVIEWER
