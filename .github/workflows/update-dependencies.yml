@@ -23,10 +23,6 @@ jobs:
       BUNDLE_GITHUB__COM: ${{ secrets.BUNDLE_ACCESS_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: next
-
       - run: |
           git config --global user.name 'Bumpsnag bot'
           git config --global user.email ''
@@ -38,6 +34,10 @@ jobs:
         with:
           ruby-version: 2.7
 
+      - uses: actions/checkout@v4
+        with:
+          ref: next
+
       - name: Install dependencies
         run: bundle install
 
@@ -46,8 +46,6 @@ jobs:
 
       - name: Commit and push changes
         run: bundle exec bumpsnag commit-update $SUBMODULE $VERSION
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: List current branch name
         id: current-branch
@@ -60,4 +58,4 @@ jobs:
          -H bumpsnag-$SUBMODULE-$VERSION
          --title "Update $SUBMODULE to version $VERSION"
          --body 'Created by bumpsnag'
-         --reviewer cawllec
+        #  --reviewer gingerbenw
