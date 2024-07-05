@@ -5,11 +5,11 @@ const includes = require('@bugsnag/core/lib/es-utils/includes')
 /*
  * Leaves breadcrumbs when network requests occur
  */
-module.exports = (_ignoredUrls = [], win = window) => {
+module.exports = (_ignoredUrls = [], win = typeof window !== 'undefined' ? window : null) => {
   let restoreFunctions = []
   const plugin = {
     load: client => {
-      if (!client._isBreadcrumbTypeEnabled('request')) return
+      if (!client._isBreadcrumbTypeEnabled('request') || window === null) return
 
       const ignoredUrls = [
         client._config.endpoints.notify,
