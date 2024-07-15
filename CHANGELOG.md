@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- (plugin-vue) Check global vue config exists before installing vue 2 handler [#2171](https://github.com/bugsnag/bugsnag-js/pull/2171)
+
 ## [7.25.0] - 2024-07-03
 
 ### Added
