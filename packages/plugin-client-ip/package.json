@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-client-ip",
-  "version": "8.0.0-alpha.9",
+  "version": "8.0.0-alpha.10",
   "main": "client-ip.js",
   "description": "@bugsnag/js plugin to disable client IP from error reports",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.9"
+    "@bugsnag/core": "^8.0.0-alpha.10"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"
