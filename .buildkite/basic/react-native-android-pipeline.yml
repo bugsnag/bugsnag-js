@@ -67,6 +67,7 @@ steps:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk
               - --farm=bb
               - --device=ANDROID_12
+              - --appium-version=1.22
               - --a11y-locator
               - --fail-fast
               - --no-tunnel
@@ -99,6 +100,7 @@ steps:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk
               - --farm=bb
               - --device=ANDROID_12
+              - --appium-version=1.22
               - --a11y-locator
               - --fail-fast
               - --no-tunnel
