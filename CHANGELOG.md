@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- (delivery-xml-http-request) Add Access-Control-Max-Age header to CORS preflight responses [#2160](https://github.com/bugsnag/bugsnag-js/pull/2160)
+
 ### Fixed
 
 - (plugin-vue) Check global vue config exists before installing vue 2 handler [#2171](https://github.com/bugsnag/bugsnag-js/pull/2171)
