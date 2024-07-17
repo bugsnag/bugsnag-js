@@ -9,9 +9,9 @@ This only affects the remote debugger. Execution of JS in the normal way (on the
 
 // this is how some internal react native code detects whether the app is running
 // in the remote debugger:
-//   https://github.com/facebook/react-native/blob/1f4535c17572df78e2a033890220337e5703b614/Libraries/ReactNative/PaperUIManager.js#L62-L66
+//   https://github.com/facebook/react-native/blob/e320ab47cf855f2e5de74ea448ec292cf0bbb29a/packages/react-native/Libraries/Utilities/DebugEnvironment.js#L15
 // there's no public api for this so we use the same approach
-const isDebuggingRemotely = !global.nativeCallSyncHook
+const isDebuggingRemotely = !global.nativeCallSyncHook && !global.RN$Bridgeless
 
 const name = 'Bugsnag React Native'
 const { version } = require('../package.json')
