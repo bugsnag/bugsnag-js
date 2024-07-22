@@ -29,7 +29,8 @@ module.exports = (client, NativeClient) => ({
       groupingHash: event.groupingHash,
       apiKey: event.apiKey,
       featureFlags: event.toJSON().featureFlags,
-      nativeStack: nativeStack
+      nativeStack: nativeStack,
+      correlation: event.toJSON().correlation
     }
 
     if (isTurboModuleEnabled) {
