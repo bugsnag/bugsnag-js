@@ -2,6 +2,10 @@
 
 ## [8.0.0] - Unreleased
 
+### Added
+
+- (delivery-react-native) Support error correlation properties in event payloads [#2174](https://github.com/bugsnag/bugsnag-js/pull/2174) 
+
 ### Fixed
 
 - (plugin-angular) Prevent excess change detection cycles when calling `Bugsnag.notify` [#1861](https://github.com/bugsnag/bugsnag-js/pull/1861)
