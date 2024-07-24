@@ -30,7 +30,7 @@ module.exports = (client, NativeClient) => ({
       apiKey: event.apiKey,
       featureFlags: event.toJSON().featureFlags,
       nativeStack: nativeStack,
-      correlation: event.toJSON().correlation
+      correlation: event._correlation
     }
 
     if (isTurboModuleEnabled) {
