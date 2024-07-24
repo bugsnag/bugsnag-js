@@ -20,6 +20,12 @@
 - (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Added `duration` metadata field to network breadcrumbs [#1903](https://github.com/bugsnag/bugsnag-js/pull/1903)
 - (react-native) Update bugsnag-android from v5.32.2 to [v6.6.1](https://github.com/bugsnag/bugsnag-android/blob/next/CHANGELOG.md#661-2024-07-03)
 
+## [Unreleased]
+
+### Fixed
+
+- (plugin-vue) Check global vue config exists before installing vue 2 handler [#2171](https://github.com/bugsnag/bugsnag-js/pull/2171)
+
 ## [7.25.0] - 2024-07-03
 
 ### Added
