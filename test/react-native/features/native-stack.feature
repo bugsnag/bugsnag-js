@@ -1,7 +1,7 @@
 Feature: Native stacktrace is parsed for promise rejections
 
 # Skipped pending PLAT-12193
-@android_only @skip_new_arch
+@android_only @skip_new_arch_below_074
 Scenario: Handled JS error with native stacktrace
   When I run "NativeStackHandledScenario"
   Then I wait to receive an error
@@ -32,7 +32,7 @@ Scenario: Handled JS error with native stacktrace
   And the stacktrace contains "file" equal to "index.android.bundle"
 
 # Skipped pending PLAT-12193
-@android_only @skip_new_arch
+@android_only @skip_new_arch_below_074
 Scenario: Unhandled JS error with native stacktrace
   When I run "NativeStackUnhandledScenario"
   Then I wait to receive an error
