@@ -19,6 +19,7 @@ import com.reactnative.scenarios.Scenario;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 class BugsnagTestInterfaceImpl {
 
@@ -166,9 +167,11 @@ class BugsnagTestInterfaceImpl {
       }
 
       if (options.hasKey("redactedKeys")) {
-        Set<String> redactedKeys = new HashSet<String>();
+        Set<Pattern> redactedKeys = new HashSet<Pattern>();
         ReadableArray rkAr = options.getArray("redactedKeys");
-        for (int i = 0; i < rkAr.size(); i++) redactedKeys.add(rkAr.getString(i));
+        for (int i = 0; i < rkAr.size(); i++) {
+          redactedKeys.add(Pattern.compile(".*" + rkAr.getString(i) + ".*"));
+        }
         config.setRedactedKeys(redactedKeys);
       }
 
