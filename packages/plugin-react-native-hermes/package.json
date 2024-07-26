@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-hermes",
-  "version": "8.0.0-alpha.10",
+  "version": "8.0.0-alpha.11",
   "main": "hermes.js",
   "description": "@bugsnag/react-native plugin to support Hermes",
   "homepage": "https://www.bugsnag.com/",
@@ -18,7 +18,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.10"
+    "@bugsnag/core": "^8.0.0-alpha.11"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"
