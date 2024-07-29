@@ -181,7 +181,7 @@ services:
       - ./test/react-native-cli/features/:/app/features
 
   react-native-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v9-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:appium-app-id-cli
     environment:
       <<: *common-environment
       BITBAR_USERNAME:
@@ -201,7 +201,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   react-native-cli-maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v9-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner:appium-app-id-cli
     environment:
       <<: *common-environment
       BITBAR_USERNAME:
