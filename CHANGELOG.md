@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- (react-native) Update bugsnag-cocoa from v6.29.0 to [v6.30.1](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6301-2024-07-25)
+
 ### Fixed
 
 - (plugin-vue) Check global vue config exists before installing vue 2 handler [#2171](https://github.com/bugsnag/bugsnag-js/pull/2171)
