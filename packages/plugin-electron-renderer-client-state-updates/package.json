@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-renderer-client-state-updates",
-  "version": "8.0.0-alpha.10",
+  "version": "8.0.0-alpha.12",
   "main": "client-state-updates.js",
   "description": "@bugsnag/electron plugin to sync information between JS renderers",
   "homepage": "https://www.bugsnag.com/",
@@ -19,7 +19,7 @@
     "client-state-updates.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.10"
+    "@bugsnag/core": "^8.0.0-alpha.12"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"

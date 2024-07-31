@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-vue",
-  "version": "8.0.0-alpha.10",
+  "version": "8.0.0-alpha.12",
   "description": "Vue.js integration for bugsnag-js",
   "main": "dist/bugsnag-vue.js",
   "browser": "dist/bugsnag-vue.js",
@@ -24,7 +24,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.10"
+    "@bugsnag/core": "^8.0.0-alpha.12"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"
