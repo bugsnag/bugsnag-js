@@ -4,7 +4,7 @@
 
 ### Added
 
-- (delivery-react-native) Support error correlation properties in event payloads [#2174](https://github.com/bugsnag/bugsnag-js/pull/2174) 
+Support error correlation properties in event payloads [#2181](https://github.com/bugsnag/bugsnag-js/pull/2181) [#2174](https://github.com/bugsnag/bugsnag-js/pull/2174) 
 
 ### Fixed
 
