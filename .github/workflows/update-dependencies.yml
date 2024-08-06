@@ -1,0 +1,62 @@
+name: update-dependencies
+
+on:
+  repository_dispatch:
+    types: [update-dependency]
+  workflow_dispatch:
+    inputs:
+      target_submodule:
+        description: 'Submodule to update'
+        required: true
+        type: string
+      target_version:
+        description: 'Version of the submodule to update to'
+        required: true
+        type: string
+
+jobs:
+  update-dependencies:
+    runs-on: macos-latest
+    env:
+      SUBMODULE: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.target_submodule || inputs.target_submodule }}
+      VERSION: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.target_version || inputs.target_version }}
+      BUNDLE_GITHUB__COM: ${{ secrets.BUNDLE_ACCESS_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REVIEWER: gingerbenw
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: next
+
+      - run: |
+          git config --global user.name 'Bumpsnag bot'
+          git config --global user.email ''
+
+      - run: git fetch --prune --unshallow
+
+      - name: Install ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Update references locally
+        run: TARGET_SUBMODULE=$SUBMODULE TARGET_VERSION=$VERSION bundle exec scripts/update-dependencies.rb
+
+      - name: Commit and push changes
+        run: bundle exec bumpsnag commit_update $SUBMODULE $VERSION
+
+      - name: List current branch name
+        id: current-branch
+        run: echo "branch=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Create pull request
+        if: ${{ steps.current-branch.outputs.branch != 'next'}}
+        run: >
+         gh pr create -B next
+         -H bumpsnag-$TARGET_SUBMODULE-$TARGET_VERSION
+         --title "Update $TARGET_SUBMODULE to version $TARGET_VERSION"
+         --body 'Created by bumpsnag'
+         --reviewer $REVIEWER
