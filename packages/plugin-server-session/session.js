@@ -1,5 +1,4 @@
 const intRange = require('@bugsnag/core/lib/validators/int-range')
-const clone = require('@bugsnag/core/lib/clone-client')
 const SessionTracker = require('./tracker')
 const Backoff = require('backo')
 const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
@@ -11,11 +10,10 @@ module.exports = {
     sessionTracker.start()
     client._sessionDelegate = {
       startSession: (client, session) => {
-        const sessionClient = clone(client)
-        sessionClient._session = session
-        sessionClient._pausedSession = null
-        sessionTracker.track(sessionClient._session)
-        return sessionClient
+        client._session = session
+        client._pausedSession = null
+        sessionTracker.track(client._session)
+        return client
       },
       pauseSession: (client) => {
         client._pausedSession = client._session
@@ -31,7 +29,6 @@ module.exports = {
         if (client._pausedSession) {
           client._session = client._pausedSession
           client._pausedSession = null
-
           return client
         }
 

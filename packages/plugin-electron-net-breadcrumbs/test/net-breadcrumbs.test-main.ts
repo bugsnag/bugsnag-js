@@ -42,9 +42,16 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
+    const expectedMetadata = expect.objectContaining({
+      method: 'GET',
+      url: `${url}/`,
+      status,
+      duration: expect.any(Number)
+    })
+
     const expected = new Breadcrumb(
       `net.request ${successOrFailure}`,
-      { request: `GET ${url}/`, status },
+      expectedMetadata,
       'request'
     )
 
@@ -72,9 +79,16 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
+    const expectedMetadata = expect.objectContaining({
+      method,
+      url,
+      status,
+      duration: expect.any(Number)
+    })
+
     const expected = new Breadcrumb(
       `net.request ${successOrFailure}`,
-      { request: `${method} ${url}`, status },
+      expectedMetadata,
       'request'
     )
 
@@ -105,9 +119,16 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
+    const expectedMetadata = expect.objectContaining({
+      method: 'GET',
+      url: `http://localhost:${currentServer.port}/`,
+      status,
+      duration: expect.any(Number)
+    })
+
     const expected = new Breadcrumb(
       `net.request ${successOrFailure}`,
-      { request: `GET http://localhost:${currentServer.port}/`, status },
+      expectedMetadata,
       'request'
     )
 
@@ -128,9 +149,11 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.abort()
     })
 
+    const expectedMetadata = expect.objectContaining({ url: `${url}/`, method: 'GET' })
+
     const expected = new Breadcrumb(
       'net.request aborted',
-      { request: `GET ${url}/` },
+      expectedMetadata,
       'request'
     )
 
@@ -151,9 +174,11 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.abort()
     })
 
+    const expectedMetadata = expect.objectContaining({ url: `${url}/`, method: 'GET' })
+
     const expected = new Breadcrumb(
       'net.request aborted',
-      { request: `GET ${url}/` },
+      expectedMetadata,
       'request'
     )
 
@@ -180,9 +205,16 @@ describe.skip('plugin: electron net breadcrumbs', () => {
       request.end()
     })
 
+    const expectedMetadata = expect.objectContaining({
+      method: 'GET',
+      url,
+      error: "Attempted to redirect, but redirect policy was 'error'",
+      duration: expect.any(Number)
+    })
+
     const expected = new Breadcrumb(
       'net.request error',
-      { request: `GET ${url}`, error: "Attempted to redirect, but redirect policy was 'error'" },
+      expectedMetadata,
       'request'
     )
 
@@ -279,6 +311,90 @@ describe.skip('plugin: electron net breadcrumbs', () => {
     })
 
     expect(client._breadcrumbs).toHaveLength(0)
+  })
+
+  it('records the duration since request.end for non-chunked requests', async () => {
+    const client = makeClient()
+
+    currentServer = await startServer(200)
+
+    const url = `http://localhost:${currentServer.port}`
+    const request = net.request({ method: 'POST', url: url })
+
+    request.write('chunk 1')
+
+    await new Promise(resolve => {
+      request.on('response', (response) => {
+        response.on('data', () => {})
+        response.on('end', resolve)
+      })
+
+      setTimeout(() => {
+        request.end('chunk 2')
+      }, 500)
+    })
+
+    const expectedMetadata = expect.objectContaining({
+      method: 'POST',
+      url,
+      status: 200,
+      duration: expect.any(Number)
+    })
+
+    const expected = new Breadcrumb(
+      'net.request succeeded',
+      expectedMetadata,
+      'request'
+    )
+
+    expect(client._breadcrumbs).toHaveLength(1)
+    expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
+    expect(client._breadcrumbs[0].metadata.duration).toBeLessThan(500)
+  })
+
+  it('records the duration since the first write operation for chunked requests', async () => {
+    const client = makeClient()
+
+    currentServer = await startServer(200)
+    currentServer.timeout = 1000
+
+    const url = `http://localhost:${currentServer.port}`
+    const request = net.request({ method: 'POST', url: url })
+
+    request.chunkedEncoding = true
+    request.write('chunk 1')
+
+    await new Promise(resolve => {
+      request.on('response', (response) => {
+        response.on('data', () => {})
+        response.on('end', resolve)
+      })
+
+      setTimeout(() => {
+        request.write('chunk 2')
+      }, 250)
+
+      setTimeout(() => {
+        request.end()
+      }, 500)
+    })
+
+    const expectedMetadata = expect.objectContaining({
+      method: 'POST',
+      url,
+      status: 200,
+      duration: expect.any(Number)
+    })
+
+    const expected = new Breadcrumb(
+      'net.request succeeded',
+      expectedMetadata,
+      'request'
+    )
+
+    expect(client._breadcrumbs).toHaveLength(1)
+    expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
+    expect(client._breadcrumbs[0].metadata.duration).toBeGreaterThanOrEqual(500)
   })
 })
 

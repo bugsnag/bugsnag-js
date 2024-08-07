@@ -17,6 +17,7 @@
 
     BugsnagHandledState *handledState = [self deserializeHandledState:payload];
     NSDictionary *user = payload[@"user"];
+    NSDictionary *correlation = payload[@"correlation"];
 
     BugsnagEvent *event = [[BugsnagEvent alloc] initWithApp:[BugsnagAppWithState appFromJson:payload[@"app"]]
                                                      device:[BugsnagDeviceWithState deviceFromJson:payload[@"device"]]
@@ -29,6 +30,8 @@
                                                     session:nil /* set by -[BugsnagClient notifyInternal:block:] */];
     event.context = payload[@"context"];
     event.groupingHash = payload[@"groupingHash"];
+
+    [event setCorrelationTraceId:correlation[@"traceId"] spanId:correlation[@"spanId"]];
 
     if (payload[@"apiKey"]) {
         event.apiKey = payload[@"apiKey"];

@@ -23,7 +23,7 @@ export interface Config {
   onSession?: OnSessionCallback | OnSessionCallback[]
   logger?: Logger | null
   maxBreadcrumbs?: number
-  metadata?: { [key: string]: any }
+  metadata?: { [section: string]: { [key: string]: any } }
   featureFlags?: FeatureFlag[]
   releaseStage?: string
   plugins?: Plugin[]

@@ -1,4 +1,5 @@
 storage: ../.verdaccio
+max_body_size: 25mb
 auth:
   htpasswd:
     file: ../.verdaccio/htpasswd

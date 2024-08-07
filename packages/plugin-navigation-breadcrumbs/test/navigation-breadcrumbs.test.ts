@@ -51,23 +51,6 @@ describe('plugin: navigation breadcrumbs', () => {
     expect(c._breadcrumbs.length).toBe(0)
   })
 
-  it('should start a new session if autoTrackSessions=true', () => {
-    const { winHandlers, docHandlers, window } = getMockWindow()
-    const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin(window)] })
-    c._sessionDelegate = {
-      startSession: jest.fn(),
-      pauseSession: noop,
-      resumeSession: id
-    }
-    winHandlers.load.forEach((h) => h.call(window))
-    docHandlers.DOMContentLoaded.forEach((h) => h.call(window.document))
-    window.history.replaceState({}, 'bar', 'network-breadcrumb-test.html')
-    expect(c._sessionDelegate.startSession).toHaveBeenCalledWith(c, expect.objectContaining({
-      id: expect.any(String),
-      startedAt: expect.any(Date)
-    }))
-  })
-
   it('should not start a new session if autoTrackSessions=false', () => {
     const { winHandlers, docHandlers, window } = getMockWindow()
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', autoTrackSessions: false, plugins: [plugin(window)] })

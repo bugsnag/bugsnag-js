@@ -247,4 +247,43 @@ describe('delivery:XMLHttpRequest', () => {
       done()
     })
   })
+
+  it('prevents session delivery with incomplete config', done => {
+    const requests: MockXMLHttpRequest[] = []
+
+    // mock XMLHttpRequest class
+    function XMLHttpRequest (this: MockXMLHttpRequest) {
+      this.method = null
+      this.url = null
+      this.data = null
+      this.headers = {}
+      this.readyState = null
+      requests.push(this)
+    }
+    XMLHttpRequest.DONE = 4
+    XMLHttpRequest.prototype.open = function (method: string, url: string) {
+      this.method = method
+      this.url = url
+    }
+    XMLHttpRequest.prototype.setRequestHeader = function (key: string, val: string) {
+      this.headers[key] = val
+    }
+    XMLHttpRequest.prototype.send = function (data: string) {
+      this.data = data
+      this.readyState = XMLHttpRequest.DONE
+      this.onreadystatechange()
+    }
+
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: null, sessions: null },
+      redactedKeys: []
+    }
+    delivery({ _config: config, logger: {} } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendSession(payload, (err) => {
+      expect(err).toStrictEqual(new Error('Session not sent due to incomplete endpoint configuration'))
+      expect(requests.length).toBe(0)
+      done()
+    })
+  })
 })

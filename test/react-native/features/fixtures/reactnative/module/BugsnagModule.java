@@ -19,6 +19,7 @@ import com.reactnative.scenarios.Scenario;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class BugsnagModule extends ReactContextBaseJavaModule {
   private static ReactApplicationContext reactContext;
@@ -172,9 +173,14 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
       }
 
       if (options.hasKey("redactedKeys")) {
-        Set<String> redactedKeys = new HashSet<String>();
+        Set<Pattern> redactedKeys = new HashSet<Pattern>();
         ReadableArray rkAr = options.getArray("redactedKeys");
-        for (int i = 0; i < rkAr.size(); i++) redactedKeys.add(rkAr.getString(i));
+        for (int i = 0; i < rkAr.size(); i++) {
+          redactedKeys.add(Pattern.compile(
+            ".*" + rkAr.getString(i) + ".*",
+            Pattern.CASE_INSENSITIVE
+          ));
+        }
         config.setRedactedKeys(redactedKeys);
       }
 

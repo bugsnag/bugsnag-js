@@ -1,6 +1,18 @@
 import { ErrorHandler, Injectable } from '@angular/core'
 import Bugsnag, { Client, Plugin } from '@bugsnag/js'
 
+// angular uses zones to watch for changes in asynchronous tasks so it can
+// update the UI in response
+// Bugsnag uses a lot of asynchronous tasks when notifying, which trigger change
+// detection multiple times. This causes a potential performance problem, so we
+// need to run `notify` outside of the current zone if zones are being used
+// see https://angular.io/guide/zone
+declare const Zone: any
+
+// zones are optional, so we need to detect if they are being used
+// see https://angular.io/guide/zone#noopzone
+const isNgZoneEnabled = typeof Zone !== 'undefined' && !!Zone.current
+
 @Injectable()
 export class BugsnagErrorHandler extends ErrorHandler {
   public bugsnagClient: Client;
@@ -42,6 +54,21 @@ export class BugsnagErrorHandler extends ErrorHandler {
 
 const plugin: Plugin = {
   load: (client: Client): ErrorHandler => {
+    const originalNotify = client._notify
+
+    client._notify = function () {
+      const originalArguments = arguments as any
+      if (isNgZoneEnabled) {
+        // run notify in the root zone to avoid triggering change detection
+        Zone.root.run(() => {
+          originalNotify(originalArguments)
+        })
+      } else {
+        // if zones are not enabled, change detection will not run anyway
+        originalNotify(originalArguments)
+      }
+    }
+
     return new BugsnagErrorHandler(client)
   },
   name: 'Angular'

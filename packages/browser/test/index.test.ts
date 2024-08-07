@@ -87,6 +87,37 @@ describe('browser notifier', () => {
     notify.onreadystatechange()
   })
 
+  it('does not send an event with invalid configuration', () => {
+    const { session, notify } = mockFetch()
+    const Bugsnag = getBugsnag()
+    // @ts-expect-error
+    Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
+    Bugsnag.notify(new Error('123'), undefined, (err, event) => {
+      expect(err).toStrictEqual(new Error('Event not sent due to incomplete endpoint configuration'))
+    })
+
+    session.onreadystatechange()
+    notify.onreadystatechange()
+  })
+
+  it('does not send a session with invalid configuration', (done) => {
+    const { session } = mockFetch()
+    const Bugsnag = getBugsnag()
+    // @ts-expect-error
+    Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
+    Bugsnag.startSession()
+
+    session.onreadystatechange()
+
+    process.nextTick(() => {
+      expect(session.open).not.toHaveBeenCalled()
+      expect(session.setRequestHeader).not.toHaveBeenCalled()
+      expect(session.send).not.toHaveBeenCalled()
+
+      done()
+    })
+  })
+
   it('does not send if false is returned in onError', (done) => {
     const { session, notify } = mockFetch()
     const Bugsnag = getBugsnag()
@@ -131,7 +162,9 @@ describe('browser notifier', () => {
       maxBreadcrumbs: 20,
       enabledBreadcrumbTypes: ['manual', 'log', 'request'],
       user: null,
-      metadata: {},
+      metadata: {
+        debug: { foo: 'bar' }
+      },
       logger: undefined,
       redactedKeys: ['foo', /bar/],
       collectUserIp: true,
@@ -148,6 +181,7 @@ describe('browser notifier', () => {
       }
       expect(event.breadcrumbs.length).toBe(0)
       expect(event.originalError.message).toBe('123')
+      expect(event.getMetadata('debug')).toEqual({ foo: 'bar' })
       done()
     })
   })
@@ -170,6 +204,47 @@ describe('browser notifier', () => {
         { featureFlag: 'feature 2', variant: '2.0' }
       ])
       done()
+    })
+  })
+
+  describe('navigation breadcrumbs', () => {
+    it('resets events on pushState', () => {
+      const Bugsnag = getBugsnag()
+      const client = Bugsnag.createClient('API_KEY')
+      const resetEventCount = jest.spyOn(client, 'resetEventCount')
+
+      window.history.pushState('', '', 'new-url')
+      expect(resetEventCount).toHaveBeenCalled()
+
+      resetEventCount.mockReset()
+      resetEventCount.mockRestore()
+    })
+
+    it('does not reset events on replaceState', () => {
+      const Bugsnag = getBugsnag()
+      const client = Bugsnag.createClient('API_KEY')
+      const resetEventCount = jest.spyOn(client, 'resetEventCount')
+
+      window.history.replaceState('', '', 'new-url')
+      expect(resetEventCount).not.toHaveBeenCalled()
+
+      resetEventCount.mockReset()
+      resetEventCount.mockRestore()
+    })
+
+    it('does not start unnecessary sessions', () => {
+      const Bugsnag = getBugsnag()
+      const client = Bugsnag.createClient('API_KEY')
+      const startSession = jest.spyOn(client, 'startSession')
+
+      window.history.replaceState('', '', 'new-url')
+      expect(startSession).not.toHaveBeenCalled()
+
+      window.history.pushState('', '', 'new-url')
+      expect(startSession).not.toHaveBeenCalled()
+
+      startSession.mockReset()
+      startSession.mockRestore()
     })
   })
 })
