@@ -5,7 +5,7 @@ module.exports = {
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures', 'examples'],
       displayName: 'electron main',
-      runner: '@jest-runner/electron/main',
+      runner: '@kayahr/jest-electron-runner/main',
       testMatch: ['**/test/**/*.test-main.ts']
     },
     {
@@ -13,7 +13,8 @@ module.exports = {
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures', 'examples'],
       displayName: 'electron renderer',
-      runner: '@jest-runner/electron',
+      "runner": "@kayahr/jest-electron-runner",
+    "testEnvironment": "@kayahr/jest-electron-runner/environment",
       testMatch: ['**/test/**/*.test-renderer.ts']
     }
   ]

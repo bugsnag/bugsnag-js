@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-ipc",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "electron-ipc.js",
   "description": "@bugsnag/electron plugin to create the IPC layer between main and renderer processes",
   "repository": {
@@ -22,12 +22,13 @@
     "@bugsnag/core": "^7.9.2"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0",
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3",
     "browserify": "^17.0.0"
   },
   "dependencies": {
     "@bugsnag/safe-json-stringify": "^6.0.0"
   },
   "author": "Bugsnag",
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

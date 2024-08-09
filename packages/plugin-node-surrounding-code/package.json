@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-surrounding-code",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "surrounding-code.js",
   "description": "@bugsnag/js plugin to load surrounding code in Node stacktraces",
   "homepage": "https://www.bugsnag.com/",
@@ -22,9 +22,10 @@
     "pump": "^3.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0"
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"
-  }
+  },
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

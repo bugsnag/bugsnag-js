@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-renderer-strip-project-root",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "strip-project-root.js",
   "description": "@bugsnag/electron plugin to strip the project root from stack traces",
   "homepage": "https://www.bugsnag.com/",
@@ -15,9 +15,10 @@
     "*.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0",
-    "@bugsnag/electron-test-helpers": "^7.25.0"
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/electron-test-helpers": "200.1.0-canary.b34356166e1e6cfa66d871a3"
   },
   "author": "Bugsnag",
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

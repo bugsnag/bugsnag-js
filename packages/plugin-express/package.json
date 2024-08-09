@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-express",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "dist/bugsnag-express.js",
   "types": "types/bugsnag-express.d.ts",
   "description": "@bugsnag/js error handling middleware for Express (and Connect) web servers",
@@ -27,10 +27,11 @@
     "@bugsnag/core": "^7.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0",
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3",
     "@types/express": "^4.17.6"
   },
   "dependencies": {
     "iserror": "^0.0.2"
-  }
+  },
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

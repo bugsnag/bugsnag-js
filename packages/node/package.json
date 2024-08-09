@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/node",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",
@@ -24,25 +24,26 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-node": "^7.25.0",
-    "@bugsnag/plugin-app-duration": "^7.25.0",
-    "@bugsnag/plugin-contextualize": "^7.25.0",
-    "@bugsnag/plugin-intercept": "^7.25.0",
-    "@bugsnag/plugin-node-device": "^7.25.0",
-    "@bugsnag/plugin-node-in-project": "^7.25.0",
-    "@bugsnag/plugin-node-surrounding-code": "^7.25.0",
-    "@bugsnag/plugin-node-uncaught-exception": "^7.25.0",
-    "@bugsnag/plugin-node-unhandled-rejection": "^7.25.0",
-    "@bugsnag/plugin-server-session": "^7.25.0",
-    "@bugsnag/plugin-stackframe-path-normaliser": "^7.25.0",
-    "@bugsnag/plugin-strip-project-root": "^7.25.0"
+    "@bugsnag/delivery-node": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-app-duration": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-contextualize": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-intercept": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-node-device": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-node-in-project": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-node-surrounding-code": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-node-uncaught-exception": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-node-unhandled-rejection": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-server-session": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-stackframe-path-normaliser": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-strip-project-root": "200.1.0-canary.b34356166e1e6cfa66d871a3"
   },
   "dependencies": {
-    "@bugsnag/core": "^7.25.0",
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3",
     "byline": "^5.0.0",
     "error-stack-parser": "^2.0.2",
     "iserror": "^0.0.2",
     "pump": "^3.0.0",
     "stack-generator": "^2.0.3"
-  }
+  },
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

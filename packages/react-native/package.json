@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/react-native",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "src/notifier.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for React Native applications",
@@ -52,17 +52,17 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
-    "@bugsnag/core": "^7.25.0",
-    "@bugsnag/delivery-react-native": "^7.25.0",
-    "@bugsnag/plugin-console-breadcrumbs": "^7.25.0",
-    "@bugsnag/plugin-network-breadcrumbs": "^7.25.0",
-    "@bugsnag/plugin-react": "^7.25.0",
-    "@bugsnag/plugin-react-native-client-sync": "^7.25.0",
-    "@bugsnag/plugin-react-native-event-sync": "^7.25.0",
-    "@bugsnag/plugin-react-native-global-error-handler": "^7.25.0",
-    "@bugsnag/plugin-react-native-hermes": "^7.25.0",
-    "@bugsnag/plugin-react-native-session": "^7.25.0",
-    "@bugsnag/plugin-react-native-unhandled-rejection": "^7.25.0",
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/delivery-react-native": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-console-breadcrumbs": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-network-breadcrumbs": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-react": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-react-native-client-sync": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-react-native-event-sync": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-react-native-global-error-handler": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-react-native-hermes": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-react-native-session": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-react-native-unhandled-rejection": "200.1.0-canary.b34356166e1e6cfa66d871a3",
     "iserror": "^0.0.2"
   },
   "scripts": {
@@ -75,5 +75,6 @@
     "android": {
       "javaPackageName": "com.bugsnag.android"
     }
-  }
+  },
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

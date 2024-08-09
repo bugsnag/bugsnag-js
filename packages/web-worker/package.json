@@ -1,6 +1,6 @@
 {
     "name": "@bugsnag/web-worker",
-    "version": "7.25.0",
+    "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
     "description": "BugSnag error reporter for JavaScript web workers and service workers",
     "homepage": "https://www.bugsnag.com/",
     "main": "dist/bugsnag.web-worker.js",
@@ -39,16 +39,17 @@
     "author": "Bugsnag",
     "license": "MIT",
     "devDependencies": {
-        "@bugsnag/core": "^7.25.0",
-        "@bugsnag/delivery-fetch": "^7.25.0",
-        "@bugsnag/plugin-browser-device": "^7.25.0",
-        "@bugsnag/plugin-browser-session": "^7.25.0",
-        "@bugsnag/plugin-client-ip": "^7.25.0",
-        "@bugsnag/plugin-window-onerror": "^7.25.0",
-        "@bugsnag/plugin-window-unhandled-rejection": "^7.25.0",
+        "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+        "@bugsnag/delivery-fetch": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+        "@bugsnag/plugin-browser-device": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+        "@bugsnag/plugin-browser-session": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+        "@bugsnag/plugin-client-ip": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+        "@bugsnag/plugin-window-onerror": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+        "@bugsnag/plugin-window-unhandled-rejection": "200.1.0-canary.b34356166e1e6cfa66d871a3",
         "ts-loader": "^9.4.1",
         "typescript": "^4.9.3",
         "webpack": "^5.75.0",
         "webpack-cli": "^5.0.0"
-    }
+    },
+    "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

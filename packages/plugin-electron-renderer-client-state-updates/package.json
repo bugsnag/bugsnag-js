@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-renderer-client-state-updates",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "client-state-updates.js",
   "description": "@bugsnag/electron plugin to sync information between JS renderers",
   "homepage": "https://www.bugsnag.com/",
@@ -19,9 +19,10 @@
     "client-state-updates.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0"
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2"
-  }
+  },
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-client-state-persistence",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "client-state-persistence.js",
   "description": "@bugsnag/electron plugin to sync information between JS and native layer",
   "homepage": "https://www.bugsnag.com/",
@@ -39,12 +39,13 @@
     "bindings": "^1.5.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0",
-    "@bugsnag/electron-test-helpers": "^7.25.0",
-    "@bugsnag/plugin-electron-client-state-manager": "^7.25.0",
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/electron-test-helpers": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/plugin-electron-client-state-manager": "200.1.0-canary.b34356166e1e6cfa66d871a3",
     "@types/bindings": "^1.5.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.9.2"
-  }
+  },
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

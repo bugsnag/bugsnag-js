@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-angular",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "description": "Angular integration for bugsnag-js",
   "main": "dist/esm5/index.js",
   "browser": "dist/esm5/index.js",
@@ -34,12 +34,13 @@
     "@angular/compiler": "^7.2.15",
     "@angular/compiler-cli": "^7.2.15",
     "@angular/core": "^7.2.15",
-    "@bugsnag/js": "^7.25.0",
+    "@bugsnag/js": "200.1.0-canary.b34356166e1e6cfa66d871a3",
     "rxjs": "^5.5.8",
     "typescript": "^3.2.4",
     "zone.js": "^0.8.26"
   },
   "peerDependencies": {
     "@bugsnag/js": "^7.0.0"
-  }
+  },
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

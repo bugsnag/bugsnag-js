@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron-test-helpers",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "helpers.ts",
   "description": "Test helpers for @bugsnag/electron",
   "repository": {
@@ -15,7 +15,7 @@
     "helpers.ts"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0"
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3"
   },
   "author": "Bugsnag",
   "license": "MIT"

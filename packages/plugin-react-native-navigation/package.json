@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-navigation",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "react-native-navigation.js",
   "types": "types/react-native-navigation.d.ts",
   "description": "@bugsnag/react-native plugin for integration with react-native-navigation",
@@ -19,7 +19,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0",
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3",
     "@types/react-native": "^0.63.20",
     "react-native-navigation": "^7.0.0"
   },
@@ -34,5 +34,6 @@
   },
   "scripts": {
     "test:types": "tsc -p tsconfig.json"
-  }
+  },
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

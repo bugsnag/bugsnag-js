@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron-filestore",
-  "version": "7.16.2",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "filestore.js",
   "description": "@bugsnag/electron package for storing events, sessions and crash dumps on the file system",
   "author": "Bugsnag",
@@ -12,5 +12,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }

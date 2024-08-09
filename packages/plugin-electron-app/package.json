@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-app",
-  "version": "7.25.0",
+  "version": "200.1.0-canary.b34356166e1e6cfa66d871a3",
   "main": "app.js",
   "description": "@bugsnag/electron plugin to collect app information",
   "repository": {
@@ -25,8 +25,8 @@
     "generate-compile-commands": "node-gyp configure --release -- -f gyp.generator.compile_commands_json.py; mv Release/compile_commands.json .; rm -rf Debug Release"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0",
-    "@bugsnag/electron-test-helpers": "^7.25.0"
+    "@bugsnag/core": "200.1.0-canary.b34356166e1e6cfa66d871a3",
+    "@bugsnag/electron-test-helpers": "200.1.0-canary.b34356166e1e6cfa66d871a3"
   },
   "dependencies": {
     "bindings": "^1.5.0"
@@ -35,5 +35,6 @@
     "@bugsnag/core": "^7.9.2"
   },
   "author": "Bugsnag",
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "f7719785eb6b594e04e738f155f6282941356f44"
 }
