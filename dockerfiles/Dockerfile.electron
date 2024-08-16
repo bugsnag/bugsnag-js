@@ -1,0 +1,24 @@
+FROM node:18-bullseye
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    xvfb \
+    libnss3 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libgdk-pixbuf2.0-0 \
+    libgtk-3-0 \
+    libasound2 \
+    libgbm1
+
+COPY . /app
+WORKDIR /app
+
+RUN npm install electron@$ELECTRON_VERSION --no-audit --progress=false --no-save
+RUN npm ci --no-audit --progress=false
+
+RUN npx lerna bootstrap
+
+RUN npm run build:electron
+
+RUN apt-get install cppcheck -y

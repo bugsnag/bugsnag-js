@@ -39,6 +39,19 @@ services:
       context: .
       dockerfile: dockerfiles/Dockerfile.ci
 
+  electron-test-image:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.electron
+    environment:
+      <<: *common-environment
+      ELECTRON_VERSION:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      START_LOCAL_NPM: 1
+      VERBOSE: 1
+    volumes:
+      - ./test/electron/maze_output:/app/test/electron/maze_output
+
   browser-maze-runner-bb:
     build:
       context: .
