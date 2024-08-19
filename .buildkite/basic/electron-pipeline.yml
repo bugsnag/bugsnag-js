@@ -32,7 +32,7 @@ steps:
   - label: ":docker: Build Electron {{matrix.electron_version}} ubuntu test image"
     timeout_in_minutes: 10
     env:
-      ELECTRON_VERSION: "{{matrix.electron_version}}"
+      ELECTRON_VERSION: ${matrix.electron_version}
     matrix:
       setup:
         electron_version:
@@ -52,10 +52,10 @@ steps:
     #       push:
     #         - electron-ubuntu-test:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-electron-test-${BRANCH_NAME}-${matrix.electron_version}
 
-  # - label: "Electron {{matrix.electron_version}} linting"
+  # - label: "Electron ${{matrix.electron_version}} linting"
   #   timeout_in_minutes: 10
   #   env:
-  #     ELECTRON_VERSION: "{{matrix.electron_version}}"
+  #     ELECTRON_VERSION: "${{matrix.electron_version}}"
   #   matrix:
   #     setup:
   #       electron_version:
