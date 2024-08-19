@@ -32,6 +32,7 @@ class Event {
     this._featuresIndex = {}
     this._user = {}
     this._session = undefined
+    this._correlation = undefined
 
     this.errors = [
       createBugsnagError(errorClass, errorMessage, Event.__type, stacktrace)
@@ -46,6 +47,19 @@ class Event {
 
   addMetadata (section, keyOrObj, maybeVal) {
     return metadataDelegate.add(this._metadata, section, keyOrObj, maybeVal)
+  }
+
+  /**
+     * Associate this event with a specific trace. This is usually done automatically when
+     * using bugsnag-js-performance, but can also be set manually if required.
+     *
+     * @param traceId the ID of the trace the event occurred within
+     * @param spanId the ID of the span that the event occurred within
+     */
+  setTraceCorrelation (traceId, spanId) {
+    if (typeof traceId === 'string') {
+      this._correlation = { traceId, ...typeof spanId === 'string' ? { spanId } : { } }
+    }
   }
 
   getMetadata (section, key) {
@@ -101,7 +115,8 @@ class Event {
       metaData: this._metadata,
       user: this._user,
       session: this._session,
-      featureFlags: this.getFeatureFlags()
+      featureFlags: this.getFeatureFlags(),
+      correlation: this._correlation
     }
   }
 }

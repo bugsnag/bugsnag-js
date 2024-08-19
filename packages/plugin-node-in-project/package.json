@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-in-project",
-  "version": "7.22.7",
+  "version": "7.25.0",
   "main": "in-project.js",
   "description": "@bugsnag/js plugin to mark whether stackframes are 'in-project'",
   "homepage": "https://www.bugsnag.com/",
@@ -18,7 +18,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.22.7"
+    "@bugsnag/core": "^7.25.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^7.0.0"

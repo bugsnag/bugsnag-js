@@ -195,6 +195,39 @@ describe('bugsnag vue', () => {
     errorHandler('oops', { $options: { name: 'MyComponent' } }, 1)
   })
 
+  it('works with a global Vue instance (CDN build)', done => {
+    // In Vue 3.+ the global Vue.config has been replaced with app.config,
+    // but CDN builds still expose a global Vue object
+    const mockVue = {}
+    const mockVueApp: Vue3App = {
+      use: (plugin) => {
+        plugin.install(mockVueApp)
+      },
+      config: { errorHandler: undefined }
+    }
+    const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin(mockVue)] })
+    // eslint-disable-next-line
+    const plugin = client.getPlugin('vue')!
+    expect(typeof plugin.install).toBe('function')
+
+    mockVueApp.use(plugin)
+    client._setDelivery(client => ({
+      sendEvent: (payload) => {
+        expect(payload.events[0].errors[0].errorClass).toBe('Error')
+        expect(payload.events[0].errors[0].errorMessage).toBe('oops')
+        expect(payload.events[0].errors[0].stacktrace[0].file).toBe(__filename)
+        expect(payload.events[0]._metadata.vue).toBeDefined()
+        expect(payload.events[0]._metadata.vue.component).toBe('MyComponent')
+        expect(payload.events[0]._metadata.vue.errorInfo).toBe('render function')
+        done()
+      },
+      sendSession: () => {}
+    }))
+    expect(typeof mockVueApp.config.errorHandler).toBe('function')
+    const errorHandler = mockVueApp.config.errorHandler as unknown as Vue3ErrorHandler
+    errorHandler(new Error('oops'), { $options: { name: 'MyComponent' } }, 1)
+  })
+
   //
   // VUE 2
   //

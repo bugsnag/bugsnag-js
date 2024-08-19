@@ -420,4 +420,29 @@ describe('@bugsnag/core/event', () => {
         }))
     })
   })
+
+  describe('event.setTraceCorrelation()', () => {
+    it('allows setting the span and trace id', () => {
+      const event = new Event('Err', 'bad', [])
+      event.setTraceCorrelation('test-trace-id', 'test-span-id')
+      const serialized = event.toJSON()
+      expect(serialized.correlation).toEqual({ traceId: 'test-trace-id', spanId: 'test-span-id' })
+    })
+
+    it.each([undefined, null])('sets the trace id if span id is %s', (type) => {
+      const event = new Event('Err', 'bad', [])
+      // @ts-expect-error spanId unexpected type
+      event.setTraceCorrelation('test-trace-id', type)
+      const serialized = event.toJSON()
+      expect(serialized.correlation).toEqual({ traceId: 'test-trace-id' })
+    })
+
+    it.each([undefined, null])('does not set trace or span id if trace id is %s', (type) => {
+      const event = new Event('Err', 'bad', [])
+      // @ts-expect-error traceId unexpected type
+      event.setTraceCorrelation(type, 'test-span-id')
+      const serialized = event.toJSON()
+      expect(serialized.correlation).toBeUndefined()
+    })
+  })
 })
