@@ -3,7 +3,11 @@
   "version": "8.0.0",
   "main": "src/notifier.js",
   "exports": {
-    ".": "./src/notifier.js",
+    ".": {
+      "types": "./types/notifier.d.ts",
+      "default": "./src/notifier.js",
+      "import": "./src/notifier.js"
+    },
     "./main": "./src/client/main.js",
     "./renderer": "./src/client/renderer.js"
   },
