@@ -29,10 +29,10 @@ steps:
   #
   # Ubuntu tests Node 18
   #
-  - label: ":docker: Build Electron {{matrix.electron_version}} ubuntu test image"
+  - label: ":docker: Build Electron {{ matrix.electron_version }} ubuntu test image"
     timeout_in_minutes: 10
     env:
-      ELECTRON_VERSION: ${matrix.electron_version}
+      ELECTRON_VERSION: ${{ matrix.electron_version }}
     matrix:
       setup:
         electron_version:
