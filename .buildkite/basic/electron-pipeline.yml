@@ -29,24 +29,24 @@ steps:
   #
   # Ubuntu tests Node 18
   #
-  - label: "Build Electron {{matrix.electron_version}} docker test image"
-    key: "electron-image-build-{{matrix.electron_version}}"
-    timeout_in_minutes: 10
-    env:
-      ELECTRON_VERSION: "{{matrix.electron_version}}"
-    matrix:
-      setup:
-        electron_version:
-          - "^20.0.0"
-          - "^24.0.0"
-          - "^26.0.0"
-          - "^28.0.0"
-          - "^30.0.0"
-    plugins:
-      - docker-compose#v4.12.0:
-          build:
-            - electron-test-image
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+  # - label: "Build Electron {{matrix.electron_version}} docker test image"
+  #   key: "electron-image-build-{{matrix.electron_version}}"
+  #   timeout_in_minutes: 10
+  #   env:
+  #     ELECTRON_VERSION: "{{matrix.electron_version}}"
+  #   matrix:
+  #     setup:
+  #       electron_version:
+  #         - "^20.0.0"
+  #         - "^24.0.0"
+  #         - "^26.0.0"
+  #         - "^28.0.0"
+  #         - "^30.0.0"
+  #   plugins:
+  #     - docker-compose#v4.12.0:
+  #         build:
+  #           - electron-test-image
+  #         image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
       #     cache-from:
       #       - electron-test-image:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-electron-test-${matrix.electron_version}
       # - docker-compose#v4.12.0:
@@ -54,7 +54,7 @@ steps:
       #       - electron-ubuntu-test:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-electron-test-${matrix.electron_version}
 
   - label: "Electron {{matrix.electron_version}} linting"
-    depends_on: "electron-image-build-{{matrix.electron_version}}"
+    # depends_on: "electron-image-build-{{matrix.electron_version}}"
     timeout_in_minutes: 10
     env:
       ELECTRON_VERSION: "{{matrix.electron_version}}"
@@ -75,7 +75,7 @@ steps:
             - test:lint-native
 
   - label: "Electron {{matrix.electron_version}} unit tests"
-    depends_on: "electron-image-build-{{matrix.electron_version}}"
+    # depends_on: "electron-image-build-{{matrix.electron_version}}"
     timeout_in_minutes: 10
     env:
       ELECTRON_VERSION: "{{matrix.electron_version}}"
@@ -96,7 +96,7 @@ steps:
             - test:unit:electron-runner
 
   - label: "Electron {{matrix.electron_version}} integration tests"
-    depends_on: "electron-image-build-{{matrix.electron_version}}"
+    # depends_on: "electron-image-build-{{matrix.electron_version}}"
     timeout_in_minutes: 10
     env:
       ELECTRON_VERSION: "{{matrix.electron_version}}"
