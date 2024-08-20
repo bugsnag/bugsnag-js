@@ -140,10 +140,10 @@ steps:
       - "publish-js"
     commands:
       - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
-#
-#  #
-#  # Conditionally trigger full pipeline
-#  #
-#  - label: 'Conditionally trigger full set of tests'
-#    timeout_in_minutes: 30
-#    command: sh -c .buildkite/pipeline_trigger.sh
+
+  #
+  # Conditionally trigger full pipeline
+  #
+  - label: 'Conditionally trigger full set of tests'
+    timeout_in_minutes: 30
+    command: sh -c .buildkite/pipeline_trigger.sh
