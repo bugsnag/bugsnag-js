@@ -45,9 +45,9 @@ steps:
       - docker-compose#v4.12.0:
           build:
             - electron-test-image
-          # image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          # cache-from:
-          #   - electron-test-image:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-electron-test-${BRANCH_NAME}-${matrix.electron_version}
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:
+            - electron-test-image:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-electron-test-${BRANCH_NAME}-${matrix.electron_version}
       # - docker-compose#v4.12.0:
       #     push:
       #       - electron-ubuntu-test:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-electron-test-${BRANCH_NAME}-${matrix.electron_version}
