@@ -8,8 +8,16 @@
       "default": "./src/notifier.js",
       "import": "./src/notifier.js"
     },
-    "./main": "./src/client/main.js",
-    "./renderer": "./src/client/renderer.js"
+    "./main": {
+      "types": "./types/notifier.d.ts",
+      "default": "./src/client/main.js",
+      "import": "./src/client/main.js"
+    },
+    "./renderer": {
+      "types": "./types/notifier.d.ts",
+      "default": "./src/client/renderer.js",
+      "import": "./src/client/renderer.js"
+    } 
   },
   "types": "types/notifier.d.ts",
   "description": "@bugsnag/electron notifier",
