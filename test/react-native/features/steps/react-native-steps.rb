@@ -168,9 +168,30 @@ end
 Then('the event {string} equals the version-dependent string:') do |field_path, table|
   payload = Maze::Server.errors.current[:body]
   payload_value = Maze::Helper.read_key_path(payload, "events.0.#{field_path}")
+
+  expected_value = get_value_for_arch_and_version(table)
+  
+  unless expected_value.eql?('@skip')
+    assert_equal_with_nullability(expected_value, payload_value)
+  end
+end
+
+Then('the stacktrace contains {string} equal to the version-dependent string:') do |field_path, table|
+  expected_value = get_value_for_arch_and_version(table)
+
+  unless expected_value.eql?('@skip')
+    values = Maze::Helper.read_key_path(Maze::Server.errors.current[:body], "events.0.exceptions.0.stacktrace")
+    found = false
+    values.each do |frame|
+      found = true if Maze::Helper.read_key_path(frame, field_path) == expected_value
+    end
+    fail("No field_path #{field_path} found with value #{expected_value}") unless found
+  end
+end
+
+def get_value_for_arch_and_version(table)
   expected_values = table.hashes
 
-  
   arch = ENV['RCT_NEW_ARCH_ENABLED'] == 'true' ? 'new' : 'old'
   arch_values = expected_values.select do |hash|
     hash['arch'] == arch
@@ -190,9 +211,5 @@ Then('the event {string} equals the version-dependent string:') do |field_path, 
   raise("There is no expected value for the current version \"#{current_version}\"") if version_values.empty?
   raise("Multiple expected values found for arch \"#{arch}\" and version \"#{current_version}\"") if version_values.length() > 1
 
-  expected_value = version_values[0]['value']
-  
-  unless expected_value.eql?('@skip')
-    assert_equal_with_nullability(expected_value, payload_value)
-  end
+  return version_values[0]['value']
 end

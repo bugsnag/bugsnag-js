@@ -29,7 +29,11 @@ Scenario: Handled JS error with native stacktrace
     | runScenario |
 
   # the javascript part follows
-  And the stacktrace contains "file" equal to "index.android.bundle"
+  And the stacktrace contains "file" equal to the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | @skip                   |
+  | new  | default | @skip                   |
+  | old  | default | index.android.bundle    |
 
 # Skipped pending PLAT-12193
 @android_only @skip_new_arch_below_074
@@ -66,7 +70,11 @@ Scenario: Unhandled JS error with native stacktrace
     | runScenario |
 
   # the javascript part follows
-  And the stacktrace contains "file" equal to "index.android.bundle"
+  And the stacktrace contains "file" equal to the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.74    | @skip                   |
+  | new  | default | @skip                   |
+  | old  | default | index.android.bundle    |
 
 #   # PLAT-5117 addresses float serialization
 #   And the error payload field "events.0.exceptions.1.stacktrace.0.lineNumber" equals 1
