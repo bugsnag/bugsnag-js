@@ -14,6 +14,7 @@ steps:
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
           BUILD_IOS: "true"
           XCODE_VERSION: "15.3.0"
         artifact_paths:
@@ -80,6 +81,7 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
@@ -107,7 +109,7 @@ steps:
               - --no-tunnel
               - --aws-public-ip
         env:
-          RCT_NEW_ARCH_ENABLED: "true"
+          RCT_NEW_ARCH_ENABLED: "1"
           SKIP_NAVIGATION_SCENARIOS: "true"
           RN_VERSION: "{{matrix}}"
         retry:
