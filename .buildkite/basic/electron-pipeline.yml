@@ -55,7 +55,7 @@ steps:
 
   - label: "Electron {{matrix.electron_version}} tests"
     # depends_on: "electron-image-build-{{matrix.electron_version}}"
-    timeout_in_minutes: 10
+    timeout_in_minutes: 20
     env:
       ELECTRON_VERSION: "{{matrix.electron_version}}"
     matrix:
