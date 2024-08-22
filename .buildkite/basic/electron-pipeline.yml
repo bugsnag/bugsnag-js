@@ -70,6 +70,6 @@ steps:
       - docker-compose#v4.12.0:
           run: electron-test-image
           shell: ["/bin/sh", "-e", "-c"]
-          command: ["npm run test:unit:lint-native && npm run test:unit:electron-runner && npm run test:electron"]
+          command: ["npm run test:lint-native && npm run test:unit:electron-runner && npm run test:electron"]
     artifact_paths:
         - "test/electron/maze_output/**/*"
