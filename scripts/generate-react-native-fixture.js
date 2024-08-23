@@ -77,9 +77,13 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 
   fs.writeFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, pbxProjContents)
 
-  // use static frameworks (this is required to use bugsnag-cocoa from the scenarios package)
+  // update Podfile
   let podfileContents = fs.readFileSync(`${fixtureDir}/ios/Podfile`, 'utf8')
-  podfileContents = podfileContents.replace(/target 'reactnative' do/, 'use_frameworks! :linkage => :static\ntarget \'reactnative\' do')
+
+  // use static frameworks (this fixes an issue with react-native-file-access on 0.75)
+  if (parseFloat(rnVersion) >= 0.75) {
+    podfileContents = podfileContents.replace(/target 'reactnative' do/, 'use_frameworks! :linkage => :static\ntarget \'reactnative\' do')
+  }
 
   // disable Flipper
   if (podfileContents.includes('use_flipper!')) {
