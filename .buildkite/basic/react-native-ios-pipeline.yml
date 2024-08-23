@@ -14,6 +14,7 @@ steps:
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
           BUILD_IOS: "true"
           XCODE_VERSION: "15.3.0"
         artifact_paths:
@@ -22,8 +23,8 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.73"
           - "0.74"
+          - "0.75"
         retry:
           automatic:
             - exit_status: "*"
@@ -46,8 +47,8 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.73"
           - "0.74"
+          - "0.75"
         retry:
           automatic:
             - exit_status: "*"
@@ -80,12 +81,13 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.73"
           - "0.74"
+          - "0.75"
 
       - label: ":bitbar: :mac: RN {{matrix}} iOS 16 (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch"
@@ -107,7 +109,7 @@ steps:
               - --no-tunnel
               - --aws-public-ip
         env:
-          RCT_NEW_ARCH_ENABLED: "true"
+          RCT_NEW_ARCH_ENABLED: "1"
           SKIP_NAVIGATION_SCENARIOS: "true"
           RN_VERSION: "{{matrix}}"
         retry:
@@ -117,6 +119,6 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.73"
           - "0.74"
+          - "0.75"
 

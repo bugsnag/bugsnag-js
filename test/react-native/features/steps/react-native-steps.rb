@@ -192,7 +192,7 @@ end
 def get_value_for_arch_and_version(table)
   expected_values = table.hashes
 
-  arch = ENV['RCT_NEW_ARCH_ENABLED'] == 'true' ? 'new' : 'old'
+  arch = ENV['RCT_NEW_ARCH_ENABLED'] == '1' ? 'new' : 'old'
   arch_values = expected_values.select do |hash|
     hash['arch'] == arch
   end

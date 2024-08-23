@@ -19,7 +19,7 @@ const rnVersion = process.env.RN_VERSION
 const ROOT_DIR = resolve(__dirname, '../')
 
 let fixturePath = 'test/react-native/features/fixtures/generated/'
-if (process.env.RCT_NEW_ARCH_ENABLED === 'true' || process.env.RCT_NEW_ARCH_ENABLED === '1') {
+if (process.env.RCT_NEW_ARCH_ENABLED === '1') {
   fixturePath += 'new-arch/'
 } else {
   fixturePath += 'old-arch/'
@@ -77,9 +77,13 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 
   fs.writeFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, pbxProjContents)
 
-  // use static frameworks (this is required to use bugsnag-cocoa from the scenarios package)
+  // update Podfile
   let podfileContents = fs.readFileSync(`${fixtureDir}/ios/Podfile`, 'utf8')
-  podfileContents = podfileContents.replace(/target 'reactnative' do/, 'use_frameworks! :linkage => :static\ntarget \'reactnative\' do')
+
+  // use static frameworks (this fixes an issue with react-native-file-access on 0.75)
+  if (parseFloat(rnVersion) >= 0.75) {
+    podfileContents = podfileContents.replace(/target 'reactnative' do/, 'use_frameworks! :linkage => :static\ntarget \'reactnative\' do')
+  }
 
   // disable Flipper
   if (podfileContents.includes('use_flipper!')) {

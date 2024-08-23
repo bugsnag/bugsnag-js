@@ -24,6 +24,7 @@ Scenario: Reporting an Unhandled Native error
   Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the version-dependent string:
   | arch | version | value                   |
+  | new  | 0.75    | N8facebook3jsi7JSErrorE |
   | new  | 0.74    | N8facebook3jsi7JSErrorE |
   | new  | 0.73    | N8facebook3jsi7JSErrorE |
   | new  | default | NSException             |
@@ -33,6 +34,7 @@ Scenario: Reporting an Unhandled Native error
   And the event "unhandled" is true
   And the event "exceptions.0.message" equals the version-dependent string:
   | arch | version | value                                                                                                                     |
+  | new  | 0.75    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | 0.74    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | 0.73    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | default | UnhandledNativeErrorScenario                                                                                              |
