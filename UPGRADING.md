@@ -3,7 +3,11 @@ Upgrading
 
 ## 7.x to 8.x
 
-As well as a number of bug fixes and enhancements with breaking changes, this version contains major improvements to our Node package: including making the top-level `Bugsnag` static interface context-aware and enabling breadcrumbs for Node.js projects.
+As well as some bug fixes and **breaking changes**, this major SDK release has the following key features:
+
+- Improved API for NodeJS: the `Bugsnag` client can now be used to call SDK methods in the context of the current request
+- Breadcrumb support for NodeJS: we now support manual breadcrumbs and capture console breadcrumbs automatically
+- Improved session reporting for single page apps: a session is now created only once per page load to more accurately reflect a user's session in your app
 
 ### Amended triggers for automatically tracked sessions for web apps
 
@@ -75,7 +79,7 @@ Prior to v8, calls to `notify` triggered change detection cycles which could aff
 
 As of v8, for consistency with other BugSnag platforms, if only one [endpoint](https://docs.bugsnag.com/platforms/javascript/configuration-options/#endpoints) is set in configuration, no events **or** sessions will be sent. To correctly setup BugSnag for on-premise, both `notify` and `sessions` endpoint should be set. This change reduces the possibility of a misconfigured client leaking data to the wrong BugSnag server.
 
-#### `request` replaced with `url` and `method` in network breadcrumb metadata
+### `request` replaced with `url` and `method` in network breadcrumb metadata
 
 Prior to v8, network breadcrumb metadata included a field named `request`, which contained the request URL prepended with the HTTP method (e.g. `"GET https://request-url.com/`). This has been replaced with two separate metadata fields named `url` and `method`, which contain the request URL and HTTP method respectively.
 
