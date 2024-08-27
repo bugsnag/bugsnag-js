@@ -16,7 +16,7 @@ module.exports = class BugsnagPluginVue {
   }
 
   load (client) {
-    if (this.Vue) {
+    if (this.Vue && this.Vue.config) {
       installVue2(this.Vue, client)
       return {
         installVueErrorHandler: () => client._logger.warn('installVueErrorHandler() was called unnecessarily')
