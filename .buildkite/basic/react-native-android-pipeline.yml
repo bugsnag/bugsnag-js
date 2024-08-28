@@ -11,6 +11,7 @@ steps:
           JAVA_VERSION: "17"
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/old-arch/**/reactnative.apk"
@@ -18,8 +19,8 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.73"
           - "0.74"
+          - "0.75"
         retry:
           automatic:
             - exit_status: "*"
@@ -34,7 +35,7 @@ steps:
           JAVA_VERSION: "17"
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
-          RCT_NEW_ARCH_ENABLED: "true"
+          RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/reactnative.apk"
@@ -46,8 +47,8 @@ steps:
             - exit_status: "*"
               limit: 1
         matrix:
-          - "0.73"
           - "0.74"
+          - "0.75"
 
       #
       # End-to-end tests
@@ -78,12 +79,13 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.73"
           - "0.74"
+          - "0.75"
 
       - label: ":bitbar: :android: RN {{matrix}} Android 12 (New Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch"
@@ -110,12 +112,12 @@ steps:
             permit_on_passed: true
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
-          RCT_NEW_ARCH_ENABLED: "true"
+          RCT_NEW_ARCH_ENABLED: "1"
           RN_VERSION: "{{matrix}}"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.73"
           - "0.74"
+          - "0.75"
 
