@@ -63,7 +63,7 @@ const Bugsnag = {
       const original = bugsnag[m]
       bugsnag[m] = function () {
         // if we are in an async context, use the client from that context
-        const contextClient = bugsnag._clientContext && bugsnag._clientContext.getStore() ? bugsnag._clientContext.getStore() : null
+        const contextClient = bugsnag._clientContext && typeof bugsnag._clientContext.getStore === 'function' ? bugsnag._clientContext.getStore() : null
         const client = contextClient || bugsnag
         const originalMethod = contextClient ? contextClient[m] : original
 
@@ -103,7 +103,7 @@ Object.keys(Client.prototype).forEach((m) => {
   Bugsnag[m] = function () {
     // if we are in an async context, use the client from that context
     let client = Bugsnag._client
-    if (client && client._clientContext && client._clientContext.getStore()) {
+    if (client && client._clientContext && typeof client._clientContext.getStore === 'function') {
       client = client._clientContext.getStore()
     }
 

@@ -78,11 +78,6 @@ Prior to v8, calls to `notify` triggered change detection cycles which could aff
 ### Validation of BugSnag endpoints
 
 As of v8, for consistency with other BugSnag platforms, if only one [endpoint](https://docs.bugsnag.com/platforms/javascript/configuration-options/#endpoints) is set in configuration, no events **or** sessions will be sent. To correctly setup BugSnag for on-premise, both `notify` and `sessions` endpoint should be set. This change reduces the possibility of a misconfigured client leaking data to the wrong BugSnag server.
-
-### `request` replaced with `url` and `method` in network breadcrumb metadata
-
-Prior to v8, network breadcrumb metadata included a field named `request`, which contained the request URL prepended with the HTTP method (e.g. `"GET https://request-url.com/`). This has been replaced with two separate metadata fields named `url` and `method`, which contain the request URL and HTTP method respectively.
-
 ## `bugsnag-react-native@*` to `@bugsnag/react-native@7.3`
 
 As of `v7.3` of the [`bugsnag-js` monorepo](https://github.com/bugsnag/bugsnag-js) it contains Bugsnag's SDK for React Native. This additional notifier joins `@bugsnag/js` and `@bugsnag/expo` in its unified version scheme, so the first version of `@bugsnag/react-native` is `v7.3.0`.
