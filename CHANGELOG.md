@@ -1,6 +1,6 @@
 # Changelog
 
-## [8.0.0] - Unreleased
+## [8.0.0] - 2024-08-29
 
 ### Summary
 
