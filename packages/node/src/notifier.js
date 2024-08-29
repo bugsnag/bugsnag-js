@@ -103,7 +103,7 @@ Object.keys(Client.prototype).forEach((m) => {
   Bugsnag[m] = function () {
     // if we are in an async context, use the client from that context
     let client = Bugsnag._client
-    if (client && client._clientContext && typeof client._clientContext.getStore === 'function') {
+    if (client && client._clientContext && client._clientContext.getStore()) {
       client = client._clientContext.getStore()
     }
 
