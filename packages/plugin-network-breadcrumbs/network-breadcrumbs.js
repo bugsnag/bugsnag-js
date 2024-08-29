@@ -21,41 +21,56 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
       // XMLHttpRequest monkey patch
       function monkeyPatchXMLHttpRequest () {
-        if (!('addEventListener' in win.XMLHttpRequest.prototype)) return
-        const nativeOpen = win.XMLHttpRequest.prototype.open
+        if (!('addEventListener' in win.XMLHttpRequest.prototype) || !('WeakMap' in win)) return
 
-        // override native open()
+        const trackedRequests = new WeakMap()
+        const requestHandlers = new WeakMap()
+
+        const originalOpen = win.XMLHttpRequest.prototype.open
         win.XMLHttpRequest.prototype.open = function open (method, url) {
-          let requestSetupKey = false
+          // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
+          if (this) {
+            trackedRequests.set(this, { method, url })
+          }
+          originalOpen.apply(this, arguments)
+        }
 
-          const error = () => handleXHRError(method, url)
-          const load = () => handleXHRLoad(method, url, this.status)
+        const originalSend = win.XMLHttpRequest.prototype.send
+        win.XMLHttpRequest.prototype.send = function send (body) {
+          const requestData = trackedRequests.get(this)
+          if (requestData) {
+          // if we have already setup listeners then this request instance is being reused,
+          // so we need to remove the listeners from the previous send
+            const listeners = requestHandlers.get(this)
+            if (listeners) {
+              this.removeEventListener('load', listeners.load)
+              this.removeEventListener('error', listeners.error)
+            }
 
-          // if we have already setup listeners, it means open() was called twice, we need to remove
-          // the listeners and recreate them
-          if (requestSetupKey) {
-            this.removeEventListener('load', load)
-            this.removeEventListener('error', error)
+            const requestStart = new Date()
+            const error = () => handleXHRError(requestData.method, requestData.url, getDuration(requestStart))
+            const load = () => handleXHRLoad(requestData.method, requestData.url, this.status, getDuration(requestStart))
+
+            this.addEventListener('load', load)
+            this.addEventListener('error', error)
+            // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
+            if (this) {
+              requestHandlers.set(this, { load, error })
+            }
           }
 
-          // attach load event listener
-          this.addEventListener('load', load)
-          // attach error event listener
-          this.addEventListener('error', error)
-
-          requestSetupKey = true
-
-          nativeOpen.apply(this, arguments)
+          originalSend.apply(this, arguments)
         }
 
         if (process.env.NODE_ENV !== 'production') {
           restoreFunctions.push(() => {
-            win.XMLHttpRequest.prototype.open = nativeOpen
+            win.XMLHttpRequest.prototype.open = originalOpen
+            win.XMLHttpRequest.prototype.send = originalSend
           })
         }
       }
 
-      function handleXHRLoad (method, url, status) {
+      function handleXHRLoad (method, url, status, duration) {
         if (url === undefined) {
           client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
           return
@@ -68,8 +83,10 @@ module.exports = (_ignoredUrls = [], win = window) => {
           return
         }
         const metadata = {
-          status: status,
-          request: `${method} ${url}`
+          status,
+          method: String(method),
+          url: String(url),
+          duration: duration
         }
         if (status >= 400) {
           // contacted server but got an error response
@@ -79,7 +96,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
       }
 
-      function handleXHRError (method, url) {
+      function handleXHRError (method, url, duration) {
         if (url === undefined) {
           client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
           return
@@ -92,7 +109,9 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
         // failed to contact server
         client.leaveBreadcrumb('XMLHttpRequest error', {
-          request: `${method} ${url}`
+          method: String(method),
+          url: String(url),
+          duration: duration
         }, BREADCRUMB_TYPE)
       }
 
@@ -130,14 +149,16 @@ module.exports = (_ignoredUrls = [], win = window) => {
           }
 
           return new Promise((resolve, reject) => {
+            const requestStart = new Date()
+
             // pass through to native fetch
             oldFetch(...arguments)
               .then(response => {
-                handleFetchSuccess(response, method, url)
+                handleFetchSuccess(response, method, url, getDuration(requestStart))
                 resolve(response)
               })
               .catch(error => {
-                handleFetchError(method, url)
+                handleFetchError(method, url, getDuration(requestStart))
                 reject(error)
               })
           })
@@ -150,10 +171,12 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
       }
 
-      const handleFetchSuccess = (response, method, url) => {
+      const handleFetchSuccess = (response, method, url, duration) => {
         const metadata = {
+          method: String(method),
           status: response.status,
-          request: `${method} ${url}`
+          url: String(url),
+          duration: duration
         }
         if (response.status >= 400) {
           // when the request comes back with a 4xx or 5xx status it does not reject the fetch promise,
@@ -163,8 +186,8 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
       }
 
-      const handleFetchError = (method, url) => {
-        client.leaveBreadcrumb('fetch() error', { request: `${method} ${url}` }, BREADCRUMB_TYPE)
+      const handleFetchError = (method, url, duration) => {
+        client.leaveBreadcrumb('fetch() error', { method: String(method), url: String(url), duration: duration }, BREADCRUMB_TYPE)
       }
     }
   }
@@ -178,3 +201,5 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
   return plugin
 }
+
+const getDuration = (startTime) => startTime && new Date() - startTime

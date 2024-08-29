@@ -39,15 +39,13 @@ app.use(middleware.requestHandler)
 
 app.use(bodyParser());
 
-const erroneous = () => new Promise((resolve, reject) => reject(new Error('async noooop')))
-
 app.use(async (ctx, next) => {
   if (ctx.path === '/') {
     ctx.body = 'ok'
   } else if (ctx.path === '/err') {
     throw new Error('noooop')
-  } else if (ctx.path === '/async-err') {
-    await erroneous()
+  } else if (ctx.path === '/promise-rejection') {
+    await Promise.reject(new Error('async noooop'))
   } else if (ctx.path === '/ctx-throw') {
     ctx.throw(500, 'thrown')
   } else if (ctx.path === '/ctx-throw-400') {
@@ -59,6 +57,22 @@ app.use(async (ctx, next) => {
     await next()
   } else if (ctx.path === '/bodytest') {
     throw new Error('request body')
+  } else if (ctx.path === '/throw-async-callback') {
+    setTimeout(function () {
+      throw new Error('error in async callback')
+    }, 100)
+    ctx.body = 'ok'
+  } else if (ctx.path === '/unhandled-rejection-async-callback') {
+    setTimeout(function () {
+      Promise.reject(new Error('unhandled rejection in async callback'))
+    }, 100)
+    ctx.body = 'ok'
+  } else if (ctx.path === '/breadcrumbs_a') {
+    Bugsnag.leaveBreadcrumb('For the first URL', { message: 'For the first URL' })
+    throw new Error('Error in /breadcrumbs_a')
+  } else if (ctx.path === '/breadcrumbs_b') {
+    Bugsnag.leaveBreadcrumb('For the second URL', { message: 'For the second URL' })
+    throw new Error('Error in /breadcrumbs_b')
   } else {
     await next()
   }

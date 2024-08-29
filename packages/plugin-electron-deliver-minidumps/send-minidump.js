@@ -34,6 +34,11 @@ module.exports = (net, client) => {
 
   const sendMinidump = async (minidumpPath, event) => {
     const apiKey = (event && event.apiKey) || client._config.apiKey
+
+    if (client._config.endpoints.minidumps === null) {
+      throw new Error('Minidump not sent due to incomplete endpoint configuration')
+    }
+
     const url = new URL(client._config.endpoints.minidumps)
     url.pathname = `${url.pathname.replace(/\/$/, '')}/minidump`
     url.searchParams.set('api_key', apiKey)

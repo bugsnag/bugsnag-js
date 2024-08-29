@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-browser-request",
-  "version": "7.25.0",
+  "version": "8.0.0-alpha.13",
   "main": "request.js",
   "description": "@bugsnag/js plugin to set request info in browsers",
   "homepage": "https://www.bugsnag.com/",
@@ -18,9 +18,9 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0"
+    "@bugsnag/core": "^8.0.0-alpha.13"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.0.0"
+    "@bugsnag/core": "^8.0.0-alpha.1"
   }
 }

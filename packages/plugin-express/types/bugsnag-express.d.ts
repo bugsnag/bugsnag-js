@@ -7,6 +7,7 @@ export default bugsnagPluginExpress
 interface BugsnagPluginExpressResult {
   errorHandler: express.ErrorRequestHandler
   requestHandler: express.RequestHandler
+  runInContext: express.RequestHandler
 }
 
 // add a new call signature for the getPlugin() method that types the plugin result

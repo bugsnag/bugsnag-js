@@ -17,7 +17,8 @@ def get_test_url(path)
   notify = "http://#{api_host}/notify"
   sessions = "http://#{api_host}/sessions"
   logs = "http://#{api_host}/logs"
-  config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}"
+  reflect= "http://#{api_host}/reflect"
+  config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}&REFLECT=#{reflect}"
 
   uri = URI("http://#{host}#{path}")
 

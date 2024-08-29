@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-electron",
-  "version": "7.25.0",
+  "version": "8.0.0-alpha.13",
   "main": "delivery.js",
   "description": "@bugsnag/electron delivery mechanism to send events, sessions, and crash dumps from Electron apps",
   "homepage": "https://www.bugsnag.com/",
@@ -17,12 +17,12 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0",
-    "@bugsnag/electron-network-status": "^7.25.0",
-    "@bugsnag/plugin-electron-client-state-manager": "^7.25.0"
+    "@bugsnag/core": "^8.0.0-alpha.13",
+    "@bugsnag/electron-network-status": "^8.0.0-alpha.13",
+    "@bugsnag/plugin-electron-client-state-manager": "^8.0.0-alpha.13"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.9.2",
-    "@bugsnag/electron-network-status": "^7.10.0"
+    "@bugsnag/core": "^8.0.0-alpha.1",
+    "@bugsnag/electron-network-status": "^8.0.0-alpha.1"
   }
 }

@@ -26,6 +26,7 @@ type NativeClientEvent = Pick<EventWithInternals,
   severityReason: EventWithInternals['_handledState']['severityReason']
   user: EventWithInternals['_user']
   metadata: EventWithInternals['_metadata']
+  correlation: EventWithInternals['_correlation']
   nativeStack: NativeStackIOS | NativeStackAndroid
 }
 
@@ -57,6 +58,7 @@ describe('delivery: react native', () => {
     c.setContext('test screen')
     c.setUser('123')
     c.notify(new Error('oh no'), (e) => {
+      e.setTraceCorrelation('trace-id', 'span-id')
       e.groupingHash = 'ER_GRP_098'
       e.apiKey = 'abcdef123456abcdef123456abcdef123456'
     }, (err, event) => {
@@ -80,6 +82,7 @@ describe('delivery: react native', () => {
       expect(sent[0].metadata).toEqual({})
       expect(sent[0].groupingHash).toEqual('ER_GRP_098')
       expect(sent[0].apiKey).toBe('abcdef123456abcdef123456abcdef123456')
+      expect(sent[0].correlation).toEqual({ traceId: 'trace-id', spanId: 'span-id' })
       done()
     })
   })

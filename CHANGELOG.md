@@ -1,5 +1,34 @@
 # Changelog
 
+## [8.0.0] - Unreleased
+
+### Summary
+
+As well as some bug fixes and **breaking changes** described in the [Upgrade Guide](./UPGRADING.md), this major SDK release has the following key features:
+
+- Improved API for NodeJS: the `Bugsnag` client can now be used to call SDK methods in the context of the current request
+- Breadcrumb support for NodeJS: we now support manual breadcrumbs and capture console breadcrumbs automatically
+- Improved session reporting for single page apps: a session is now created only once per page load to more accurately reflect a user's session in your app
+
+### Added
+
+- (node) Add support for manual breadcrumbs [#1927](https://github.com/bugsnag/bugsnag-js/pull/1927) and automatic console breadcrumbs [#2107](https://github.com/bugsnag/bugsnag-js/pull/2107)
+- Support error correlation properties in event payloads [#2174](https://github.com/bugsnag/bugsnag-js/pull/2174) 
+
+### Fixed
+
+- (plugin-angular) Prevent excess change detection cycles when calling `Bugsnag.notify` [#1861](https://github.com/bugsnag/bugsnag-js/pull/1861)
+
+### Changed
+
+- (node) Enable breadcrumbs and context-scoped calls [#1927](https://github.com/bugsnag/bugsnag-js/pull/1927)
+- (plugin-contextualize) Reimplement without relying on the deprecated node Domain API. From Node 16+ unhandled promise rejections are also supported [#1924](https://github.com/bugsnag/bugsnag-js/pull/1924)
+- (plugin-navigation-breadcrumbs) Calling `pushState` or `replaceState` no longer triggers a new session when `autoTrackSessions` is enabled [#1820](https://github.com/bugsnag/bugsnag-js/pull/1820)
+- (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) *Breaking change*: The `request` metadata field in network breadcrumbs has been renamed to `url` and is no longer pre-pended with the HTTP method [#1988](https://github.com/bugsnag/bugsnag-js/pull/1988)
+- (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Add `method` metadata field to network breadcrumbs [#1988](https://github.com/bugsnag/bugsnag-js/pull/1988)
+- (plugin-network-breadcrumbs, plugin-electron-net-breadcrumbs) Add `duration` metadata field to network breadcrumbs [#1903](https://github.com/bugsnag/bugsnag-js/pull/1903)
+- (react-native) Update bugsnag-android from v5.32.2 to [v6.6.1](https://github.com/bugsnag/bugsnag-android/blob/next/CHANGELOG.md#661-2024-07-03)
+
 ## [7.25.1] - 2024-08-27
 
 ### Changed

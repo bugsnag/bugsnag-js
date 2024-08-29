@@ -96,6 +96,13 @@ app.get('/rejection-async', function (req, res, next) {
   }, 100)
 })
 
+app.get('/unhandled-rejection-async-callback', function (req, res, next) {
+  setTimeout(function () {
+    Promise.reject(new Error('unhandled rejection in async callback'))
+  }, 100)
+  res.end('OK')
+})
+
 app.get('/string-as-error', function (req, res, next) {
   next('errrr')
 })
@@ -119,13 +126,13 @@ app.get('/oversized', function (req, res, next) {
     big['entry'+i] = repeat('long repetitive string', 1000);
     i++;
   }
-  req.bugsnag.leaveBreadcrumb('big thing', big);
-  req.bugsnag.notify(new Error('oversized'));
+  Bugsnag.leaveBreadcrumb('big thing', big);
+  Bugsnag.notify(new Error('oversized'));
   res.end('OK')
 })
 
 app.get('/handled', function (req, res, next) {
-  req.bugsnag.notify(new Error('handled'))
+  Bugsnag.notify(new Error('handled'))
   res.end('OK')
 })
 
@@ -137,11 +144,11 @@ app.post('/features/unhandled', bodyParser.urlencoded(), function (req, res, nex
   // the request body is an object of feature flag name -> variant
   const featureFlags = Object.keys(req.body).map(name => ({ name, variant: req.body[name] }))
 
-  req.bugsnag.addFeatureFlags(featureFlags)
-  req.bugsnag.clearFeatureFlag('from config 3')
+  Bugsnag.addFeatureFlags(featureFlags)
+  Bugsnag.clearFeatureFlag('from config 3')
 
   if (req.body.hasOwnProperty('clearAllFeatureFlags')) {
-    req.bugsnag.clearFeatureFlags()
+    Bugsnag.clearFeatureFlags()
   }
 
   throw new Error('oh no')
@@ -151,15 +158,71 @@ app.post('/features/handled', bodyParser.urlencoded(), function (req, res, next)
   // the request body is an object of feature flag name -> variant
   const featureFlags = Object.keys(req.body).map(name => ({ name, variant: req.body[name] }))
 
-  req.bugsnag.addFeatureFlags(featureFlags)
-  req.bugsnag.clearFeatureFlag('from config 3')
+  Bugsnag.addFeatureFlags(featureFlags)
+  Bugsnag.clearFeatureFlag('from config 3')
 
   if (req.body.hasOwnProperty('clearAllFeatureFlags')) {
-    req.bugsnag.clearFeatureFlags()
+    Bugsnag.clearFeatureFlags()
   }
 
-  req.bugsnag.notify(new Error('oh no'))
+  Bugsnag.notify(new Error('oh no'))
   res.end('OK')
+})
+
+app.get('/breadcrumbs_a', function (req, res) {
+  Bugsnag.leaveBreadcrumb('For the first URL', { message: 'For the first URL' })
+  throw new Error('Error in /breadcrumbs_a')
+})
+
+app.get('/breadcrumbs_b', function (req, res) {
+  Bugsnag.leaveBreadcrumb('For the second URL', { message: 'For the second URL' })
+  throw new Error('Error in /breadcrumbs_b')
+})
+
+app.get('/console_breadcrumbs_a', function (req, res) {
+  console.log('For the first URL')
+  throw new Error('Error in /console_breadcrumbs_a')
+})
+
+app.get('/console_breadcrumbs_b', function (req, res) {
+  console.log('For the second URL')
+  throw new Error('Error in /console_breadcrumbs_b')
+})
+
+app.post('/context-loss',
+(req, res, next) => {
+  // Context is lost in this middleware because next gets
+  // called in the request context without being bound to
+  // the async local storage context
+  Bugsnag.leaveBreadcrumb('About to parse request body')
+  req.rawBody = '';
+  req.setEncoding('utf8');
+
+  req.on('data', function(chunk) { 
+    req.rawBody += chunk;
+  });
+
+  // this event handler gets called without async local storage context
+  // the fix body parsing libraries have made is to effectviely wrap this
+  // event handler with AsyncResource.bind so that next does get called in
+  // the async local storage context. Here for this test we don't do that in order
+  // to show how context can be lost and re-gained
+  req.on('end', function() {
+    Bugsnag.leaveBreadcrumb('context is lost here')
+    // next gets called without being bound to the async local storage context
+    next();
+  });
+},
+(req, res, next) => {
+  Bugsnag.leaveBreadcrumb('so no context here either')
+  req.bugsnag.leaveBreadcrumb('but this is fine')
+  next();
+},
+// Explicitly bind the async local storage context to next using the helper middleware
+middleware.runInContext,
+(req, res, next) => {
+  Bugsnag.leaveBreadcrumb('context is regained from here')
+  throw new Error('Error in /context-loss')
 })
 
 app.use(middleware.errorHandler)
