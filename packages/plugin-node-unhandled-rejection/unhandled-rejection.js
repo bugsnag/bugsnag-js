@@ -4,7 +4,8 @@ module.exports = {
     if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return
     _handler = err => {
       // if we are in an async context, use the client from that context
-      const c = (client._clientContext && client._clientContext.getStore()) ? client._clientContext.getStore() : client
+      const ctx = client._clientContext && client._clientContext.getStore()
+      const c = ctx || client
 
       const event = c.Event.create(err, false, {
         severity: 'error',

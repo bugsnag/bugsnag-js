@@ -7,7 +7,8 @@ module.exports = {
     if (!client._config.enabledErrorTypes.unhandledExceptions) return
     _handler = err => {
       // if we are in an async context, use the client from that context
-      const c = (client._clientContext && client._clientContext.getStore()) ? client._clientContext.getStore() : client
+      const ctx = client._clientContext && client._clientContext.getStore()
+      const c = ctx || client
 
       // check if the stacktrace has no context, if so append the frames we created earlier
       // see plugin-contextualize for where this is created
