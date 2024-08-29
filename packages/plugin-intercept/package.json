@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-intercept",
-  "version": "8.0.0-alpha.13",
+  "version": "8.0.0",
   "main": "intercept.js",
   "description": "@bugsnag/js plugin providing convenience functions for intercepting asynchronous errors",
   "homepage": "https://www.bugsnag.com/",
@@ -18,7 +18,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.13"
+    "@bugsnag/core": "^8.0.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"

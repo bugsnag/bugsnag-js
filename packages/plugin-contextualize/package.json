@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-contextualize",
-  "version": "8.0.0-alpha.13",
+  "version": "8.0.0",
   "main": "contextualize.js",
   "description": "@bugsnag/js plugin to add context to unhandled events",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.13"
+    "@bugsnag/core": "^8.0.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"
