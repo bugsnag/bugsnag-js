@@ -10,7 +10,7 @@ afterEach(() => jest.clearAllMocks())
 
 describe('BugsnagIpcRenderer', () => {
   it('should call ipcRenderer.invoke correctly for breadcrumbs', async () => {
-    const breadcrumb = new Breadcrumb('hi IPC', { electron: 'has many processes' })
+    const breadcrumb = new Breadcrumb('hi IPC', { electron: 'has many processes' }, 'log')
     await BugsnagIpcRenderer.leaveBreadcrumb(breadcrumb)
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'leaveBreadcrumb', JSON.stringify(breadcrumb))
   })

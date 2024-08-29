@@ -93,8 +93,8 @@ services:
     command: --fail-fast --retry 2
     environment:
       <<: *common-environment
-      NODE_VERSION: "${NODE_VERSION:-10}"
-      COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-10}"
+      NODE_VERSION: "${NODE_VERSION:-12}"
+      COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-12}"
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-js-maze-runner}"
       DEBUG:
     networks:

@@ -2,6 +2,8 @@ const name = 'Bugsnag Node'
 const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
+const { AsyncLocalStorage } = require('async_hooks')
+
 const Client = require('@bugsnag/core/client')
 const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
@@ -14,9 +16,6 @@ const delivery = require('@bugsnag/delivery-node')
 // extend the base config schema with some node-specific options
 const schema = { ...require('@bugsnag/core/config').schema, ...require('./config') }
 
-// remove enabledBreadcrumbTypes from the config schema
-delete schema.enabledBreadcrumbTypes
-
 const pluginApp = require('@bugsnag/plugin-app-duration')
 const pluginSurroundingCode = require('@bugsnag/plugin-node-surrounding-code')
 const pluginInProject = require('@bugsnag/plugin-node-in-project')
@@ -28,6 +27,7 @@ const pluginNodeUnhandledRejection = require('@bugsnag/plugin-node-unhandled-rej
 const pluginIntercept = require('@bugsnag/plugin-intercept')
 const pluginContextualize = require('@bugsnag/plugin-contextualize')
 const pluginStackframePathNormaliser = require('@bugsnag/plugin-stackframe-path-normaliser')
+const pluginConsoleBreadcrumbs = require('@bugsnag/plugin-console-breadcrumbs')
 
 const internalPlugins = [
   pluginApp,
@@ -40,7 +40,8 @@ const internalPlugins = [
   pluginNodeUnhandledRejection,
   pluginIntercept,
   pluginContextualize,
-  pluginStackframePathNormaliser
+  pluginStackframePathNormaliser,
+  pluginConsoleBreadcrumbs
 ]
 
 const Bugsnag = {
@@ -52,15 +53,35 @@ const Bugsnag = {
 
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
+    /**
+     * Patch all calls to the client in order to forwards them to the context client if it exists
+     *
+     * This is useful for when client methods are called later, such as in the console breadcrumbs
+     * plugin where we want to call `leaveBreadcrumb` on the request-scoped client, if it exists.
+     */
+    Object.keys(Client.prototype).forEach((m) => {
+      const original = bugsnag[m]
+      bugsnag[m] = function () {
+        // if we are in an async context, use the client from that context
+        const contextClient = bugsnag._clientContext && typeof bugsnag._clientContext.getStore === 'function' ? bugsnag._clientContext.getStore() : null
+        const client = contextClient || bugsnag
+        const originalMethod = contextClient ? contextClient[m] : original
+
+        client._depth += 1
+        const ret = originalMethod.apply(client, arguments)
+        client._depth -= 1
+        return ret
+      }
+    })
+
+    // Used to store and retrieve the request-scoped client which makes it easy to obtain the request-scoped client
+    // from anywhere in the codebase e.g. when calling Bugsnag.leaveBreadcrumb() or even within the global unhandled
+    // promise rejection handler.
+    bugsnag._clientContext = new AsyncLocalStorage()
+
     bugsnag._setDelivery(delivery)
 
     bugsnag._logger.debug('Loaded!')
-
-    bugsnag.leaveBreadcrumb = function () {
-      bugsnag._logger.warn('Breadcrumbs are not supported in Node.js yet')
-    }
-
-    bugsnag._config.enabledBreadcrumbTypes = []
 
     return bugsnag
   },
@@ -80,10 +101,18 @@ const Bugsnag = {
 Object.keys(Client.prototype).forEach((m) => {
   if (/^_/.test(m)) return
   Bugsnag[m] = function () {
-    if (!Bugsnag._client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
-    Bugsnag._client._depth += 1
-    const ret = Bugsnag._client[m].apply(Bugsnag._client, arguments)
-    Bugsnag._client._depth -= 1
+    // if we are in an async context, use the client from that context
+    let client = Bugsnag._client
+    const ctx = client && client._clientContext && client._clientContext.getStore()
+    if (ctx) {
+      client = ctx
+    }
+
+    if (!client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
+
+    client._depth += 1
+    const ret = client[m].apply(client, arguments)
+    client._depth -= 1
     return ret
   }
 })

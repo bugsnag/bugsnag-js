@@ -4,6 +4,8 @@
     "timestamp": "^\\d{4}\\-\\d{2}\\-\\d{2}T\\d{2}:\\d{2}:[\\d\\.]+Z?$",
     "metaData": {
         "status": 200,
-        "request": "GET xhr_success.html"
+        "method": "GET",
+        "url": "xhr_success.html",
+        "duration": "NUMBER"
     }
 }

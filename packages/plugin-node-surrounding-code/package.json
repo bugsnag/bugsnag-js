@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-surrounding-code",
-  "version": "7.25.0",
+  "version": "8.0.0-alpha.13",
   "main": "surrounding-code.js",
   "description": "@bugsnag/js plugin to load surrounding code in Node stacktraces",
   "homepage": "https://www.bugsnag.com/",
@@ -22,9 +22,9 @@
     "pump": "^3.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0"
+    "@bugsnag/core": "^8.0.0-alpha.13"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.0.0"
+    "@bugsnag/core": "^8.0.0-alpha.1"
   }
 }

@@ -1,4 +1,3 @@
-var fs = require('fs')
 var Bugsnag = require('@bugsnag/node')
 Bugsnag.start({
   apiKey: process.env.BUGSNAG_API_KEY,
@@ -10,7 +9,7 @@ Bugsnag.start({
 
 var contextualize = Bugsnag.getPlugin('contextualize')
 contextualize(function () {
-  fs.createReadStream('does not exist')
+  Promise.reject(new Error('unhandled rejection'))
 }, function (event) {
   event.addMetadata('subsystem', { name: 'fs reader', widgetsAdded: 'cat,dog,mouse' })
 })

@@ -186,7 +186,6 @@ class Client {
     // stuff like __proto__ etc. (only store the result if the plugin had a
     // name)
     if (plugin.name) this._plugins[`~${plugin.name}~`] = result
-    return this
   }
 
   getPlugin (name) {
@@ -213,6 +212,7 @@ class Client {
       this._logger.debug('Session not started due to onSession callback')
       return this
     }
+
     return this._sessionDelegate.startSession(this, session)
   }
 

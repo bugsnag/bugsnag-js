@@ -48,7 +48,7 @@ android {
 }
 
 dependencies {
-    api "com.bugsnag:bugsnag-android:5.+"
+    api "com.bugsnag:bugsnag-android:6.+"
     implementation 'com.facebook.react:react-native:+'
 }
 

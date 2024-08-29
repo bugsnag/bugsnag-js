@@ -138,7 +138,8 @@ async function installNotifiers (notifier) {
   await ex(`npm`, [
     `install`,
     `--no-package-lock`,
-    `--no-save`
+    `--no-save`,
+    `--legacy-peer-deps`
   ].concat(notifier
     ? [
       `../../../../bugsnag-${notifier}-${require(`../packages/${notifier}/package.json`).version}.tgz`
@@ -161,6 +162,7 @@ async function installNgNotifier (notifier) {
     `install`,
     `--no-package-lock`,
     `--no-save`,
+    `--legacy-peer-deps`,
     `../../../../../../bugsnag-browser-${require('../packages/browser/package.json').version}.tgz`,
     `../../../../../../bugsnag-js-${require('../packages/js/package.json').version}.tgz`,
     `../../../../../../bugsnag-node-${require('../packages/node/package.json').version}.tgz`,

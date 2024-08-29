@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-internal-callback-marker",
-  "version": "7.25.0",
+  "version": "8.0.0-alpha.13",
   "main": "internal-callback-marker.js",
   "description": "@bugsnag/js plugin to annotate all OnError callbacks added by internal plugins",
   "homepage": "https://www.bugsnag.com/",
@@ -18,9 +18,9 @@
     "internal-callback-marker.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^7.25.0"
+    "@bugsnag/core": "^8.0.0-alpha.13"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^7.9.2"
+    "@bugsnag/core": "^8.0.0-alpha.1"
   }
 }
