@@ -71,3 +71,4 @@ jobs:
       with:
         name: cucumber-failures
         path: test/.cucumber-failures/
+        include-hidden-files: true
