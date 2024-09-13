@@ -22,7 +22,7 @@ else
   npm install @react-native-community/masked-view@^0.1 --legacy-peer-deps --registry=$REGISTRY_URL
       npm install @react-navigation/native@^6.0 --legacy-peer-deps --registry=$REGISTRY_URL
       npm install @react-navigation/stack@^6.0 --legacy-peer-deps --registry=$REGISTRY_URL
-      npm install react-native-gesture-handler@^2.2 --legacy-peer-deps --registry=$REGISTRY_URL
+      npm install react-native-gesture-handler@2.18.1 --legacy-peer-deps --registry=$REGISTRY_URL
       npm install react-native-reanimated@^1.13 --legacy-peer-deps --registry=$REGISTRY_URL
       npm install react-native-safe-area-context@3.3 --legacy-peer-deps --registry=$REGISTRY_URL
       npm install react-native-screens@3.10 --legacy-peer-deps --registry=$REGISTRY_URL
