@@ -100,6 +100,9 @@
     "test:electron": "xvfb-maybe --auto-servernum -- cucumber-js test/electron/features --retry 3 --retry-tag-filter @flaky"
   },
   "overrides": {
-    "@lerna/conventional-commits": "^6.4.1"
+    "@lerna/conventional-commits": "^6.4.1",
+    "react-native": {
+      "shell-quote": "^1.7.3"
+    }
   }
 }
