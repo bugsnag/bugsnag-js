@@ -18,3 +18,4 @@ out
 compile_commands.json
 .cache
 .clangd
+Gemfile.lock
