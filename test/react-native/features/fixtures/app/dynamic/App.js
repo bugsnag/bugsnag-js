@@ -1,18 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView, StyleSheet, View, Text } from 'react-native'
 import { launchScenario } from '@bugsnag/react-native-scenarios'
 
 const App = () => {
+  const [scenario, setScenario] = useState(null)
+
   useEffect(() => {
-    launchScenario()
+    launchScenario(setScenario)
   }, [])
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Text>React Native Test App</Text>
-      </View>
-    </SafeAreaView>
+    scenario !== null ? scenario.view() : (
+      <SafeAreaView style={styles.container}>
+        <View>
+          <Text>React Native Test App</Text>
+        </View>
+      </SafeAreaView>
+    )
   )
 }
 
