@@ -20,6 +20,9 @@
     "react-native-navigation": "*"
   },
   "peerDependencies": {
+    "@bugsnag/plugin-react-navigation": "*",
+    "@react-navigation/native": "*",
+    "@react-navigation/native-stack": "*",
     "react": "*",
     "react-native": "*",
     "react-native-file-access": "*"
