@@ -297,7 +297,6 @@ steps:
           manual:
             permit_on_passed: true
         env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 25
@@ -329,7 +328,6 @@ steps:
               - --aws-public-ip
         env:
           RCT_NEW_ARCH_ENABLED: "1"
-          SKIP_NAVIGATION_SCENARIOS: "true"
           RN_VERSION: "{{matrix}}"
         retry:
           manual:
