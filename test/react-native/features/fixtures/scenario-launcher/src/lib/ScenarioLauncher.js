@@ -3,7 +3,7 @@ import { getCurrentCommand } from './CommandRunner'
 import { NativeInterface } from './native'
 import Bugsnag from '@bugsnag/react-native'
 
-async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoint, scenarioData) {
+async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoint, scenarioData, setScenario) {
   console.error(`[Bugsnag ScenarioLauncher] running scenario: ${scenarioName}`)
 
   const nativeConfig = {

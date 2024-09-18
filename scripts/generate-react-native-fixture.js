@@ -114,9 +114,7 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
 }
 
 function installFixtureDependencies() {
-  if (!process.env.RCT_NEW_ARCH_ENABLED) {
-    DEPENDENCIES.push(...REACT_NAVIGATION_DEPENDENCIES)
-  }
+  DEPENDENCIES.push(...REACT_NAVIGATION_DEPENDENCIES)
 
   const fixtureDependencyArgs = DEPENDENCIES.join(' ')
 
