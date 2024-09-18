@@ -393,7 +393,7 @@ steps:
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
-              - features/navigation.feature
+              - features/react-navigation.feature
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
@@ -420,7 +420,7 @@ steps:
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
-              - features/navigation.feature
+              - features/react-native-navigation.feature
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager

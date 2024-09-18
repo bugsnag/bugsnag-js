@@ -1,3 +1,3 @@
-// navigation.feature
-export { ReactNavigationBreadcrumbsEnabledScenario } from './scenarios/ReactNavigationBreadcrumbsEnabledScenario'
-export { ReactNavigationBreadcrumbsDisabledScenario } from './scenarios/ReactNavigationBreadcrumbsDisabledScenario'
+// react-native-navigation.feature
+export { ReactNativeNavigationBreadcrumbsEnabledScenario } from './scenarios/ReactNativeNavigationBreadcrumbsEnabledScenario'
+export { ReactNativeNavigationBreadcrumbsDisabledScenario } from './scenarios/ReactNativeNavigationBreadcrumbsDisabledScenario'

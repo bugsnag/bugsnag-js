@@ -1,10 +1,11 @@
 import Scenario from './Scenario'
-import BugsnagReactNativeNavigation from '@bugsnag/plugin-react-native-navigation'
 import { Navigation } from 'react-native-navigation'
+import BugsnagReactNativeNavigation from '@bugsnag/plugin-react-native-navigation'
 
-export class ReactNavigationBreadcrumbsEnabledScenario extends Scenario {
+export class ReactNativeNavigationBreadcrumbsDisabledScenario extends Scenario {
   constructor (configuration, jsConfig) {
     super()
+    configuration.enabledBreadcrumbTypes = []
     jsConfig.plugins = [new BugsnagReactNativeNavigation(Navigation)]
   }
 
