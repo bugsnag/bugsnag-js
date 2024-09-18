@@ -36,6 +36,14 @@ const DEPENDENCIES = [
   `@bugsnag/react-native@${notifierVersion}`
 ]
 
+const REACT_NAVIGATION_DEPENDENCIES = [
+  `@bugsnag/plugin-react-navigation@${notifierVersion}`,
+  '@react-navigation/native',
+  '@react-navigation/native-stack',
+  'react-native-screens',
+  'react-native-safe-area-context'
+]
+
 if (!process.env.SKIP_GENERATE_FIXTURE) {
   // remove the fixture directory if it already exists
   if (fs.existsSync(fixtureDir)) {
@@ -109,8 +117,7 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
 
 function installFixtureDependencies () {
   if (!isNewArchEnabled) {
-    const reactNavigationDependencies = getReactNavigationDependencies()
-    DEPENDENCIES.push(...reactNavigationDependencies)
+    DEPENDENCIES.push(...REACT_NAVIGATION_DEPENDENCIES)
   }
 
   const fixtureDependencyArgs = DEPENDENCIES.join(' ')
@@ -178,6 +185,12 @@ function replaceGeneratedFixtureFiles () {
   fs.writeFileSync(`${fixtureDir}/ios/Podfile`, podfileContents)
 
   // react navigation setup
+  if (!isNewArchEnabled) {
+    configureReactNavigationAndroid()
+  }
+}
+
+function configureReactNavigationAndroid () {
   const fileExtension = parseFloat(reactNativeVersion) < 0.73 ? 'java' : 'kt'
   let mainActivityPattern, mainActivityReplacement
   if (fileExtension === 'java') {
@@ -217,23 +230,4 @@ class MainActivity : ReactActivity() {
   let mainActivityContents = fs.readFileSync(mainActivityPath, 'utf8')
   mainActivityContents = mainActivityContents.replace(mainActivityPattern, mainActivityReplacement)
   fs.writeFileSync(mainActivityPath, mainActivityContents)
-}
-
-function getReactNavigationDependencies () {
-  let reactNativeScreensVersion
-  switch (reactNativeVersion) {
-    case '0.71':
-      reactNativeScreensVersion = '3.32.0'
-      break
-    default:
-      reactNativeScreensVersion = 'latest'
-  }
-
-  return [
-    `@bugsnag/plugin-react-navigation@${notifierVersion}`,
-    '@react-navigation/native',
-    '@react-navigation/native-stack',
-    `react-native-screens@${reactNativeScreensVersion}`,
-    'react-native-safe-area-context'
-  ]
 }
