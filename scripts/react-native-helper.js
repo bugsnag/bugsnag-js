@@ -12,7 +12,6 @@ module.exports = {
       const registryUrl = process.env.REGISTRY_URL
 
       const jsSourceDir = process.env.JS_SOURCE_DIR || 'scenario_js'
-      const installRNFileAccess = jsSourceDir === 'scenario_js'
 
       let artefactName = rnVersion
       if (process.env.ARTEFACT_NAME) {
@@ -37,10 +36,8 @@ module.exports = {
       common.run(command, true)
 
       // Install react-native-file-access
-      if (installRNFileAccess) {
-        const RNFACommand = `npm install react-native-file-access@3.0.4  --registry ${registryUrl}`
-        common.run(RNFACommand, true)
-      }
+      const RNFACommand = `npm install react-native-file-access@3.0.4  --registry ${registryUrl}`
+      common.run(RNFACommand, true)
 
       // Install any required secondary files
       if (fs.existsSync('./install.sh')) {

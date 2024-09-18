@@ -1,27 +1,27 @@
 import * as React from 'react'
-import { View, Button, Text } from 'react-native'
+import { View, Text } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import Bugsnag from '@bugsnag/react-native'
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const HomeScreen = (props) => {
+  React.useEffect(() => {
+    (async () => {
+      await delay(100)
+      Bugsnag.notify(new Error('HomeNavigationError'))
+      await delay(250)
+      Navigation.push(props.componentId, {
+        component: {
+          name: 'Details'
+        }
+      })
+    })()
+  }, [])
+
   return (
     <View style={ { flex: 1, alignItems: 'center', justifyContent: 'center' } }>
       <Text>Home Screen</Text>
-      <Button title='Navigate'
-        accessibilityLabel='navigate'
-        onPress={ () =>
-          Navigation.push(props.componentId, {
-            component: {
-              name: 'Details'
-            }
-          })
-        }/>
-      <Button title='Notify handled error'
-        accessibilityLabel='sendHandled'
-        onPress={ () => Bugsnag.notify(new Error('HomeNavigationError')) }/>
-      <Button title='Set context'
-        accessibilityLabel='setContext'
-        onPress={ () => Bugsnag.setContext('homeSetContext') }/>
     </View>
   )
 }

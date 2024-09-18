@@ -1,28 +1,22 @@
 import * as React from 'react'
-import { View, Text, Button } from 'react-native'
-import { Navigation } from 'react-native-navigation'
+import { View, Text } from 'react-native'
 import Bugsnag from '@bugsnag/react-native'
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const DetailsScreen = (props) => {
+  React.useEffect(() => {
+    (async () => {
+      await delay(100)
+      Bugsnag.notify(new Error('DetailsNavigationError'))
+      await delay(250)
+      throw new Error('DetailsNavigationUnhandledError')
+    })()
+  }, [])
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Details Screen</Text>
-      <Button title='Navigate'
-        accessibilityLabel='navigate'
-        onPress={() =>
-          Navigation.pop(props.componentId)
-        }/>
-      <Button title='Notify handled error'
-        accessibilityLabel='sendHandled'
-        onPress={() => Bugsnag.notify(new Error('DetailsNavigationError'))}/>
-      <Button title='Notify unhandled error'
-        accessibilityLabel='sendUnhandled'
-        onPress={() => {
-          throw new Error('DetailsNavigationUnhandledError')
-        }}/>
-      <Button title='Set context'
-        accessibilityLabel='setContext'
-        onPress={() => Bugsnag.setContext('detailsSetContext')}/>
     </View>
   )
 }
