@@ -357,7 +357,7 @@ steps:
               - --device=IOS_16
               - --a11y-locator
               - --fail-fast
-              - features/navigation.feature
+              - features/react-navigation.feature
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
@@ -381,7 +381,7 @@ steps:
               - --device=IOS_16
               - --a11y-locator
               - --fail-fast
-              - features/navigation.feature
+              - features/react-native-navigation.feature
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
