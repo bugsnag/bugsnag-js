@@ -21,6 +21,11 @@ const ROOT_DIR = resolve(__dirname, '../')
 const isNewArchEnabled = process.env.RCT_NEW_ARCH_ENABLED === 'true' || process.env.RCT_NEW_ARCH_ENABLED === '1'
 
 let fixturePath = 'test/react-native/features/fixtures/generated/'
+
+if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
+  fixturePath += 'react-native-navigation/'
+}
+
 if (isNewArchEnabled) {
   fixturePath += 'new-arch/'
 } else {
@@ -33,15 +38,20 @@ const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtur
 
 const DEPENDENCIES = [
   'react-native-file-access@3.0.4',
-  `@bugsnag/react-native@${notifierVersion}`
+  `@bugsnag/react-native@${notifierVersion}`,
+  `@bugsnag/plugin-react-navigation@${notifierVersion}`,
+  `@bugsnag/plugin-react-native-navigation@${notifierVersion}`
 ]
 
 const REACT_NAVIGATION_DEPENDENCIES = [
-  `@bugsnag/plugin-react-navigation@${notifierVersion}`,
   '@react-navigation/native',
   '@react-navigation/native-stack',
   'react-native-screens',
   'react-native-safe-area-context'
+]
+
+const REACT_NATIVE_NAVIGATION_DEPENDENCIES = [
+  'react-native-navigation'
 ]
 
 if (!process.env.SKIP_GENERATE_FIXTURE) {
@@ -51,12 +61,17 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
   }
 
   // create the test fixture
-  const RNInitArgs = [`react-native@${process.env.RN_VERSION}`, 'init', 'reactnative', '--directory', fixtureDir, '--version', reactNativeVersion, '--npm', '--skip-install']
+  const RNInitArgs = ['@react-native-community/cli@latest', 'init', 'reactnative', '--directory', fixtureDir, '--version', reactNativeVersion, '--npm', '--skip-install']
   execFileSync('npx', RNInitArgs, { stdio: 'inherit' })
 
   replaceGeneratedFixtureFiles()
 
   installFixtureDependencies()
+
+  // link react-native-navigation using rnn-link tool
+  if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
+    execSync('npx rnn-link', { cwd: fixtureDir, stdio: 'inherit' })
+  }
 }
 
 if (process.env.BUILD_ANDROID === 'true' || process.env.BUILD_ANDROID === '1') {
@@ -75,9 +90,6 @@ if (process.env.BUILD_ANDROID === 'true' || process.env.BUILD_ANDROID === '1') {
 
 if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
   fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })
-
-  // bundle install
-  execFileSync('bundle', ['install'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
 
   // install pods
   execFileSync('pod', ['install'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
@@ -116,7 +128,11 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
 }
 
 function installFixtureDependencies () {
-  if (!isNewArchEnabled) {
+  // add dependencies for react-native-navigation (wix)
+  if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
+    DEPENDENCIES.push(...REACT_NATIVE_NAVIGATION_DEPENDENCIES)
+  } else if (!isNewArchEnabled) {
+    // add dependencies for @react-navigation
     DEPENDENCIES.push(...REACT_NAVIGATION_DEPENDENCIES)
   }
 
@@ -142,6 +158,13 @@ function replaceGeneratedFixtureFiles () {
     resolve(replacementFilesDir, 'App.js'),
     resolve(fixtureDir, 'App.js')
   )
+
+  if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
+    fs.copyFileSync(
+      resolve(replacementFilesDir, 'react-native-navigation/index.js'),
+      resolve(fixtureDir, 'index.js')
+    )
+  }
 
   // replace the AndroidManifest.xml file with our own
   fs.copyFileSync(

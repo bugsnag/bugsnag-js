@@ -72,6 +72,10 @@ export { FeatureFlagsScenario } from './FeatureFlagsScenario'
 export { FeatureFlagsNativeCrashScenario } from './FeatureFlagsNativeCrashScenario'
 export { NativeFeatureFlagsScenario } from './NativeFeatureFlagsScenario'
 
-// navigation.feature
+// react-navigation.feature
 export { ReactNavigationBreadcrumbsEnabledScenario } from './ReactNavigationBreadcrumbsEnabledScenario'
 export { ReactNavigationBreadcrumbsDisabledScenario } from './ReactNavigationBreadcrumbsDisabledScenario'
+
+// react-native-navigation.feature
+export { ReactNativeNavigationBreadcrumbsEnabledScenario } from './ReactNativeNavigationBreadcrumbsEnabledScenario'
+export { ReactNativeNavigationBreadcrumbsDisabledScenario } from './ReactNativeNavigationBreadcrumbsDisabledScenario'
