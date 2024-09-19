@@ -1,4 +1,4 @@
-@navigation @skip_new_arch
+@navigation @react-native-navigation
 Feature: Navigation plugin features
 
 Scenario: Navigating screens causes breadcrumbs and context to be updated

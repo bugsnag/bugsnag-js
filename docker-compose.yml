@@ -172,6 +172,7 @@ services:
       BITBAR_ACCESS_KEY:
       HERMES:
       RN_VERSION:
+      REACT_NATIVE_NAVIGATION:
     ports:
       - "9000-9499:9339"
     networks:

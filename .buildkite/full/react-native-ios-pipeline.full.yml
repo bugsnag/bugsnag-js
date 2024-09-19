@@ -164,6 +164,56 @@ steps:
             - exit_status: "*"
               limit: 1
 
+      - label: ':mac: Build react-native-navigation {{matrix}} test fixture ipa (Old Arch)'
+        key: "build-react-native-navigation-ios-fixture-old-arch"
+        timeout_in_minutes: 30
+        agents:
+          queue: "macos-14"
+        env:
+          NODE_VERSION: "18"
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
+          BUILD_IOS: "true"
+          XCODE_VERSION: "15.3.0"
+          REACT_NATIVE_NAVIGATION: "true"
+        artifact_paths:
+          - "test/react-native/features/fixtures/generated/react-native-navigation/old-arch/**/output/reactnative.ipa"
+        commands:
+          - "bundle install"
+          - "node scripts/generate-react-native-fixture.js"
+        matrix:
+          - "0.71"
+          - "0.72"
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
+
+      - label: ':mac: Build react-native-navigation {{matrix}} test fixture ipa (New Arch)'
+        key: "build-react-native-navigation-ios-fixture-new-arch"
+        timeout_in_minutes: 30
+        agents:
+          queue: "macos-14"
+        env:
+          NODE_VERSION: "18"
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "1"
+          BUILD_IOS: "true"
+          XCODE_VERSION: "15.3.0"
+          REACT_NATIVE_NAVIGATION: "true"
+        artifact_paths:
+          - "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/**/output/reactnative.ipa"
+        commands:
+          - "bundle install"
+          - "node scripts/generate-react-native-fixture.js"
+        matrix:
+          - "0.71"
+          - "0.72"
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
+
       #
       # End-to-end tests
       #
@@ -385,3 +435,71 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+
+      - label: ":bitbar: :mac: react-native-navigation {{matrix}} iOS 16 (Old Arch) end-to-end tests"
+        depends_on: "build-react-native-navigation-ios-fixture-old-arch"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native/features/fixtures/generated/react-native-navigation/old-arch/{{matrix}}/output/reactnative.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=/app/features/fixtures/generated/react-native-navigation/old-arch/{{matrix}}/output/reactnative.ipa
+              - --farm=bb
+              - --device=IOS_16
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
+              - features/react-native-navigation.feature
+        retry:
+          manual:
+            permit_on_passed: true
+        env:
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
+          REACT_NATIVE_NAVIGATION: "true"
+        concurrency: 25
+        concurrency_group: "bitbar"
+        concurrency_method: eager
+        matrix:
+          - "0.71"
+          - "0.72"
+
+      - label: ":bitbar: :mac: react-native-navigation {{matrix}} iOS 16 (New Arch) end-to-end tests"
+        depends_on: "build-react-native-navigation-ios-fixture-new-arch"
+        timeout_in_minutes: 60
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/output/reactnative.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=/app/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/output/reactnative.ipa
+              - --farm=bb
+              - --device=IOS_16
+              - --a11y-locator
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
+              - features/react-native-navigation.feature
+        env:
+          RCT_NEW_ARCH_ENABLED: "1"
+          RN_VERSION: "{{matrix}}"
+          REACT_NATIVE_NAVIGATION: "true"
+        retry:
+          manual:
+            permit_on_passed: true
+        concurrency: 25
+        concurrency_group: "bitbar"
+        concurrency_method: eager
+        matrix:
+          - "0.71"
+          - "0.72"
