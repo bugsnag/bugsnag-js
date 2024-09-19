@@ -21,6 +21,7 @@
   },
   "peerDependencies": {
     "@bugsnag/plugin-react-navigation": "*",
+    "@bugsnag/plugin-react-native-navigation": "*",
     "@react-navigation/native": "*",
     "@react-navigation/native-stack": "*",
     "react": "*",
