@@ -25,6 +25,10 @@ Before('@navigation') do |scenario|
   skip_this_scenario("Skipping scenario") if ENV['SKIP_NAVIGATION_SCENARIOS'].eql?('true')
 end
 
+Before('@react-native-navigation') do |scenario|
+  skip_this_scenario("Skipping scenario") unless ENV['REACT_NATIVE_NAVIGATION'].eql?('true')
+end
+
 # Require until PLAT-8236 is implemented
 Before('@skip_hermes') do |_scenario|
   skip_this_scenario("Skipping scenario") if ENV['HERMES'].eql?('true')
