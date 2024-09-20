@@ -3,20 +3,6 @@ steps:
   - group: "React Native CLI Tests"
     steps:
       #
-      # CLI tests Maze Runner image
-      #
-      - label: ":docker: Build CLI test image"
-        key: "cli-maze-image"
-        timeout_in_minutes: 30
-        plugins:
-          - docker-compose#v4.12.0:
-              build: react-native-cli-tool-maze-runner
-              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-              cache-from:  react-native-cli-tool-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:cli-maze-${BRANCH_NAME}
-          - docker-compose#v4.12.0:
-              push: react-native-cli-tool-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:cli-maze-${BRANCH_NAME}
-
-      #
       # CLI tests
       #
       # TODO: These tests were removed for older RN versions and will be re-added for RN 0.71+ (see PLAT-12578)
