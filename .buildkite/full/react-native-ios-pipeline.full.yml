@@ -149,30 +149,32 @@ steps:
             - exit_status: "*"
               limit: 1
 
-      - label: ':mac: Build react-native-navigation {{matrix}} test fixture ipa (New Arch)'
-        key: "build-react-native-navigation-ios-fixture-new-arch"
-        timeout_in_minutes: 30
-        agents:
-          queue: "macos-14"
-        env:
-          NODE_VERSION: "18"
-          RN_VERSION: "{{matrix}}"
-          RCT_NEW_ARCH_ENABLED: "1"
-          BUILD_IOS: "true"
-          XCODE_VERSION: "15.3.0"
-          REACT_NATIVE_NAVIGATION: "true"
-        artifact_paths:
-          - "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/**/output/reactnative.ipa"
-        commands:
-          - "bundle install"
-          - "node scripts/generate-react-native-fixture.js"
-        matrix:
-          - "0.71"
-          - "0.72"
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
+      # Skipped due to build failures with react-native-navigation when new arch is enabled
+      # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
+      # - label: ':mac: Build react-native-navigation {{matrix}} test fixture ipa (New Arch)'
+      #   key: "build-react-native-navigation-ios-fixture-new-arch"
+      #   timeout_in_minutes: 30
+      #   agents:
+      #     queue: "macos-14"
+      #   env:
+      #     NODE_VERSION: "18"
+      #     RN_VERSION: "{{matrix}}"
+      #     RCT_NEW_ARCH_ENABLED: "1"
+      #     BUILD_IOS: "true"
+      #     XCODE_VERSION: "15.3.0"
+      #     REACT_NATIVE_NAVIGATION: "true"
+      #   artifact_paths:
+      #     - "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/**/output/reactnative.ipa"
+      #   commands:
+      #     - "bundle install"
+      #     - "node scripts/generate-react-native-fixture.js"
+      #   matrix:
+      #     - "0.71"
+      #     - "0.72"
+      #   retry:
+      #     automatic:
+      #       - exit_status: "*"
+      #         limit: 1
 
       #
       # End-to-end tests
@@ -350,6 +352,9 @@ steps:
           - "0.72"
           - "0.73"
 
+      # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't currently support RN 0.73+,
+      # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
+      # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
       - label: ":bitbar: :mac: react-native-navigation {{matrix}} iOS 16 (Old Arch) end-to-end tests"
         depends_on: "build-react-native-navigation-ios-fixture-old-arch"
         timeout_in_minutes: 60
@@ -384,36 +389,38 @@ steps:
           - "0.71"
           - "0.72"
 
-      - label: ":bitbar: :mac: react-native-navigation {{matrix}} iOS 16 (New Arch) end-to-end tests"
-        depends_on: "build-react-native-navigation-ios-fixture-new-arch"
-        timeout_in_minutes: 60
-        plugins:
-          artifacts#v1.9.0:
-            download: "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/output/reactnative.ipa"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.12.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            command:
-              - --app=/app/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/output/reactnative.ipa
-              - --farm=bb
-              - --device=IOS_16
-              - --a11y-locator
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-              - features/react-native-navigation.feature
-        env:
-          RCT_NEW_ARCH_ENABLED: "1"
-          RN_VERSION: "{{matrix}}"
-          REACT_NATIVE_NAVIGATION: "true"
-        retry:
-          manual:
-            permit_on_passed: true
-        concurrency: 25
-        concurrency_group: "bitbar"
-        concurrency_method: eager
-        matrix:
-          - "0.71"
-          - "0.72"
+      # Skipped due to build failures with react-native-navigation when new arch is enabled
+      # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
+      # - label: ":bitbar: :mac: react-native-navigation {{matrix}} iOS 16 (New Arch) end-to-end tests"
+      #   depends_on: "build-react-native-navigation-ios-fixture-new-arch"
+      #   timeout_in_minutes: 60
+      #   plugins:
+      #     artifacts#v1.9.0:
+      #       download: "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/output/reactnative.ipa"
+      #       upload: ./test/react-native/maze_output/**/*
+      #     docker-compose#v4.12.0:
+      #       pull: react-native-maze-runner
+      #       run: react-native-maze-runner
+      #       service-ports: true
+      #       command:
+      #         - --app=/app/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/output/reactnative.ipa
+      #         - --farm=bb
+      #         - --device=IOS_16
+      #         - --a11y-locator
+      #         - --fail-fast
+      #         - --no-tunnel
+      #         - --aws-public-ip
+      #         - features/react-native-navigation.feature
+      #   env:
+      #     RCT_NEW_ARCH_ENABLED: "1"
+      #     RN_VERSION: "{{matrix}}"
+      #     REACT_NATIVE_NAVIGATION: "true"
+      #   retry:
+      #     manual:
+      #       permit_on_passed: true
+      #   concurrency: 25
+      #   concurrency_group: "bitbar"
+      #   concurrency_method: eager
+      #   matrix:
+      #     - "0.71"
+      #     - "0.72"

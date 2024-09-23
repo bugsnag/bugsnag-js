@@ -347,6 +347,9 @@ steps:
           - "0.72"
           - "0.73"
 
+      # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't support RN 0.73+,
+      # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
+      # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
       - label: ":bitbar: :android: RN {{matrix}} Android 12 (New Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch-full"
         timeout_in_minutes: 60
