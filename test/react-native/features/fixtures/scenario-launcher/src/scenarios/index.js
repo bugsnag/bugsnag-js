@@ -71,3 +71,7 @@ export { UnhandledOverrideJsErrorScenario } from './UnhandledOverrideJsErrorScen
 export { FeatureFlagsScenario } from './FeatureFlagsScenario'
 export { FeatureFlagsNativeCrashScenario } from './FeatureFlagsNativeCrashScenario'
 export { NativeFeatureFlagsScenario } from './NativeFeatureFlagsScenario'
+
+// navigation.feature
+export { ReactNavigationBreadcrumbsEnabledScenario } from './ReactNavigationBreadcrumbsEnabledScenario'
+export { ReactNavigationBreadcrumbsDisabledScenario } from './ReactNavigationBreadcrumbsDisabledScenario'
