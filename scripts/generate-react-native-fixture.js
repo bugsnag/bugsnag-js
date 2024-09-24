@@ -37,7 +37,7 @@ const fixtureDir = resolve(ROOT_DIR, fixturePath, reactNativeVersion)
 const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtures/app/dynamic/')
 
 const DEPENDENCIES = [
-  'react-native-file-access@3.0.4',
+  'react-native-file-access@3.1.1',
   `@bugsnag/react-native@${notifierVersion}`,
   `@bugsnag/plugin-react-navigation@${notifierVersion}`,
   `@bugsnag/plugin-react-native-navigation@${notifierVersion}`
@@ -192,11 +192,6 @@ function replaceGeneratedFixtureFiles () {
 
   // update Podfile
   let podfileContents = fs.readFileSync(`${fixtureDir}/ios/Podfile`, 'utf8')
-
-  // use static frameworks (this fixes an issue with react-native-file-access on 0.75)
-  if (parseFloat(reactNativeVersion) >= 0.75) {
-    podfileContents = podfileContents.replace(/target 'reactnative' do/, 'use_frameworks! :linkage => :static\ntarget \'reactnative\' do')
-  }
 
   // disable Flipper
   if (podfileContents.includes('use_flipper!')) {
