@@ -158,12 +158,6 @@ function replaceGeneratedFixtureFiles () {
     )
   }
 
-  // replace the AndroidManifest.xml file with our own
-  fs.copyFileSync(
-    resolve(replacementFilesDir, 'android/AndroidManifest.xml'),
-    resolve(fixtureDir, 'android/app/src/main/AndroidManifest.xml')
-  )
-
   // replace the Info.plist file with our own
   fs.copyFileSync(
     resolve(replacementFilesDir, 'ios/Info.plist'),
