@@ -75,14 +75,6 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 }
 
 if (process.env.BUILD_ANDROID === 'true' || process.env.BUILD_ANDROID === '1') {
-  if (isNewArchEnabled) {
-    // If we're building with the new architecture, replace the gradle.properties file
-    fs.copyFileSync(
-      resolve(replacementFilesDir, 'android/newarch.gradle.properties'),
-      resolve(fixtureDir, 'android/gradle.properties')
-    )
-  }
-
   // build the android app
   execFileSync('./gradlew', ['assembleRelease'], { cwd: `${fixtureDir}/android`, stdio: 'inherit' })
   fs.copyFileSync(`${fixtureDir}/android/app/build/outputs/apk/release/app-release.apk`, `${fixtureDir}/reactnative.apk`)
@@ -202,10 +194,19 @@ function replaceGeneratedFixtureFiles () {
 
   fs.writeFileSync(`${fixtureDir}/ios/Podfile`, podfileContents)
 
-  // react navigation setup
-  if (!isNewArchEnabled) {
+  if (isNewArchEnabled) {
+    enableNewArchGradle()
+  } else {
+    // react navigation setup
     configureReactNavigationAndroid()
   }
+}
+
+function enableNewArchGradle () {
+  const gradlePropertiesPath = `${fixtureDir}/android/gradle.properties`
+  let gradlePropertiesContents = fs.readFileSync(gradlePropertiesPath, 'utf8')
+  gradlePropertiesContents = gradlePropertiesContents.replace('newArchEnabled=false', 'newArchEnabled=true')
+  fs.writeFileSync(gradlePropertiesPath, gradlePropertiesContents)
 }
 
 function configureReactNavigationAndroid () {
