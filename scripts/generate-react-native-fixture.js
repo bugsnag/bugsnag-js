@@ -68,6 +68,10 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 
   installFixtureDependencies()
 
+  configureAndroidProject()
+
+  configureIOSProject()
+
   // link react-native-navigation using rnn-link tool
   if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
     execSync('npx rnn-link', { cwd: fixtureDir, stdio: 'inherit' })
@@ -158,28 +162,21 @@ function replaceGeneratedFixtureFiles () {
     )
   }
 
-  // replace the Info.plist file with our own
-  fs.copyFileSync(
-    resolve(replacementFilesDir, 'ios/Info.plist'),
-    resolve(fixtureDir, 'ios/reactnative/Info.plist')
-  )
-
   // copy the exportOptions.plist file
   fs.copyFileSync(
     resolve(replacementFilesDir, 'ios/exportOptions.plist'),
     resolve(fixtureDir, 'exportOptions.plist')
   )
+}
 
-  // update pbxproj
+function configureIOSProject () {
+  // update the bundle identifier in pbxproj
   let pbxProjContents = fs.readFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, 'utf8')
   pbxProjContents = pbxProjContents.replaceAll('org.reactjs.native.example', 'com.bugsnag.fixtures')
-
   fs.writeFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, pbxProjContents)
 
-  // update Podfile
-  let podfileContents = fs.readFileSync(`${fixtureDir}/ios/Podfile`, 'utf8')
-
   // disable Flipper
+  let podfileContents = fs.readFileSync(`${fixtureDir}/ios/Podfile`, 'utf8')
   if (podfileContents.includes('use_flipper!')) {
     podfileContents = podfileContents.replace(/use_flipper!/, '# use_flipper!')
   } else if (podfileContents.includes(':flipper_configuration')) {
@@ -188,19 +185,43 @@ function replaceGeneratedFixtureFiles () {
 
   fs.writeFileSync(`${fixtureDir}/ios/Podfile`, podfileContents)
 
+  // set NSAllowsArbitraryLoads to allow http traffic for all domains (bitbar public IP + bs-local.com)
+  const plistpath = `${fixtureDir}/ios/reactnative/Info.plist`
+  let plistContents = fs.readFileSync(plistpath, 'utf8')
+  const allowArbitraryLoads = '<key>NSAllowsArbitraryLoads</key>\n\t\t<true/>'
+  let searchPattern, replacement
+  if (plistContents.includes('<key>NSAllowsArbitraryLoads</key>')) {
+    searchPattern = '<key>NSAllowsArbitraryLoads</key>\n\t\t<false/>'
+    replacement = allowArbitraryLoads
+  } else {
+    searchPattern = '<key>NSAppTransportSecurity</key>\n\t<dict>'
+    replacement = `${searchPattern}\n\t\t${allowArbitraryLoads}`
+  }
+
+  // remove the NSAllowsLocalNetworking key if it exists as this causes NSAllowsArbitraryLoads to be ignored
+  const allowLocalNetworking = '<key>NSAllowsLocalNetworking</key>\n\t\t<true/>'
+  plistContents = plistContents.replace(allowLocalNetworking, '')
+
+  fs.writeFileSync(plistpath, plistContents.replace(searchPattern, replacement))
+}
+
+function configureAndroidProject () {
+  // set android:usesCleartextTraffic="true" in AndroidManifest.xml
+  const androidManifestPath = `${fixtureDir}/android/app/src/main/AndroidManifest.xml`
+  let androidManifestContents = fs.readFileSync(androidManifestPath, 'utf8')
+  androidManifestContents = androidManifestContents.replace('<application', '<application android:usesCleartextTraffic="true"')
+  fs.writeFileSync(androidManifestPath, androidManifestContents)
+
   if (isNewArchEnabled) {
-    enableNewArchGradle()
+    // enable the new architecture in gradle properties
+    const gradlePropertiesPath = `${fixtureDir}/android/gradle.properties`
+    let gradlePropertiesContents = fs.readFileSync(gradlePropertiesPath, 'utf8')
+    gradlePropertiesContents = gradlePropertiesContents.replace('newArchEnabled=false', 'newArchEnabled=true')
+    fs.writeFileSync(gradlePropertiesPath, gradlePropertiesContents)
   } else {
     // react navigation setup
     configureReactNavigationAndroid()
   }
-}
-
-function enableNewArchGradle () {
-  const gradlePropertiesPath = `${fixtureDir}/android/gradle.properties`
-  let gradlePropertiesContents = fs.readFileSync(gradlePropertiesPath, 'utf8')
-  gradlePropertiesContents = gradlePropertiesContents.replace('newArchEnabled=false', 'newArchEnabled=true')
-  fs.writeFileSync(gradlePropertiesPath, gradlePropertiesContents)
 }
 
 function configureReactNavigationAndroid () {
