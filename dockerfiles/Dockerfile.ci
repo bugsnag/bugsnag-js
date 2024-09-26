@@ -14,5 +14,4 @@ COPY bin ./bin
 COPY scripts ./scripts
 COPY test ./test
 COPY packages ./packages
-RUN npx lerna bootstrap
 RUN npm run build

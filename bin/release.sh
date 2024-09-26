@@ -25,7 +25,6 @@ cd /app/bugsnag-js
 
 # "ci" rather than "install" ensures the process doesn't make the work tree dirty by modifying lockfiles
 npm ci
-npm run bootstrap -- --ci
 
 # check if CDN packages changed – if they didn't we don't need to upload to the CDN
 BROWSER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/js$ || test $? = 1;)

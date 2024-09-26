@@ -42,10 +42,9 @@ def heading(message)
   HEADING
 end
 
-# Bootstrap and build Bugsnag packages so they're ready to install
-def bootstrap
+# Build Bugsnag packages so they're ready to install
+def build
   Dir.chdir(ROOT) do
-    system("npm run bootstrap")
     system("npm run build")
   end
 end
@@ -139,7 +138,7 @@ def tidy_up
 end
 
 begin
-  bootstrap
+  build
   pack
   install_and_build
 ensure

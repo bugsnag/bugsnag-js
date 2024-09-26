@@ -60,7 +60,6 @@ async function init () {
 
 async function update () {
   try {
-    await bootstrap()
     await updateNotifiers()
     await installFixtureDeps()
     await buildFixtures()
@@ -107,11 +106,6 @@ async function ex (cmd, args, uopts) {
 
 function trace (stepname) {
   console.log(`\n• ${stepname} •\n  ${Array(stepname.length).fill('-').join('')}`)
-}
-
-async function bootstrap () {
-  trace('bootstrap')
-  return ex(`npm`, [ `run`, `bootstrap` ])
 }
 
 async function buildNotifiers (notifier) {
