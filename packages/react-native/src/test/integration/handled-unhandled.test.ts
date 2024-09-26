@@ -37,7 +37,7 @@ jest.mock('react-native', () => {
 })
 
 // @ts-ignore
-import rnPromise from '@bugsnag/plugin-react-native-unhandled-rejection/node_modules/promise/setimmediate' // eslint-disable-line
+import rnPromise from 'promise/setimmediate' // eslint-disable-line
 // eslint-disable-next-line
 import Bugsnag from '../../..'
 
