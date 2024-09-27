@@ -39,7 +39,7 @@ RUN npm install --no-package-lock --no-save --legacy-peer-deps \
 # install the dependencies and build each fixture
 WORKDIR /app/test/browser/features/fixtures
 RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_modules/*" | \
-  xargs -I % bash -c 'cd `dirname %` && npm install --no-package-lock && npm run build'
+  xargs -I % bash -c 'cd `dirname %` && npm install --no-package-lock --legacy-peer-deps && npm run build'
 
 # once the fixtures are built we no longer need node_modules and
 # it makes the COPY later on much faster if we don't have them
