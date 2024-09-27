@@ -20,7 +20,6 @@
   "license": "MIT",
   "devDependencies": {
     "@bugsnag/core": "^8.0.0",
-    "@types/react-native": "^0.63.20",
     "react-native-navigation": "^7.0.0"
   },
   "peerDependencies": {

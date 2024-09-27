@@ -21,12 +21,13 @@
     "@babel/preset-typescript": "^7.23.3",
     "@cucumber/cucumber": "^7.2.1",
     "@jest-runner/electron": "^3.0.1",
-    "@types/jest": "^25.1.2",
+    "@types/jest": "^26.0.14",
     "@types/ncp": "^2.0.4",
     "@types/node": "^13.7.1",
     "@types/node-fetch": "^2.5.7",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.16",
+    "@types/react-native": "0.67.8",
     "@types/react-test-renderer": "^16.9.2",
     "@types/rimraf": "^3.0.0",
     "@types/uuid": "^8.3.0",
@@ -99,6 +100,10 @@
     "test:electron": "xvfb-maybe --auto-servernum -- cucumber-js test/electron/features --retry 3 --retry-tag-filter @flaky"
   },
   "overrides": {
+    "@types/babel__traverse": "7.17.1",
+    "@types/express-serve-static-core": "4.17.28",
+    "@types/prettier": "2.6.0",
+    "@types/yargs": "17.0.10",
     "shell-quote": "^1.7.3",
     "thenify": "^3.3.1"
   },

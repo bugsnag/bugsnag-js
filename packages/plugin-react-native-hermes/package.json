@@ -14,7 +14,9 @@
   "files": [
     "*.js"
   ],
-  "scripts": {},
+  "scripts": {
+    "test:types": "tsc -p tsconfig.json"
+  },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
