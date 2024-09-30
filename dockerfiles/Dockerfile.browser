@@ -23,12 +23,13 @@ RUN npm pack --verbose packages/plugin-vue/
 RUN npm pack --verbose packages/web-worker/
 
 COPY test/browser/features test/browser/features
-
 WORKDIR /app/test/browser/features/fixtures
-RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-browser-*.tgz
-RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-plugin-react-*.tgz
-RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-plugin-vue-*.tgz
-RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-web-worker-*.tgz
+RUN npm install --no-package-lock --no-save --legacy-peer-deps \
+../../../../bugsnag-browser-*.tgz \
+../../../../bugsnag-plugin-react-*.tgz \
+../../../../bugsnag-plugin-vue-*.tgz \
+../../../../bugsnag-web-worker-*.tgz
+
 WORKDIR plugin_angular/ng
 RUN npm install --no-package-lock --no-save --legacy-peer-deps \
   ../../../../../../bugsnag-plugin-angular-*.tgz  \
