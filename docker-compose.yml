@@ -106,6 +106,7 @@ services:
           - maze-runner
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./reports/:/app/reports/
 
   android-builder-base-java-11:
     build:
