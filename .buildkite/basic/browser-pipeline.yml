@@ -70,6 +70,7 @@ steps:
             files: "reports/TEST-*.xml"
             format: "junit"
             branch: "^main|next$$"
+            api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
@@ -101,6 +102,7 @@ steps:
 #            files: "reports/TEST-*.xml"
 #            format: "junit"
 #            branch: "^main|next$$"
+#            api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
 #        concurrency: 25
 #        concurrency_group: "bitbar"
 #        concurrency_method: eager
@@ -126,6 +128,7 @@ steps:
             files: "reports/TEST-*.xml"
             format: "junit"
             branch: "^main|next$$"
+            api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
@@ -167,6 +170,7 @@ steps:
             files: "reports/TEST-*.xml"
             format: "junit"
             branch: "^main|next$$"
+            api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 2
         concurrency_group: "browserstack"
         concurrency_method: eager
