@@ -41,6 +41,7 @@ steps:
       queue: "macos-14"
     env:
       NODE_VERSION: "18"
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
     commands:
       # force the NPM registry as the default on CI is artifactory, which can't
       # currently install from our lockfile
