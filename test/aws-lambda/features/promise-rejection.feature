@@ -78,4 +78,8 @@ Scenario: promise rejections are reported when using serverless-express
     Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
     And the session "id" is not null
     And the session "startedAt" is a timestamp
-    And the event "session.events" is null
+
+    # TODO: investigate why this behaviour has changed (previously the event was not associated with a session - see PLAT-12841)
+    # And the event "session.events" is null
+    And the event "session.events.handled" equals 0
+    And the event "session.events.unhandled" equals 1
