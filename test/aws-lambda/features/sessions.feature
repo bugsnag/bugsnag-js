@@ -15,16 +15,11 @@ Scenario Outline: sessions are reported
 
     Examples:
         | lambda                                         | handled-count | unhandled-count |
-        | AsyncUnhandledExceptionFunctionNode14          | 0             | 1               |
-        | AsyncUnhandledExceptionFunctionNode12          | 0             | 1               |
-        | CallbackUnhandledExceptionFunctionNode14       | 0             | 1               |
-        | CallbackUnhandledExceptionFunctionNode12       | 0             | 1               |
-        | CallbackThrownUnhandledExceptionFunctionNode14 | 0             | 1               |
-        | CallbackThrownUnhandledExceptionFunctionNode12 | 0             | 1               |
-        | AsyncHandledExceptionFunctionNode14            | 1             | 0               |
-        | AsyncHandledExceptionFunctionNode12            | 1             | 0               |
-        | CallbackHandledExceptionFunctionNode14         | 1             | 0               |
-        | CallbackHandledExceptionFunctionNode12         | 1             | 0               |
+        | AsyncUnhandledExceptionFunctionNode18          | 0             | 1               |
+        | CallbackUnhandledExceptionFunctionNode18       | 0             | 1               |
+        | CallbackThrownUnhandledExceptionFunctionNode18 | 0             | 1               |
+        | AsyncHandledExceptionFunctionNode18            | 1             | 0               |
+        | CallbackHandledExceptionFunctionNode18         | 1             | 0               |
 
 @simple-app
 Scenario Outline: no session is sent when autoTrackSessions is false
@@ -37,11 +32,7 @@ Scenario Outline: no session is sent when autoTrackSessions is false
 
     Examples:
         | lambda                                   |
-        | AsyncUnhandledExceptionFunctionNode14    |
-        | AsyncUnhandledExceptionFunctionNode12    |
-        | CallbackUnhandledExceptionFunctionNode14 |
-        | CallbackUnhandledExceptionFunctionNode12 |
-        | AsyncHandledExceptionFunctionNode14      |
-        | AsyncHandledExceptionFunctionNode12      |
-        | CallbackHandledExceptionFunctionNode14   |
-        | CallbackHandledExceptionFunctionNode12   |
+        | AsyncUnhandledExceptionFunctionNode18    |
+        | CallbackUnhandledExceptionFunctionNode18 |
+        | AsyncHandledExceptionFunctionNode18      |
+        | CallbackHandledExceptionFunctionNode18   |
