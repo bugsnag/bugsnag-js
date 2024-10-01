@@ -15,6 +15,9 @@ BeforeAll do
     exit 127
   end
 
+  sam_version = `sam --version`
+  puts "Using SAM CLI version: #{sam_version}"
+
   success = system(File.realpath("#{__dir__}/../scripts/build-fixtures"))
 
   unless success
