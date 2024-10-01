@@ -65,7 +65,7 @@ services:
     volumes:
       - ./test/browser/maze_output:/app/test/browser/maze_output
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./reports/:/app/reports/
+      - ./reports/:/app/test/browser/reports/
 
   browser-maze-runner-bs:
     build:
@@ -86,7 +86,7 @@ services:
           - maze-runner
     volumes:
       - ./test/browser/maze_output:/app/test/browser/maze_output
-      - ./reports/:/app/reports/
+      - ./reports/:/app/test/browser/reports/
 
   node-maze-runner:
     build:
@@ -106,7 +106,7 @@ services:
           - maze-runner
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./reports/:/app/reports/
+      - ./reports/:/app/test/node/reports/
 
   android-builder-base-java-11:
     build:
