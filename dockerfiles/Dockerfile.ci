@@ -13,5 +13,5 @@ COPY scripts ./scripts
 COPY test ./test
 COPY packages ./packages
 
-RUN npm install --unsafe-perm --legacy-peer-deps
+RUN npm install --unsafe-perm
 RUN npm run build

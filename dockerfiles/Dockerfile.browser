@@ -11,7 +11,7 @@ ADD min_packages.tar .
 COPY bin ./bin
 COPY packages ./packages
 
-RUN npm install --legacy-peer-deps
+RUN npm install
 RUN npm run build
 
 RUN npm pack --verbose packages/js/
@@ -24,14 +24,14 @@ RUN npm pack --verbose packages/web-worker/
 
 COPY test/browser/features test/browser/features
 WORKDIR /app/test/browser/features/fixtures
-RUN npm install --no-package-lock --no-save --legacy-peer-deps \
+RUN npm install --no-package-lock --no-save \
 ../../../../bugsnag-browser-*.tgz \
 ../../../../bugsnag-plugin-react-*.tgz \
 ../../../../bugsnag-plugin-vue-*.tgz \
 ../../../../bugsnag-web-worker-*.tgz
 
 WORKDIR plugin_angular/ng
-RUN npm install --no-package-lock --no-save --legacy-peer-deps \
+RUN npm install --no-package-lock --no-save \
   ../../../../../../bugsnag-plugin-angular-*.tgz  \
   ../../../../../../bugsnag-node-*.tgz \
   ../../../../../../bugsnag-browser-*.tgz \
@@ -40,7 +40,7 @@ RUN npm install --no-package-lock --no-save --legacy-peer-deps \
 # install the dependencies and build each fixture
 WORKDIR /app/test/browser/features/fixtures
 RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_modules/*" | \
-  xargs -I % bash -c 'cd `dirname %` && npm install --no-package-lock --legacy-peer-deps && npm run build'
+  xargs -I % bash -c 'cd `dirname %` && npm install --no-package-lock && npm run build'
 
 # once the fixtures are built we no longer need node_modules and
 # it makes the COPY later on much faster if we don't have them
