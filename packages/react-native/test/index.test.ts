@@ -43,7 +43,9 @@ describe('react native notifier', () => {
       Bugsnag = require('..')
     })
 
+    // @ts-expect-error Cannot find name 'window'
     window.fetch = jest.fn()
+    // @ts-expect-error Cannot find name 'window'
     window.XMLHttpRequest = jest.fn() as any
   })
 

@@ -72,7 +72,6 @@ export async function launchScenario () {
 
   switch (command.action) {
     case 'run-scenario':
-      // eslint-disable-next-line no-return-await
       return await runScenario(
         command.scenario_name,
         command.api_key,
@@ -82,7 +81,6 @@ export async function launchScenario () {
       )
 
     case 'start-bugsnag':
-      // eslint-disable-next-line no-return-await
       return await startBugsnag(
         command.scenario_name,
         command.api_key,

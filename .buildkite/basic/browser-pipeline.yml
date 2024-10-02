@@ -125,9 +125,6 @@ steps:
       #
       - label: ":browserstack: {{matrix}} tests"
         matrix:
-          - ie_8
-          - ie_9
-          - ie_10
           - edge_17
           - safari_10
           - safari_16

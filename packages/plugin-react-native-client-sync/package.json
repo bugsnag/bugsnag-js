@@ -21,5 +21,8 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0-alpha.1"
+  },
+  "scripts": {
+    "test:types": "tsc -p tsconfig.json"
   }
 }
