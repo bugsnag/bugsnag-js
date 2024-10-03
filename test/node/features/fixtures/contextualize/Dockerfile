@@ -8,4 +8,4 @@ RUN npm install
 
 COPY . ./
 
-RUN npm install --no-package-lock --no-save --legacy-peer-deps bugsnag-node*.tgz
+RUN npm install --no-package-lock --no-save bugsnag-node*.tgz

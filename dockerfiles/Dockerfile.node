@@ -11,7 +11,7 @@ ADD min_packages.tar .
 COPY bin ./bin
 COPY packages ./packages
 
-RUN npm install --legacy-peer-deps
+RUN npm install
 RUN npm run build
 
 RUN npm pack --verbose packages/node/
