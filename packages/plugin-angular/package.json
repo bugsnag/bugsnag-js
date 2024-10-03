@@ -39,6 +39,6 @@
     "zone.js": "^0.8.26"
   },
   "peerDependencies": {
-    "@bugsnag/js": "^8.0.0-alpha.1"
+    "@bugsnag/js": "^8.0.0"
   }
 }
