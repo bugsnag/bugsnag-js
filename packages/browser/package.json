@@ -1,6 +1,7 @@
 {
   "name": "@bugsnag/browser",
   "version": "8.0.0",
+  "type": "module",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for browser JavaScript",
@@ -21,10 +22,10 @@
   ],
   "scripts": {
     "size": "../../bin/size dist/bugsnag.min.js",
-    "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:dist && npm run build:dist:min",
-    "build:dist": "cross-env NODE_ENV=production bash -c '../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/extract-source-map dist/bugsnag.js'",
-    "build:dist:min": "cross-env NODE_ENV=production bash -c '../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/minify dist/bugsnag.min.js'",
+    "clean": "rm -rf dist/*",
+    "build": "npm run clean && npm run build:npm && npm run build:cdn",
+    "build:cdn": "rollup --config rollup.config.cdn.mjs",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
     "cdn-upload": "../../bin/cdn-upload dist/*"
   },
   "author": "Bugsnag",
