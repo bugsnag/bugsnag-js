@@ -42,6 +42,12 @@ steps:
     env:
       NODE_VERSION: "18"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+    plugins:
+      test-collector#v1.10.2:
+        files: "reports/TEST-*.xml"
+        format: "junit"
+        branch: "^main|next$$"
+        api-token-env-name: "JS_AWS_LAMBDA_BUILDKITE_ANALYTICS_TOKEN"
     commands:
       # force the NPM registry as the default on CI is artifactory, which can't
       # currently install from our lockfile
