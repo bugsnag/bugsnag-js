@@ -1,24 +1,17 @@
 const {
   BugsnagSourceMapUploaderPlugin,
   BugsnagBuildReporterPlugin,
-} = require('webpack-bugsnag-plugins');
+} = require('webpack-bugsnag-plugins')
 
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   productionBrowserSourceMaps: true,
-  webpack(config, { buildId, isServer, webpack }) {
+  webpack(config, { buildId, webpack }) {
     config.plugins.push(
       new webpack.DefinePlugin({
-        // Define the build id so that it can be accessed in the client when reporting errors
         'process.env.NEXT_BUILD_ID': JSON.stringify(buildId),
-        'process.env.NEXT_IS_SERVER': JSON.stringify(isServer),
-      })
+      }),
     )
-    
-    // Avoid including '@bugsnag/plugin-aws-lambda' module in the client side bundle
-    // See https://arunoda.me/blog/ssr-and-server-only-modules
-    if (!isServer) {
-      config.plugins.push(new webpack.IgnorePlugin({resourceRegExp: /@bugsnag\/plugin-aws-lambda/}));
-    }
 
     // Upload source maps on production build
     if (
@@ -45,3 +38,5 @@ module.exports = {
     return config
   },
 }
+
+module.exports = nextConfig
