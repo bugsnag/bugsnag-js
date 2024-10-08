@@ -161,6 +161,11 @@ steps:
               - --no-tunnel
               - --aws-public-ip
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
@@ -187,6 +192,11 @@ steps:
               - --no-tunnel
               - --aws-public-ip
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
@@ -213,6 +223,11 @@ steps:
               - --no-tunnel
               - --aws-public-ip
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
@@ -237,6 +252,11 @@ steps:
               - --device=IOS_14
               - --a11y-locator
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
@@ -258,6 +278,11 @@ steps:
               - --device=IOS_14
               - --a11y-locator
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
@@ -279,6 +304,11 @@ steps:
               - --device=IOS_14
               - --a11y-locator
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager

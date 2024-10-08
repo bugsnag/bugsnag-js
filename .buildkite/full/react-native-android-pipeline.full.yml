@@ -220,6 +220,11 @@ steps:
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
         concurrency: 25
@@ -248,6 +253,11 @@ steps:
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -277,6 +287,11 @@ steps:
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -306,6 +321,11 @@ steps:
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
@@ -333,6 +353,11 @@ steps:
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
         retry:
           manual:
             permit_on_passed: true
@@ -370,6 +395,11 @@ steps:
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
         retry:
           manual:
             permit_on_passed: true
@@ -405,6 +435,11 @@ steps:
               - --no-tunnel
               - --aws-public-ip
               - features/react-native-navigation.feature
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
         retry:
           manual:
             permit_on_passed: true
@@ -440,6 +475,11 @@ steps:
               - --no-tunnel
               - --aws-public-ip
               - features/react-native-navigation.feature
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
         retry:
           manual:
             permit_on_passed: true

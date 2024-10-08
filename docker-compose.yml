@@ -188,6 +188,7 @@ services:
       - ./test/react-native/features/:/app/features
       - ./test/react-native/maze_output:/app/maze_output
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./reports/:/app/reports
 
   react-native-cli-maze-runner:
     image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v9-cli
@@ -207,6 +208,7 @@ services:
       - ./test/react-native-cli/features/:/app/features/
       - ./test/react-native-cli/maze_output:/app/maze_output
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./reports/:/app/reports
 
   release:
     build:
