@@ -135,7 +135,7 @@ function installFixtureDependencies () {
   const fixtureDependencyArgs = DEPENDENCIES.join(' ')
 
   // install test fixture dependencies
-  execSync(`npm install --save ${fixtureDependencyArgs} --registry ${process.env.REGISTRY_URL}`, { cwd: fixtureDir, stdio: 'inherit' })
+  execSync(`npm install --save ${fixtureDependencyArgs} --registry ${process.env.REGISTRY_URL} --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })
 
   // install the scenario launcher package
   const scenarioLauncherPackage = `${ROOT_DIR}/test/react-native/features/fixtures/scenario-launcher`

@@ -26,8 +26,8 @@
     "@bugsnag/electron-network-status": "^8.0.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.1",
-    "@bugsnag/electron-network-status": "^8.0.0-alpha.1"
+    "@bugsnag/core": "^8.0.0",
+    "@bugsnag/electron-network-status": "^8.0.0"
   },
   "author": "Bugsnag",
   "license": "MIT"
