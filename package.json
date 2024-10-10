@@ -52,7 +52,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-standard": "^4.0.1",
-    "exorcist": "^1.0.1",
+    "exorcist": "^2.0.0",
     "form-data": "^2.3.3",
     "formidable": "^1.2.2",
     "glob": "^7.1.6",
@@ -104,6 +104,8 @@
     "@types/express-serve-static-core": "4.17.28",
     "@types/prettier": "2.6.0",
     "@types/yargs": "17.0.10",
+    "hermes-engine": "^0.7.2",
+    "json-schema": "^0.4.0",
     "shell-quote": "^1.7.3",
     "thenify": "^3.3.1"
   },

@@ -71,7 +71,6 @@ steps:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
               - --device=IOS_16
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -108,7 +107,6 @@ steps:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
               - --device=IOS_16
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip

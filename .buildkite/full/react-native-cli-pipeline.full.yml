@@ -157,7 +157,6 @@ steps:
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --appium-version=1.22
-              - --a11y-locator
               - --no-tunnel
               - --aws-public-ip
               - features/run-app-tests
@@ -188,7 +187,6 @@ steps:
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --appium-version=1.22
-              - --a11y-locator
               - --no-tunnel
               - --aws-public-ip
               - features/run-app-tests
@@ -219,7 +217,6 @@ steps:
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --appium-version=1.22
-              - --a11y-locator
               - --no-tunnel
               - --aws-public-ip
               - features/run-app-tests
@@ -250,7 +247,6 @@ steps:
               - --app=build/rn0_66.ipa
               - --farm=bs
               - --device=IOS_14
-              - --a11y-locator
               - features/run-app-tests
           test-collector#v1.10.2:
             files: "reports/TEST-*.xml"
@@ -276,7 +272,6 @@ steps:
               - --app=build/rn0_67.ipa
               - --farm=bs
               - --device=IOS_14
-              - --a11y-locator
               - features/run-app-tests
           test-collector#v1.10.2:
             files: "reports/TEST-*.xml"
@@ -302,7 +297,6 @@ steps:
               - --app=build/rn0_69.ipa
               - --farm=bs
               - --device=IOS_14
-              - --a11y-locator
               - features/run-app-tests
           test-collector#v1.10.2:
             files: "reports/TEST-*.xml"

@@ -97,7 +97,6 @@ particular, these commands need the `BrowserStackLocal` binary (available
     bundle exec maze-runner --app=<PATH_TO_TEST_FIXTURE_APK> \
                             --farm=bs \
                             --device=ANDROID_9_0 \
-                            --a11y-locator \
                             features/app.feature
     ```
 1. Or on iOS:
@@ -105,7 +104,6 @@ particular, these commands need the `BrowserStackLocal` binary (available
     bundle exec maze-runner --app=<PATH_TO_TEST_FIXTURE_IPA> \
                             --farm=bs \
                             --device=IOS_16 \
-                            --a11y-locator \
                             features/app.feature
     ```
 1. To run all features, omit the final argument.
