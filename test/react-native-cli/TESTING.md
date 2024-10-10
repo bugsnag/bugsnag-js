@@ -81,7 +81,6 @@ particular, these commands need the `BrowserStackLocal` binary (available
     bundle exec maze-runner --app=./build/rn0_63.apk \
                             --farm=bs \
                             --device=ANDROID_9_0 \
-                            --a11y-locator \
                             --bs-local=~/BrowserStackLocal \
                             features/run-app-tests
     ```
@@ -90,7 +89,6 @@ particular, these commands need the `BrowserStackLocal` binary (available
     bundle exec maze-runner --app=../../build/rn0_63.ipa \
                             --farm=bs \
                             --device=IOS_13 \
-                            --a11y-locator \
                             --bs-local=~/BrowserStackLocal \
                             features/run-app-tests
     ```

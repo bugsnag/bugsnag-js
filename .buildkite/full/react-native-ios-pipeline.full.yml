@@ -195,7 +195,6 @@ steps:
               - --app=build/rn0.66.ipa
               - --farm=bb
               - --device=IOS_15|IOS_16
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -226,7 +225,6 @@ steps:
               - --app=build/rn0.67.ipa
               - --farm=bb
               - --device=IOS_15|IOS_16
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -258,7 +256,6 @@ steps:
               - --app=build/rn0.69.ipa
               - --farm=bb
               - --device=IOS_15|IOS_16
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -290,7 +287,6 @@ steps:
               - --app=build/rn0.68-hermes.ipa
               - --farm=bb
               - --device=IOS_15|IOS_16
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -321,7 +317,6 @@ steps:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
               - --device=IOS_16
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -359,7 +354,6 @@ steps:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
               - --device=IOS_16
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -400,7 +394,6 @@ steps:
               - --app=/app/features/fixtures/generated/react-native-navigation/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
               - --device=IOS_16
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -441,7 +434,6 @@ steps:
       #         - --app=/app/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/output/reactnative.ipa
       #         - --farm=bb
       #         - --device=IOS_16
-      #         - --a11y-locator
       #         - --fail-fast
       #         - --no-tunnel
       #         - --aws-public-ip
