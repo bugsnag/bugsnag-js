@@ -1,7 +1,27 @@
 import createRollupConfig from '../../.rollup/index.mjs'
 
 export default createRollupConfig({
-  internal: 'src/notifier.ts',
+  input: 'src/notifier.ts',
+  output: [
+    {
+      dir: `dist`,
+      entryFileNames: '[name].js',
+      format: 'cjs',
+      preserveModules: true,
+      generatedCode: {
+        preset: 'es2015',
+      }
+   },
+   {
+      dir: `dist`,
+      entryFileNames: '[name].mjs',
+      format: 'esm',
+      preserveModules: true,
+      generatedCode: {
+        preset: 'es2015',
+      }
+   },
+  ],
   external: [
     "@bugsnag/core/breadcrumb",
     "@bugsnag/core/client",

@@ -37,7 +37,7 @@ const name = 'Bugsnag JavaScript'
 const version = '__VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
-export const Bugsnag = {
+const Bugsnag = {
   _client: null as unknown as Client<BrowserConfig>,
   createClient: (opts: string | BrowserConfig) => {
     // handle very simple use case where user supplies just the api key as a string

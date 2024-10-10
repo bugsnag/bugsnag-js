@@ -9,15 +9,17 @@ const defaultOptions = () => ({
   // additional external dependencies, such as '@bugsnag/browser'
   external: [],
   // the entry point for the bundle
-  internal: undefined,
+  input: undefined,
+  // the output configuration for the bundle
+  output: undefined
 })
 
 function createRollupConfig (options = defaultOptions()) {
   const packageJson = JSON.parse(fs.readFileSync(`${process.cwd()}/package.json`))
 
   return {
-    input: options.internal || 'src/index.ts',
-    output: {
+    input: options.input || 'src/index.ts',
+    output: options.output || {
       dir: 'dist',
       format: 'esm',
       preserveModules: true,
