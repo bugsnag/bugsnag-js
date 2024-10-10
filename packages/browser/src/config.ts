@@ -1,8 +1,16 @@
-const { schema } = require('@bugsnag/core/config')
-const map = require('@bugsnag/core/lib/es-utils/map')
-const assign = require('@bugsnag/core/lib/es-utils/assign')
+import { Config } from '@bugsnag/core'
+import { schema } from '@bugsnag/core/config'
+import assign from '@bugsnag/core/lib/es-utils/assign'
+import map from '@bugsnag/core/lib/es-utils/map'
 
-module.exports = {
+export interface BrowserConfig extends Config {
+  maxEvents?: number
+  collectUserIp?: boolean
+  generateAnonymousId?: boolean
+  trackInlineScripts?: boolean
+}
+
+export default {
   releaseStage: assign({}, schema.releaseStage, {
     defaultValue: () => {
       if (/^localhost(:\d+)?$/.test(window.location.host)) return 'development'
@@ -22,10 +30,12 @@ module.exports = {
   })
 }
 
+type ConsoleMethods = 'debug' | 'info' | 'warn' | 'error'
+
 const getPrefixedConsole = () => {
-  const logger = {}
+  const logger: Record<string, () => void> = {}
   const consoleLog = console.log
-  map(['debug', 'info', 'warn', 'error'], (method) => {
+  map(['debug', 'info', 'warn', 'error'], (method: ConsoleMethods) => {
     const consoleMethod = console[method]
     logger[method] = typeof consoleMethod === 'function'
       ? consoleMethod.bind(console, '[bugsnag]')
