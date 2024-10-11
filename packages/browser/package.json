@@ -27,7 +27,8 @@
     "build": "npm run clean && npm run build:npm && npm run build:cdn",
     "build:cdn": "rollup --config rollup.config.cdn.mjs",
     "build:npm": "rollup --config rollup.config.npm.mjs",
-    "cdn-upload": "../../bin/cdn-upload dist/*"
+    "cdn-upload": "../../bin/cdn-upload dist/*",
+    "test:types": "tsc --noEmit"
   },
   "author": "Bugsnag",
   "license": "MIT",
