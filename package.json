@@ -17,6 +17,7 @@
     "@babel/plugin-transform-shorthand-properties": "^7.23.3",
     "@babel/plugin-transform-spread": "^7.23.3",
     "@babel/plugin-transform-template-literals": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@cucumber/cucumber": "^7.2.1",
