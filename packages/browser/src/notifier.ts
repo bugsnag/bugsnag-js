@@ -31,6 +31,12 @@ import dXMLHttpRequest from '@bugsnag/delivery-xml-http-request'
 import { schema as baseSchema } from '@bugsnag/core/config'
 import browserConfig, { BrowserConfig } from './config'
 
+declare global {
+  interface Window {
+    XDomainRequest?: any
+  }
+}
+
 const schema = assign({}, baseSchema, browserConfig)
 
 const name = 'Bugsnag JavaScript'
@@ -69,7 +75,7 @@ const Bugsnag = {
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
     // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
-    // @ts-expect-error
+    // @ts-expect-error DeliveryXDomainRequest does not match _setDelivery signature
     bugsnag._setDelivery(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
 
     bugsnag._logger.debug('Loaded!')
@@ -91,10 +97,6 @@ const Bugsnag = {
     return Bugsnag._client != null
   }
 }
-
-type BugsnagBrowser = typeof Bugsnag
-
-type BugsnagBrowserKeys = keyof BugsnagBrowser | 'resetEventCount'
 
 map(['resetEventCount'].concat(keys(Client.prototype)), (m) => {
   if (/^_/.test(m)) return
