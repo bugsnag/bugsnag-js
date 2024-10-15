@@ -51,7 +51,9 @@ module.exports = {
       'plugin-simple-throttle',
       'plugin-console-breadcrumbs',
       'plugin-browser-session'
-    ]),
+    ], {
+      testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
+    }),
     project('react native', [
       'react-native',
       'delivery-react-native',
