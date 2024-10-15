@@ -3,6 +3,13 @@
   "version": "8.0.0",
   "main": "dist/onerror.js",
   "types": "dist/types/onerror.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/onerror.mjs",
+      "require": "./dist/onerror.js",
+      "types": "./dist/types/onerror.d.ts"
+    }
+  },
   "description": "@bugsnag/js plugin to report unhandled exceptions in browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
