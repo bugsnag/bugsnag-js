@@ -5,9 +5,9 @@
   "types": "dist/types/onerror.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/onerror.mjs",
-      "require": "./dist/onerror.js",
-      "types": "./dist/types/onerror.d.ts"
+      "types": "./dist/types/onerror.d.ts",
+      "default": "./dist/onerror.js",
+      "import": "./dist/onerror.mjs"
     }
   },
   "description": "@bugsnag/js plugin to report unhandled exceptions in browsers",
