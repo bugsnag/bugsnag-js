@@ -6,7 +6,7 @@ RUN apk add --update bash python3 make gcc g++ musl-dev xvfb-run curl
 WORKDIR /app
 
 COPY package*.json ./
-COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
+COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js jest tsconfig.json ./
 ADD min_packages.tar .
 COPY bin ./bin
 COPY packages ./packages
