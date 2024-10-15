@@ -2,14 +2,14 @@
  * Automatically notifies Bugsnag when window.onerror is called
  */
 
-import type { Client, Stackframe } from 'packages/core/types'
+import type { Plugin, Stackframe } from 'packages/core/types'
 
-export default (win = window, component = 'window onerror') => ({
-  load: (client: Client) => {
+export default (win = window, component = 'window onerror'): Plugin => ({
+  load: (client) => {
     // @ts-expect-error _config is private API
-    if (!client._config.autoDetectErrors) return
-    // @ts-expect-error _config is private API
-    if (!client._config.enabledErrorTypes?.unhandledExceptions) return
+    if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes?.unhandledExceptions) return
+
+    const prevOnError = win.onerror
     function onerror (messageOrEvent: string | Event, url?: string, lineNo?: number, charNo?: number, error?: Error) {
       // Ignore errors with no info due to CORS settings
       if (lineNo === 0 && /Script error\.?/.test(messageOrEvent.toString())) {
@@ -70,7 +70,6 @@ export default (win = window, component = 'window onerror') => ({
       if (typeof prevOnError === 'function') prevOnError.apply(win, [messageOrEvent, url, lineNo, charNo, error])
     }
 
-    const prevOnError = win.onerror
     win.onerror = onerror
   }
 })
