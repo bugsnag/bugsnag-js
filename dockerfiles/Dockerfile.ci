@@ -8,6 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 ADD min_packages.tar .
+COPY .rollup ./.rollup
 COPY bin ./bin
 COPY scripts ./scripts
 COPY test ./test
