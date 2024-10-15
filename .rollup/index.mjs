@@ -10,6 +10,8 @@ const defaultOptions = () => ({
   external: [],
   // the entry point for the bundle
   input: undefined,
+  // output directory for the bundle
+  output: undefined
 })
 
 function createRollupConfig (options = defaultOptions()) {
@@ -17,13 +19,13 @@ function createRollupConfig (options = defaultOptions()) {
 
   return {
     input: options.input || 'src/index.ts',
-    output: {
+    output: options.output || {
       dir: 'dist',
       format: 'esm',
       preserveModules: true,
       generatedCode: {
         preset: 'es2015',
-      },
+      }
     },
     external: ['@bugsnag/core'].concat(options.external),
     plugins: [
@@ -32,7 +34,7 @@ function createRollupConfig (options = defaultOptions()) {
         values: {
           __VERSION__: packageJson.version,
           ...options.additionalReplacements,
-        },
+        }
       }),
       typescript({
         // don't output anything if there's a TS error
@@ -43,9 +45,9 @@ function createRollupConfig (options = defaultOptions()) {
           declarationMap: true,
           emitDeclarationOnly: true,
           declarationDir: 'dist/types',
-        },
-      }),
-    ],
+        }
+      })
+    ]
   }
 }
 
