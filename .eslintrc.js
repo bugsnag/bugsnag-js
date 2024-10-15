@@ -44,7 +44,8 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     jsx: true,
-    ecmaVersion: 2018
+    ecmaVersion: 2018,
+    sourceType: 'module'
   },
   overrides: [
     // linting for js files
