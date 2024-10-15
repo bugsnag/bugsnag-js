@@ -7,7 +7,7 @@ import type { Plugin, Stackframe } from 'packages/core/types'
 export default (win = window, component = 'window onerror'): Plugin => ({
   load: (client) => {
     // @ts-expect-error _config is private API
-    if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes?.unhandledExceptions) return
+    if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledExceptions) return
 
     const prevOnError = win.onerror
     function onerror (messageOrEvent: string | Event, url?: string, lineNo?: number, charNo?: number, error?: Error) {
