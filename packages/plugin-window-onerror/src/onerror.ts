@@ -2,13 +2,18 @@
  * Automatically notifies Bugsnag when window.onerror is called
  */
 
-module.exports = (win = window, component = 'window onerror') => ({
-  load: (client) => {
+import type { Client, Stackframe } from 'packages/core/types'
+
+export default (win = window, component = 'window onerror') => ({
+  load: (client: Client) => {
+    // @ts-expect-error _config is private API
     if (!client._config.autoDetectErrors) return
-    if (!client._config.enabledErrorTypes.unhandledExceptions) return
-    function onerror (messageOrEvent, url, lineNo, charNo, error) {
+    // @ts-expect-error _config is private API
+    if (!client._config.enabledErrorTypes?.unhandledExceptions) return
+    function onerror (messageOrEvent: string | Event, url?: string, lineNo?: number, charNo?: number, error?: Error) {
       // Ignore errors with no info due to CORS settings
-      if (lineNo === 0 && /Script error\.?/.test(messageOrEvent)) {
+      if (lineNo === 0 && /Script error\.?/.test(messageOrEvent.toString())) {
+        // @ts-expect-error _logger is private API
         client._logger.warn('Ignoring cross-domain or eval script error. See docs: https://tinyurl.com/yy3rn63z')
       } else {
         // any error sent to window.onerror is unhandled and has severity=error
@@ -41,11 +46,13 @@ module.exports = (win = window, component = 'window onerror') => ({
           const name = messageOrEvent.type ? `Event: ${messageOrEvent.type}` : 'Error'
           // attempt to find a message from one of the conventional properties, but
           // default to empty string (the event will fill it with a placeholder)
+          // @ts-expect-error TODO: messageOrEvent has no message or detail property
           const message = messageOrEvent.message || messageOrEvent.detail || ''
 
           event = client.Event.create({ name, message }, true, handledState, component, 1)
 
           // provide the original thing onerror received – not our error-like object we passed to _notify
+          // @ts-expect-error originalError is readonly
           event.originalError = messageOrEvent
 
           // include the raw input as metadata – it might contain more info than we extracted
@@ -60,7 +67,7 @@ module.exports = (win = window, component = 'window onerror') => ({
         client._notify(event)
       }
 
-      if (typeof prevOnError === 'function') prevOnError.apply(this, arguments)
+      if (typeof prevOnError === 'function') prevOnError.apply(win, [messageOrEvent, url, lineNo, charNo, error])
     }
 
     const prevOnError = win.onerror
@@ -71,18 +78,20 @@ module.exports = (win = window, component = 'window onerror') => ({
 // Sometimes the stacktrace has less information than was passed to window.onerror.
 // This function will augment the first stackframe with any useful info that was
 // received as arguments to the onerror callback.
-const decorateStack = (stack, url, lineNo, charNo) => {
-  if (!stack[0]) stack.push({})
+const decorateStack = (stack: Stackframe[], url?: string, lineNo?: number, charNo?: number) => {
+  if (!stack[0]) stack.push({ file: '' })
   const culprit = stack[0]
   if (!culprit.file && typeof url === 'string') culprit.file = url
   if (!culprit.lineNumber && isActualNumber(lineNo)) culprit.lineNumber = lineNo
   if (!culprit.columnNumber) {
     if (isActualNumber(charNo)) {
       culprit.columnNumber = charNo
+      // @ts-expect-error event.errorCharacter does not exist on type 'Event' (deprecated)
     } else if (window.event && isActualNumber(window.event.errorCharacter)) {
+      // @ts-expect-error event.errorCharacter does not exist on type 'Event' (deprecated)
       culprit.columnNumber = window.event.errorCharacter
     }
   }
 }
 
-const isActualNumber = (n) => typeof n === 'number' && String.call(n) !== 'NaN'
+const isActualNumber = (n: unknown): n is number => typeof n === 'number' && String.call(n) !== 'NaN'
