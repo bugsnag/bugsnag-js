@@ -43,7 +43,7 @@ jobs:
     - run: npm ci --no-audit --progress=false
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-    - run: npm run build:electron
+    - run: npm run build
       shell: bash
     - run: sudo apt-get install cppcheck --assume-yes
       name: Install cppcheck
