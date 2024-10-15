@@ -1,8 +1,7 @@
 {
   "name": "@bugsnag/plugin-window-onerror",
   "version": "8.0.0",
-  "main": "dist/onerror.mjs",
-  "browser": "dist/onerror.js",
+  "main": "dist/onerror.js",
   "types": "dist/types/onerror.d.ts",
   "exports": {
     ".": {
