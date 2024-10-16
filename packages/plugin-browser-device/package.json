@@ -2,6 +2,14 @@
   "name": "@bugsnag/plugin-browser-device",
   "version": "8.0.0",
   "main": "device.js",
+  "types": "dist/types/device.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/device.d.ts",
+      "default": "./dist/device.js",
+      "import": "./dist/device.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to set device info in browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -24,5 +32,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*"
   }
 }
