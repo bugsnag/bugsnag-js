@@ -14,19 +14,30 @@ const defaultOptions = () => ({
   output: undefined
 })
 
+const sharedOutput = {
+  dir: 'dist',
+  entryFileNames: '[name].js',
+  preserveModules: true,
+  generatedCode: {
+    preset: 'es2015',
+  }
+}
+
 function createRollupConfig (options = defaultOptions()) {
   const packageJson = JSON.parse(fs.readFileSync(`${process.cwd()}/package.json`))
 
   return {
     input: options.input || 'src/index.ts',
-    output: options.output || {
-      dir: 'dist',
-      format: 'esm',
-      preserveModules: true,
-      generatedCode: {
-        preset: 'es2015',
+    output: options.output || [
+      {
+        ...sharedOutput,
+        format: 'cjs'
+      },
+      {
+        ...sharedOutput,
+        format: 'esm'
       }
-    },
+    ],
     external: ['@bugsnag/core'].concat(options.external),
     plugins: [
       replace({
