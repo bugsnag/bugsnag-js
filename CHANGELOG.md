@@ -4,7 +4,7 @@
 
 ### Added
 
-- Add new `reportUnhandledPromiseRejectionsAsHandled` config option
+- Add new `reportUnhandledPromiseRejectionsAsHandled` config option [#2225](https://github.com/bugsnag/bugsnag-js/pull/2225)
 
 ## [8.0.0] - 2024-08-29
 
