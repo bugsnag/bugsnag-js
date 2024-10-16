@@ -16,8 +16,6 @@ const defaultOptions = () => ({
 
 const sharedOutput = {
   dir: 'dist',
-  entryFileNames: '[name].js',
-  preserveModules: true,
   generatedCode: {
     preset: 'es2015',
   }
@@ -31,10 +29,13 @@ function createRollupConfig (options = defaultOptions()) {
     output: options.output || [
       {
         ...sharedOutput,
+        entryFileNames: '[name].js',
         format: 'cjs'
       },
       {
         ...sharedOutput,
+        preserveModules: true,
+        entryFileNames: '[name].mjs',
         format: 'esm'
       }
     ],
