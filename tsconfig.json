@@ -66,7 +66,6 @@
     "packages/delivery-x-domain-request",
     "packages/delivery-xml-http-request",
     "packages/in-flight",
-    "packages/plugin-app-duration",
     "packages/plugin-aws-lambda",
     "packages/plugin-browser-context",
     "packages/plugin-browser-device",
