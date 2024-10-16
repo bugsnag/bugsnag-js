@@ -48,6 +48,7 @@ export default (win = window): Plugin => {
               [Object.prototype.toString.call(event.originalError)]: {
                 name: event.originalError.name,
                 message: event.originalError.message,
+                // @ts-expect-error Property 'code' does not exist on type 'Error'
                 code: event.originalError.code
               }
             })
@@ -74,8 +75,7 @@ export default (win = window): Plugin => {
         if ('addEventListener' in win) {
           win.removeEventListener('unhandledrejection', _listener)
         } else {
-          // @ts-expect-error onunhandledrejection does not exist on type never
-          win.onunhandledrejection = null
+          (win as Window).onunhandledrejection = null
         }
       }
       _listener = null

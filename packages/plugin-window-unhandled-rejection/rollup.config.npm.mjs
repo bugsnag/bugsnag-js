@@ -1,7 +1,7 @@
 import createRollupConfig from '../../.rollup/index.mjs'
 
 export default createRollupConfig({
-    input: 'src/onerror.ts',
+    input: 'src/unhandled-rejection.ts',
     output: [
         {
             dir: `dist`,
