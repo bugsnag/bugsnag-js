@@ -1,35 +1,24 @@
-const assign = require('@bugsnag/core/lib/es-utils/assign')
-const BUGSNAG_ANONYMOUS_ID_KEY = 'bugsnag-anonymous-id'
+import type { Device, Plugin } from '@bugsnag/core'
+import assign from '@bugsnag/core/lib/es-utils/assign'
+import setDefaultUserId from './set-default-user-id'
+import getDeviceId from './get-device-id'
 
-const getDeviceId = (win) => {
-  try {
-    const storage = win.localStorage
-
-    let id = storage.getItem(BUGSNAG_ANONYMOUS_ID_KEY)
-
-    // If we get an ID, make sure it looks like a valid cuid. The length can
-    // fluctuate slightly, so some leeway is built in
-    if (id && /^c[a-z0-9]{20,32}$/.test(id)) {
-      return id
-    }
-
-    const cuid = require('@bugsnag/cuid')
-    id = cuid()
-
-    storage.setItem(BUGSNAG_ANONYMOUS_ID_KEY, id)
-
-    return id
-  } catch (err) {
-    // If localStorage is not available (e.g. because it's disabled) then give up
+// Declare deprecated navigator values
+declare global {
+  interface Navigator {
+    browserLanguage?: string
+    systemLanguage?: string
+    userLanguage?: string
   }
 }
 
 /*
  * Automatically detects browser device details
  */
-module.exports = (nav = navigator, win = window) => ({
+export default (nav = navigator, win = window): Plugin => ({
+  name: 'device',
   load: (client) => {
-    const device = {
+    const device: Device = {
       locale: nav.browserLanguage || nav.systemLanguage || nav.userLanguage || nav.language,
       userAgent: nav.userAgent
     }
@@ -43,6 +32,7 @@ module.exports = (nav = navigator, win = window) => ({
           : 'portrait'
     }
 
+    // @ts-expect-error _config is private API
     if (client._config.generateAnonymousId) {
       device.id = getDeviceId(win)
     }
@@ -50,6 +40,7 @@ module.exports = (nav = navigator, win = window) => ({
     client.addOnSession(session => {
       session.device = assign({}, session.device, device)
       // only set device id if collectUserIp is false
+      // @ts-expect-error _config is private API
       if (!client._config.collectUserIp) setDefaultUserId(session)
     })
 
@@ -60,22 +51,17 @@ module.exports = (nav = navigator, win = window) => ({
         device,
         { time: new Date() }
       )
+      // @ts-expect-error _config is private API
       if (!client._config.collectUserIp) setDefaultUserId(event)
+      // @ts-expect-error second parameter is private API
     }, true)
   },
+  // @ts-expect-error _config is private API
   configSchema: {
     generateAnonymousId: {
-      validate: value => value === true || value === false,
+      validate: (value: unknown): value is boolean => value === true || value === false,
       defaultValue: () => true,
       message: 'should be true|false'
     }
   }
 })
-
-const setDefaultUserId = (eventOrSession) => {
-  // device id is also used to populate the user id field, if it's not already set
-  const user = eventOrSession.getUser()
-  if (!user || !user.id) {
-    eventOrSession.setUser(eventOrSession.device.id)
-  }
-}

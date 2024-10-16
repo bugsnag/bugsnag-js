@@ -68,7 +68,6 @@
     "packages/in-flight",
     "packages/plugin-aws-lambda",
     "packages/plugin-browser-context",
-    "packages/plugin-browser-device",
     "packages/plugin-contextualize",
     "packages/plugin-navigation-breadcrumbs",
     "packages/plugin-network-breadcrumbs",
