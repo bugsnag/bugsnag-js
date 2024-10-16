@@ -104,7 +104,7 @@
     "@types/express-serve-static-core": "4.17.28",
     "@types/prettier": "2.6.0",
     "@types/yargs": "17.0.10",
-    "hermes-engine": "^0.7.2",
+    "hermes-engine": "^0.10.0",
     "json-schema": "^0.4.0",
     "shell-quote": "^1.7.3",
     "thenify": "^3.3.1"
