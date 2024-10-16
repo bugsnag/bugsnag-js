@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/plugin-app-duration",
   "version": "8.0.0",
-  "main": "app.js",
+  "main": "dist/app-duration.js",
+  "types": "dist/types/app-duration.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/app-duration.d.ts",
+      "default": "./dist/app-duration.js",
+      "import": "./dist/app-duration.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to set app duration in browsers and node",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -21,5 +29,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*"
   }
 }
