@@ -21,6 +21,10 @@
     "@babel/preset-typescript": "^7.23.3",
     "@cucumber/cucumber": "^7.2.1",
     "@jest-runner/electron": "^3.0.1",
+    "@rollup/plugin-commonjs": "^28.0.0",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-replace": "^6.0.1",
+    "@rollup/plugin-typescript": "^12.1.0",
     "@types/jest": "^26.0.14",
     "@types/ncp": "^2.0.4",
     "@types/node": "^13.7.1",
@@ -68,6 +72,7 @@
     "react-native": "^0.63.4",
     "react-test-renderer": "^16.13.1",
     "rimraf": "^3.0.0",
+    "rollup": "^4.24.0",
     "semver": "^5.5.1",
     "source-map": "^0.5.7",
     "timekeeper": "^2.2.0",
@@ -78,7 +83,7 @@
     "xvfb-maybe": "^0.2.1"
   },
   "scripts": {
-    "build": "lerna run build --scope '@bugsnag/node' --scope '@bugsnag/browser' && lerna run build --ignore '@bugsnag/node' --ignore '@bugsnag/browser'",
+    "build": "lerna run build",
     "build:electron": "lerna run build --scope '@bugsnag/plugin-electron-ipc' --scope '@bugsnag/plugin-electron-app' --scope '@bugsnag/plugin-electron-client-state-persistence'",
     "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives --max-warnings=0 .",
     "test:lint-native": "bash scripts/cppcheck.sh",
