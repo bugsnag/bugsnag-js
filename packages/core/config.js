@@ -168,5 +168,10 @@ module.exports.schema = {
       isArray(value) && value.length === filter(value, feature =>
         feature && typeof feature === 'object' && typeof feature.name === 'string'
       ).length
+  },
+  reportUnhandledPromiseRejectionsAsHandled: {
+    defaultValue: () => false,
+    message: 'should be true|false',
+    validate: value => value === true || value === false
   }
 }

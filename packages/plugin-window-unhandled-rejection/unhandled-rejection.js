@@ -21,9 +21,12 @@ module.exports = (win = window) => {
           }
         } catch (e) {}
 
+        // Report unhandled promise rejections as handled if the user has configured it
+        const unhandled = !client._config.reportUnhandledPromiseRejectionsAsHandled
+
         const event = client.Event.create(error, false, {
           severity: 'error',
-          unhandled: true,
+          unhandled,
           severityReason: { type: 'unhandledPromiseRejection' }
         }, 'unhandledrejection handler', 1, client._logger)
 
