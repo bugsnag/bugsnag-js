@@ -1,16 +1,19 @@
 const payload = require('@bugsnag/core/lib/json-payload')
 
-async function getIntegrity (windowOrWorkerGlobalScope, requestBody) {
+function getIntegrity (windowOrWorkerGlobalScope, requestBody) {
   if (windowOrWorkerGlobalScope.isSecureContext && windowOrWorkerGlobalScope.crypto && windowOrWorkerGlobalScope.crypto.subtle && windowOrWorkerGlobalScope.crypto.subtle.digest && typeof TextEncoder === 'function') {
     const msgUint8 = new TextEncoder().encode(requestBody)
-    const hashBuffer = await windowOrWorkerGlobalScope.crypto.subtle.digest('SHA-1', msgUint8)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    const hashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('')
 
-    return 'sha1 ' + hashHex
+    return windowOrWorkerGlobalScope.crypto.subtle.digest('SHA-1', msgUint8).then((hashBuffer) => {
+      const hashArray = Array.from(new Uint8Array(hashBuffer))
+      const hashHex = hashArray
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('')
+
+      return 'sha1 ' + hashHex
+    })
   }
+  return Promise.resolve()
 }
 
 module.exports = (client, win = window) => ({
