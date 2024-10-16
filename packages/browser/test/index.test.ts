@@ -83,8 +83,10 @@ describe('browser notifier', () => {
       done()
     })
 
-    session.onreadystatechange()
-    notify.onreadystatechange()
+    process.nextTick(() => {
+      session.onreadystatechange()
+      notify.onreadystatechange()
+    }, 1000)
   })
 
   it('does not send an event with invalid configuration', () => {
