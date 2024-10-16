@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-commented-out-tests */
-import plugin from '../'
+import plugin from '../src/unhandled-rejection'
 
 import Client from '@bugsnag/core/client'
 
