@@ -14,19 +14,31 @@ const defaultOptions = () => ({
   output: undefined
 })
 
+const sharedOutput = {
+  dir: 'dist',
+  generatedCode: {
+    preset: 'es2015',
+  }
+}
+
 function createRollupConfig (options = defaultOptions()) {
   const packageJson = JSON.parse(fs.readFileSync(`${process.cwd()}/package.json`))
 
   return {
     input: options.input || 'src/index.ts',
-    output: options.output || {
-      dir: 'dist',
-      format: 'esm',
-      preserveModules: true,
-      generatedCode: {
-        preset: 'es2015',
+    output: options.output || [
+      {
+        ...sharedOutput,
+        entryFileNames: '[name].js',
+        format: 'cjs'
+      },
+      {
+        ...sharedOutput,
+        preserveModules: true,
+        entryFileNames: '[name].mjs',
+        format: 'esm'
       }
-    },
+    ],
     external: ['@bugsnag/core'].concat(options.external),
     plugins: [
       replace({
@@ -37,6 +49,7 @@ function createRollupConfig (options = defaultOptions()) {
         }
       }),
       typescript({
+        removeComments: true,
         // don't output anything if there's a TS error
         noEmitOnError: true,
         // turn on declaration files and declaration maps
