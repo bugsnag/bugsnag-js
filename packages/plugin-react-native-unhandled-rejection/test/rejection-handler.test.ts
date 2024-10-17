@@ -49,6 +49,30 @@ describe('plugin: react native rejection handler', () => {
     stop()
   })
 
+  it('should report unhandledRejection events as handled when reportUnhandledPromiseRejectionsAsHandled is true', (done) => {
+    expect.assertions(1)
+
+    const c = new Client({ apiKey: 'api_key', reportUnhandledPromiseRejectionsAsHandled: true })
+    c._setDelivery(client => ({
+      sendEvent: (payload) => {
+        const r = JSON.parse(JSON.stringify(payload))
+        expect(r.events[0].unhandled).toBe(false)
+        done()
+      },
+      sendSession: () => { }
+    }))
+    const stop = plugin.load(c)
+    // in the interests of keeping the tests quick, TypeErrors get rejected quicker
+    // see: https://github.com/then/promise/blob/d980ed01b7a383bfec416c96095e2f40fd18ab34/src/rejection-tracking.js#L48-L54
+    try {
+      // @ts-ignore
+      String.floop()
+    } catch (e) {
+      RnPromise.reject(e)
+    }
+    stop()
+  })
+
   it('should hook in to the hermes promise rejection tracker', (done) => {
     // @ts-ignore
     global.HermesInternal = {
