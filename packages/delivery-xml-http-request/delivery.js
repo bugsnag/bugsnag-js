@@ -57,9 +57,9 @@ module.exports = (client, win = window) => ({
           if (integrity) {
             req.setRequestHeader('Bugsnag-Integrity', integrity)
           }
+          req.send(body)
         }).catch((err) => {
           client._logger.error(err)
-        }).finally(() => {
           req.send(body)
         })
       } else {
