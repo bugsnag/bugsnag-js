@@ -1,28 +1,32 @@
 module.exports = api => {
   // NB: This function can be called without an api argument, e.g. by bin/bundle
 
+  if (api && api.env('test')) {
+    return {
+      presets: [
+        ['@babel/preset-env', { targets: { node: 'current' } }],
+        '@babel/preset-typescript'
+      ],
+      overrides: [
+        {
+          test: 'node_modules/react-native/**/*',
+          presets: ['module:metro-react-native-babel-preset']
+        },
+        {
+          test: './packages/plugin-react/**/*',
+          presets: ['@babel/preset-react']
+        },
+        {
+          test: './packages/plugin-react-navigation/**/*',
+          presets: ['@babel/preset-react', 'module:metro-react-native-babel-preset']
+        }
+      ]
+    }
+  }
+
   const presets = []
   const plugins = []
   const overrides = []
-
-  if (api && api.env('test')) {
-    presets.push('@babel/preset-typescript')
-    plugins.push(['@babel/plugin-proposal-class-properties', { loose: true }])
-    plugins.push('@babel/plugin-transform-modules-commonjs')
-    plugins.push('@babel/plugin-proposal-optional-chaining')
-    overrides.push({
-      test: 'node_modules/react-native/**/*',
-      presets: ['module:metro-react-native-babel-preset']
-    })
-    overrides.push({
-      test: './packages/plugin-react/**/*',
-      presets: ['@babel/preset-react']
-    })
-    overrides.push({
-      test: './packages/plugin-react-navigation/**/*',
-      presets: ['@babel/preset-react', 'module:metro-react-native-babel-preset']
-    })
-  }
 
   plugins.push(
     ['@babel/plugin-transform-arrow-functions'],
