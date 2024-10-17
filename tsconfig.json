@@ -88,7 +88,6 @@
     "packages/browser"
   ],
   "exclude": [
-    "packages/react-native/src/NativeBugsnag.ts",
-    "packages/**/dist/**/*.js"
+    "packages/react-native/src/NativeBugsnag.ts"
   ]
 }
