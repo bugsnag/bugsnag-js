@@ -36,7 +36,7 @@ export const Bugsnag = {
     // configure a client with user supplied options
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
-    bugsnag._setDelivery(delivery)
+    bugsnag._setDelivery(client => delivery(client, undefined, self))
 
     bugsnag._logger.debug('Loaded!')
 
