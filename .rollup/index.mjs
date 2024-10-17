@@ -49,6 +49,7 @@ function createRollupConfig (options = defaultOptions()) {
         }
       }),
       typescript({
+        removeComments: true,
         // don't output anything if there's a TS error
         noEmitOnError: true,
         // turn on declaration files and declaration maps
