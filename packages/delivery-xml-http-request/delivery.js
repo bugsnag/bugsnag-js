@@ -32,9 +32,6 @@ module.exports = (client, win = window) => ({
       req.setRequestHeader('Bugsnag-Api-Key', event.apiKey || client._config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '4')
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
-      if (url.substring(0, 5) === 'https') {
-        req.setRequestHeader('Access-Control-Max-Age', 86400)
-      }
       req.send(body)
     } catch (e) {
       client._logger.error(e)
