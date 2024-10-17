@@ -52,7 +52,7 @@ module.exports = (client, win = window) => ({
         req.setRequestHeader('Access-Control-Max-Age', 86400)
       }
 
-      if (typeof Promise !== 'undefined') {
+      if (typeof Promise !== 'undefined' && Promise.toString().indexOf('[native code]') !== -1) {
         getIntegrity(win, body).then((integrity) => {
           if (integrity) {
             req.setRequestHeader('Bugsnag-Integrity', integrity)
