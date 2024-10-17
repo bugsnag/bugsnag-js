@@ -9,6 +9,7 @@ COPY package*.json ./
 COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 ADD min_packages.tar .
 COPY bin ./bin
+COPY .rollup ./.rollup
 COPY scripts ./scripts
 COPY test ./test
 COPY packages ./packages

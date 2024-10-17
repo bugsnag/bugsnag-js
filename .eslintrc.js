@@ -31,9 +31,17 @@ const ruleOverrides = {
   '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'off',
   '@typescript-eslint/prefer-includes': 'off',
   '@typescript-eslint/no-for-in-array': 'off',
+
+  // Optional chaining compiles to a lot more code
+  '@typescript-eslint/prefer-optional-chain': 'off',
+
+  // Support TypeScript 3.8 by disallowing import { type Module } from 'module'
+  'import/consistent-type-specifier-style': ['warn', 'prefer-top-level']
 }
 
 module.exports = {
+  root: true,
+  reportUnusedDisableDirectives: true,
   plugins: [
     'react'
   ],
@@ -44,7 +52,8 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     jsx: true,
-    ecmaVersion: 2018
+    ecmaVersion: 2018,
+    sourceType: 'module'
   },
   overrides: [
     // linting for js files
