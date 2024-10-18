@@ -345,9 +345,10 @@ describe('delivery:XMLHttpRequest', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/', sessions: '/echo/' },
-      redactedKeys: []
+      redactedKeys: [],
+      sendPayloadChecksums: true
     }
-    delivery({ _config: config, _logger: {} } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendSession(payload, (err) => {
+    delivery({ _config: config, _logger: {} } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: true } as unknown as Window).sendSession(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -356,6 +357,7 @@ describe('delivery:XMLHttpRequest', () => {
       expect(requests[0].headers['Bugsnag-Api-Key']).toEqual('aaaaaaaa')
       expect(requests[0].headers['Bugsnag-Payload-Version']).toEqual('1')
       expect(requests[0].headers['Bugsnag-Sent-At']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
+      expect(requests[0].headers['Bugsnag-Integrity']).toEqual('sha1 14faf2461b0519f9d9d62cfb8d79483fcc8f825c')
       expect(requests[0].data).toBe(JSON.stringify(payload))
       done()
     })
