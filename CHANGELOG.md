@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Add new `reportUnhandledPromiseRejectionsAsHandled` config option [#2225](https://github.com/bugsnag/bugsnag-js/pull/2225)
+
 ## [8.0.0] - 2024-08-29
 
 ### Summary
@@ -30,10 +36,6 @@ As well as some bug fixes and **breaking changes** described in the [Upgrade Gui
 - (react-native) Update bugsnag-android from v5.32.2 to [v6.6.1](https://github.com/bugsnag/bugsnag-android/blob/next/CHANGELOG.md#661-2024-07-03)
 
 ## [7.25.1] - 2024-08-27
-
-### Added
-
-- (delivery-xml-http-request) Add Access-Control-Max-Age header to CORS preflight responses [#2160](https://github.com/bugsnag/bugsnag-js/pull/2160)
 
 ### Changed
 

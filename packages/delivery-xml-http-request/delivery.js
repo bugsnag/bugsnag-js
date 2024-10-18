@@ -47,9 +47,6 @@ module.exports = (client, win = window) => ({
       req.setRequestHeader('Bugsnag-Api-Key', event.apiKey || client._config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '4')
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
-      if (url.substring(0, 5) === 'https') {
-        req.setRequestHeader('Access-Control-Max-Age', 86400)
-      }
 
       if (client._config.sendPayloadChecksums && typeof Promise !== 'undefined' && Promise.toString().indexOf('[native code]') !== -1) {
         getIntegrity(win, body).then((integrity) => {

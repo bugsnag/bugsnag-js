@@ -61,6 +61,34 @@ describe('plugin: node unhandled rejection handler', () => {
     process.listeners('unhandledRejection')[0](new Error('never gonna catch me'), Promise.resolve())
   })
 
+  it('should report unhandledRejection events as handled when reportUnhandledPromiseRejectionsAsHandled is true', (done) => {
+    const c = new Client({
+      apiKey: 'api_key',
+      reportUnhandledPromiseRejectionsAsHandled: true,
+      onUnhandledRejection: (err: Error, event: EventWithInternals) => {
+        expect(err.message).toBe('never gonna catch me')
+        expect(event._handledState.unhandled).toBe(false)
+        expect(event._handledState.severity).toBe('error')
+        expect(event._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+        plugin.destroy()
+        done()
+      },
+      plugins: [plugin]
+    }, {
+      ...schema,
+      onUnhandledRejection: {
+        validate: (val: unknown) => typeof val === 'function',
+        message: 'should be a function',
+        defaultValue: () => {}
+      }
+    })
+    c._setDelivery(client => ({
+      sendEvent: (payload, cb) => cb(),
+      sendSession: (payload, cb) => cb()
+    }))
+    process.listeners('unhandledRejection')[0](new Error('never gonna catch me'), Promise.resolve())
+  })
+
   it('should tolerate delivery errors', done => {
     const c = new Client({
       apiKey: 'api_key',
