@@ -54,7 +54,8 @@ describe('delivery:XMLHttpRequest', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: 'https/echo/' },
-      redactedKeys: []
+      redactedKeys: [],
+      sendPayloadChecksums: true
     }
 
     delivery({ _logger: {}, _config: config } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: true } as unknown as Window).sendEvent(payload, (err: any) => {
@@ -68,6 +69,62 @@ describe('delivery:XMLHttpRequest', () => {
       expect(requests[0].headers['Bugsnag-Sent-At']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
       expect(requests[0].headers['Access-Control-Max-Age']).toEqual(86400)
       expect(requests[0].headers['Bugsnag-Integrity']).toEqual('sha1 14faf2461b0519f9d9d62cfb8d79483fcc8f825c')
+      expect(requests[0].data).toBe(JSON.stringify(payload))
+      done()
+    })
+  })
+
+  it('omits the bugsnag integrity header when sendPayloadChecksums is false', done => {
+    const requests: MockXMLHttpRequest[] = []
+
+    // mock XMLHttpRequest class
+    function XMLHttpRequest (this: MockXMLHttpRequest) {
+      this.method = null
+      this.url = null
+      this.data = null
+      this.headers = {}
+      this.readyState = XMLHttpRequest.UNSENT
+      requests.push(this)
+    }
+    XMLHttpRequest.UNSENT = 0
+    XMLHttpRequest.OPENED = 1
+    XMLHttpRequest.HEADERS_RECEIVED = 2
+    XMLHttpRequest.LOADING = 3
+    XMLHttpRequest.DONE = 4
+    XMLHttpRequest.prototype.open = function (method: string, url: string) {
+      this.method = method
+      this.url = url
+      this.readyState = XMLHttpRequest.OPENED
+      this.onreadystatechange()
+    }
+    XMLHttpRequest.prototype.setRequestHeader = function (key: string, val: string) {
+      this.headers[key] = val
+    }
+    XMLHttpRequest.prototype.send = function (data: string) {
+      this.data = data
+      this.readyState = XMLHttpRequest.HEADERS_RECEIVED
+      this.onreadystatechange()
+
+      setTimeout(() => {
+        this.status = 200
+        this.readyState = XMLHttpRequest.DONE
+        this.onreadystatechange()
+      }, 500)
+    }
+
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: 'https/echo/' },
+      redactedKeys: [],
+      sendPayloadChecksums: false
+    }
+
+    delivery({ _logger: { }, _config: config } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: true } as unknown as Window).sendEvent(payload, (err: any) => {
+      expect(err).toBe(null)
+      expect(requests.length).toBe(1)
+      expect(requests[0].method).toBe('POST')
+      expect(requests[0].headers['Bugsnag-Integrity']).toBeUndefined()
       expect(requests[0].data).toBe(JSON.stringify(payload))
       done()
     })

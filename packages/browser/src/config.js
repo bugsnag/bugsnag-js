@@ -19,6 +19,10 @@ module.exports = {
       (typeof console !== 'undefined' && typeof console.debug === 'function')
         ? getPrefixedConsole()
         : undefined
+  }),
+  sendPayloadChecksums: assign({}, schema.sendPayloadChecksums, {
+    defaultValue: () => false,
+    validate: value => value === true || value === false
   })
 }
 

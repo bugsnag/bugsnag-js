@@ -3,7 +3,6 @@ const payload = require('@bugsnag/core/lib/json-payload')
 function getIntegrity (windowOrWorkerGlobalScope, requestBody) {
   if (windowOrWorkerGlobalScope.isSecureContext && windowOrWorkerGlobalScope.crypto && windowOrWorkerGlobalScope.crypto.subtle && windowOrWorkerGlobalScope.crypto.subtle.digest && typeof TextEncoder === 'function') {
     const msgUint8 = new TextEncoder().encode(requestBody)
-
     return windowOrWorkerGlobalScope.crypto.subtle.digest('SHA-1', msgUint8).then((hashBuffer) => {
       const hashArray = Array.from(new Uint8Array(hashBuffer))
       const hashHex = hashArray
@@ -52,7 +51,7 @@ module.exports = (client, win = window) => ({
         req.setRequestHeader('Access-Control-Max-Age', 86400)
       }
 
-      if (typeof Promise !== 'undefined' && Promise.toString().indexOf('[native code]') !== -1) {
+      if (client._config.sendPayloadChecksums && typeof Promise !== 'undefined' && Promise.toString().indexOf('[native code]') !== -1) {
         getIntegrity(win, body).then((integrity) => {
           if (integrity) {
             req.setRequestHeader('Bugsnag-Integrity', integrity)
@@ -77,6 +76,7 @@ module.exports = (client, win = window) => ({
         return cb(err)
       }
       const req = new win.XMLHttpRequest()
+      const body = payload.session(session, client._config.redactedKeys)
 
       req.onreadystatechange = function () {
         if (req.readyState === win.XMLHttpRequest.DONE) {
@@ -96,7 +96,20 @@ module.exports = (client, win = window) => ({
       req.setRequestHeader('Bugsnag-Api-Key', client._config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '1')
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
-      req.send(payload.session(session, client._config.redactedKeys))
+
+      if (client._config.sendPayloadChecksums && typeof Promise !== 'undefined' && Promise.toString().indexOf('[native code]') !== -1) {
+        getIntegrity(win, body).then((integrity) => {
+          if (integrity) {
+            req.setRequestHeader('Bugsnag-Integrity', integrity)
+          }
+          req.send(body)
+        }).catch((err) => {
+          client._logger.error(err)
+          req.send(body)
+        })
+      } else {
+        req.send(body)
+      }
     } catch (e) {
       client._logger.error(e)
     }
