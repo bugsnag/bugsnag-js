@@ -53,9 +53,6 @@ describe('browser notifier', () => {
 
   beforeEach(() => {
     jest.resetModules()
-    // jest.mock('@bugsnag/cuid', () => () => 'abc123')
-
-    mockFetch(onNotifySend, onSessionSend)
   })
 
   function getBugsnag (): typeof BugsnagBrowserStatic {
