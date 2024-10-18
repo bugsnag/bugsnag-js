@@ -101,11 +101,8 @@ describe('@bugsnag/core/client', () => {
       client._logger = { debug: log, info: log, warn: log, error: log }
       client._logger.debug('hey')
     })
-    it('can supply a different logger via config', done => {
-      const log = (msg: any) => {
-        expect(msg).toBeTruthy()
-        done()
-      }
+    it('can supply a different logger via config', () => {
+      const log = jest.fn()
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
         logger: {
@@ -116,6 +113,8 @@ describe('@bugsnag/core/client', () => {
         }
       })
       client._logger.debug('hey')
+
+      expect(log).toHaveBeenCalledWith('hey')
     })
     it('is ok with a null logger', () => {
       const client = new Client({
