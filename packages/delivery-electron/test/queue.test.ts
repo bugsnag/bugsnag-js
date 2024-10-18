@@ -27,7 +27,7 @@ describe('delivery: electron -> queue', () => {
       expect(storagePath).toBeAFile()
     })
 
-    it('throws an error when the directory was not succesfully created', async (done) => {
+    it('throws an error when the directory was not succesfully created', async () => {
       const storagePath = join(invalidDir(), 'foooo')
       const queue = new PayloadQueue(storagePath, 'stuff')
       let didErr = false
@@ -40,7 +40,6 @@ describe('delivery: electron -> queue', () => {
         didErr = true
       }
       expect(didErr).toBe(true)
-      done()
     })
 
     it('rejects all pending promises', async () => {
@@ -91,13 +90,14 @@ describe('delivery: electron -> queue', () => {
       })
     })
 
-    it('calls the onerror callback and returns null if there is an error', async (done) => {
+    it('calls the onerror callback and returns null if there is an error', (done) => {
       const queue = new PayloadQueue(invalidDir(), 'stuff', err => {
         expect(err).not.toBe(null)
         done()
       })
-      const item = await queue.peek()
-      expect(item).toBe(null)
+      queue.peek().then(item => {
+        expect(item).toBe(null)
+      })
     })
 
     it('removes a file if it’s not valid JSON', async () => {
@@ -181,12 +181,12 @@ describe('delivery: electron -> queue', () => {
       })
     })
 
-    it('calls the onerror callback if there is an error', async (done) => {
+    it('calls the onerror callback if there is an error', (done) => {
       const queue = new PayloadQueue(invalidDir(), 'stuff', (err) => {
         expect(err).toBeTruthy()
         done()
       })
-      await queue.enqueue({})
+      queue.enqueue({})
     })
 
     it('purges items that are over the limit', async () => {
@@ -246,12 +246,12 @@ describe('delivery: electron -> queue', () => {
       await expect(access(path, F_OK)).rejects.toBeTruthy()
     })
 
-    it('calls the onerror callback if there is an error', async (done) => {
+    it('calls the onerror callback if there is an error', (done) => {
       const queue = new PayloadQueue(tempdir, 'stuff', (err) => {
         expect(err).toBeTruthy()
         done()
       })
-      await queue.remove(join(invalidDir(), 'somefile'))
+      queue.remove(join(invalidDir(), 'somefile'))
     })
   })
 })
