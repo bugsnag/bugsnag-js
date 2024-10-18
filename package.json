@@ -20,7 +20,7 @@
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@cucumber/cucumber": "^7.2.1",
-    "@jest-runner/electron": "^3.0.1",
+    "@kayahr/jest-electron-runner": "^29.15.0",
     "@types/jest": "^26.0.14",
     "@types/ncp": "^2.0.4",
     "@types/node": "^13.7.1",
