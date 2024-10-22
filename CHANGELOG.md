@@ -4,7 +4,7 @@
 
 ### Added
 
-- Add new `reportUnhandledPromiseRejectionsAsHandled` config option [#2225](https://github.com/bugsnag/bugsnag-js/pull/2225)
+- Add new `reportUnhandledPromiseRejectionsAsHandled` config option to allow unhandled promise rejections to be reported as handled and not contribute to the app stability score [#2225](https://github.com/bugsnag/bugsnag-js/pull/2225)
 
 ## [8.0.0] - 2024-08-29
 
