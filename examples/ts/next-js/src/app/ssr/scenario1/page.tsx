@@ -1,0 +1,1 @@
+// getServerSideProps throws an Error.

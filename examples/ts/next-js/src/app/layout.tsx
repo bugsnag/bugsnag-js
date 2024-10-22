@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Image from "next/image";
-import Link from "next/link";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-neutral-100 bg-no-repeat`}>
-        <nav className="bg-inherit">
-          <Link href="https://www.bugsnag.com" className="text-zinc-900 px-10">BugSnag</Link>
-        </nav>
+        <Header />
+        
         {children}
+
+        <Footer />
       </body>
     </html>
   );
