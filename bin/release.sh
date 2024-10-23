@@ -36,15 +36,7 @@ if [ -z "${RETRY_PUBLISH:-}" ]; then
 fi
 
 # build packages
-npx lerna run build \
-  --scope @bugsnag/node \
-  --scope @bugsnag/browser
-
-npx lerna run build \
-  --ignore @bugsnag/node\
-  --ignore @bugsnag/browser \
-  --ignore @bugsnag/plugin-electron-app \
-  --ignore @bugsnag/plugin-electron-client-state-persistence
+npx lerna run build
 
 # push local changes and tags
 git push origin --follow-tags
@@ -57,9 +49,9 @@ else
 fi
 
 if [ "$BROWSER_PACKAGE_CHANGED" -eq 1 ] || [  -v FORCE_CDN_UPLOAD ]; then
-  npx lerna run cdn-upload --stream --scope @bugsnag/browser
+  npx lerna run cdn-upload --scope @bugsnag/browser
 fi
 
 if [ "$WORKER_PACKAGE_CHANGED" -eq 1 ] || [  -v FORCE_CDN_UPLOAD ]; then
-  npx lerna run cdn-upload --stream --scope @bugsnag/web-worker
+  npx lerna run cdn-upload --scope @bugsnag/web-worker
 fi
