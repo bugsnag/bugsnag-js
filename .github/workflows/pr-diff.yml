@@ -22,7 +22,6 @@ jobs:
         run: |
           mkdir .diff
           npm ci
-          npx lerna bootstrap
           npm run build
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-before-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-before-gzipped
