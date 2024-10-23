@@ -36,15 +36,7 @@ if [ -z "${RETRY_PUBLISH:-}" ]; then
 fi
 
 # build packages
-npx lerna run build \
-  --scope @bugsnag/node \
-  --scope @bugsnag/browser
-
-npx lerna run build \
-  --ignore @bugsnag/node\
-  --ignore @bugsnag/browser \
-  --ignore @bugsnag/plugin-electron-app \
-  --ignore @bugsnag/plugin-electron-client-state-persistence
+npx lerna run build
 
 # push local changes and tags
 git push origin --follow-tags
