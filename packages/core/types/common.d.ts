@@ -28,6 +28,7 @@ export interface Config {
   releaseStage?: string
   plugins?: Plugin[]
   user?: User | null
+  reportUnhandledPromiseRejectionsAsHandled?: boolean
 }
 
 export type OnErrorCallback = (event: Event, cb: (err: null | Error, shouldSend?: boolean) => void) => void | boolean | Promise<void | boolean>

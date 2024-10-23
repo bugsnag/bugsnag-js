@@ -1,5 +1,11 @@
 # Changelog
 
+## [8.1.1] - 2024-10-23
+
+### Fixed
+
+- Add `reportUnhandledPromiseRejectionsAsHandled` config option to typescript definition [#2237](https://github.com/bugsnag/bugsnag-js/pull/2237)
+
 ## [8.1.0] - 2024-10-23
 
 ### Added
