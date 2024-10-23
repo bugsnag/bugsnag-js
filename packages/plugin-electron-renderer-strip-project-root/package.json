@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-renderer-strip-project-root",
-  "version": "8.1.0",
+  "version": "8.1.1",
   "main": "strip-project-root.js",
   "description": "@bugsnag/electron plugin to strip the project root from stack traces",
   "homepage": "https://www.bugsnag.com/",
@@ -15,8 +15,8 @@
     "*.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^8.1.0",
-    "@bugsnag/electron-test-helpers": "^8.1.0"
+    "@bugsnag/core": "^8.1.1",
+    "@bugsnag/electron-test-helpers": "^8.1.1"
   },
   "author": "Bugsnag",
   "license": "MIT"
