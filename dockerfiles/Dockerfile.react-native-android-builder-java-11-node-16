@@ -14,7 +14,6 @@ ARG REG_NPM_EMAIL
 RUN echo "_auth=$REG_BASIC_CREDENTIAL" >> ~/.npmrc
 RUN echo "email=$REG_NPM_EMAIL" >> ~/.npmrc
 RUN echo "always-auth=true" >> ~/.npmrc
-RUN echo "legacy-peer-deps=true" >> ~/.npmrc
 
 # gradle / artifactory auth
 ARG MAVEN_REPO_URL

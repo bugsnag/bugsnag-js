@@ -41,7 +41,7 @@
   "dependencies": {
     "@bugsnag/core": "^8.0.0",
     "byline": "^5.0.0",
-    "error-stack-parser": "^2.0.2",
+    "error-stack-parser": "^2.0.3",
     "iserror": "^0.0.2",
     "pump": "^3.0.0",
     "stack-generator": "^2.0.3"

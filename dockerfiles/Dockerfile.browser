@@ -1,18 +1,17 @@
 # CI test image for unit/lint/type tests
-FROM node:14-alpine as browser-feature-builder
+FROM node:18-alpine as browser-feature-builder
 
-RUN apk add --update bash python3 make gcc g++ musl-dev xvfb-run
+RUN apk add --update bash python3 make gcc g++ musl-dev xvfb-run curl
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
-
 COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 ADD min_packages.tar .
 COPY bin ./bin
 COPY packages ./packages
-RUN npx lerna bootstrap
+
+RUN npm install
 RUN npm run build
 
 RUN npm pack --verbose packages/js/
@@ -24,14 +23,15 @@ RUN npm pack --verbose packages/plugin-vue/
 RUN npm pack --verbose packages/web-worker/
 
 COPY test/browser/features test/browser/features
-
 WORKDIR /app/test/browser/features/fixtures
-RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-browser-*.tgz
-RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-plugin-react-*.tgz
-RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-plugin-vue-*.tgz
-RUN npm install --no-package-lock --no-save --legacy-peer-deps ../../../../bugsnag-web-worker-*.tgz
+RUN npm install --no-package-lock --no-save \
+../../../../bugsnag-browser-*.tgz \
+../../../../bugsnag-plugin-react-*.tgz \
+../../../../bugsnag-plugin-vue-*.tgz \
+../../../../bugsnag-web-worker-*.tgz
+
 WORKDIR plugin_angular/ng
-RUN npm install --no-package-lock --no-save --legacy-peer-deps \
+RUN npm install --no-package-lock --no-save \
   ../../../../../../bugsnag-plugin-angular-*.tgz  \
   ../../../../../../bugsnag-node-*.tgz \
   ../../../../../../bugsnag-browser-*.tgz \
@@ -47,7 +47,7 @@ RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_mo
 RUN rm -fr **/*/node_modules/
 
 # The maze-runner browser tests (W3C protocol)
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli as browser-maze-runner
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v9-cli as browser-maze-runner
 
 COPY --from=browser-feature-builder /app/test/browser /app/test/browser/
 WORKDIR /app/test/browser

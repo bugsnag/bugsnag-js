@@ -43,7 +43,6 @@ jobs:
     - run: npm ci --no-audit --progress=false
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-    - run: npx lerna bootstrap
     - run: npm run build:electron
       shell: bash
     - run: sudo apt-get install cppcheck --assume-yes
@@ -71,3 +70,4 @@ jobs:
       with:
         name: cucumber-failures
         path: test/.cucumber-failures/
+        include-hidden-files: true

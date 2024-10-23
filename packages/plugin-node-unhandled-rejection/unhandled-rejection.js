@@ -7,9 +7,12 @@ module.exports = {
       const ctx = client._clientContext && client._clientContext.getStore()
       const c = ctx || client
 
+      // Report unhandled promise rejections as handled if the user has configured it
+      const unhandled = !client._config.reportUnhandledPromiseRejectionsAsHandled
+
       const event = c.Event.create(err, false, {
         severity: 'error',
-        unhandled: true,
+        unhandled,
         severityReason: { type: 'unhandledPromiseRejection' }
       }, 'unhandledRejection handler', 1)
 

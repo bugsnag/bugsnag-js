@@ -37,7 +37,7 @@ jest.mock('react-native', () => {
 })
 
 // @ts-ignore
-import rnPromise from '@bugsnag/plugin-react-native-unhandled-rejection/node_modules/promise/setimmediate' // eslint-disable-line
+import rnPromise from 'promise/setimmediate' // eslint-disable-line
 // eslint-disable-next-line
 import Bugsnag from '../../..'
 
@@ -59,6 +59,7 @@ beforeAll(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {})
 
   // leaving the default handler intact causes simulated unhandled errors to fail tests
+  // @ts-expect-error Property 'ErrorUtils' does not exist on type 'typeof global
   global.ErrorUtils.setGlobalHandler(() => {})
   Bugsnag.start()
 })
@@ -81,6 +82,7 @@ describe('@bugsnag/react-native: handled and unhandled errors', () => {
   it('should send an unhandled error', (done) => {
     // we can't actually throw an error as that will fail the test, but we can
     // send an error to the handler that Bugsnag has hooked into
+    // @ts-expect-error Property 'ErrorUtils' does not exist on type 'typeof global
     global.ErrorUtils.getGlobalHandler()(new Error('hi'))
     setTimeout(() => {
       expect(NativeClient._events.length).toBe(1)

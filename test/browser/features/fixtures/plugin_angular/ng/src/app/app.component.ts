@@ -9,14 +9,8 @@ import bugsnagClient from './bugsnag';
 
 export class AppComponent {
   title = 'app';
-  yes = false;
   ngOnInit() {
-    setTimeout(() => {
-      this.yes = true
-    }, 1)
-    // unset it immediately so we don't allow two renders – getting multiple errors/reports
-    setTimeout(() => {
-      this.yes = false
-    }, 1)
+    // @ts-expect-error
+    this.nothing.here = 'will cause an error'
   }
 }

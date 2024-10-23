@@ -69,15 +69,18 @@ steps:
               - --farm=bb
               - --device=ANDROID_12
               - --appium-version=1.22
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
         retry:
           manual:
             permit_on_passed: true
         env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 25
@@ -103,15 +106,18 @@ steps:
               - --farm=bb
               - --device=ANDROID_12
               - --appium-version=1.22
-              - --a11y-locator
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
         retry:
           manual:
             permit_on_passed: true
         env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
           RCT_NEW_ARCH_ENABLED: "1"
           RN_VERSION: "{{matrix}}"
         concurrency: 25

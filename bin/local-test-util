@@ -60,7 +60,6 @@ async function init () {
 
 async function update () {
   try {
-    await bootstrap()
     await updateNotifiers()
     await installFixtureDeps()
     await buildFixtures()
@@ -109,11 +108,6 @@ function trace (stepname) {
   console.log(`\n• ${stepname} •\n  ${Array(stepname.length).fill('-').join('')}`)
 }
 
-async function bootstrap () {
-  trace('bootstrap')
-  return ex(`npm`, [ `run`, `bootstrap` ])
-}
-
 async function buildNotifiers (notifier) {
   trace('build notifiers')
   if (notifier) {
@@ -139,7 +133,6 @@ async function installNotifiers (notifier) {
     `install`,
     `--no-package-lock`,
     `--no-save`,
-    `--legacy-peer-deps`
   ].concat(notifier
     ? [
       `../../../../bugsnag-${notifier}-${require(`../packages/${notifier}/package.json`).version}.tgz`
@@ -162,7 +155,6 @@ async function installNgNotifier (notifier) {
     `install`,
     `--no-package-lock`,
     `--no-save`,
-    `--legacy-peer-deps`,
     `../../../../../../bugsnag-browser-${require('../packages/browser/package.json').version}.tgz`,
     `../../../../../../bugsnag-js-${require('../packages/js/package.json').version}.tgz`,
     `../../../../../../bugsnag-node-${require('../packages/node/package.json').version}.tgz`,

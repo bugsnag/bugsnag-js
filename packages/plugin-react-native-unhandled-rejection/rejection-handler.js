@@ -11,6 +11,9 @@ module.exports = {
     // Do not attach any listeners if autoDetectErrors is disabled or unhandledRejections are not an enabled error type
     if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return () => { }
 
+    // Report unhandled promise rejections as handled if the user has configured it
+    const unhandled = !client._config.reportUnhandledPromiseRejectionsAsHandled
+
     // Check if Hermes is available and is being used for promises
     // React Native v0.63 and v0.64 include global.HermesInternal but not 'hasPromise'
     if (global?.HermesInternal?.hasPromise?.() && global.HermesInternal.enablePromiseRejectionTracker) {
@@ -19,7 +22,7 @@ module.exports = {
         onUnhandled: (id, rejection = {}) => {
           const event = client.Event.create(rejection, false, {
             severity: 'error',
-            unhandled: true,
+            unhandled,
             severityReason: { type: 'unhandledPromiseRejection' }
           }, 'promise rejection tracking', 1)
 
@@ -39,7 +42,7 @@ module.exports = {
       onUnhandled: (id, error) => {
         const event = client.Event.create(error, false, {
           severity: 'error',
-          unhandled: true,
+          unhandled,
           severityReason: { type: 'unhandledPromiseRejection' }
         }, 'promise rejection tracking', 1)
         client._notify(event)

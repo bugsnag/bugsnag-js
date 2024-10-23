@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:18-alpine
 
 RUN apk add git
 
@@ -9,6 +9,6 @@ COPY . /app
 
 WORKDIR /app
 
-RUN npm i -g bugsnag-react-native-cli-*.tgz --legacy-peer-deps
+RUN npm i -g bugsnag-react-native-cli-*.tgz
 
 ENTRYPOINT ["/bin/sh"]

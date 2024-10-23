@@ -43,6 +43,30 @@ describe('plugin: unhandled rejection', () => {
       handler({ reason: new Error('BAD_PROMISE') })
     })
 
+    it('should report unhandledRejection events as handled when reportUnhandledPromiseRejectionsAsHandled is true', (done) => {
+      const p = plugin(window)
+      const client = new Client({
+        apiKey: 'API_KEY_YEAH',
+        reportUnhandledPromiseRejectionsAsHandled: true,
+        plugins: [p]
+      })
+
+      client._setDelivery(client => ({
+        sendEvent: (payload) => {
+          const event = payload.events[0].toJSON()
+          expect(event.unhandled).toBe(false)
+          expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
+          // @ts-ignore
+          p.destroy(window)
+          done()
+        },
+        sendSession: () => {}
+      }))
+
+      // simulate an UnhandledRejection event
+      getUnhandledRejectionHandler()({ reason: new Error('BAD_PROMISE') })
+    })
+
     it('handles bad user input', done => {
       expect.assertions(6)
 

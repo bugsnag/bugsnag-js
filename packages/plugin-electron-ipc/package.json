@@ -19,7 +19,7 @@
     "dist/preload.bundle.js"
   ],
   "peerDependencies": {
-    "@bugsnag/core": "^8.0.0-alpha.1"
+    "@bugsnag/core": "^8.0.0"
   },
   "devDependencies": {
     "@bugsnag/core": "^8.0.0",
@@ -27,6 +27,9 @@
   },
   "dependencies": {
     "@bugsnag/safe-json-stringify": "^6.0.0"
+  },
+  "overrides": {
+    "shell-quote": "^1.7.3"
   },
   "author": "Bugsnag",
   "license": "MIT"

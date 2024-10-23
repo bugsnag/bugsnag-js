@@ -1,18 +1,17 @@
 # CI test image for unit/lint/type tests
-FROM node:14-alpine as node-feature-builder
+FROM node:18-alpine as node-feature-builder
 
-RUN apk add --update bash python3 make gcc g++ musl-dev xvfb-run
+RUN apk add --update bash python3 make gcc g++ musl-dev xvfb-run curl
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
-
 COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
 ADD min_packages.tar .
 COPY bin ./bin
 COPY packages ./packages
-RUN npx lerna bootstrap
+
+RUN npm install
 RUN npm run build
 
 RUN npm pack --verbose packages/node/
@@ -21,7 +20,7 @@ RUN npm pack --verbose packages/plugin-koa/
 RUN npm pack --verbose packages/plugin-restify/
 
 # The maze-runner node tests
-FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli as node-maze-runner
+FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v9-cli as node-maze-runner
 WORKDIR /app/
 COPY packages/node/ .
 COPY test/node/features test/node/features

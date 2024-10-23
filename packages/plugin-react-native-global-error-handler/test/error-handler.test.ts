@@ -28,8 +28,9 @@ describe('plugin: react native global error handler', () => {
   })
 
   it('should warn if ErrorUtils is not defined', done => {
+    // @ts-expect-error Cannot find name 'global'
     const errorUtils = global.ErrorUtils
-    // @ts-ignore
+    // @ts-expect-error Cannot find name 'global'
     global.ErrorUtils = undefined
     const client = new Client({
       apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
@@ -38,6 +39,7 @@ describe('plugin: react native global error handler', () => {
         info: () => {},
         warn: msg => {
           expect(msg).toMatch(/ErrorUtils/)
+          // @ts-expect-error Cannot find name 'global'
           global.ErrorUtils = errorUtils
           done()
         },

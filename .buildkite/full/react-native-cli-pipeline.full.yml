@@ -3,20 +3,6 @@ steps:
   - group: "React Native CLI Tests"
     steps:
       #
-      # CLI tests Maze Runner image
-      #
-      - label: ":docker: Build CLI test image"
-        key: "cli-maze-image"
-        timeout_in_minutes: 30
-        plugins:
-          - docker-compose#v4.12.0:
-              build: react-native-cli-tool-maze-runner
-              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-              cache-from:  react-native-cli-tool-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:cli-maze-${BRANCH_NAME}
-          - docker-compose#v4.12.0:
-              push: react-native-cli-tool-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:cli-maze-${BRANCH_NAME}
-
-      #
       # CLI tests
       #
       # TODO: These tests were removed for older RN versions and will be re-added for RN 0.71+ (see PLAT-12578)
@@ -171,10 +157,14 @@ steps:
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --appium-version=1.22
-              - --a11y-locator
               - --no-tunnel
               - --aws-public-ip
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
@@ -197,10 +187,14 @@ steps:
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --appium-version=1.22
-              - --a11y-locator
               - --no-tunnel
               - --aws-public-ip
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
@@ -223,10 +217,14 @@ steps:
               - --farm=bb
               - --device=ANDROID_10|ANDROID_11|ANDROID_12
               - --appium-version=1.22
-              - --a11y-locator
               - --no-tunnel
               - --aws-public-ip
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
@@ -249,8 +247,12 @@ steps:
               - --app=build/rn0_66.ipa
               - --farm=bs
               - --device=IOS_14
-              - --a11y-locator
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
@@ -270,8 +272,12 @@ steps:
               - --app=build/rn0_67.ipa
               - --farm=bs
               - --device=IOS_14
-              - --a11y-locator
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
@@ -291,8 +297,12 @@ steps:
               - --app=build/rn0_69.ipa
               - --farm=bs
               - --device=IOS_14
-              - --a11y-locator
               - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager

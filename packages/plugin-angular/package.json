@@ -30,16 +30,15 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@angular/cli": "^7.3.9",
-    "@angular/compiler": "^7.2.15",
-    "@angular/compiler-cli": "^7.2.15",
-    "@angular/core": "^7.2.15",
+    "@angular/cli": "^10.0.0",
+    "@angular/compiler": "^10.0.0",
+    "@angular/compiler-cli": "^10.0.0",
+    "@angular/core": "^10.0.0",
     "@bugsnag/js": "^8.0.0",
     "rxjs": "^5.5.8",
-    "typescript": "^3.2.4",
     "zone.js": "^0.8.26"
   },
   "peerDependencies": {
-    "@bugsnag/js": "^8.0.0-alpha.1"
+    "@bugsnag/js": "^8.0.0"
   }
 }

@@ -3,7 +3,7 @@ import { getCurrentCommand } from './CommandRunner'
 import { NativeInterface } from './native'
 import Bugsnag from '@bugsnag/react-native'
 
-async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoint, scenarioData) {
+async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoint, scenarioData, setScenario) {
   console.error(`[Bugsnag ScenarioLauncher] running scenario: ${scenarioName}`)
 
   const nativeConfig = {
@@ -20,8 +20,6 @@ async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoin
   // create the scenario and allow it to modify the configuration
   const scenario = new Scenarios[scenarioName](nativeConfig, jsConfig, scenarioData)
 
-  console.error(`[Bugsnag ScenarioLauncher] with config: ${JSON.stringify(nativeConfig)} (native) and ${JSON.stringify(jsConfig)} (js)`)
-
   // clear persistent data
   console.error('[Bugsnag ScenarioLauncher] clearing persistent data')
   NativeInterface.clearPersistentData()
@@ -36,7 +34,10 @@ async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoin
 
   // run the scenario
   console.error('launching scenario')
-  setTimeout(() => scenario.run(), 1)
+  setTimeout(() => {
+    scenario.run()
+    if (typeof scenario.view === 'function') setScenario(scenario)
+  }, 1)
 }
 
 async function startBugsnag (scenarioName, apiKey, notifyEndpoint, sessionEndpoint, scenarioData) {
@@ -67,22 +68,21 @@ async function startBugsnag (scenarioName, apiKey, notifyEndpoint, sessionEndpoi
   Bugsnag.start(jsConfig)
 }
 
-export async function launchScenario () {
+export async function launchScenario (setScenario) {
   const command = await getCurrentCommand()
 
   switch (command.action) {
     case 'run-scenario':
-      // eslint-disable-next-line no-return-await
       return await runScenario(
         command.scenario_name,
         command.api_key,
         command.notify,
         command.sessions,
-        command.scenario_data
+        command.scenario_data,
+        setScenario
       )
 
     case 'start-bugsnag':
-      // eslint-disable-next-line no-return-await
       return await startBugsnag(
         command.scenario_name,
         command.api_key,

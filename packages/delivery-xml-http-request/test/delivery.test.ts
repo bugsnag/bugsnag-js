@@ -53,7 +53,7 @@ describe('delivery:XMLHttpRequest', () => {
     const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: '/echo/' },
+      endpoints: { notify: 'echo/' },
       redactedKeys: []
     }
 
@@ -61,7 +61,7 @@ describe('delivery:XMLHttpRequest', () => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
-      expect(requests[0].url).toMatch('/echo/')
+      expect(requests[0].url).toMatch('echo/')
       expect(requests[0].headers['Content-Type']).toEqual('application/json')
       expect(requests[0].headers['Bugsnag-Api-Key']).toEqual('aaaaaaaa')
       expect(requests[0].headers['Bugsnag-Payload-Version']).toEqual('4')

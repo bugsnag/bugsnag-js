@@ -12,6 +12,12 @@ Please see ${DOCS_LINK} for more information`
 const EXTRA_INPUT_FILES = ['"$(SRCROOT)/.xcode.env.local"', '"$(SRCROOT)/.xcode.env"']
 const EXTRA_PACKAGER_ARGS = 'export SOURCE_MAP_PATH=$(pwd)/build/sourcemaps\nif [ ! -d "$SOURCE_MAP_PATH" ]; then\n\tmkdir -p "$SOURCE_MAP_PATH";\nfi\nexport EXTRA_PACKAGER_ARGS="--sourcemap-output $(pwd)/build/sourcemaps/main.jsbundle.map"'
 
+type ErrorWithCode = Error & { code: string }
+
+function isErrorWithCode (e: unknown): e is ErrorWithCode {
+  return e instanceof Error && 'code' in e && typeof e.code === 'string'
+}
+
 export async function updateXcodeProject (projectRoot: string, endpoint: string|undefined, reactNativeVersion: string|undefined, logger: Logger) {
   const iosDir = path.join(projectRoot, 'ios')
   const xcodeprojDir = (await fs.readdir(iosDir)).find(p => p.endsWith('.xcodeproj'))
@@ -117,15 +123,20 @@ async function updateXcodeEnv (iosDir: string, logger: Logger): Promise<boolean>
       return true
     }
   } catch (error) {
-    if (error.code === 'ENOENT') {
-      logger.info(`Creating a new .xcode.env file at ${envFilePath}`)
-      const newData = `export NODE_BINARY=$(command -v node)\n\n# React Native Source Map File\nexport SOURCE_MAP_PATH=$(pwd)/build/sourcemaps\nif [ ! -d "$SOURCE_MAP_PATH" ]; then\n\tmkdir -p "$SOURCE_MAP_PATH";\nfi\nexport ${searchString}$(pwd)/build/sourcemaps/main.jsbundle.map`
+    if (isErrorWithCode(error)) {
+      if (error.code === 'ENOENT') {
+        logger.info(`Creating a new .xcode.env file at ${envFilePath}`)
+        const newData = `export NODE_BINARY=$(command -v node)\n\n# React Native Source Map File\nexport SOURCE_MAP_PATH=$(pwd)/build/sourcemaps\nif [ ! -d "$SOURCE_MAP_PATH" ]; then\n\tmkdir -p "$SOURCE_MAP_PATH";\nfi\nexport ${searchString}$(pwd)/build/sourcemaps/main.jsbundle.map`
 
-      await fs.writeFile(envFilePath, newData, 'utf8')
-      return true
-    } else {
-      console.error(`Error updating .xcode.env file: ${error.message}`)
-      return false
+        await fs.writeFile(envFilePath, newData, 'utf8')
+        return true
+      } else {
+        console.error(`Error updating .xcode.env file: ${error.message}`)
+        return false
+      }
     }
+
+    console.error('Error updating .xcode.env file')
+    return false
   }
 }

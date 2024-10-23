@@ -1,6 +1,24 @@
 steps:
 
   #
+  # Java 11 Android builder base - used by React Native and React Native CLI (< 0.73)
+  #
+  - label: ":docker: Build Java 11 Android Builder base image"
+    key: "android-builder-base-java-11"
+    timeout_in_minutes: 30
+    plugins:
+      - docker-compose#v4.12.0:
+          build: android-builder-base-java-11
+          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+          cache-from:  android-builder-base-java-11:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-11
+      - docker-compose#v4.12.0:
+          push: android-builder-base-java-11:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-11
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 1
+
+  #
   # Upload full React Native pipelines
   #
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: FULL REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
@@ -30,8 +48,7 @@ steps:
     depends_on: "publish-js"
     trigger: "bugsnag-expo"
     build:
-      # don't specify 'branch' here so we build the default branch in the expo
-      # repo, which should be the most up-to-date @bugsnag/expo version
+      branch: "v51/next"
       env:
         BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
         BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
