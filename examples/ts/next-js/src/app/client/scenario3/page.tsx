@@ -1,0 +1,1 @@
+// There is an exception during React lifecycle that is caught by Next.js's React Error Boundary. In this case, when the component mounts. This should cause _error.js to render.

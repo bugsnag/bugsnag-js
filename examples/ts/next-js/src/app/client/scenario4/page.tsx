@@ -1,0 +1,1 @@
+// There is an unhandled Promise rejection during React lifecycle. In this case, when the component mounts.

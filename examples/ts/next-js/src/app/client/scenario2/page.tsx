@@ -1,0 +1,1 @@
+// There is a top-of-module exception. _error.js should render.

@@ -1,0 +1,1 @@
+// There is a top-of-module Promise that rejects, but its result is not awaited.

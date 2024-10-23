@@ -1,0 +1,1 @@
+// getServerSideProps manually captures an exception from a try/catch.

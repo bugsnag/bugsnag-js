@@ -1,0 +1,1 @@
+// getServerSideProps returns a Promise that rejects.
