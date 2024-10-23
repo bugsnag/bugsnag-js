@@ -1,0 +1,159 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  simple-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    Environment:
+      Variables:
+        BUGSNAG_API_KEY: a12a0c59ed3137195c967a33e3091690
+
+Resources:
+  AsyncUnhandledException:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/unhandled-exception
+      Handler: async-unhandled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
+      Events:
+        AsyncUnhandledException:
+          Type: Api
+          Properties:
+            Path: /async/unhandled-exception
+            Method: get
+
+  AsyncHandledException:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/handled-exception
+      Handler: async-handled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
+      Events:
+        AsyncHandledException:
+          Type: Api
+          Properties:
+            Path: /async/handled-exception
+            Method: get
+
+  AsyncPromiseRejection:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/promise-rejection
+      Handler: async-promise-rejection.lambdaHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
+      Events:
+        AsyncPromiseRejection:
+          Type: Api
+          Properties:
+            Path: /async/promise-rejection
+            Method: get
+
+  AsyncTimeout:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: async/timeout
+      Handler: async-timeout.lambdaHandler
+      Runtime: nodejs14.x
+      Timeout: 3
+      Layers:
+        - !Ref NodeDependenciesLayer
+      Events:
+        AsyncTimeout:
+          Type: Api
+          Properties:
+            Path: /async/timeout
+            Method: get
+
+  CallbackUnhandledException:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/unhandled-exception
+      Handler: callback-unhandled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
+      Events:
+        CallbackUnhandledException:
+          Type: Api
+          Properties:
+            Path: /callback/unhandled-exception
+            Method: get
+
+  CallbackThrownUnhandledException:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/thrown-unhandled-exception
+      Handler: callback-thrown-unhandled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
+      Events:
+        CallbackThrownUnhandledException:
+          Type: Api
+          Properties:
+            Path: /callback/thrown-unhandled-exception
+            Method: get
+
+  CallbackHandledException:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/handled-exception
+      Handler: callback-handled-exception.lambdaHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
+      Events:
+        CallbackHandledException:
+          Type: Api
+          Properties:
+            Path: /callback/handled-exception
+            Method: get
+
+  CallbackPromiseRejection:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/promise-rejection
+      Handler: callback-promise-rejection.lambdaHandler
+      Runtime: nodejs14.x
+      Timeout: 3
+      Layers:
+        - !Ref NodeDependenciesLayer
+      Events:
+        CallbackPromiseRejection:
+          Type: Api
+          Properties:
+            Path: /callback/promise-rejection
+            Method: get
+
+  CallbackTimeout:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: callback/timeout
+      Handler: callback-timeout.lambdaHandler
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref NodeDependenciesLayer
+      Events:
+        CallbackPromiseRejection:
+          Type: Api
+          Properties:
+            Path: /callback/timeout
+            Method: get
+
+  NodeDependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: node-dependencies-layer
+      Description: Dependencies for the Lambda Functions
+      ContentUri: dependencies-layer/
+      CompatibleRuntimes:
+        - nodejs14.x
