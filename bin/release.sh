@@ -49,9 +49,9 @@ else
 fi
 
 if [ "$BROWSER_PACKAGE_CHANGED" -eq 1 ] || [  -v FORCE_CDN_UPLOAD ]; then
-  npx lerna run cdn-upload --stream --scope @bugsnag/browser
+  npx lerna run cdn-upload --scope @bugsnag/browser
 fi
 
 if [ "$WORKER_PACKAGE_CHANGED" -eq 1 ] || [  -v FORCE_CDN_UPLOAD ]; then
-  npx lerna run cdn-upload --stream --scope @bugsnag/web-worker
+  npx lerna run cdn-upload --scope @bugsnag/web-worker
 fi
