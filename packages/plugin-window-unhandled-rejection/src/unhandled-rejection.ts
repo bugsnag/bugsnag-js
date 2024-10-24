@@ -1,33 +1,42 @@
-const map = require('@bugsnag/core/lib/es-utils/map')
-const isError = require('@bugsnag/core/lib/iserror')
+import { Plugin, Stackframe } from '@bugsnag/core'
+import map from '@bugsnag/core/lib/es-utils/map'
+import isError from '@bugsnag/core/lib/iserror'
 
-let _listener
+type Listener = (evt: PromiseRejectionEvent) => void
+
+let _listener: Listener | null
+
 /*
  * Automatically notifies Bugsnag when window.onunhandledrejection is called
  */
-module.exports = (win = window) => {
-  const plugin = {
+export default (win = window): Plugin => {
+  const plugin: Plugin = {
     load: (client) => {
+      // @ts-expect-error _config is private API
       if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return
-      const listener = evt => {
+      const listener = (evt: PromiseRejectionEvent) => {
         let error = evt.reason
         let isBluebird = false
 
         // accessing properties on evt.detail can throw errors (see #394)
         try {
+          // @ts-expect-error detail does not exist on type PromiseRejectionEvent
           if (evt.detail && evt.detail.reason) {
+            // @ts-expect-error detail does not exist on type PromiseRejectionEvent
             error = evt.detail.reason
             isBluebird = true
           }
         } catch (e) {}
 
         // Report unhandled promise rejections as handled if the user has configured it
+        // @ts-expect-error _config is private API
         const unhandled = !client._config.reportUnhandledPromiseRejectionsAsHandled
 
         const event = client.Event.create(error, false, {
           severity: 'error',
           unhandled,
           severityReason: { type: 'unhandledPromiseRejection' }
+          // @ts-expect-error _logger is private API
         }, 'unhandledrejection handler', 1, client._logger)
 
         if (isBluebird) {
@@ -40,6 +49,7 @@ module.exports = (win = window) => {
               [Object.prototype.toString.call(event.originalError)]: {
                 name: event.originalError.name,
                 message: event.originalError.message,
+                // @ts-expect-error Property 'code' does not exist on type 'Error'
                 code: event.originalError.code
               }
             })
@@ -49,7 +59,9 @@ module.exports = (win = window) => {
       if ('addEventListener' in win) {
         win.addEventListener('unhandledrejection', listener)
       } else {
+        // @ts-expect-error onunhandledrejection does not exist on type never
         win.onunhandledrejection = (reason, promise) => {
+          // @ts-expect-error detail does not exist on type PromiseRejectionEvent
           listener({ detail: { reason, promise } })
         }
       }
@@ -57,13 +69,14 @@ module.exports = (win = window) => {
     }
   }
 
+  // @ts-expect-error cannot find name 'process'
   if (process.env.NODE_ENV !== 'production') {
     plugin.destroy = (win = window) => {
       if (_listener) {
         if ('addEventListener' in win) {
           win.removeEventListener('unhandledrejection', _listener)
         } else {
-          win.onunhandledrejection = null
+          (win as Window).onunhandledrejection = null
         }
       }
       _listener = null
@@ -91,7 +104,7 @@ module.exports = (win = window) => {
 //
 // Bluebird pads method names with spaces so trim that too…
 // https://github.com/petkaantonov/bluebird/blob/b7f21399816d02f979fe434585334ce901dcaf44/src/debuggability.js#L568-L571
-const fixBluebirdStacktrace = (error) => (frame) => {
+const fixBluebirdStacktrace = (error: PromiseRejectionEvent['reason']) => (frame: Stackframe) => {
   if (frame.file === error.toString()) return
   if (frame.method) {
     frame.method = frame.method.replace(/^\s+/, '')

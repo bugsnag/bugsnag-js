@@ -1,4 +1,4 @@
-import plugin from '../device'
+import plugin from '../src/device'
 
 import Client, {
   SessionDeliveryPayload,

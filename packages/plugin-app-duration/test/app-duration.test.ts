@@ -1,4 +1,4 @@
-import plugin from '../app'
+import plugin from '../src/app-duration'
 import Client from '@bugsnag/core/client'
 import Event from '@bugsnag/core/event'
 
@@ -39,7 +39,7 @@ describe('plugin-app-duration', () => {
       }
     }
 
-    const result = plugin.load(client)
+    const result = plugin.load(client as unknown as Client)
 
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
