@@ -20,7 +20,7 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",

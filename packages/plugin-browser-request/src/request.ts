@@ -1,13 +1,15 @@
-const assign = require('@bugsnag/core/lib/es-utils/assign')
+import { Plugin } from '@bugsnag/core'
+import assign from '@bugsnag/core/lib/es-utils/assign'
 
 /*
  * Sets the event request: { url } to be the current href
  */
-module.exports = (win = window) => ({
+export default (win = window): Plugin => ({
   load: (client) => {
     client.addOnError(event => {
       if (event.request && event.request.url) return
       event.request = assign({}, event.request, { url: win.location.href })
+      // @ts-expect-error second parameter is private API
     }, true)
   }
 })

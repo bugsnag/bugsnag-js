@@ -1,6 +1,6 @@
 /* eslint-disable jest/no-commented-out-tests */
 
-import plugin from '../'
+import plugin from '../src/onerror'
 
 import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
 
