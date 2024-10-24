@@ -1,0 +1,23 @@
+{
+  "name": "hono-test",
+  "scripts": {
+    "dev": "tsx src/index.js",
+    "build": "tsc",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@bugsnag/js": "^8.0.0",
+    "@bugsnag/plugin-aws-lambda": "^8.0.0",
+    "@hono/node-server": "^1.13.2",
+    "hono": "^4.6.3",
+    "javascript-obfuscator": "^4.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "terser-webpack-plugin": "^5.3.10",
+    "tsx": "^4.7.1",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "type": "module"
+}
