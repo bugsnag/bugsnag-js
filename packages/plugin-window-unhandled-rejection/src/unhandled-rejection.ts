@@ -33,7 +33,7 @@ declare global {
     onunhandledrejection: OnUnhandledRejection | null
   }
   interface Error {
-    code?: string
+    code?: number | string
   }
 }
 
