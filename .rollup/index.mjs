@@ -1,6 +1,6 @@
-import typescript from "@rollup/plugin-typescript";
-import replace from "@rollup/plugin-replace";
-import fs from "fs";
+import typescript from '@rollup/plugin-typescript'
+import replace from '@rollup/plugin-replace'
+import fs from 'fs'
 
 const defaultOptions = () => ({
   // additional variables to define with '@rollup/plugin-replace'
@@ -12,42 +12,40 @@ const defaultOptions = () => ({
   input: undefined,
   // output directory for the bundle
   output: undefined
-});
+})
 
 const sharedOutput = {
-  dir: "dist",
+  dir: 'dist',
   generatedCode: {
-    preset: "es2015"
+    preset: 'es2015',
   }
-};
+}
 
-function createRollupConfig(options = defaultOptions()) {
-  const packageJson = JSON.parse(
-    fs.readFileSync(`${process.cwd()}/package.json`)
-  );
+function createRollupConfig (options = defaultOptions()) {
+  const packageJson = JSON.parse(fs.readFileSync(`${process.cwd()}/package.json`))
 
   return {
-    input: options.input || "src/index.ts",
+    input: options.input || 'src/index.ts',
     output: options.output || [
       {
         ...sharedOutput,
-        entryFileNames: "[name].js",
-        format: "cjs"
+        entryFileNames: '[name].js',
+        format: 'cjs'
       },
       {
         ...sharedOutput,
         preserveModules: true,
-        entryFileNames: "[name].mjs",
-        format: "esm"
+        entryFileNames: '[name].mjs',
+        format: 'esm'
       }
     ],
-    external: ["@bugsnag/core"].concat(options.external),
+    external: ['@bugsnag/core'].concat(options.external),
     plugins: [
       replace({
         preventAssignment: true,
         values: {
           __VERSION__: packageJson.version,
-          ...options.additionalReplacements
+          ...options.additionalReplacements,
         }
       }),
       typescript({
@@ -59,11 +57,11 @@ function createRollupConfig(options = defaultOptions()) {
           declaration: true,
           declarationMap: true,
           emitDeclarationOnly: true,
-          declarationDir: "dist/types"
+          declarationDir: 'dist/types',
         }
       })
     ]
-  };
+  }
 }
 
-export default createRollupConfig;
+export default createRollupConfig
