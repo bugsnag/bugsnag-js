@@ -65,7 +65,7 @@ export default (win = window): Plugin => {
               [Object.prototype.toString.call(event.originalError)]: {
                 name: event.originalError.name,
                 message: event.originalError.message,
-                // @ts-expect-error Optional NodeJS error property
+                // @ts-expect-error optional error.code property
                 code: event.originalError.code
               }
             })
@@ -74,11 +74,6 @@ export default (win = window): Plugin => {
       }
       if (typeof win.addEventListener === 'function') {
         win.addEventListener('unhandledrejection', listener)
-      } else {
-        // @ts-expect-error IE8 onunhandledrejection does not match the signature of the modern listener
-        win.onunhandledrejection = (reason, promise) => {
-          listener({ detail: { reason, promise } } as unknown as PromiseRejectionEvent)
-        }
       }
       _listener = listener
     }
@@ -89,8 +84,6 @@ export default (win = window): Plugin => {
       if (_listener) {
         if (typeof win.removeEventListener === 'function') {
           win.removeEventListener('unhandledrejection', _listener)
-        } else {
-          win.onunhandledrejection = null
         }
       }
       _listener = null
