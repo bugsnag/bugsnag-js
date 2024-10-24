@@ -1,7 +1,7 @@
 {
   "name": "@bugsnag/plugin-browser-request",
   "version": "8.1.1",
-  "main": "dist/request.ts",
+  "main": "dist/request.js",
   "types": "dist/types/request.d.ts",
   "exports": {
     ".": {
