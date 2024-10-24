@@ -37,17 +37,17 @@ Scenario: reporting unhandled promise rejections
   And the "file" of stack frame 0 equals "scenarios/unhandled-promise-rejection.js"
   And the "lineNumber" of stack frame 0 equals 10
 
-Scenario: reporting unhandled promise rejections
-  And I run the service "unhandled" with the command "node scenarios/unhandled-promise-rejection"
+Scenario: reporting unhandled promise rejections as handled
+  And I run the service "unhandled" with the command "node scenarios/unhandled-promise-rejection-as-handled"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
-  And the event "unhandled" is true
+  And the event "unhandled" is false
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledPromiseRejection"
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "not handled"
   And the exception "type" equals "nodejs"
-  And the "file" of stack frame 0 equals "scenarios/unhandled-promise-rejection.js"
+  And the "file" of stack frame 0 equals "scenarios/unhandled-promise-rejection-as-handled.js"
   And the "lineNumber" of stack frame 0 equals 10
 
 Scenario: not reporting unhandledRejections when autoDetectErrors is off

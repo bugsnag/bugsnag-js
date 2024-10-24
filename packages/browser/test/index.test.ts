@@ -1,4 +1,4 @@
-import BugsnagBrowserStatic, { Breadcrumb, Session } from '../src/notifier'
+import BugsnagBrowserStatic, { Breadcrumb, BrowserConfig, Session } from '../src/notifier'
 
 const DONE = window.XMLHttpRequest.DONE
 
@@ -137,7 +137,8 @@ describe('browser notifier', () => {
 
   it('accepts all config options', (done) => {
     const Bugsnag = getBugsnag()
-    Bugsnag.start({
+
+    const completeConfig: Required<BrowserConfig> = {
       apiKey: API_KEY,
       appVersion: '1.2.3',
       appType: 'worker',
@@ -161,18 +162,23 @@ describe('browser notifier', () => {
       releaseStage: 'production',
       maxBreadcrumbs: 20,
       enabledBreadcrumbTypes: ['manual', 'log', 'request'],
+      context: 'contextual',
+      featureFlags: [],
+      plugins: [],
       user: null,
       metadata: {
         debug: { foo: 'bar' }
       },
-      logger: undefined,
+      logger: { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() },
       redactedKeys: ['foo', /bar/],
       collectUserIp: true,
       maxEvents: 10,
       generateAnonymousId: false,
-      trackInlineScripts: true
-    })
+      trackInlineScripts: true,
+      reportUnhandledPromiseRejectionsAsHandled: true
+    }
 
+    Bugsnag.start(completeConfig)
     Bugsnag.notify(new Error('123'), (event) => {
       return false
     }, (err, event) => {
