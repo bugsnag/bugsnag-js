@@ -52,7 +52,6 @@ services:
       BITBAR_USERNAME:
       BITBAR_ACCESS_KEY:
       HOST: "${HOST:-maze-runner}"
-      API_HOST: "${API_HOST:-maze-runner}"
     env_file:
       - ${DOCKER_ENV_FILE:-test/browser/features/fixtures/null_env}
     networks:
@@ -77,7 +76,6 @@ services:
     environment:
       <<: *common-environment
       HOST: "${HOST:-maze-runner}"
-      API_HOST: "${API_HOST:-maze-runner}"
     env_file:
       - ${DOCKER_ENV_FILE:-test/browser/features/fixtures/null_env}
     networks:

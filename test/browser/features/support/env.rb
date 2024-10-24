@@ -7,20 +7,18 @@ end
 def get_test_url(path)
 
   if Maze.config.aws_public_ip
-    host = Maze.public_document_server_address
-    api_host = Maze.public_address
+    maze_runner = Maze.public_address
   else
-    host = "#{ENV['HOST']}:#{Maze.config.document_server_port}"
-    api_host = "#{ENV['API_HOST']}:#{Maze.config.port}"
+    maze_runner = "#{ENV['HOST']}:#{Maze.config.port}"
   end
 
-  notify = "https://#{api_host}/notify"
-  sessions = "https://#{api_host}/sessions"
-  logs = "https://#{api_host}/logs"
-  reflect= "https://#{api_host}/reflect"
+  notify = "https://#{maze_runner}/notify"
+  sessions = "https://#{maze_runner}/sessions"
+  logs = "https://#{maze_runner}/logs"
+  reflect= "https://#{maze_runner}/reflect"
   config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}&REFLECT=#{reflect}"
 
-  uri = URI("https://#{host}#{path}")
+  uri = URI("https://#{maze_runner}/docs#{path}")
 
   if uri.query
     uri.query += "&#{config_query_string}"
