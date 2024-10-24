@@ -48,7 +48,7 @@ Scenario: reporting unhandled promise rejections as handled
   And the exception "message" equals "not handled"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/unhandled-promise-rejection-as-handled.js"
-  And the "lineNumber" of stack frame 0 equals 10
+  And the "lineNumber" of stack frame 0 equals 11
 
 Scenario: not reporting unhandledRejections when autoDetectErrors is off
   And I run the service "unhandled" with the command "node scenarios/unhandled-promise-rejection-auto-notify-off"
