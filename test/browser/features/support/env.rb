@@ -14,13 +14,13 @@ def get_test_url(path)
     api_host = "#{ENV['API_HOST']}:#{Maze.config.port}"
   end
 
-  notify = "http://#{api_host}/notify"
-  sessions = "http://#{api_host}/sessions"
-  logs = "http://#{api_host}/logs"
-  reflect= "http://#{api_host}/reflect"
+  notify = "https://#{api_host}/notify"
+  sessions = "https://#{api_host}/sessions"
+  logs = "https://#{api_host}/logs"
+  reflect= "https://#{api_host}/reflect"
   config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}&REFLECT=#{reflect}"
 
-  uri = URI("http://#{host}#{path}")
+  uri = URI("https://#{host}#{path}")
 
   if uri.query
     uri.query += "&#{config_query_string}"
