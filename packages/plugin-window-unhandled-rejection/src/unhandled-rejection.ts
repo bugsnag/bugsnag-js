@@ -29,6 +29,7 @@ export default (win = window): Plugin => {
         } catch (e) {}
 
         // Report unhandled promise rejections as handled if the user has configured it
+        // @ts-expect-error _config is private API
         const unhandled = !client._config.reportUnhandledPromiseRejectionsAsHandled
 
         const event = client.Event.create(error, false, {
