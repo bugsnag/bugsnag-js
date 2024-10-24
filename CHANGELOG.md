@@ -1,5 +1,11 @@
 # Changelog
 
+## [8.1.2] - 2024-10-24
+
+### Fixed
+
+- Ensure `reportUnhandledPromiseRejectionsAsHandled` is correctly handled for all platforms [#2239](https://github.com/bugsnag/bugsnag-js/pull/2239)
+
 ## [8.1.1] - 2024-10-23
 
 ### Fixed
