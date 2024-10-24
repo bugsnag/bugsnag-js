@@ -26,7 +26,9 @@ module.exports = {
   ],
   projects: [
     project('core', ['core']),
-    project('web workers', ['web-worker']),
+    project('web workers', ['web-worker'], {
+      testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
+    }),
     project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
     project('browser', [
       'browser',
@@ -49,7 +51,9 @@ module.exports = {
       'plugin-simple-throttle',
       'plugin-console-breadcrumbs',
       'plugin-browser-session'
-    ]),
+    ], {
+      testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
+    }),
     project('react native', [
       'react-native',
       'delivery-react-native',
