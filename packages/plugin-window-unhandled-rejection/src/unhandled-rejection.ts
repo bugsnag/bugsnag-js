@@ -1,4 +1,4 @@
-import { Plugin, Stackframe } from '@bugsnag/core'
+import { Client, Logger, Plugin, Stackframe } from '@bugsnag/core'
 import map from '@bugsnag/core/lib/es-utils/map'
 import isError from '@bugsnag/core/lib/iserror'
 
@@ -6,50 +6,79 @@ type Listener = (evt: PromiseRejectionEvent) => void
 
 let _listener: Listener | null
 
+interface InternalClient extends Client {
+  _config: {
+    autoDetectErrors: boolean
+    enabledErrorTypes: {
+      unhandledRejections: boolean
+    }
+    reportUnhandledPromiseRejectionsAsHandled: boolean
+  }
+  _logger: Logger
+}
+
+interface InternalPromiseRejectionEvent {
+  detail?: {
+    reason: PromiseRejectionEvent['reason']
+    promise: PromiseRejectionEvent['promise']
+  }
+}
+
+type PREvent = PromiseRejectionEvent & InternalPromiseRejectionEvent
+
+type OnUnhandledRejection = (reason: PromiseRejectionEvent['reason'], promise: PromiseRejectionEvent['promise']) => void
+
+declare global {
+  interface Window {
+    onunhandledrejection: OnUnhandledRejection | null
+  }
+  interface Error {
+    code?: string
+  }
+}
+
 /*
  * Automatically notifies Bugsnag when window.onunhandledrejection is called
  */
 export default (win = window): Plugin => {
   const plugin: Plugin = {
     load: (client) => {
-      // @ts-expect-error _config is private API
-      if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledRejections) return
-      const listener = (evt: PromiseRejectionEvent) => {
-        let error = evt.reason
+      const internalClient = client as InternalClient
+
+      if (!internalClient._config.autoDetectErrors || !internalClient._config.enabledErrorTypes.unhandledRejections) return
+      const listener: Listener = (evt) => {
+        const internalEvent = evt as PREvent
+
+        let error = internalEvent.reason
         let isBluebird = false
 
         // accessing properties on evt.detail can throw errors (see #394)
         try {
-          // @ts-expect-error detail does not exist on type PromiseRejectionEvent
-          if (evt.detail && evt.detail.reason) {
-            // @ts-expect-error detail does not exist on type PromiseRejectionEvent
-            error = evt.detail.reason
+          if (internalEvent.detail && internalEvent.detail.reason) {
+            error = internalEvent.detail.reason
             isBluebird = true
           }
         } catch (e) {}
 
         // Report unhandled promise rejections as handled if the user has configured it
-        // @ts-expect-error _config is private API
-        const unhandled = !client._config.reportUnhandledPromiseRejectionsAsHandled
+        const unhandled = !internalClient._config.reportUnhandledPromiseRejectionsAsHandled
 
-        const event = client.Event.create(error, false, {
+        const event = internalClient.Event.create(error, false, {
           severity: 'error',
           unhandled,
           severityReason: { type: 'unhandledPromiseRejection' }
-          // @ts-expect-error _logger is private API
-        }, 'unhandledrejection handler', 1, client._logger)
+        }, 'unhandledrejection handler', 1, internalClient._logger)
 
         if (isBluebird) {
           map(event.errors[0].stacktrace, fixBluebirdStacktrace(error))
         }
 
-        client._notify(event, (event) => {
+        internalClient._notify(event, (event) => {
           if (isError(event.originalError) && !event.originalError.stack) {
             event.addMetadata('unhandledRejection handler', {
               [Object.prototype.toString.call(event.originalError)]: {
                 name: event.originalError.name,
                 message: event.originalError.message,
-                // @ts-expect-error Property 'code' does not exist on type 'Error'
                 code: event.originalError.code
               }
             })
@@ -59,17 +88,14 @@ export default (win = window): Plugin => {
       if ('addEventListener' in win) {
         win.addEventListener('unhandledrejection', listener)
       } else {
-        // @ts-expect-error onunhandledrejection does not exist on type never
-        win.onunhandledrejection = (reason, promise) => {
-          // @ts-expect-error detail does not exist on type PromiseRejectionEvent
-          listener({ detail: { reason, promise } })
+        (win as Window).onunhandledrejection = (reason, promise) => {
+          listener({ detail: { reason, promise } } as unknown as PromiseRejectionEvent)
         }
       }
       _listener = listener
     }
   }
 
-  // @ts-expect-error cannot find name 'process'
   if (process.env.NODE_ENV !== 'production') {
     plugin.destroy = (win = window) => {
       if (_listener) {
