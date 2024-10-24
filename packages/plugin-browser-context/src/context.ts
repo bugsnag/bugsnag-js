@@ -1,5 +1,4 @@
 import { Plugin } from '@bugsnag/core'
-
 /*
  * Sets the default context to be the current URL
  */

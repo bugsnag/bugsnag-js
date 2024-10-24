@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/plugin-browser-context",
   "version": "8.1.1",
-  "main": "context.js",
+  "main": "dist/context.js",
+  "types": "dist/types/context.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/context.d.ts",
+      "default": "./dist/context.js",
+      "import": "./dist/context.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to set event context in browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
