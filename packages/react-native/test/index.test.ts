@@ -108,6 +108,14 @@ describe('react native notifier', () => {
     expect(NativeModules.BugsnagReactNative.addFeatureFlags).toHaveBeenCalled()
   })
 
+  it('accepts the reportUnhandledPromiseRejectionsAsHandled config option', () => {
+    const warnMock = jest.spyOn(console, 'warn').mockImplementation(() => {})
+
+    Bugsnag.start({ reportUnhandledPromiseRejectionsAsHandled: true })
+
+    expect(warnMock).not.toHaveBeenCalled()
+  })
+
   describe('isStarted()', () => {
     it('returns false when the notifier has not been initialized', () => {
       expect(Bugsnag.isStarted()).toBe(false)
