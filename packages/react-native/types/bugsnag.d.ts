@@ -5,7 +5,7 @@ interface ReactNativeSchema extends Config {
 }
 
 // these properties are allowed to be configured in the JS layer
-type Configurable = 'onError' | 'onBreadcrumb' | 'logger' | 'metadata' | 'user' | 'context' | 'plugins' | 'codeBundleId' | 'featureFlags'
+type Configurable = 'onError' | 'onBreadcrumb' | 'logger' | 'metadata' | 'user' | 'context' | 'plugins' | 'codeBundleId' | 'featureFlags' | 'reportUnhandledPromiseRejectionsAsHandled'
 
 type ReactNativeConfig = Pick<ReactNativeSchema, Configurable>
 
