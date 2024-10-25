@@ -18,6 +18,14 @@ Scenario: Reporting an Unhandled promise rejection
   And the event "unhandled" is true
   And the exception "message" equals "UnhandledJsPromiseRejectionScenario"
 
+Scenario: Reporting an Unhandled promise rejection as handled
+  When I run "UnhandledJsPromiseRejectionAsHandledScenario"
+  Then I wait to receive an error
+  And the exception "errorClass" equals "Error"
+  And the exception "type" equals "reactnativejs"
+  And the event "unhandled" is false
+  And the exception "message" equals "UnhandledJsPromiseRejectionAsHandledScenario"
+
 Scenario: Reporting an Unhandled Native error
   When I run "UnhandledNativeErrorScenario" and relaunch the crashed app
   And I configure Bugsnag for "UnhandledNativeErrorScenario"
