@@ -9,6 +9,7 @@ Background:
   And I wait for the host "hono" to open port "80"
 
 Scenario: A handled error
+  Then I open the URL "http://hono/" and get a 200 response
   Then I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
