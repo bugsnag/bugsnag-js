@@ -1,6 +1,6 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
-import Bugsnag from '@bugsnag/js';
+import Bugsnag from '@bugsnag/node';
 
 Bugsnag.start({
     apiKey: process.env.BUGSNAG_API_KEY,
@@ -20,4 +20,3 @@ serve({
     fetch: app.fetch,
     port: 80
 });
-console.log("test")
