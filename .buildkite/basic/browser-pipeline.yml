@@ -64,6 +64,7 @@ steps:
               - "--browser={{matrix}}"
               - "--no-tunnel"
               - "--aws-public-ip"
+              - "--fail-fast"
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
@@ -91,6 +92,7 @@ steps:
               - "--browser=ie_11"
               - "--no-tunnel"
               - "--aws-public-ip"
+              - "--fail-fast"
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
@@ -131,6 +133,7 @@ steps:
               - "--https"
               - "--farm=bs"
               - "--browser={{matrix}}"
+              - "--fail-fast"
           artifacts#v1.5.0:
             upload:
               - "./test/browser/maze_output/failed/**/*"
