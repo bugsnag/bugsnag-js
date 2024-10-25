@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/plugin-browser-request",
   "version": "8.1.1",
-  "main": "request.js",
+  "main": "dist/request.js",
+  "types": "dist/types/request.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/request.d.ts",
+      "default": "./dist/request.js",
+      "import": "./dist/request.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to set request info in browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,9 +20,8 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
-  "scripts": {},
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
@@ -22,5 +29,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*"
   }
 }
