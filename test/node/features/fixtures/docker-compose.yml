@@ -183,7 +183,6 @@ services:
         aliases:
           - hono
     restart: "no"
-    entrypoint: "node scenarios/app"
 
   koa:
     build:
