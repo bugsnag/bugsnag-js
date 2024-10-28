@@ -19,8 +19,8 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.74"
           - "0.75"
+          - "0.76"
         retry:
           automatic:
             - exit_status: "*"
@@ -47,8 +47,8 @@ steps:
             - exit_status: "*"
               limit: 1
         matrix:
-          - "0.74"
           - "0.75"
+          - "0.76"
 
       #
       # End-to-end tests
@@ -87,8 +87,8 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.74"
           - "0.75"
+          - "0.76"
 
       - label: ":bitbar: :android: RN {{matrix}} Android 12 (New Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch"
@@ -124,6 +124,6 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.74"
           - "0.75"
+          - "0.76"
 
