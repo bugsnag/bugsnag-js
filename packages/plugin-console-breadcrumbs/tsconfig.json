@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "include": ["src/**/*.ts"],
   "compilerOptions": {
-    "target": "ES2020"
+    "target": "ES2020",
+    "types": ["node"]
   }
 }
