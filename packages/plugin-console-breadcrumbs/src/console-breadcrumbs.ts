@@ -15,13 +15,13 @@ const plugin: Plugin = {
     if (isDev || !client._isBreadcrumbTypeEnabled('log')) return
 
     map(CONSOLE_LOG_METHODS, method => {
-      const original = (console as any)[method]
-      console[method] = (...args: any[]) => {
+      const original = console[method]
+      console[method] = (...args) => {
         client.leaveBreadcrumb(
           'Console output',
           reduce(
             args,
-            (accum: any, arg: any, i: any) => {
+            (accum, arg, i) => {
               // do the best/simplest stringification of each argument
               let stringified = '[Unknown value]'
               // this may fail if the input is:
@@ -48,8 +48,9 @@ const plugin: Plugin = {
         )
         original.apply(console, args)
       }
-      (console as any)[method]._restore = () => {
-        (console as any)[method] = original
+      // @ts-expect-error _restore is added to be able to remove our monkey patched code
+      console[method]._restore = () => {
+        console[method] = original
       }
     })
   }
@@ -58,16 +59,18 @@ const plugin: Plugin = {
 if (process.env.NODE_ENV !== 'production') {
   plugin.destroy = () =>
     CONSOLE_LOG_METHODS.forEach(method => {
-      if (typeof (console as any)[method]._restore === 'function') {
-        (console as any)[method]._restore()
+      // @ts-expect-error _restore is added to be able to remove our monkey patched code
+      if (typeof console[method]._restore === 'function') {
+        // @ts-expect-error _restore is added to be able to remove our monkey patched code
+        console[method]._restore()
       }
     })
 }
 
 const CONSOLE_LOG_METHODS = filter(
-  ['log', 'debug', 'info', 'warn', 'error'],
+  ['log', 'debug', 'info', 'warn', 'error'] as const,
   method =>
-    typeof console !== 'undefined' && typeof (console as any)[method] === 'function'
+    typeof console !== 'undefined' && typeof console[method] === 'function'
 )
 
 export default plugin
