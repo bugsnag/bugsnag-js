@@ -1,4 +1,4 @@
-import plugin from '../'
+import plugin from '../src/request'
 
 import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
 
