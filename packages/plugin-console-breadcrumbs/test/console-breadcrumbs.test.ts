@@ -1,4 +1,4 @@
-import plugin from '../'
+import plugin from '../src/console-breadcrumbs'
 
 import Client from '@bugsnag/core/client'
 
