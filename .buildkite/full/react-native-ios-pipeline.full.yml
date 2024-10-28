@@ -94,6 +94,7 @@ steps:
           - "0.71"
           - "0.72"
           - "0.73"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
@@ -119,6 +120,7 @@ steps:
           - "0.71"
           - "0.72"
           - "0.73"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
@@ -338,6 +340,7 @@ steps:
           - "0.71"
           - "0.72"
           - "0.73"
+          - "0.74"
 
       - label: ":bitbar: :mac: RN {{matrix}} iOS 16 (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch-full"
@@ -375,6 +378,7 @@ steps:
           - "0.71"
           - "0.72"
           - "0.73"
+          - "0.74"
 
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't currently support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821

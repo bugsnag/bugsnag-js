@@ -13,12 +13,17 @@ if (!process.env.REGISTRY_URL) {
   process.exit(1)
 }
 
+if (!process.env.RCT_NEW_ARCH_ENABLED || (process.env.RCT_NEW_ARCH_ENABLED !== '1' && process.env.RCT_NEW_ARCH_ENABLED !== '0')) {
+  console.error('RCT_NEW_ARCH_ENABLED must be set to 1 or 0')
+  process.exit(1)
+}
+
 const notifierVersion = process.env.NOTIFIER_VERSION || common.determineVersion()
 
 const reactNativeVersion = process.env.RN_VERSION
 const ROOT_DIR = resolve(__dirname, '../')
 
-const isNewArchEnabled = process.env.RCT_NEW_ARCH_ENABLED === 'true' || process.env.RCT_NEW_ARCH_ENABLED === '1'
+const isNewArchEnabled = process.env.RCT_NEW_ARCH_ENABLED === '1'
 
 let fixturePath = 'test/react-native/features/fixtures/generated/'
 
@@ -88,7 +93,7 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
   fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })
 
   // install pods
-  execFileSync('pod', ['install'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
+  execFileSync('pod', ['install', '--repo-update'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
 
   // build the ios app
   const archiveArgs = [
@@ -212,13 +217,13 @@ function configureAndroidProject () {
   androidManifestContents = androidManifestContents.replace('<application', '<application android:usesCleartextTraffic="true"')
   fs.writeFileSync(androidManifestPath, androidManifestContents)
 
-  if (isNewArchEnabled) {
-    // enable the new architecture in gradle properties
-    const gradlePropertiesPath = `${fixtureDir}/android/gradle.properties`
-    let gradlePropertiesContents = fs.readFileSync(gradlePropertiesPath, 'utf8')
-    gradlePropertiesContents = gradlePropertiesContents.replace('newArchEnabled=false', 'newArchEnabled=true')
-    fs.writeFileSync(gradlePropertiesPath, gradlePropertiesContents)
-  } else {
+  // enable/disable the new architecture in gradle.properties
+  const gradlePropertiesPath = `${fixtureDir}/android/gradle.properties`
+  let gradlePropertiesContents = fs.readFileSync(gradlePropertiesPath, 'utf8')
+  gradlePropertiesContents = gradlePropertiesContents.replace(/newArchEnabled\s*=\s*(true|false)/, `newArchEnabled=${isNewArchEnabled}`)
+  fs.writeFileSync(gradlePropertiesPath, gradlePropertiesContents)
+
+  if (!isNewArchEnabled) {
     // react navigation setup
     configureReactNavigationAndroid()
   }
