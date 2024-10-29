@@ -35,8 +35,17 @@ module.exports = (client) => ({
     }
   },
   sendSession: (session, cb = () => {}) => {
+    const start = Date.now()
+    console.log(`[Bugsnag] Starting to send session at ${new Date(start).toISOString()}`);
+
     const _cb = err => {
-      if (err) client._logger.error(`Session failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
+      const end = Date.now()
+      if (err) {
+        client._logger.error(`Session failed to send…\n${(err && err.stack) ? err.stack : err}`, err);
+        console.log(`[Bugsnag] Session failed to send at ${new Date(end).toISOString()}, duration: ${end - start}ms`);
+        } else {
+            console.log(`[Bugsnag] Session sent successfully at ${new Date(end).toISOString()}, duration: ${end - start}ms`);
+        }
       cb(err)
     }
 
