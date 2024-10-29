@@ -93,7 +93,8 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
   fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })
 
   // install pods
-  execFileSync('pod', ['install', '--repo-update'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
+  execFileSync('bundle', ['install'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
+  execFileSync('bundle', ['exec', 'pod', 'install', '--repo-update'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
 
   // build the ios app
   const archiveArgs = [
