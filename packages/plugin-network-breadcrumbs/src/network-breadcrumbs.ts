@@ -6,6 +6,8 @@ const BREADCRUMB_TYPE = 'request'
 interface InternalClient extends Client {
   _logger: Logger
 }
+
+type FetchArguments = Parameters<typeof window.fetch>
 /*
  * Leaves breadcrumbs when network requests occur
  */
@@ -129,15 +131,16 @@ export default (_ignoredUrls = [], win = window): Plugin => {
         // only patch it if it exists and if it is not a polyfill (patching a polyfilled
         // fetch() results in duplicate breadcrumbs for the same request because the
         // implementation uses XMLHttpRequest which is also patched)
+        // @ts-expect-error we are expecting
         if (!('fetch' in win) || win.fetch.polyfill) return
 
         const oldFetch = win.fetch
-        win.fetch = function fetch () {
-          const urlOrRequest = arguments[0]
-          const options = arguments[1]
+        win.fetch = function fetch (...args: FetchArguments) {
+          const urlOrRequest = args[0]
+          const options = args[1]
 
-          let method
-          let url = null
+          let method: string | undefined
+          let url: string | null = null
 
           if (urlOrRequest && typeof urlOrRequest === 'object') {
             url = urlOrRequest.url
@@ -160,20 +163,19 @@ export default (_ignoredUrls = [], win = window): Plugin => {
           return new Promise((resolve, reject) => {
             const requestStart = new Date()
 
-            // const [urlOrRequest, options] = arguments
             // pass through to native fetch
-            oldFetch(...arguments)
+            oldFetch(...args)
               .then(response => {
                 handleFetchSuccess(
                   response,
-                  method,
-                  url,
+                  String(method),
+                  String(url),
                   getDuration(requestStart)
                 )
                 resolve(response)
               })
               .catch(error => {
-                handleFetchError(method, url, getDuration(requestStart))
+                handleFetchError(String(method), String(url), getDuration(requestStart))
                 reject(error)
               })
           })
@@ -186,7 +188,7 @@ export default (_ignoredUrls = [], win = window): Plugin => {
         }
       }
 
-      const handleFetchSuccess = (response, method, url, duration) => {
+      const handleFetchSuccess = (response: Response, method: string, url: string, duration: number) => {
         const metadata = {
           method: String(method),
           status: response.status,
@@ -201,7 +203,7 @@ export default (_ignoredUrls = [], win = window): Plugin => {
         }
       }
 
-      const handleFetchError = (method, url, duration) => {
+      const handleFetchError = (method: string, url: string, duration: number) => {
         internalClient.leaveBreadcrumb('fetch() error', { method: String(method), url: String(url), duration: duration }, BREADCRUMB_TYPE)
       }
     }
@@ -217,4 +219,4 @@ export default (_ignoredUrls = [], win = window): Plugin => {
   return plugin
 }
 
-const getDuration = (startTime): number => startTime && new Date() as unknown as number - startTime
+const getDuration = (startTime: Date): number => startTime && Number(new Date()) - Number(startTime)
