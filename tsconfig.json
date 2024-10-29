@@ -69,7 +69,6 @@
     "packages/plugin-aws-lambda",
     "packages/plugin-contextualize",
     "packages/plugin-navigation-breadcrumbs",
-    "packages/plugin-network-breadcrumbs",
     "packages/plugin-server-session",
     "packages/plugin-react",
     "packages/plugin-vue",
