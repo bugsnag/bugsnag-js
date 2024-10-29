@@ -16,7 +16,7 @@ const plugin: Plugin = {
 
     map(CONSOLE_LOG_METHODS, method => {
       const original = console[method]
-      console[method] = (...args) => {
+      console[method] = (...args: any) => {
         client.leaveBreadcrumb(
           'Console output',
           reduce(
@@ -67,8 +67,8 @@ if (process.env.NODE_ENV !== 'production') {
     })
 }
 
-const CONSOLE_LOG_METHODS = filter(
-  ['log', 'debug', 'info', 'warn', 'error'] as const,
+const CONSOLE_LOG_METHODS: Array<'log' | 'debug' | 'info' | 'warn' | 'error'> = filter(
+  ['log', 'debug', 'info', 'warn', 'error'],
   method =>
     typeof console !== 'undefined' && typeof console[method] === 'function'
 )
