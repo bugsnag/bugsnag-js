@@ -169,6 +169,7 @@ export default (_ignoredUrls = [], win: GlobalWithFetchAndXHR = window): Plugin 
           return new Promise((resolve, reject) => {
             const requestStart = new Date()
 
+            // const [urlOrRequest, options] = arguments
             // pass through to native fetch
             oldFetch(...args)
               .then(response => {
