@@ -1,19 +1,28 @@
+import { Client, Logger, Plugin } from '@bugsnag/core'
+import includes from '@bugsnag/core/lib/es-utils/includes'
+
 const BREADCRUMB_TYPE = 'request'
 
-const includes = require('@bugsnag/core/lib/es-utils/includes')
-
+interface InternalClient extends Client {
+  _logger: Logger
+}
 /*
  * Leaves breadcrumbs when network requests occur
  */
-module.exports = (_ignoredUrls = [], win = window) => {
-  let restoreFunctions = []
-  const plugin = {
+export default (_ignoredUrls = [], win = window): Plugin => {
+  let restoreFunctions: any[] = []
+  const plugin: Plugin = {
     load: client => {
-      if (!client._isBreadcrumbTypeEnabled('request')) return
+      const internalClient = client as InternalClient
+
+      // @ts-expect-error isBreadcrumbTypeEnabled is private API
+      if (!internalClient._isBreadcrumbTypeEnabled('request')) return
 
       const ignoredUrls = [
-        client._config.endpoints.notify,
-        client._config.endpoints.sessions
+        // @ts-expect-error _config is private API
+        internalClient._config.endpoints.notify,
+        // @ts-expect-error _config is private API
+        internalClient._config.endpoints.sessions
       ].concat(_ignoredUrls)
 
       monkeyPatchXMLHttpRequest()
@@ -27,12 +36,12 @@ module.exports = (_ignoredUrls = [], win = window) => {
         const requestHandlers = new WeakMap()
 
         const originalOpen = win.XMLHttpRequest.prototype.open
-        win.XMLHttpRequest.prototype.open = function open (method, url) {
+        win.XMLHttpRequest.prototype.open = function open (method: string, url: string) {
           // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
           if (this) {
             trackedRequests.set(this, { method, url })
           }
-          originalOpen.apply(this, arguments)
+          originalOpen.apply(this, arguments as any)
         }
 
         const originalSend = win.XMLHttpRequest.prototype.send
@@ -59,7 +68,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
             }
           }
 
-          originalSend.apply(this, arguments)
+          originalSend.apply(this, arguments as any)
         }
 
         if (process.env.NODE_ENV !== 'production') {
@@ -70,9 +79,9 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
       }
 
-      function handleXHRLoad (method, url, status, duration) {
+      function handleXHRLoad (method: string, url: string, status: number, duration: number) {
         if (url === undefined) {
-          client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
+          internalClient._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
           return
         }
 
@@ -90,15 +99,15 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
         if (status >= 400) {
           // contacted server but got an error response
-          client.leaveBreadcrumb('XMLHttpRequest failed', metadata, BREADCRUMB_TYPE)
+          internalClient.leaveBreadcrumb('XMLHttpRequest failed', metadata, BREADCRUMB_TYPE)
         } else {
-          client.leaveBreadcrumb('XMLHttpRequest succeeded', metadata, BREADCRUMB_TYPE)
+          internalClient.leaveBreadcrumb('XMLHttpRequest succeeded', metadata, BREADCRUMB_TYPE)
         }
       }
 
-      function handleXHRError (method, url, duration) {
+      function handleXHRError (method: string, url: string, duration: number) {
         if (url === undefined) {
-          client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
+          internalClient._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
           return
         }
 
@@ -108,7 +117,7 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
 
         // failed to contact server
-        client.leaveBreadcrumb('XMLHttpRequest error', {
+        internalClient.leaveBreadcrumb('XMLHttpRequest error', {
           method: String(method),
           url: String(url),
           duration: duration
@@ -151,10 +160,16 @@ module.exports = (_ignoredUrls = [], win = window) => {
           return new Promise((resolve, reject) => {
             const requestStart = new Date()
 
+            // const [urlOrRequest, options] = arguments
             // pass through to native fetch
             oldFetch(...arguments)
               .then(response => {
-                handleFetchSuccess(response, method, url, getDuration(requestStart))
+                handleFetchSuccess(
+                  response,
+                  method,
+                  url,
+                  getDuration(requestStart)
+                )
                 resolve(response)
               })
               .catch(error => {
@@ -180,14 +195,14 @@ module.exports = (_ignoredUrls = [], win = window) => {
         }
         if (response.status >= 400) {
           // when the request comes back with a 4xx or 5xx status it does not reject the fetch promise,
-          client.leaveBreadcrumb('fetch() failed', metadata, BREADCRUMB_TYPE)
+          internalClient.leaveBreadcrumb('fetch() failed', metadata, BREADCRUMB_TYPE)
         } else {
-          client.leaveBreadcrumb('fetch() succeeded', metadata, BREADCRUMB_TYPE)
+          internalClient.leaveBreadcrumb('fetch() succeeded', metadata, BREADCRUMB_TYPE)
         }
       }
 
       const handleFetchError = (method, url, duration) => {
-        client.leaveBreadcrumb('fetch() error', { method: String(method), url: String(url), duration: duration }, BREADCRUMB_TYPE)
+        internalClient.leaveBreadcrumb('fetch() error', { method: String(method), url: String(url), duration: duration }, BREADCRUMB_TYPE)
       }
     }
   }
@@ -202,4 +217,4 @@ module.exports = (_ignoredUrls = [], win = window) => {
   return plugin
 }
 
-const getDuration = (startTime) => startTime && new Date() - startTime
+const getDuration = (startTime): number => startTime && new Date() as unknown as number - startTime
