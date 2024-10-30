@@ -2,12 +2,12 @@
   "name": "@bugsnag/plugin-console-breadcrumbs",
   "version": "8.1.1",
   "main": "dist/console-breadcrumbs.js",
-  "types": "dist/types/throttle.d.ts",
+  "types": "dist/types/console-breadcrumbs.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/throttle.d.ts",
-      "default": "./dist/throttle.js",
-      "import": "./dist/throttle.mjs"
+      "types": "./dist/types/console-breadcrumbs.d.ts",
+      "default": "./dist/console-breadcrumbs.js",
+      "import": "./dist/console-breadcrumbs.mjs"
     }
   },
   "description": "@bugsnag/js plugin to record console log method calls as breadcrumbs",
