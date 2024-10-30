@@ -1,29 +1,29 @@
-import { Client, Logger, Plugin } from '@bugsnag/core'
+import { Client, Config, Logger, Plugin } from '@bugsnag/core'
 import includes from '@bugsnag/core/lib/es-utils/includes'
 
 const BREADCRUMB_TYPE = 'request'
 
 interface InternalClient extends Client {
   _logger: Logger
+  _config: Required<Config>
+  _isBreadcrumbTypeEnabled: (type: string) => boolean
 }
 
-type FetchArguments = Parameters<typeof window.fetch>
+type FetchArguments = Parameters<Window['fetch']>
+
 /*
  * Leaves breadcrumbs when network requests occur
  */
 export default (_ignoredUrls = [], win = window): Plugin => {
-  let restoreFunctions: any[] = []
+  let restoreFunctions: Array<() => void> = []
   const plugin: Plugin = {
     load: client => {
       const internalClient = client as InternalClient
 
-      // @ts-expect-error isBreadcrumbTypeEnabled is private API
       if (!internalClient._isBreadcrumbTypeEnabled('request')) return
 
       const ignoredUrls = [
-        // @ts-expect-error _config is private API
         internalClient._config.endpoints.notify,
-        // @ts-expect-error _config is private API
         internalClient._config.endpoints.sessions
       ].concat(_ignoredUrls)
 
@@ -38,12 +38,12 @@ export default (_ignoredUrls = [], win = window): Plugin => {
         const requestHandlers = new WeakMap()
 
         const originalOpen = win.XMLHttpRequest.prototype.open
-        win.XMLHttpRequest.prototype.open = function open (method: string, url: string) {
+        win.XMLHttpRequest.prototype.open = function open (method: string, url: string | URL) {
           // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
           if (this) {
             trackedRequests.set(this, { method, url })
           }
-          originalOpen.apply(this, arguments as any)
+          originalOpen.apply(this, arguments as unknown as Parameters<typeof originalOpen>)
         }
 
         const originalSend = win.XMLHttpRequest.prototype.send
@@ -70,7 +70,7 @@ export default (_ignoredUrls = [], win = window): Plugin => {
             }
           }
 
-          originalSend.apply(this, arguments as any)
+          originalSend.apply(this, arguments as unknown as Parameters<typeof originalSend>)
         }
 
         if (process.env.NODE_ENV !== 'production') {
@@ -131,7 +131,7 @@ export default (_ignoredUrls = [], win = window): Plugin => {
         // only patch it if it exists and if it is not a polyfill (patching a polyfilled
         // fetch() results in duplicate breadcrumbs for the same request because the
         // implementation uses XMLHttpRequest which is also patched)
-        // @ts-expect-error we are expecting
+        // @ts-expect-error polyfill is not defined in the Fetch API
         if (!('fetch' in win) || win.fetch.polyfill) return
 
         const oldFetch = win.fetch
@@ -140,9 +140,9 @@ export default (_ignoredUrls = [], win = window): Plugin => {
           const options = args[1]
 
           let method: string | undefined
-          let url: string | null = null
+          let url: string | URL | null = null
 
-          if (urlOrRequest && typeof urlOrRequest === 'object') {
+          if (urlOrRequest && typeof urlOrRequest === 'object' && 'url' in urlOrRequest) {
             url = urlOrRequest.url
             if (options && 'method' in options) {
               method = options.method
@@ -166,12 +166,7 @@ export default (_ignoredUrls = [], win = window): Plugin => {
             // pass through to native fetch
             oldFetch(...args)
               .then(response => {
-                handleFetchSuccess(
-                  response,
-                  String(method),
-                  String(url),
-                  getDuration(requestStart)
-                )
+                handleFetchSuccess(response, method, url, getDuration(requestStart))
                 resolve(response)
               })
               .catch(error => {
@@ -188,7 +183,7 @@ export default (_ignoredUrls = [], win = window): Plugin => {
         }
       }
 
-      const handleFetchSuccess = (response: Response, method: string, url: string, duration: number) => {
+      const handleFetchSuccess = (response: Response, method: string | undefined, url: string | URL | null, duration: number) => {
         const metadata = {
           method: String(method),
           status: response.status,

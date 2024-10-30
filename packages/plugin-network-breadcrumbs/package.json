@@ -2,12 +2,12 @@
   "name": "@bugsnag/plugin-network-breadcrumbs",
   "version": "8.1.1",
   "main": "dist/network-breadcrumbs.js",
-  "types": "dist/types/throttle.d.ts",
+  "types": "dist/types/network-breadcrumbs.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/throttle.d.ts",
-      "default": "./dist/throttle.js",
-      "import": "./dist/throttle.mjs"
+      "types": "./dist/types/network-breadcrumbs.d.ts",
+      "default": "./dist/network-breadcrumbs.js",
+      "import": "./dist/network-breadcrumbs.mjs"
     }
   },
   "description": "@bugsnag/js plugin to record browser requests as breadcrumbs",
