@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import plugin from '../src/network-breadcrumbs'
+import plugin from '../'
 
 import Client from '@bugsnag/core/client'
 import { Config } from '@bugsnag/core'
