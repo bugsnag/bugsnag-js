@@ -18,12 +18,21 @@ Scenario: Reporting an Unhandled promise rejection
   And the event "unhandled" is true
   And the exception "message" equals "UnhandledJsPromiseRejectionScenario"
 
+Scenario: Reporting an Unhandled promise rejection as handled
+  When I run "UnhandledJsPromiseRejectionAsHandledScenario"
+  Then I wait to receive an error
+  And the exception "errorClass" equals "Error"
+  And the exception "type" equals "reactnativejs"
+  And the event "unhandled" is false
+  And the exception "message" equals "UnhandledJsPromiseRejectionAsHandledScenario"
+
 Scenario: Reporting an Unhandled Native error
   When I run "UnhandledNativeErrorScenario" and relaunch the crashed app
   And I configure Bugsnag for "UnhandledNativeErrorScenario"
   Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the version-dependent string:
   | arch | version | value                   |
+  | new  | 0.76    | N8facebook3jsi7JSErrorE |
   | new  | 0.75    | N8facebook3jsi7JSErrorE |
   | new  | 0.74    | N8facebook3jsi7JSErrorE |
   | new  | 0.73    | N8facebook3jsi7JSErrorE |
@@ -34,6 +43,7 @@ Scenario: Reporting an Unhandled Native error
   And the event "unhandled" is true
   And the event "exceptions.0.message" equals the version-dependent string:
   | arch | version | value                                                                                                                     |
+  | new  | 0.76    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | 0.75    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | 0.74    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | 0.73    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
