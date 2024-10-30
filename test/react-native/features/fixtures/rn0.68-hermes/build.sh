@@ -1,6 +1,9 @@
 rm -rf reactnative.xcarchive
 
-cd ios && pod install
+cd ios
+bundle install
+bundle exec pod install
+
 xcrun xcodebuild \
   -scheme reactnative \
   -workspace reactnative.xcworkspace \
