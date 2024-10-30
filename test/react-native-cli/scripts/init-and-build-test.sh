@@ -1,3 +1,5 @@
+# set -euo pipefail
+
 VERSION=$1
 
 function check_status {
