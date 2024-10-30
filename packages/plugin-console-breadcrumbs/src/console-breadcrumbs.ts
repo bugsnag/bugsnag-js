@@ -1,18 +1,27 @@
-import { Plugin } from '@bugsnag/core'
+import { Client, Config, Plugin } from '@bugsnag/core'
 import filter from '@bugsnag/core/lib/es-utils/filter'
 import map from '@bugsnag/core/lib/es-utils/map'
 import reduce from '@bugsnag/core/lib/es-utils/reduce'
+
+type ConsoleMethod = 'log' | 'debug' | 'info' | 'warn' | 'error'
+
+interface ClientWithInternals extends Client {
+  _config: Required<Config>
+  _isBreadcrumbTypeEnabled: (type: ConsoleMethod) => boolean
+}
+
+type ConsoleWithRestore = Console & {
+  [key in ConsoleMethod]: typeof console[ConsoleMethod] & { _restore: () => void }
+}
 
 /*
  * Leaves breadcrumbs when console log methods are called
  */
 const plugin: Plugin = {
-  load: client => {
-    // @ts-expect-error _config is private API
-    const isDev = /^(local-)?dev(elopment)?$/.test(client._config.releaseStage)
+  load: (client) => {
+    const isDev = /^(local-)?dev(elopment)?$/.test((client as ClientWithInternals)._config.releaseStage)
 
-    // @ts-expect-error isBreadcrumbTypeEnabled is private API
-    if (isDev || !client._isBreadcrumbTypeEnabled('log')) return
+    if (isDev || !(client as ClientWithInternals)._isBreadcrumbTypeEnabled('log')) return
 
     map(CONSOLE_LOG_METHODS, method => {
       const original = console[method]
@@ -48,8 +57,7 @@ const plugin: Plugin = {
         )
         original.apply(console, args)
       }
-      // @ts-expect-error _restore is added to be able to remove our monkey patched code
-      console[method]._restore = () => {
+      (console as ConsoleWithRestore)[method]._restore = () => {
         console[method] = original
       }
     })
@@ -57,17 +65,17 @@ const plugin: Plugin = {
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  plugin.destroy = () =>
+  plugin.destroy = () => {
+    const consoleWithRestore = console as ConsoleWithRestore
     CONSOLE_LOG_METHODS.forEach(method => {
-      // @ts-expect-error _restore is added to be able to remove our monkey patched code
-      if (typeof console[method]._restore === 'function') {
-        // @ts-expect-error _restore is added to be able to remove our monkey patched code
-        console[method]._restore()
+      if (typeof consoleWithRestore[method]._restore === 'function') {
+        consoleWithRestore[method]._restore()
       }
     })
+  }
 }
 
-const CONSOLE_LOG_METHODS: Array<'log' | 'debug' | 'info' | 'warn' | 'error'> = filter(
+const CONSOLE_LOG_METHODS: ConsoleMethod[] = filter(
   ['log', 'debug', 'info', 'warn', 'error'],
   method =>
     typeof console !== 'undefined' && typeof console[method] === 'function'
