@@ -93,7 +93,7 @@ module.exports = {
       common.run(archiveCmd, true)
 
       common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}`)
-      common.run('npm run bugsnag:upload-rn-ios -- --overwrite', true)
+      common.run(`npm run bugsnag:upload-rn-ios -- --overwrite ${rnVersion}.xcarchive`, true)
     } catch (e) {
       console.error(e, e.stack)
       process.exit(1)
