@@ -26,6 +26,7 @@ steps:
       DEBUG: true
       LANG: "en_US.UTF-8"
       DEVELOPER_DIR: "/Applications/Xcode14.app"
+      NODE_VERSION: "18"
     artifact_paths: build/rn0_69.ipa
     commands:
       - test/react-native-cli/scripts/init-and-build-test.sh rn0_69

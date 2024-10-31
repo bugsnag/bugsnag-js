@@ -92,9 +92,9 @@ module.exports = {
       common.run('pod install || pod install --repo-update', true)
       const archiveCmd = `xcrun xcodebuild -scheme "${rnVersion}" -workspace "${rnVersion}.xcworkspace" -configuration Release -archivePath "../${rnVersion}.xcarchive" -allowProvisioningUpdates archive`
       common.run(archiveCmd, true)
+
       common.changeDir(`${targetDir}`)
-      const bugsnagCliCommand = './node_modules/.bin/bugsnag-cli upload react-native-ios --upload-api-root-url=http://localhost:9339 --overwrite'
-      common.run(bugsnagCliCommand, true)
+      common.run('./node_modules/.bin/bugsnag-cli upload react-native-ios --upload-api-root-url=http://localhost:9339 --overwrite', true)
     } catch (e) {
       console.error(e, e.stack)
       process.exit(1)
