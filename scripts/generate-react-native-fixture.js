@@ -93,7 +93,8 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
   fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })
 
   // install pods
-  execFileSync('pod', ['install', '--repo-update'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
+  execFileSync('bundle', ['install'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
+  execFileSync('bundle', ['exec', 'pod', 'install', '--repo-update'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
 
   // build the ios app
   const archiveArgs = [
@@ -189,6 +190,14 @@ function configureIOSProject () {
   }
 
   fs.writeFileSync(`${fixtureDir}/ios/Podfile`, podfileContents)
+
+  // pin xcodeproj version to < 1.26.0
+  const gemfilePath = resolve(fixtureDir, 'Gemfile')
+  if (fs.existsSync(gemfilePath)) {
+    let gemfileContents = fs.readFileSync(gemfilePath, 'utf8')
+    gemfileContents += '\ngem \'xcodeproj\', \'< 1.26.0\''
+    fs.writeFileSync(gemfilePath, gemfileContents)
+  }
 
   // set NSAllowsArbitraryLoads to allow http traffic for all domains (bitbar public IP + bs-local.com)
   const plistpath = `${fixtureDir}/ios/reactnative/Info.plist`
