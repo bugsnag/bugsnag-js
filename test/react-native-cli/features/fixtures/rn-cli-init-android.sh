@@ -54,7 +54,7 @@ expect "Do you want to install the BugSnag CLI to allow you to upload JavaScript
 send -- y
 
 expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want"
-send -- 2.1.1\r
+send -- \r
 
 if {[expr $rnVersionInt3 < 0.68]} {
    expect "or follow the manual integration instructions in our online docs: https://docs.bugsnag.com/platforms/react-native/react-native/manual-setup/')"
