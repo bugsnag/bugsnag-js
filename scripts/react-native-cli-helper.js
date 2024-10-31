@@ -49,8 +49,7 @@ module.exports = {
       }
 
       common.changeDir(`${destFixtures}/${rnVersion}`)
-      const bugsnagCliCommand = './node_modules/.bin/bugsnag-cli upload react-native-android --upload-api-root-url=http://localhost:9339 --overwrite'
-      common.run(bugsnagCliCommand, true)
+      common.run('npm run bugsnag:upload-rn-android -- --overwrite', true)
 
       // Finally, copy the APK back to the host
       common.run(`mkdir -p ${baseDir}/build`)
@@ -93,9 +92,8 @@ module.exports = {
       const archiveCmd = `xcrun xcodebuild -scheme "${rnVersion}" -workspace "${rnVersion}.xcworkspace" -configuration Release -archivePath "../${rnVersion}.xcarchive" -allowProvisioningUpdates archive`
       common.run(archiveCmd, true)
 
-      common.changeDir(`${targetDir}`)
-      common.run('./node_modules/.bin/bugsnag-cli upload react-native-ios --upload-api-root-url=http://localhost:9339 --overwrite', true)
-      common.run('sleep 5', true)
+      common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}`)
+      common.run('npm run bugsnag:upload-rn-ios -- --overwrite', true)
     } catch (e) {
       console.error(e, e.stack)
       process.exit(1)
