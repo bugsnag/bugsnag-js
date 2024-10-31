@@ -40,6 +40,7 @@ steps:
       - "android-builder-base-java-11"
     commands:
       - buildkite-agent pipeline upload .buildkite/full/react-native-cli-pipeline.full.yml
+    skip: "Skipped due to PLAT-13000"
 
   #
   # Trigger Expo pipelines
