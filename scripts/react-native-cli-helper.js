@@ -95,6 +95,7 @@ module.exports = {
 
       common.changeDir(`${targetDir}`)
       common.run('./node_modules/.bin/bugsnag-cli upload react-native-ios --upload-api-root-url=http://localhost:9339 --overwrite', true)
+      common.run('sleep 5', true)
     } catch (e) {
       console.error(e, e.stack)
       process.exit(1)
