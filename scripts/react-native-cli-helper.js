@@ -91,7 +91,8 @@ module.exports = {
       common.run(`rm -rf ../${rnVersion}.xcarchive`, true)
       common.run('bundle install')
       common.run('bundle exec pod install || bundle exec pod install --repo-update', true)
-      const archiveCmd = `xcrun xcodebuild -scheme "${rnVersion}" -workspace "${rnVersion}.xcworkspace" -configuration Release -archivePath "../${rnVersion}.xcarchive" -allowProvisioningUpdates archive`
+      // const archiveCmd = `xcrun xcodebuild -scheme "${rnVersion}" -workspace "${rnVersion}.xcworkspace" -configuration Release -archivePath "../${rnVersion}.xcarchive" -allowProvisioningUpdates archive`
+      const archiveCmd = `xcodebuild -workspace ${rnVersion}.xcworkspace -scheme ${rnVersion} -configuration Release -sdk iphoneos build`
       common.run(archiveCmd, true)
 
       common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}`)
