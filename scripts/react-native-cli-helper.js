@@ -96,7 +96,7 @@ module.exports = {
       common.run(archiveCmd, true)
 
       common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}`)
-      const bugsnagCliCommand = 'npm run bugsnag:upload-rn-ios --overwrite'
+      const bugsnagCliCommand = 'npm run bugsnag:upload-rn-ios -- --overwrite'
       common.run(bugsnagCliCommand, true)
 
     } catch (e) {
