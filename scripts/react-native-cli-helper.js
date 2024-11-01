@@ -49,7 +49,7 @@ module.exports = {
       }
 
       common.changeDir(`${destFixtures}/${rnVersion}`)
-      const bugsnagCliCommand = 'npm run bugsnag:upload-rn-android --overwrite'
+      const bugsnagCliCommand = 'npm run bugsnag:upload-rn-android -- --overwrite'
       common.run(bugsnagCliCommand, true)
 
       // Finally, copy the APK back to the host
@@ -99,7 +99,6 @@ module.exports = {
       common.changeDir(`${initialDir}/${fixturesDir}/${rnVersion}`)
       const bugsnagCliCommand = 'npm run bugsnag:upload-rn-ios -- --overwrite'
       common.run(bugsnagCliCommand, true)
-
     } catch (e) {
       console.error(e, e.stack)
       process.exit(1)
