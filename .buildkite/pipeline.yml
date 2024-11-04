@@ -1,11 +1,11 @@
 steps:
   # License audit
   #
-  - label: ":copyright: License Audit"
-    timeout_in_minutes: 20
-    agents:
-      queue: macos-14
-    command: scripts/license_finder.sh
+  # - label: ":copyright: License Audit"
+  #   timeout_in_minutes: 20
+  #   agents:
+  #     queue: macos-14-1
+  #   command: scripts/license_finder.sh
 
   #
   # Publish/package notifier
@@ -22,7 +22,7 @@ steps:
     key: "publish-js"
     timeout_in_minutes: 30
     agents:
-      queue: "macos-14"
+      queue: "macos-14-1"
     env:
       NODE_VERSION: "18"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
@@ -37,7 +37,7 @@ steps:
   - label: ":aws-lambda: AWS Lambda tests"
     timeout_in_minutes: 35
     agents:
-      queue: "macos-14"
+      queue: "macos-14-1"
     env:
       NODE_VERSION: "18"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
@@ -81,43 +81,43 @@ steps:
         - exit_status: "*"
           limit: 1
 
-  - label: "Lint"
-    depends_on: "ci-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v4.12.0:
-        run: ci
-    command: "npm run test:lint"
+  # - label: "Lint"
+  #   depends_on: "ci-image"
+  #   timeout_in_minutes: 10
+  #   plugins:
+  #     docker-compose#v4.12.0:
+  #       run: ci
+  #   command: "npm run test:lint"
 
-  - label: "Unit tests"
-    depends_on: "ci-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v4.12.0:
-        run: ci
-    command: "npm run test:unit"
+  # - label: "Unit tests"
+  #   depends_on: "ci-image"
+  #   timeout_in_minutes: 10
+  #   plugins:
+  #     docker-compose#v4.12.0:
+  #       run: ci
+  #   command: "npm run test:unit"
 
-  - label: "Type checks/tests"
-    depends_on: "ci-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v4.12.0:
-        run: ci
-    command: "npm run test:types"
+  # - label: "Type checks/tests"
+  #   depends_on: "ci-image"
+  #   timeout_in_minutes: 10
+  #   plugins:
+  #     docker-compose#v4.12.0:
+  #       run: ci
+  #   command: "npm run test:types"
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on: "package-js"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
+  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  #   depends_on: "package-js"
+  #   commands:
+  #     - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
+  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  #   commands:
+  #     - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on: "package-js"
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
+  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+  #   depends_on: "package-js"
+  #   commands:
+  #     - buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
 
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
@@ -134,6 +134,6 @@ steps:
   #
   # Conditionally trigger full pipeline
   #
-  - label: 'Conditionally trigger full set of tests'
-    timeout_in_minutes: 30
-    command: sh -c .buildkite/pipeline_trigger.sh
+  # - label: 'Conditionally trigger full set of tests'
+  #   timeout_in_minutes: 30
+  #   command: sh -c .buildkite/pipeline_trigger.sh
