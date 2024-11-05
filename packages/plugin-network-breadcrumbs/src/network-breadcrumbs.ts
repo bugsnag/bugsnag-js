@@ -189,7 +189,7 @@ export default (_ignoredUrls = [], win: GlobalWithFetchAndXHR = window): Plugin 
         }
       }
 
-      const handleFetchSuccess = (response: Response, method: string | undefined, url: string | URL | null, duration: number) => {
+      const handleFetchSuccess = (response: Response, method: string, url: string, duration: number) => {
         const metadata = {
           method,
           status: response.status,
