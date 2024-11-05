@@ -3,6 +3,12 @@ import includes from '@bugsnag/core/lib/es-utils/includes'
 
 const BREADCRUMB_TYPE = 'request'
 
+interface GlobalWithFetchAndXHR {
+  fetch: typeof fetch
+  XMLHttpRequest: typeof XMLHttpRequest
+  WeakMap: typeof WeakMap
+}
+
 interface InternalClient extends Client {
   _logger: Logger
   _config: Required<Config>
@@ -14,7 +20,7 @@ type FetchArguments = Parameters<Window['fetch']>
 /*
  * Leaves breadcrumbs when network requests occur
  */
-export default (_ignoredUrls = [], win = window): Plugin => {
+export default (_ignoredUrls = [], win: GlobalWithFetchAndXHR = window): Plugin => {
   let restoreFunctions: Array<() => void> = []
   const plugin: Plugin = {
     load: client => {
@@ -166,7 +172,7 @@ export default (_ignoredUrls = [], win = window): Plugin => {
             // pass through to native fetch
             oldFetch(...args)
               .then(response => {
-                handleFetchSuccess(response, method, url, getDuration(requestStart))
+                handleFetchSuccess(response, String(method), String(url), getDuration(requestStart))
                 resolve(response)
               })
               .catch(error => {
@@ -183,11 +189,11 @@ export default (_ignoredUrls = [], win = window): Plugin => {
         }
       }
 
-      const handleFetchSuccess = (response: Response, method: string | undefined, url: string | URL | null, duration: number) => {
+      const handleFetchSuccess = (response: Response, method: string, url: string, duration: number) => {
         const metadata = {
-          method: String(method),
+          method,
           status: response.status,
-          url: String(url),
+          url,
           duration: duration
         }
         if (response.status >= 400) {
@@ -199,7 +205,7 @@ export default (_ignoredUrls = [], win = window): Plugin => {
       }
 
       const handleFetchError = (method: string, url: string, duration: number) => {
-        internalClient.leaveBreadcrumb('fetch() error', { method: String(method), url: String(url), duration: duration }, BREADCRUMB_TYPE)
+        internalClient.leaveBreadcrumb('fetch() error', { method, url, duration: duration }, BREADCRUMB_TYPE)
       }
     }
   }
