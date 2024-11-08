@@ -1,5 +1,6 @@
-import createRollupConfig from "../../.rollup/index.mjs";
+import createRollupConfig from '../../.rollup/index.mjs'
 
 export default createRollupConfig({
-  input: "src/throttle.ts"
-});
+    input: 'src/throttle.ts',
+    external: ['@bugsnag/core/lib/validators/int-range']
+})
