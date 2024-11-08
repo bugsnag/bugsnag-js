@@ -2,6 +2,14 @@
   "name": "@bugsnag/plugin-navigation-breadcrumbs",
   "version": "8.1.1",
   "main": "navigation-breadcrumbs.js",
+  "types": "dist/types/navigation-breadcrumbs.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/navigation-breadcrumbs.d.ts",
+      "default": "./dist/navigation-breadcrumbs.js",
+      "import": "./dist/navigation-breadcrumbs.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to record browser navigation as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -14,6 +22,11 @@
   "files": [
     "*.js"
   ],
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*"
+  },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
