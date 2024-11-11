@@ -33,7 +33,7 @@ const fixtureDir = resolve(ROOT_DIR, fixturePath, reactNativeVersion)
 
 const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtures/app/dynamic/')
 
-// Local Packages
+// Local packages
 const PACKAGE_DIRECTORIES = [
   `${ROOT_DIR}/packages/core`,
   `${ROOT_DIR}/packages/react-native`,
@@ -71,6 +71,7 @@ const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
   'react-native-navigation'
 ]
 
+// Build the packages
 if (!process.env.SKIP_BUILD_PACKAGES) {
   // run npm install in the root directory
   execFileSync('npm', ['install'], { cwd: ROOT_DIR, stdio: 'inherit' })
@@ -80,6 +81,7 @@ if (!process.env.SKIP_BUILD_PACKAGES) {
   execFileSync('npm', buildArgs, { cwd: ROOT_DIR, stdio: 'inherit' })
 }
 
+// Generate the fixture
 if (!process.env.SKIP_GENERATE_FIXTURE) {
   // remove the fixture directory if it already exists
   if (fs.existsSync(fixtureDir)) {
@@ -92,11 +94,11 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 
   replaceGeneratedFixtureFiles()
 
-  installFixtureDependencies()
-
   configureAndroidProject()
 
   configureIOSProject()
+
+  installFixtureDependencies()
 
   // link react-native-navigation using rnn-link tool
   if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
@@ -104,12 +106,14 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
   }
 }
 
+// Build the android fixture
 if (process.env.BUILD_ANDROID === 'true' || process.env.BUILD_ANDROID === '1') {
   // build the android app
   execFileSync('./gradlew', ['assembleRelease'], { cwd: `${fixtureDir}/android`, stdio: 'inherit' })
   fs.copyFileSync(`${fixtureDir}/android/app/build/outputs/apk/release/app-release.apk`, `${fixtureDir}/reactnative.apk`)
 }
 
+// Build the iOS fixture
 if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
   fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })
 
