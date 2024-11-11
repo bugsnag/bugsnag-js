@@ -1,4 +1,4 @@
-import plugin from '../'
+import plugin from '../src/interaction-breadcrumbs'
 
 import Client from '@bugsnag/core/client'
 import Breadcrumb from '@bugsnag/core/breadcrumb'

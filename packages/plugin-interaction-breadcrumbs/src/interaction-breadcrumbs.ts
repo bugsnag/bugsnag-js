@@ -1,7 +1,10 @@
+import { Plugin } from '@bugsnag/core'
+import type ClientWithInternals from 'packages/core/client'
+
 /*
  * Leaves breadcrumbs when the user interacts with the DOM
  */
-module.exports = (win = window) => ({
+export default (win = window): Plugin<ClientWithInternals> => ({
   load: (client) => {
     if (!('addEventListener' in win)) return
     if (!client._isBreadcrumbTypeEnabled('user')) return
@@ -23,7 +26,8 @@ module.exports = (win = window) => ({
 
 const trim = /^\s*([^\s][\s\S]{0,139}[^\s])?\s*/
 
-function getNodeText (el) {
+// TODO: Fix Type
+function getNodeText (el: any) {
   let text = el.textContent || el.innerText || ''
 
   if (!text && (el.type === 'submit' || el.type === 'button')) {
@@ -40,7 +44,8 @@ function getNodeText (el) {
 }
 
 // Create a label from tagname, id and css class of the element
-function getNodeSelector (el, win) {
+// TODO: Fix Type
+function getNodeSelector (el: any, win: Window): string {
   const parts = [el.tagName]
   if (el.id) parts.push('#' + el.id)
   if (el.className && el.className.length) parts.push(`.${el.className.split(' ').join('.')}`)
