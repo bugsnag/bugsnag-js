@@ -74,7 +74,7 @@ const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
 // Build the packages
 if (!process.env.SKIP_BUILD_PACKAGES) {
   // run npm install in the root directory
-  execFileSync('npm', ['install'], { cwd: ROOT_DIR, stdio: 'inherit' })
+  execFileSync('npm', ['install'], { cwd: ROOT_DIR, stdio: 'inherit', env: process.env })
 
   // build the packages
   const buildArgs = ['run', 'build']
