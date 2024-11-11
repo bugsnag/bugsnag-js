@@ -1,15 +1,9 @@
 const { execFileSync, execSync } = require('child_process')
 const { resolve } = require('path')
 const fs = require('fs')
-const common = require('./common')
 
 if (!process.env.RN_VERSION) {
   console.error('Please provide a React Native version')
-  process.exit(1)
-}
-
-if (!process.env.REGISTRY_URL) {
-  console.error('Please provide a Registry URL')
   process.exit(1)
 }
 
@@ -17,8 +11,6 @@ if (!process.env.RCT_NEW_ARCH_ENABLED || (process.env.RCT_NEW_ARCH_ENABLED !== '
   console.error('RCT_NEW_ARCH_ENABLED must be set to 1 or 0')
   process.exit(1)
 }
-
-const notifierVersion = process.env.NOTIFIER_VERSION || common.determineVersion()
 
 const reactNativeVersion = process.env.RN_VERSION
 const ROOT_DIR = resolve(__dirname, '../')
@@ -41,23 +33,52 @@ const fixtureDir = resolve(ROOT_DIR, fixturePath, reactNativeVersion)
 
 const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtures/app/dynamic/')
 
-const DEPENDENCIES = [
-  'react-native-file-access@3.1.1',
-  `@bugsnag/react-native@${notifierVersion}`,
-  `@bugsnag/plugin-react-navigation@${notifierVersion}`,
-  `@bugsnag/plugin-react-native-navigation@${notifierVersion}`
+// Local Packages
+const PACKAGE_DIRECTORIES = [
+  `${ROOT_DIR}/packages/core`,
+  `${ROOT_DIR}/packages/react-native`,
+  `${ROOT_DIR}/packages/delivery-react-native`,
+  `${ROOT_DIR}/packages/plugin-console-breadcrumbs`,
+  `${ROOT_DIR}/packages/plugin-network-breadcrumbs`,
+  `${ROOT_DIR}/packages/plugin-react`,
+  `${ROOT_DIR}/packages/plugin-react-native-client-sync`,
+  `${ROOT_DIR}/packages/plugin-react-native-event-sync`,
+  `${ROOT_DIR}/packages/plugin-react-native-global-error-handler`,
+  `${ROOT_DIR}/packages/plugin-react-native-hermes`,
+  `${ROOT_DIR}/packages/plugin-react-native-session`,
+  `${ROOT_DIR}/packages/plugin-react-native-unhandled-rejection`,
+  `${ROOT_DIR}/packages/plugin-react-native-navigation`,
+  `${ROOT_DIR}/packages/plugin-react-navigation`,
+  `${ROOT_DIR}/test/react-native/features/fixtures/scenario-launcher`
 ]
 
-const REACT_NAVIGATION_DEPENDENCIES = [
-  '@react-navigation/native',
-  '@react-navigation/native-stack',
-  'react-native-screens',
-  'react-native-safe-area-context'
+const PEER_DEPENDENCIES = [
+  'react-native-file-access@3.1.1'
 ]
 
-const REACT_NATIVE_NAVIGATION_DEPENDENCIES = [
+const reactNavigationVersion = '6.1.18'
+const reactNavigationNativeStackVersion = '6.11.0'
+const reactNativeScreensVersion = '3.35.0'
+const reactNativeSafeAreaContextVersion = '4.14.0'
+const REACT_NAVIGATION_PEER_DEPENDENCIES = [
+  `@react-navigation/native@${reactNavigationVersion}`,
+  `@react-navigation/native-stack@${reactNavigationNativeStackVersion}`,
+  `react-native-screens@${reactNativeScreensVersion}`,
+  `react-native-safe-area-context@${reactNativeSafeAreaContextVersion}`
+]
+
+const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
   'react-native-navigation'
 ]
+
+if (!process.env.SKIP_BUILD_PACKAGES) {
+  // run npm install in the root directory
+  execFileSync('npm', ['install'], { cwd: ROOT_DIR, stdio: 'inherit' })
+
+  // build the packages
+  const buildArgs = ['run', 'build']
+  execFileSync('npm', buildArgs, { cwd: ROOT_DIR, stdio: 'inherit' })
+}
 
 if (!process.env.SKIP_GENERATE_FIXTURE) {
   // remove the fixture directory if it already exists
@@ -130,23 +151,24 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
 }
 
 function installFixtureDependencies () {
-  // add dependencies for react-native-navigation (wix)
-  if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
-    DEPENDENCIES.push(...REACT_NATIVE_NAVIGATION_DEPENDENCIES)
-  } else if (!isNewArchEnabled) {
-    // add dependencies for @react-navigation
-    DEPENDENCIES.push(...REACT_NAVIGATION_DEPENDENCIES)
+  // pack all local packages into the fixture directory
+  for (const package of PACKAGE_DIRECTORIES) {
+    const libraryPackArgs = ['pack', package, '--pack-destination', fixtureDir]
+    execFileSync('npm', libraryPackArgs, { cwd: ROOT_DIR, stdio: 'inherit' })
   }
 
-  const fixtureDependencyArgs = DEPENDENCIES.join(' ')
+  // add dependencies for react-native-navigation (wix)
+  if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
+    PEER_DEPENDENCIES.push(...REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES)
+  } else if (!isNewArchEnabled) {
+    // add dependencies for @react-navigation
+    PEER_DEPENDENCIES.push(...REACT_NAVIGATION_PEER_DEPENDENCIES)
+  }
 
-  // install test fixture dependencies
-  execSync(`npm install --save ${fixtureDependencyArgs} --registry ${process.env.REGISTRY_URL} --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })
+  const fixtureDependencyArgs = PEER_DEPENDENCIES.join(' ')
 
-  // install the scenario launcher package
-  const scenarioLauncherPackage = `${ROOT_DIR}/test/react-native/features/fixtures/scenario-launcher`
-  execSync(`npm pack ${scenarioLauncherPackage} --pack-destination ${fixtureDir}`, { cwd: ROOT_DIR, stdio: 'inherit' })
-  execSync('npm install --save bugsnag-react-native-scenarios-1.0.0.tgz', { cwd: fixtureDir, stdio: 'inherit' })
+  // install test fixture dependencies and local packages
+  execSync(`npm install --save ${fixtureDependencyArgs} *.tgz --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })
 }
 
 /** Replace native files generated by react-native cli with pre-configured files */
