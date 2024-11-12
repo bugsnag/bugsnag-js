@@ -10,7 +10,7 @@ module.exports = {
       const baseDir = process.env.PWD
       const sourceFixtures = `${baseDir}/${sourceFixturesIn}`
       const destFixtures = `${baseDir}/${destFixturesIn}`
-      const version = process.env.NOTIFIER_VERSION || common.determineVersion()
+      const version = process.env.NOTIFIER_VERSION || common.getCommitId()
       const rnVersion = process.env.REACT_NATIVE_VERSION
 
       console.log(`Installing CLI version: ${version}`)
@@ -63,7 +63,7 @@ module.exports = {
   },
   buildIOS: function buildIOS () {
     try {
-      const version = process.env.NOTIFIER_VERSION || common.determineVersion()
+      const version = process.env.NOTIFIER_VERSION || common.getCommitId()
       const rnVersion = process.env.REACT_NATIVE_VERSION
       const fixturesDir = 'features/fixtures'
       const targetDir = `${fixturesDir}/${rnVersion}`
