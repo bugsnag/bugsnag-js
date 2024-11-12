@@ -7,7 +7,7 @@ const fs = require('fs')
 module.exports = {
   buildAndroid: function buildAndroid (sourceFixtures, destFixtures) {
     try {
-      const version = process.env.NOTIFIER_VERSION || common.determineVersion()
+      const version = process.env.NOTIFIER_VERSION || common.getCommitId()
       const rnVersion = process.env.REACT_NATIVE_VERSION
       const registryUrl = process.env.REGISTRY_URL
 
@@ -65,7 +65,7 @@ module.exports = {
   },
   buildIOS: function buildIOS () {
     try {
-      const version = process.env.NOTIFIER_VERSION || common.determineVersion()
+      const version = process.env.NOTIFIER_VERSION || common.getCommitId()
       const rnVersion = process.env.REACT_NATIVE_VERSION
       const registryUrl = process.env.REGISTRY_URL
       const fixtureDir = 'test/react-native/features/fixtures'
