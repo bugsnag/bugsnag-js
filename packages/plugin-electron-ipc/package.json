@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-ipc",
-  "version": "8.0.0",
+  "version": "8.1.1",
   "main": "electron-ipc.js",
   "description": "@bugsnag/electron plugin to create the IPC layer between main and renderer processes",
   "repository": {
@@ -22,7 +22,7 @@
     "@bugsnag/core": "^8.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0",
+    "@bugsnag/core": "^8.1.1",
     "browserify": "^17.0.0"
   },
   "dependencies": {

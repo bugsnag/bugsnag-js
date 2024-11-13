@@ -1,10 +1,22 @@
 # Changelog
 
-## [Unreleased]
+## [8.1.2] - 2024-10-25
+
+### Fixed
+
+- Ensure `reportUnhandledPromiseRejectionsAsHandled` is correctly handled for all platforms [#2239](https://github.com/bugsnag/bugsnag-js/pull/2239)
+
+## [8.1.1] - 2024-10-23
+
+### Fixed
+
+- Add `reportUnhandledPromiseRejectionsAsHandled` config option to typescript definition [#2237](https://github.com/bugsnag/bugsnag-js/pull/2237)
+
+## [8.1.0] - 2024-10-23
 
 ### Added
 
-- Add new `reportUnhandledPromiseRejectionsAsHandled` config option [#2225](https://github.com/bugsnag/bugsnag-js/pull/2225)
+- Add new `reportUnhandledPromiseRejectionsAsHandled` config option to allow unhandled promise rejections to be reported as handled and not contribute to the app stability score [#2225](https://github.com/bugsnag/bugsnag-js/pull/2225)
 
 ## [8.0.0] - 2024-08-29
 

@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-navigation",
-  "version": "8.0.0",
+  "version": "8.1.1",
   "main": "react-native-navigation.js",
   "types": "types/react-native-navigation.d.ts",
   "description": "@bugsnag/react-native plugin for integration with react-native-navigation",
@@ -19,7 +19,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.0.0",
+    "@bugsnag/core": "^8.1.1",
     "react-native-navigation": "^7.0.0"
   },
   "peerDependencies": {
