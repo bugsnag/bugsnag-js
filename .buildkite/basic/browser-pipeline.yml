@@ -59,6 +59,7 @@ steps:
             service-ports: true
             use-aliases: true
             command:
+              - "--https"
               - "--farm=bb"
               - "--browser={{matrix}}"
               - "--no-tunnel"
@@ -117,6 +118,7 @@ steps:
             service-ports: true
             use-aliases: true
             command:
+              - "--https"
               - "--farm=bb"
               - "--browser=ie_11"
               - "--no-tunnel"
@@ -158,6 +160,7 @@ steps:
             run: browser-maze-runner-bs
             use-aliases: true
             command:
+              - "--https"
               - "--farm=bs"
               - "--browser={{matrix}}"
           artifacts#v1.5.0:

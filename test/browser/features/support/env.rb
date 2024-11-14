@@ -1,8 +1,6 @@
 require 'yaml'
 
-Maze.hooks.before_all do
-  Maze.config.document_server_root = File.realpath("#{__dir__}/../fixtures")
-end
+Maze.config.document_server_root = File.realpath("#{__dir__}/../fixtures")
 
 def get_test_url(path)
 
