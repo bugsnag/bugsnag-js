@@ -1,8 +1,6 @@
 require 'yaml'
 
-Maze.hooks.before_all do
-  Maze.config.document_server_root = File.realpath("#{__dir__}/../fixtures")
-end
+Maze.config.document_server_root = File.realpath("#{__dir__}/../fixtures")
 
 def get_test_url(path)
 
@@ -10,17 +8,17 @@ def get_test_url(path)
     host = Maze.public_document_server_address
     api_host = Maze.public_address
   else
-    host = "#{ENV['HOST']}:#{Maze.config.document_server_port}"
-    api_host = "#{ENV['API_HOST']}:#{Maze.config.port}"
+    host = "#{ENV['HOST']}:9339/docs"
+    api_host = "#{ENV['API_HOST']}:9339"
   end
 
-  notify = "http://#{api_host}/notify"
-  sessions = "http://#{api_host}/sessions"
-  logs = "http://#{api_host}/logs"
-  reflect= "http://#{api_host}/reflect"
+  notify = "https://#{api_host}/notify"
+  sessions = "https://#{api_host}/sessions"
+  logs = "https://#{api_host}/logs"
+  reflect= "https://#{api_host}/reflect"
   config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}&REFLECT=#{reflect}"
 
-  uri = URI("http://#{host}#{path}")
+  uri = URI("https://#{host}#{path}")
 
   if uri.query
     uri.query += "&#{config_query_string}"

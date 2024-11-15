@@ -1,6 +1,6 @@
 window.onload = function () {
   var bugsnagScript = document.createElement('SCRIPT')
-  bugsnagScript.src = '/node_modules/@bugsnag/browser/dist/bugsnag.min.js'
+  bugsnagScript.src = '/docs/node_modules/@bugsnag/browser/dist/bugsnag.min.js'
   document.documentElement.appendChild(bugsnagScript)
 
   if (!document.attachEvent) {
