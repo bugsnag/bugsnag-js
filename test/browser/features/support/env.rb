@@ -10,13 +10,19 @@ def get_test_url(path)
     maze_runner = "#{ENV['HOST']}:9339"
   end
 
-  notify = "https://#{maze_runner}/notify"
-  sessions = "https://#{maze_runner}/sessions"
-  logs = "https://#{maze_runner}/logs"
-  reflect= "https://#{maze_runner}/reflect"
+  if Maze.config.https
+    protocol = 'https'
+  else
+    protocol = 'http'
+  end
+
+  notify = "#{protocol}://#{maze_runner}/notify"
+  sessions = "#{protocol}://#{maze_runner}/sessions"
+  logs = "#{protocol}://#{maze_runner}/logs"
+  reflect= "#{protocol}://#{maze_runner}/reflect"
   config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}&REFLECT=#{reflect}"
 
-  uri = URI("https://#{maze_runner}/docs#{path}")
+  uri = URI("#{protocol}://#{maze_runner}/docs#{path}")
 
   if uri.query
     uri.query += "&#{config_query_string}"
