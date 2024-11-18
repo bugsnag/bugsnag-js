@@ -1,7 +1,7 @@
 {
   "name": "@bugsnag/plugin-interaction-breadcrumbs",
   "version": "8.1.1",
-  "main": "interaction-breadcrumbs.js",
+  "main": "dist/interaction-breadcrumbs.js",
   "types": "dist/types/interaction-breadcrumbs.d.ts",
   "exports": {
     ".": {
