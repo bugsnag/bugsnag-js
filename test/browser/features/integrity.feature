@@ -1,5 +1,5 @@
 @device
-Feature: Browser device data
+Feature: Bugsnag-Integrity header
 
 Scenario: Integrity headers are set when setPayloadChecksums is true
   When I navigate to the test URL "/integrity/script/a.html"
