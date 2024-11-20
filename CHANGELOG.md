@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Introduce `sendPayloadChecksums` option and set `Bugsnag-Integrity` headers on events and sessions [#2221](https://github.com/bugsnag/bugsnag-js/pull/2221)
+
 ## [8.1.2] - 2024-10-25
 
 ### Fixed
