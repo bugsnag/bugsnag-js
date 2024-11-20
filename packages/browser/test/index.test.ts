@@ -192,7 +192,8 @@ describe('browser notifier', () => {
       maxEvents: 10,
       generateAnonymousId: false,
       trackInlineScripts: true,
-      reportUnhandledPromiseRejectionsAsHandled: true
+      reportUnhandledPromiseRejectionsAsHandled: true,
+      sendPayloadChecksums: true
     }
 
     Bugsnag.start(completeConfig)
