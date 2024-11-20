@@ -5,20 +5,24 @@ Maze.config.document_server_root = File.realpath("#{__dir__}/../fixtures")
 def get_test_url(path)
 
   if Maze.config.aws_public_ip
-    host = Maze.public_document_server_address
-    api_host = Maze.public_address
+    maze_runner = Maze.public_address
   else
-    host = "#{ENV['HOST']}:9339/docs"
-    api_host = "#{ENV['API_HOST']}:9339"
+    maze_runner = "#{ENV['HOST']}:9339"
   end
 
-  notify = "https://#{api_host}/notify"
-  sessions = "https://#{api_host}/sessions"
-  logs = "https://#{api_host}/logs"
-  reflect= "https://#{api_host}/reflect"
+  if Maze.config.https
+    protocol = 'https'
+  else
+    protocol = 'http'
+  end
+
+  notify = "#{protocol}://#{maze_runner}/notify"
+  sessions = "#{protocol}://#{maze_runner}/sessions"
+  logs = "#{protocol}://#{maze_runner}/logs"
+  reflect= "#{protocol}://#{maze_runner}/reflect"
   config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}&REFLECT=#{reflect}"
 
-  uri = URI("https://#{host}#{path}")
+  uri = URI("#{protocol}://#{maze_runner}/docs#{path}")
 
   if uri.query
     uri.query += "&#{config_query_string}"
