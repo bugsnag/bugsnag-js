@@ -41,11 +41,6 @@ const Bugsnag = {
     if (typeof opts === 'string') opts = { apiKey: opts }
     if (!opts) opts = {}
 
-    // sendPayloadChecksums is false by default unless custom endpoints are not specified
-    if (!opts.endpoints) {
-      opts.sendPayloadChecksums = 'sendPayloadChecksums' in opts ? opts.sendPayloadChecksums : true
-    }
-
     const internalPlugins = [
       // add browser-specific plugins
       pluginApp,
