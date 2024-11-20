@@ -1,4 +1,4 @@
-@device
+@skip_ie_11 @skip_ios_10 @skip_safari_16 @skip_edge_17 @skip_chrome_43
 Feature: Bugsnag-Integrity header
 
 Scenario: Integrity headers are set when setPayloadChecksums is true
