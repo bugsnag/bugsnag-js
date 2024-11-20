@@ -135,6 +135,81 @@ describe('worker notifier', () => {
       Bugsnag.start({ apiKey: API_KEY, autoTrackSessions: true })
     })
   })
+
+  describe('payload checksum behavior (Bugsnag-Integrity header)', () => {
+    beforeEach(() => {
+      // @ts-ignore
+      window.isSecureContext = true
+    })
+
+    afterEach(() => {
+      // @ts-ignore
+      window.isSecureContext = false
+    })
+
+    it('includes the integrity header by default', (done) => {
+      const Bugsnag = getBugsnag()
+      Bugsnag.start({ apiKey: API_KEY, autoTrackSessions: true })
+      Bugsnag.notify(new Error('123'), undefined, (err, event) => {
+        if (err) done(err)
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.bugsnag.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://notify.bugsnag.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        done()
+      })
+    })
+
+    it('does not include the integrity header if endpoint configuration is supplied', (done) => {
+      const Bugsnag = getBugsnag()
+      Bugsnag.start({ apiKey: API_KEY, autoTrackSessions: true, endpoints: { notify: 'https://notify.custom.com', sessions: 'https://sessions.custom.com' } })
+      Bugsnag.notify(new Error('123'), undefined, (err, event) => {
+        if (err) done(err)
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.custom.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.not.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://notify.custom.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.not.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        done()
+      })
+    })
+
+    it('can be enabled for a custom endpoint configuration by using sendPayloadChecksums', (done) => {
+      const Bugsnag = getBugsnag()
+      Bugsnag.start({ apiKey: API_KEY, autoTrackSessions: true, endpoints: { notify: 'https://notify.custom.com', sessions: 'https://sessions.custom.com' }, sendPayloadChecksums: true })
+      Bugsnag.notify(new Error('123'), undefined, (err, event) => {
+        if (err) done(err)
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.custom.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://notify.custom.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        done()
+      })
+    })
+  })
 })
 
 describe('prevent-discard', () => {
