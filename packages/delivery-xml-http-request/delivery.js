@@ -1,6 +1,6 @@
 const payload = require('@bugsnag/core/lib/json-payload')
 
-function getIntegrity (windowOrWorkerGlobalScope, requestBody) {
+function getIntegrityHeaderValue (windowOrWorkerGlobalScope, requestBody) {
   if (windowOrWorkerGlobalScope.isSecureContext && windowOrWorkerGlobalScope.crypto && windowOrWorkerGlobalScope.crypto.subtle && windowOrWorkerGlobalScope.crypto.subtle.digest && typeof TextEncoder === 'function') {
     const msgUint8 = new TextEncoder().encode(requestBody)
     return windowOrWorkerGlobalScope.crypto.subtle.digest('SHA-1', msgUint8).then((hashBuffer) => {
@@ -49,7 +49,7 @@ module.exports = (client, win = window) => ({
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
 
       if (client._config.sendPayloadChecksums && typeof Promise !== 'undefined' && Promise.toString().indexOf('[native code]') !== -1) {
-        getIntegrity(win, body).then((integrity) => {
+        getIntegrityHeaderValue(win, body).then((integrity) => {
           if (integrity) {
             req.setRequestHeader('Bugsnag-Integrity', integrity)
           }
@@ -95,7 +95,7 @@ module.exports = (client, win = window) => ({
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
 
       if (client._config.sendPayloadChecksums && typeof Promise !== 'undefined' && Promise.toString().indexOf('[native code]') !== -1) {
-        getIntegrity(win, body).then((integrity) => {
+        getIntegrityHeaderValue(win, body).then((integrity) => {
           if (integrity) {
             req.setRequestHeader('Bugsnag-Integrity', integrity)
           }

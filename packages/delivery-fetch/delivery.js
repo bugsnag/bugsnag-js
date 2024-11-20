@@ -1,7 +1,7 @@
 import payload from '@bugsnag/core/lib/json-payload'
 
-function addIntegrityHeader (windowOrWorkerGlobalScope, requestBody, headers) {
-  if (windowOrWorkerGlobalScope.isSecureContext && windowOrWorkerGlobalScope.crypto && windowOrWorkerGlobalScope.crypto.subtle && windowOrWorkerGlobalScope.crypto.subtle.digest && typeof TextEncoder === 'function') {
+function getIntegrityHeaderValue (sendPayloadChecksums, windowOrWorkerGlobalScope, requestBody, headers) {
+  if (sendPayloadChecksums && windowOrWorkerGlobalScope.isSecureContext && windowOrWorkerGlobalScope.crypto && windowOrWorkerGlobalScope.crypto.subtle && windowOrWorkerGlobalScope.crypto.subtle.digest && typeof TextEncoder === 'function') {
     const msgUint8 = new TextEncoder().encode(requestBody)
     return windowOrWorkerGlobalScope.crypto.subtle.digest('SHA-1', msgUint8).then((hashBuffer) => {
       const hashArray = Array.from(new Uint8Array(hashBuffer))
@@ -9,7 +9,7 @@ function addIntegrityHeader (windowOrWorkerGlobalScope, requestBody, headers) {
         .map((b) => b.toString(16).padStart(2, '0'))
         .join('')
 
-      headers['Bugsnag-Integrity'] = 'sha1 ' + hashHex
+      return 'sha1 ' + hashHex
     })
   }
 
@@ -21,20 +21,25 @@ const delivery = (client, fetch = global.fetch, windowOrWorkerGlobalScope = wind
     const url = client._config.endpoints.notify
 
     const body = payload.event(event, client._config.redactedKeys)
-    const headers = {
-      'Content-Type': 'application/json',
-      'Bugsnag-Api-Key': event.apiKey || client._config.apiKey,
-      'Bugsnag-Payload-Version': '4',
-      'Bugsnag-Sent-At': (new Date()).toISOString()
-    }
 
-    addIntegrityHeader(windowOrWorkerGlobalScope, body, headers).then(() =>
-      fetch(url, {
+    getIntegrityHeaderValue(client._config.sendPayloadChecksums, windowOrWorkerGlobalScope, body).then(integrityHeaderValue => {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Bugsnag-Api-Key': event.apiKey || client._config.apiKey,
+        'Bugsnag-Payload-Version': '4',
+        'Bugsnag-Sent-At': (new Date()).toISOString()
+      }
+
+      if (integrityHeaderValue) {
+        headers['Bugsnag-Integrity'] = integrityHeaderValue
+      }
+
+      return fetch(url, {
         method: 'POST',
         headers,
         body
       })
-    ).then(() => {
+    }).then(() => {
       cb(null)
     }).catch(err => {
       client._logger.error(err)
@@ -45,20 +50,25 @@ const delivery = (client, fetch = global.fetch, windowOrWorkerGlobalScope = wind
     const url = client._config.endpoints.sessions
 
     const body = payload.session(session, client._config.redactedKeys)
-    const headers = {
-      'Content-Type': 'application/json',
-      'Bugsnag-Api-Key': client._config.apiKey,
-      'Bugsnag-Payload-Version': '1',
-      'Bugsnag-Sent-At': (new Date()).toISOString()
-    }
 
-    addIntegrityHeader(windowOrWorkerGlobalScope, body, headers).then(() =>
-      fetch(url, {
+    getIntegrityHeaderValue(client._config.sendPayloadChecksums, windowOrWorkerGlobalScope, body).then((integrityHeaderValue) => {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Bugsnag-Api-Key': client._config.apiKey,
+        'Bugsnag-Payload-Version': '1',
+        'Bugsnag-Sent-At': (new Date()).toISOString()
+      }
+
+      if (integrityHeaderValue) {
+        headers['Bugsnag-Integrity'] = integrityHeaderValue
+      }
+
+      return fetch(url, {
         method: 'POST',
         headers,
         body
       })
-    ).then(() => {
+    }).then(() => {
       cb(null)
     }).catch(err => {
       client._logger.error(err)

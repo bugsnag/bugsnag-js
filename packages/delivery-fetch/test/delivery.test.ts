@@ -15,7 +15,8 @@ describe('delivery:fetch', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/' },
-      redactedKeys: []
+      redactedKeys: [],
+      sendPayloadChecksums: true
     }
 
     const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
@@ -48,7 +49,8 @@ describe('delivery:fetch', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/' },
-      redactedKeys: []
+      redactedKeys: [],
+      sendPayloadChecksums: true
     }
 
     const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
@@ -58,6 +60,30 @@ describe('delivery:fetch', () => {
       expect(globalAny.fetch.mock.calls[0][1].headers['Bugsnag-Integrity']).toBeUndefined()
       done()
     })
+  })
+
+  it('omits the bugsnag integrity header when sendPayloadChecksums is false', done => {
+    window.isSecureContext = true
+    globalAny.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve()
+    }))
+
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: '/echo/' },
+      redactedKeys: [],
+      sendPayloadChecksums: false
+    }
+
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+
+    delivery({ logger: { }, _config: config } as unknown as Client).sendEvent(payload, (err) => {
+      expect(err).toBeNull()
+      expect(globalAny.fetch.mock.calls[0][1].headers['Bugsnag-Integrity']).toBeUndefined()
+      done()
+    })
+
+    window.isSecureContext = false
   })
 
   it('returns an error for failed event delivery', done => {
@@ -90,7 +116,8 @@ describe('delivery:fetch', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { sessions: '/echo/' },
-      redactedKeys: []
+      redactedKeys: [],
+      sendPayloadChecksums: true
     }
 
     const payload = { sample: 'payload' } as unknown as SessionDeliveryPayload
