@@ -1,4 +1,4 @@
-importScripts("/node_modules/@bugsnag/web-worker/dist/bugsnag.web-worker.min.js")
+importScripts("/docs/node_modules/@bugsnag/web-worker/dist/bugsnag.web-worker.min.js")
 
 onmessage = function (e) {
     var payload = e.data.payload;
