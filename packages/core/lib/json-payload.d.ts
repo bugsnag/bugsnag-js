@@ -1,10 +1,8 @@
-import { Event, Session } from '@bugsnag/core'
-
 type RedactedKey = string | RegExp
 
 interface JsonPayload {
-  event: (event: Event, redactedKeys: RedactedKey[]) => string
-  session: (session: Session, redactedKeys: RedactedKey[]) => string
+  event: (event: Object, redactedKeys?: RedactedKey[]) => string
+  session: (session: Object, redactedKeys?: RedactedKey[]) => string
 }
 
 declare const jsonPayload: JsonPayload
