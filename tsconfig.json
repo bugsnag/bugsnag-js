@@ -63,7 +63,6 @@
     "packages/core",
     "packages/delivery-node",
     "packages/delivery-react-native",
-    "packages/delivery-xml-http-request",
     "packages/in-flight",
     "packages/plugin-aws-lambda",
     "packages/plugin-contextualize",
