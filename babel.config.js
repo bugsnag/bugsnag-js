@@ -6,6 +6,7 @@ module.exports = api => {
   const overrides = []
 
   if (api && api.env('test')) {
+    // presets.push(['@babel/preset-env', { targets: { node: 'current' } }])
     presets.push('@babel/preset-typescript')
     plugins.push(['@babel/plugin-proposal-class-properties', { loose: true }])
     plugins.push('@babel/plugin-transform-modules-commonjs')

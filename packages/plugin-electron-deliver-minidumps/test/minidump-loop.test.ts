@@ -6,7 +6,7 @@ import MinidumpDeliveryLoop from '../minidump-loop'
 
 const flushPromises = () => new Promise(setImmediate)
 
-jest.useFakeTimers()
+jest.useFakeTimers({ legacyFakeTimers: true })
 
 jest.mock('fs', () => ({
   promises: {
