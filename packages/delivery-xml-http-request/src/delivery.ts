@@ -1,24 +1,28 @@
-const payload = require('@bugsnag/core/lib/json-payload')
+import type { Client, Config, Session } from '@bugsnag/core'
 
-module.exports = (client, win = window) => ({
+import payload from '@bugsnag/core/lib/json-payload'
+import { Event } from 'packages/core'
+import ClientWithInternals, { Delivery } from 'packages/core/client'
+
+const delivery = (client: Client, win = window): Delivery => ({
   sendEvent: (event, cb = () => {}) => {
     try {
-      const url = client._config.endpoints.notify
+      const url = (client as ClientWithInternals<Required<Config>>)._config.endpoints.notify
       if (url === null) {
         const err = new Error('Event not sent due to incomplete endpoint configuration')
         return cb(err)
       }
       const req = new win.XMLHttpRequest()
-      const body = payload.event(event, client._config.redactedKeys)
+      const body = payload.event(event as unknown as Event, (client as ClientWithInternals<Required<Config>>)._config.redactedKeys)
 
       req.onreadystatechange = function () {
         if (req.readyState === win.XMLHttpRequest.DONE) {
           const status = req.status
           if (status === 0 || status >= 400) {
-            const err = new Error(`Request failed with status ${status}`)
-            client._logger.error('Event failed to send…', err)
+            const err = new Error(`Request failed with status ${status}`);
+            (client as ClientWithInternals)._logger.error('Event failed to send…', err)
             if (body.length > 10e5) {
-              client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
+              (client as ClientWithInternals)._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
             }
             cb(err)
           } else {
@@ -29,17 +33,17 @@ module.exports = (client, win = window) => ({
 
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
-      req.setRequestHeader('Bugsnag-Api-Key', event.apiKey || client._config.apiKey)
+      req.setRequestHeader('Bugsnag-Api-Key', event.apiKey || (client as ClientWithInternals)._config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '4')
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
       req.send(body)
     } catch (e) {
-      client._logger.error(e)
+      (client as ClientWithInternals)._logger.error(e)
     }
   },
   sendSession: (session, cb = () => {}) => {
     try {
-      const url = client._config.endpoints.sessions
+      const url = (client as ClientWithInternals<Required<Config>>)._config.endpoints.sessions
       if (url === null) {
         const err = new Error('Session not sent due to incomplete endpoint configuration')
         return cb(err)
@@ -50,8 +54,8 @@ module.exports = (client, win = window) => ({
         if (req.readyState === win.XMLHttpRequest.DONE) {
           const status = req.status
           if (status === 0 || status >= 400) {
-            const err = new Error(`Request failed with status ${status}`)
-            client._logger.error('Session failed to send…', err)
+            const err = new Error(`Request failed with status ${status}`);
+            (client as ClientWithInternals)._logger.error('Session failed to send…', err)
             cb(err)
           } else {
             cb(null)
@@ -61,12 +65,14 @@ module.exports = (client, win = window) => ({
 
       req.open('POST', url)
       req.setRequestHeader('Content-Type', 'application/json')
-      req.setRequestHeader('Bugsnag-Api-Key', client._config.apiKey)
+      req.setRequestHeader('Bugsnag-Api-Key', (client as ClientWithInternals)._config.apiKey)
       req.setRequestHeader('Bugsnag-Payload-Version', '1')
       req.setRequestHeader('Bugsnag-Sent-At', (new Date()).toISOString())
-      req.send(payload.session(session, client._config.redactedKeys))
+      req.send(payload.session(session as Session, (client as ClientWithInternals<Required<Config>>)._config.redactedKeys))
     } catch (e) {
-      client._logger.error(e)
+      (client as ClientWithInternals)._logger.error(e)
     }
   }
 })
+
+export default delivery
