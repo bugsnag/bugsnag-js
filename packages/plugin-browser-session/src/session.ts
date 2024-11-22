@@ -1,11 +1,35 @@
-const includes = require('@bugsnag/core/lib/es-utils/includes')
+import { Client, Logger, Plugin, Session } from '@bugsnag/core'
+import includes from '@bugsnag/core/lib/es-utils/includes'
 
-module.exports = {
-  load: client => { client._sessionDelegate = sessionDelegate }
+interface SessionDelegate {
+  startSession: (client: InternalClient, session: Session) => InternalClient
+  resumeSession: (client: { _session: any, _pausedSession: null, startSession: () => any}) => any
+  pauseSession: (client: { _pausedSession: any, _session: null }) => void
+}
+
+interface InternalClient extends Client {
+  _config: {
+    enabledReleaseStages: string[] | null
+    releaseStage: string
+    releaseStages: string[]
+  }
+  _delivery: any
+  _logger: Logger
+  _notifier: any
+  _session: Session
+  _sessionDelegate: SessionDelegate
+  _pausedSession: any
+}
+
+const plugin: Plugin = {
+  load: client => {
+    const internalClient = client as InternalClient
+    internalClient._sessionDelegate = sessionDelegate
+  }
 }
 
 const sessionDelegate = {
-  startSession: (client, session) => {
+  startSession: (client: InternalClient, session: Session) => {
     const sessionClient = client
     sessionClient._session = session
     sessionClient._pausedSession = null
@@ -30,7 +54,7 @@ const sessionDelegate = {
     })
     return sessionClient
   },
-  resumeSession: (client) => {
+  resumeSession: (client: { _session: any, _pausedSession: null, startSession: () => any }) => {
     // Do nothing if there's already an active session
     if (client._session) {
       return client
@@ -47,8 +71,10 @@ const sessionDelegate = {
     // Otherwise start a new session
     return client.startSession()
   },
-  pauseSession: (client) => {
+  pauseSession: (client: { _pausedSession: any, _session: null }) => {
     client._pausedSession = client._session
     client._session = null
   }
 }
+
+export default plugin

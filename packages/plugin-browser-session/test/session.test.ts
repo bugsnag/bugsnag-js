@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import plugin from '../'
+import plugin from '../src/session'
 import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
 import EventWithInternals from '@bugsnag/core/event'
 
