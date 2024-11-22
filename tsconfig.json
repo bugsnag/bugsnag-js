@@ -74,7 +74,6 @@
     "packages/plugin-koa",
     "packages/plugin-restify",
     "packages/node",
-    "packages/plugin-client-ip",
     "packages/plugin-strip-query-string",
     "packages/plugin-strip-project-root",
     "packages/plugin-interaction-breadcrumbs",
