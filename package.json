@@ -41,7 +41,7 @@
     "babel-jest": "^29.7.0",
     "babelify": "^10.0.0",
     "browser-pack-flat": "^3.2.0",
-    "browserify": "^16.2.2",
+    "browserify": "^17.0.1",
     "browserify-versionify": "^1.0.6",
     "coverage-diff": "^1.6.0",
     "cross-env": "^7.0.3",
