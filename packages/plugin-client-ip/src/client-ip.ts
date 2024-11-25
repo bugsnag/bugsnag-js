@@ -1,13 +1,18 @@
-import { Plugin } from 'packages/core/types'
+import { Client, Plugin } from 'packages/core/types'
 import assign from '@bugsnag/core/lib/es-utils/assign'
+
+interface InternalClient extends Client {
+  _config: {
+    collectUserIp: boolean
+  }
+}
 
 /*
  * Prevent collection of user IPs
  */
 const plugin: Plugin = {
   load: client => {
-    // @ts-expect-error _config is private API
-    if (client._config.collectUserIp) return
+    if ((client as InternalClient)._config.collectUserIp) return
 
     client.addOnError(event => {
       // If user.id is explicitly undefined, it will be missing from the payload. It needs
