@@ -52,7 +52,7 @@ declare class Client {
 
   // user
   public getUser(): User;
-  public setUser(id?: string, email?: string, name?: string): void;
+  public setUser(id?: string | null, email?: string | null, name?: string | null): void;
 
   // sessions
   public startSession(): Client;
