@@ -56,7 +56,7 @@ jobs:
         if: ${{ steps.current-branch.outputs.branch != 'next'}}
         run: >
          gh pr create -B next
-         -H bumpsnag-$TARGET_SUBMODULE-$TARGET_VERSION
-         --title "Update $TARGET_SUBMODULE to version $TARGET_VERSION"
+         -H bumpsnag-$SUBMODULE-$VERSION
+         --title "Update $SUBMODULE to version $VERSION"
          --body 'Created by bumpsnag'
          --reviewer $REVIEWER
