@@ -12,7 +12,7 @@ interface ExtendedPlugin extends Plugin {
 }
 
 interface ValidationOption {
-  validate: (value: boolean) => boolean
+  validate: (value: unknown) => boolean
   defaultValue: () => unknown
   message: string
 }
@@ -38,7 +38,7 @@ const plugin: ExtendedPlugin = {
     collectUserIp: {
       defaultValue: () => true,
       message: 'should be true|false',
-      validate: (value: boolean) => value === true || value === false
+      validate: (value: unknown) => value === true || value === false
     }
   }
 }
