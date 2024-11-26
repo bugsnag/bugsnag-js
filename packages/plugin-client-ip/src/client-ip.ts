@@ -7,10 +7,20 @@ interface InternalClient extends Client {
   }
 }
 
+interface ExtendedPlugin extends Plugin {
+  configSchema: Record<string, ValidationOption>
+}
+
+interface ValidationOption {
+  validate: (value: boolean) => boolean
+  defaultValue: () => unknown
+  message: string
+}
+
 /*
  * Prevent collection of user IPs
  */
-const plugin: Plugin = {
+const plugin: ExtendedPlugin = {
   load: client => {
     if ((client as InternalClient)._config.collectUserIp) return
 
@@ -24,7 +34,6 @@ const plugin: Plugin = {
       event.request = assign({ clientIp: '[REDACTED]' }, event.request)
     })
   },
-  // @ts-expect-error _config is private API
   configSchema: {
     collectUserIp: {
       defaultValue: () => true,
