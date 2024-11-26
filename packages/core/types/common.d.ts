@@ -29,6 +29,7 @@ export interface Config {
   plugins?: Plugin[]
   user?: User | null
   reportUnhandledPromiseRejectionsAsHandled?: boolean
+  sendPayloadChecksums?: boolean
 }
 
 export type OnErrorCallback = (event: Event, cb: (err: null | Error, shouldSend?: boolean) => void) => void | boolean | Promise<void | boolean>
