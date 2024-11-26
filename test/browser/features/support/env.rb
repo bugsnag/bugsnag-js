@@ -10,11 +10,7 @@ def get_test_url(path)
     maze_runner = "#{ENV['HOST']}:9339"
   end
 
-  if Maze.config.https
-    protocol = 'https'
-  else
-    protocol = 'http'
-  end
+  protocol = Maze.config.https ? 'https' : 'http'
 
   notify = "#{protocol}://#{maze_runner}/notify"
   sessions = "#{protocol}://#{maze_runner}/sessions"
