@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: next
+          ref: dep-updater-fixes
 
       - run: |
           git config --global user.name 'Bumpsnag bot'
