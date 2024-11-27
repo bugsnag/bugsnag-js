@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Changed
+
+- (react-native) Update bugsnag-android from v6.6.1 to [v6.10.0](https://github.com/bugsnag/bugsnag-android/blob/next/CHANGELOG.md#6100-2024-11-14)
+
 ## [8.1.2] - 2024-10-25
 
 ### Fixed
@@ -31,7 +37,7 @@ As well as some bug fixes and **breaking changes** described in the [Upgrade Gui
 ### Added
 
 - (node) Add support for manual breadcrumbs [#1927](https://github.com/bugsnag/bugsnag-js/pull/1927) and automatic console breadcrumbs [#2107](https://github.com/bugsnag/bugsnag-js/pull/2107)
-- Support error correlation properties in event payloads [#2174](https://github.com/bugsnag/bugsnag-js/pull/2174) 
+- Support error correlation properties in event payloads [#2174](https://github.com/bugsnag/bugsnag-js/pull/2174)
 
 ### Fixed
 
