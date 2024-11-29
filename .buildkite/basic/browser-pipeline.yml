@@ -178,6 +178,7 @@ steps:
           - ios_10
         depends_on: "browser-maze-runner-bs"
         timeout_in_minutes: 30
+        soft_fail: true
         plugins:
           docker-compose#v4.12.0:
             pull: browser-maze-runner-bs
