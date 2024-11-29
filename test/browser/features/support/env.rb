@@ -44,10 +44,6 @@ Before('@skip_if_local_storage_is_unavailable') do |scenario|
   skip_this_scenario unless Maze.driver.local_storage?
 end
 
-Before('@skip_below_ios_12') do |_scenario|
-  skip_below('ios', 12)
-end
-
 ERRORS = YAML::load_file('features/fixtures/browser_errors.yml')
 
 ERRORS.keys.each do |browser|
