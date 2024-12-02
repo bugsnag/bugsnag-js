@@ -4,4 +4,7 @@ steps:
 
   - label: 'Upload the full test pipeline'
     depends_on: 'trigger-full-build'
+    agents:
+      queue: macos
+    timeout_in_minutes: 5
     command: buildkite-agent pipeline upload .buildkite/full/pipeline.full.yml
