@@ -1,3 +1,6 @@
+agents:
+  queue: "opensource"
+
 steps:
 
   - group: "React Native CLI Tests"
@@ -87,7 +90,7 @@ steps:
       #
       - label: ":ios: Init and build RN CLI 0.66 ipa"
         key: "rn-cli-0-66-ipa"
-        timeout_in_minutes: 30
+        timeout_in_minutes: 15
         agents:
           queue: "macos-12-arm"
         env:
@@ -104,7 +107,7 @@ steps:
 
       - label: ":ios: Init and build RN CLI 0.67 ipa (Non-hermes)"
         key: "rn-cli-0-67-ipa"
-        timeout_in_minutes: 30
+        timeout_in_minutes: 15
         agents:
           queue: "macos-12-arm"
         env:
@@ -121,7 +124,7 @@ steps:
 
       - label: ":ios: Init and build RN CLI 0.69 ipa (Non-hermes)"
         key: "rn-cli-0-69-ipa"
-        timeout_in_minutes: 30
+        timeout_in_minutes: 15
         agents:
           queue: "macos-12-arm"
         env:
