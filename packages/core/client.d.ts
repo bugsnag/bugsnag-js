@@ -24,12 +24,22 @@ interface SessionDeliveryPayload {
   notifier?: Notifier
   device?: Device
   app?: App
-  sessions?: Session[]
+  sessions?: Array<{
+    id: string
+    startedAt: Date
+    user?: User
+  }>
 }
 
 interface Delivery {
   sendEvent(payload: EventDeliveryPayload, cb: (err?: Error | null) => void): void
   sendSession(session: SessionDeliveryPayload, cb: (err?: Error | null) => void): void
+}
+
+export interface SessionDelegate {
+  startSession: (client: ClientWithInternals, session: Session) => ClientWithInternals
+  pauseSession: (client: ClientWithInternals) => void
+  resumeSession: (client: ClientWithInternals) => ClientWithInternals
 }
 
 /**
@@ -58,11 +68,7 @@ export default class ClientWithInternals<T extends Config = Config> extends Clie
   _session: Session | null
   _pausedSession: Session | null
 
-  _sessionDelegate: {
-    startSession: (client: ClientWithInternals, session: Session) => ClientWithInternals
-    pauseSession: (client: ClientWithInternals) => void
-    resumeSession: (client: ClientWithInternals) => ClientWithInternals
-  }
+  _sessionDelegate: SessionDelegate
 
   _addOnSessionPayload: (cb: (sessionPayload: Session) => void) => void
 

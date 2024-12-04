@@ -7,8 +7,6 @@ declare class Session {
   public device?: Device;
   public app?: App;
 
-  public _user?: User;
-
   public getUser(): User;
   public setUser(id?: string, email?: string, name?: string): void;
 }
