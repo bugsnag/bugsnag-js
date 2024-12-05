@@ -1,82 +1,4 @@
 ---
-ie_8:
-  handled:
-    errorClass: 'TypeError'
-    errorMessage: "'foo' is undefined"
-  unhandled_syntax:
-    errorClass: 'Error'
-    errorMessage: "Expected ';'"
-    lineNumber: 18
-    columnNumber: 13
-    file: '/unhandled/script/a.html'
-  unhandled_thrown:
-    errorClass: 'Error'
-    errorMessage: "bad things"
-    lineNumber: 18
-    columnNumber: 7
-  unhandled_undefined_function:
-    errorClass: 'Error'
-    errorMessage: "Object expected"
-    lineNumber: 18
-    columnNumber: 7
-  unhandled_malformed_uri:
-    errorClass: 'Error'
-    errorMessage: "The URI to be decoded is not a valid encoding"
-    lineNumber: 18
-    columnNumber: 7
-
-ie_9:
-  handled:
-    errorClass: 'ReferenceError'
-    errorMessage: "'foo' is undefined"
-  unhandled_syntax:
-    errorClass: 'Error'
-    errorMessage: "Expected ';'"
-    lineNumber: 18
-    columnNumber: 13
-    file: '/unhandled/script/a.html'
-  unhandled_thrown:
-    errorClass: 'Error'
-    errorMessage: "bad things"
-    lineNumber: 18
-    columnNumber: 7
-  unhandled_undefined_function:
-    errorClass: 'Error'
-    errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
-    lineNumber: 18
-    columnNumber: 7
-  unhandled_malformed_uri:
-    errorClass: 'Error'
-    errorMessage: "The URI to be decoded is not a valid encoding"
-    lineNumber: 18
-    columnNumber: 7
-
-ie_10:
-  handled:
-    errorClass: 'ReferenceError'
-    errorMessage: "'foo' is undefined"
-  unhandled_syntax:
-    errorClass: 'Error'
-    errorMessage: "Expected ';'"
-    lineNumber: 18
-    columnNumber: 13
-    file: '/unhandled/script/a.html'
-  unhandled_thrown:
-    errorClass: 'Error'
-    errorMessage: "bad things"
-    lineNumber: 18
-    columnNumber: 7
-  unhandled_undefined_function:
-    errorClass: 'Error'
-    errorMessage: "'nevergoingtoexist_notinamillionyears' is undefined"
-    lineNumber: 18
-    columnNumber: 7
-  unhandled_malformed_uri:
-    errorClass: 'Error'
-    errorMessage: "The URI to be decoded is not a valid encoding"
-    lineNumber: 18
-    columnNumber: 7
-
 ie_11:
   handled:
     errorClass: 'ReferenceError'
@@ -182,6 +104,32 @@ safari_16:
     columnNumber: 25
 
 ios_10:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: foo"
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token '!'. Parse error."
+    lineNumber: 18
+    columnNumber: 0
+    file: '/unhandled/script/a.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 18
+    columnNumber: 22
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: "Can't find variable: nevergoingtoexist_notinamillionyears"
+    lineNumber: 18
+    columnNumber: 43
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI error
+    lineNumber: 18
+    columnNumber: 25
+
+ios_11:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: "Can't find variable: foo"
