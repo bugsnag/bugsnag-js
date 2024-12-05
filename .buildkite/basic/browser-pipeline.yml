@@ -1,3 +1,6 @@
+agents:
+  queue: "opensource"
+
 steps:
 
   - group: "Browser Tests"
