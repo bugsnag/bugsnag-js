@@ -1,17 +1,25 @@
-const includes = require('@bugsnag/core/lib/es-utils/includes')
+import { Plugin, Session } from '@bugsnag/core'
+import ClientWithInternals, { Notifier } from '@bugsnag/core/client'
+import includes from '@bugsnag/core/lib/es-utils/includes'
 
-module.exports = {
-  load: client => { client._sessionDelegate = sessionDelegate }
+interface InternalClient extends ClientWithInternals {
+  _notifier?: Notifier
+}
+
+const plugin: Plugin = {
+  load: client => {
+    (client as InternalClient)._sessionDelegate = sessionDelegate
+  }
 }
 
 const sessionDelegate = {
-  startSession: (client, session) => {
+  startSession: (client: InternalClient, session: Session) => {
     const sessionClient = client
     sessionClient._session = session
     sessionClient._pausedSession = null
 
     // exit early if the current releaseStage is not enabled
-    if (sessionClient._config.enabledReleaseStages !== null && !includes(sessionClient._config.enabledReleaseStages, sessionClient._config.releaseStage)) {
+    if (sessionClient._config.enabledReleaseStages && !includes(sessionClient._config.enabledReleaseStages, sessionClient._config.releaseStage)) {
       sessionClient._logger.warn('Session not sent due to releaseStage/enabledReleaseStages configuration')
       return sessionClient
     }
@@ -24,13 +32,13 @@ const sessionDelegate = {
         {
           id: session.id,
           startedAt: session.startedAt,
-          user: session._user
+          user: session.getUser()
         }
       ]
-    })
+    }, () => {})
     return sessionClient
   },
-  resumeSession: (client) => {
+  resumeSession: (client: InternalClient) => {
     // Do nothing if there's already an active session
     if (client._session) {
       return client
@@ -47,8 +55,10 @@ const sessionDelegate = {
     // Otherwise start a new session
     return client.startSession()
   },
-  pauseSession: (client) => {
+  pauseSession: (client: InternalClient) => {
     client._pausedSession = client._session
     client._session = null
   }
 }
+
+export default plugin
