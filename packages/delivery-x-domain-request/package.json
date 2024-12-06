@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/delivery-x-domain-request",
   "version": "8.1.1",
-  "main": "delivery.js",
+  "main": "dist/delivery.js",
+  "types": "dist/types/delivery.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/delivery.d.ts",
+      "default": "./dist/delivery.js",
+      "import": "./dist/delivery.mjs"
+    }
+  },
   "description": "@bugsnag/js delivery mechanism for IE 8, 9 and 10",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,10 +20,15 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*"
+  },
   "devDependencies": {
     "@bugsnag/core": "^8.1.1"
   },
