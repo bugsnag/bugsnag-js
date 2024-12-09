@@ -1,7 +1,7 @@
 import createRollupConfig from "../../.rollup/index.mjs";
 
 export default createRollupConfig({
-  input: "src/request.ts",
+  input: "src/notifier.ts",
   external: [
     '@bugsnag/core/client',
     '@bugsnag/core/event',
