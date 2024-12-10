@@ -1,10 +1,13 @@
+import { Plugin } from '@bugsnag/core'
+import type ClientWithInternals from 'packages/core/client'
+
 /*
  * Leaves breadcrumbs when the user interacts with the DOM
  */
-module.exports = (win = window) => ({
+export default (win = window): Plugin => ({
   load: (client) => {
     if (!('addEventListener' in win)) return
-    if (!client._isBreadcrumbTypeEnabled('user')) return
+    if (!(client as ClientWithInternals)._isBreadcrumbTypeEnabled('user')) return
 
     win.addEventListener('click', (event) => {
       let targetText, targetSelector
@@ -13,8 +16,8 @@ module.exports = (win = window) => ({
         targetSelector = getNodeSelector(event.target, win)
       } catch (e) {
         targetText = '[hidden]'
-        targetSelector = '[hidden]'
-        client._logger.error('Cross domain error when tracking click event. See docs: https://tinyurl.com/yy3rn63z')
+        targetSelector = '[hidden]';
+        (client as ClientWithInternals)._logger.error('Cross domain error when tracking click event. See docs: https://tinyurl.com/yy3rn63z')
       }
       client.leaveBreadcrumb('UI click', { targetText, targetSelector }, 'user')
     }, true)
@@ -23,7 +26,8 @@ module.exports = (win = window) => ({
 
 const trim = /^\s*([^\s][\s\S]{0,139}[^\s])?\s*/
 
-function getNodeText (el) {
+// TODO: Fix Type
+function getNodeText (el: any) {
   let text = el.textContent || el.innerText || ''
 
   if (!text && (el.type === 'submit' || el.type === 'button')) {
@@ -40,7 +44,8 @@ function getNodeText (el) {
 }
 
 // Create a label from tagname, id and css class of the element
-function getNodeSelector (el, win) {
+// TODO: Fix Type
+function getNodeSelector (el: any, win: Window): string {
   const parts = [el.tagName]
   if (el.id) parts.push('#' + el.id)
   if (el.className && el.className.length) parts.push(`.${el.className.split(' ').join('.')}`)
