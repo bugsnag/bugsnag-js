@@ -10,6 +10,7 @@ COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconf
 ADD min_packages.tar .
 COPY .rollup ./.rollup
 COPY bin ./bin
+COPY jest ./jest
 COPY packages ./packages
 
 RUN npm install
