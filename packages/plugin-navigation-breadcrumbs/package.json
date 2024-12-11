@@ -1,7 +1,7 @@
 {
   "name": "@bugsnag/plugin-navigation-breadcrumbs",
   "version": "8.1.1",
-  "main": "navigation-breadcrumbs.js",
+  "main": "dist/navigation-breadcrumbs.js",
   "types": "dist/types/navigation-breadcrumbs.d.ts",
   "exports": {
     ".": {

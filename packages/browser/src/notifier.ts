@@ -1,7 +1,7 @@
 import Client from '@bugsnag/core/client'
-import Event from '@bugsnag/core/event'
-import Session from '@bugsnag/core/session'
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+// import Event from '@bugsnag/core/event'
+// import Session from '@bugsnag/core/session'
+// import Breadcrumb from '@bugsnag/core/breadcrumb'
 import { Config } from '@bugsnag/core/types'
 
 import map from '@bugsnag/core/lib/es-utils/map'
@@ -119,6 +119,6 @@ map(['resetEventCount'].concat(keys(Client.prototype)) as Method[], (m) => {
   }
 })
 
-export { Client, Event, Session, Breadcrumb, Bugsnag }
+// export { Client, Event, Session, Breadcrumb, Bugsnag }
 
 export default Bugsnag

@@ -1,4 +1,4 @@
-import map from 'packages/core/lib/es-utils/map'
+import map from '@bugsnag/core/lib/es-utils/map'
 
 type LoggerMethod = 'debug' | 'info' | 'warn' | 'error'
 

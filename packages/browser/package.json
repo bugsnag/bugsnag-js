@@ -1,13 +1,13 @@
 {
   "name": "@bugsnag/browser",
   "version": "8.1.2",
-  "main": "dist/bugsnag.js",
+  "main": "dist/notifier.js",
   "types": "types/bugsnag.d.ts",
   "exports": {
     ".": {
       "types": "./types/bugsnag.d.ts",
-      "default": "./dist/bugsnag.js",
-      "import": "./dist/bugsnag.mjs"
+      "default": "./dist/notifier.js",
+      "import": "./dist/notifier.mjs"
     }
   },
   "description": "Bugsnag error reporter for browser JavaScript",
