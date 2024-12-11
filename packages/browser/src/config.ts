@@ -9,10 +9,9 @@ const config = {
       return 'production'
     }
   }),
-  appType: {
-    ...schema.appType,
+  appType: assign({}, schema.appType, {
     defaultValue: () => 'browser'
-  },
+  }),
   logger: assign({}, schema.logger, {
     defaultValue: () =>
       // set logger based on browser capability
