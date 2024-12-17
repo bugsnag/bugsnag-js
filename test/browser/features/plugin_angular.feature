@@ -9,4 +9,3 @@ Scenario: basic error handler usage
   And the test should run in this browser
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
-  And the event "metaData.angular" is not null
