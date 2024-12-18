@@ -871,6 +871,10 @@ describe('@bugsnag/core/client', () => {
       expect(c.getUser()).toEqual({ id: '123', email: 'bug@sn.ag', name: 'Bug S. Nag' })
       c.setUser()
       expect(c.getUser()).toEqual({ id: undefined, email: undefined, name: undefined })
+      c.setUser(null, null, null)
+      expect(c.getUser()).toEqual({ id: null, email: null, name: null })
+      c.setUser('123', null, 'Bug S. Nag')
+      expect(c.getUser()).toEqual({ id: '123', email: null, name: 'Bug S. Nag' })
     })
 
     it('can be set via config', () => {
