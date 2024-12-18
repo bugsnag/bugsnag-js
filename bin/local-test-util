@@ -161,7 +161,7 @@ async function installNgNotifier (notifier) {
     `../../../../../../bugsnag-web-worker-${require('../packages/web-worker/package.json').version}.tgz`,
     `../../../../../../bugsnag-plugin-angular-${require('../packages/plugin-angular/package.json').version}.tgz`
   ], {
-    cwd: `${__dirname}/../test/browser/features/fixtures/plugin_angular/ng`
+    cwd: `${__dirname}/../test/browser/features/fixtures/plugin_angular/angular_12`
   })
 }
 

@@ -30,7 +30,7 @@ RUN npm install --no-package-lock --no-save \
 ../../../../bugsnag-plugin-vue-*.tgz \
 ../../../../bugsnag-web-worker-*.tgz
 
-WORKDIR plugin_angular/ng
+WORKDIR plugin_angular/angular_12
 RUN npm install --no-package-lock --no-save \
   ../../../../../../bugsnag-plugin-angular-*.tgz  \
   ../../../../../../bugsnag-node-*.tgz \

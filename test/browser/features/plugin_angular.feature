@@ -5,7 +5,7 @@
 Feature: Angular support
 
 Scenario: basic error handler usage
-  When I navigate to the test URL "/plugin_angular/ng/dist/index.html"
+  When I navigate to the test URL "/plugin_angular/angular_12/dist/index.html"
   And the test should run in this browser
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
