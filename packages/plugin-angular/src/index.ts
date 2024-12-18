@@ -40,13 +40,6 @@ export class BugsnagErrorHandler extends ErrorHandler {
       1
     )
 
-    if (error.ngDebugContext) {
-      event.addMetadata('angular', {
-        component: error.ngDebugContext.component,
-        context: error.ngDebugContext.context
-      })
-    }
-
     this.bugsnagClient._notify(event)
     ErrorHandler.prototype.handleError.call(this, error)
   }

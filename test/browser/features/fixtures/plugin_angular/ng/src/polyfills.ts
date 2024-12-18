@@ -18,6 +18,9 @@
  * BROWSER POLYFILLS
  */
 
+import 'globalthis/auto';
+import 'core-js/modules/web.queue-microtask';
+
 /**
  * IE11 requires the following for NgClass support on SVG elements
  */
@@ -57,7 +60,7 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js/dist/zone';  // Included with Angular CLI.
+import 'zone.js';  // Included with Angular CLI.
 
 
 /***************************************************************************************************
