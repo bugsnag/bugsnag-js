@@ -60,7 +60,7 @@ function createRollupConfig (options = defaultOptions(), overrides = {}) {
           declarationDir: 'dist/types',
         }
       }),
-      ...options.plugins
+      ...(options.plugins ?? [])
     ],
     ...overrides
   }
