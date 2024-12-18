@@ -21,7 +21,7 @@ export default createRollupConfig({
     }
   ],
   plugins: [
-    nodeResolve(),
+    nodeResolve({ browser: true}),
     commonjs(),
     typescript({
       removeComments: true,
@@ -35,6 +35,6 @@ export default createRollupConfig({
         declarationDir: 'dist/types',
       }
     }),
-    babel({ babelHelpers: 'bundled' }),
+    // babel({ babelHelpers: 'bundled' }),
   ]
 });
