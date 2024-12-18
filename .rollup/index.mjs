@@ -14,14 +14,14 @@ const defaultOptions = () => ({
   output: undefined
 })
 
-const sharedOutput = {
+export const sharedOutput = {
   dir: 'dist',
   generatedCode: {
     preset: 'es2015',
   }
 }
 
-function createRollupConfig (options = defaultOptions()) {
+function createRollupConfig (options = defaultOptions(), overrides = {}) {
   const packageJson = JSON.parse(fs.readFileSync(`${process.cwd()}/package.json`))
 
   return {
@@ -59,8 +59,10 @@ function createRollupConfig (options = defaultOptions()) {
           emitDeclarationOnly: true,
           declarationDir: 'dist/types',
         }
-      })
-    ]
+      }),
+      ...options.plugins
+    ],
+    ...overrides
   }
 }
 

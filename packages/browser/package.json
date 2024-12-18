@@ -54,7 +54,10 @@
     "@bugsnag/plugin-simple-throttle": "^8.1.1",
     "@bugsnag/plugin-strip-query-string": "^8.1.1",
     "@bugsnag/plugin-window-onerror": "^8.1.1",
-    "@bugsnag/plugin-window-unhandled-rejection": "^8.1.1"
+    "@bugsnag/plugin-window-unhandled-rejection": "^8.1.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0"
   },
   "dependencies": {
     "@bugsnag/core": "^8.1.1"
