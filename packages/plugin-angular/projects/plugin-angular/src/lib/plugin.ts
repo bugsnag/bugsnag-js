@@ -1,5 +1,6 @@
-import { ErrorHandler, Injectable } from '@angular/core'
-import Bugsnag, { Client, Plugin } from '@bugsnag/js'
+import { ErrorHandler } from '@angular/core'
+import { Client, Event, Plugin } from '@bugsnag/js'
+import BugsnagErrorHandler from './bugsnag-error-handler'
 
 // angular uses zones to watch for changes in asynchronous tasks so it can
 // update the UI in response
@@ -13,58 +14,26 @@ declare const Zone: any
 // see https://angular.io/guide/zone#noopzone
 const isNgZoneEnabled = typeof Zone !== 'undefined' && !!Zone.current
 
-@Injectable()
-export class BugsnagErrorHandler extends ErrorHandler {
-  public bugsnagClient: Client;
-  constructor (client?: Client) {
-    super()
-    if (client) {
-      this.bugsnagClient = client
-    } else {
-      this.bugsnagClient = ((Bugsnag as any)._client as Client)
-    }
-  }
-
-  public handleError (error: any): void {
-    const handledState = {
-      severity: 'error',
-      severityReason: { type: 'unhandledException' },
-      unhandled: true
-    }
-
-    const event = this.bugsnagClient.Event.create(
-      error,
-      true,
-      handledState,
-      'angular error handler',
-      1
-    )
-
-    this.bugsnagClient._notify(event)
-    ErrorHandler.prototype.handleError.call(this, error)
-  }
-}
-
 const plugin: Plugin = {
+  name: 'Angular',
   load: (client: Client): ErrorHandler => {
     const originalNotify = client._notify
 
     client._notify = function () {
-      const originalArguments = arguments as any
+      const event = arguments as unknown as Event
       if (isNgZoneEnabled) {
         // run notify in the root zone to avoid triggering change detection
         Zone.root.run(() => {
-          originalNotify(originalArguments)
+          originalNotify(event)
         })
       } else {
         // if zones are not enabled, change detection will not run anyway
-        originalNotify(originalArguments)
+        originalNotify(event)
       }
     }
 
     return new BugsnagErrorHandler(client)
-  },
-  name: 'Angular'
+  }
 }
 
 export default plugin
