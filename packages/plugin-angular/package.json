@@ -13,11 +13,8 @@
   "files": [
     "dist"
   ],
-  "type": "module",
-  "module": "dist/fesm2022/bugsnag-plugin-angular.mjs",
-  "types": "dist/index.d.ts",
   "scripts": {
-    "clean": "rm -fr dist && mkdir dist",
+    "ng": "ng",
     "build": "ng build",
     "test:types": "npm run build"
   },

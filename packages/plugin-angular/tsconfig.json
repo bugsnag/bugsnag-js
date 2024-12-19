@@ -9,10 +9,9 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
     "paths": {
       "plugin-angular": [
-        "dist"
+        "./dist/plugin-angular"
       ]
     },
     "skipLibCheck": true,
