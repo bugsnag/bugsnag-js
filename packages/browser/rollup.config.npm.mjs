@@ -7,21 +7,21 @@ import typescript from '@rollup/plugin-typescript'
 import createRollupConfig, { sharedOutput } from "../../.rollup/index.mjs"
 
 export default createRollupConfig({
-  input: "src/notifier.ts",
+  input: "src/bugsnag.ts",
   output: [
     {
       ...sharedOutput,
-      entryFileNames: 'bugsnag.js',
+      entryFileNames: '[name].js',
       format: 'cjs'
     },
     {
       ...sharedOutput,
       preserveModules: false,
-      entryFileNames: 'bugsnag.mjs',
+      entryFileNames: '[name].mjs',
       format: 'esm'
     }, {
       ...sharedOutput,
-      entryFileNames: 'bugsnag.min.js',
+      entryFileNames: '[name].min.js',
       format: 'cjs',
       compact: true,
       plugins: [terser({ ecma: 2015 })],
