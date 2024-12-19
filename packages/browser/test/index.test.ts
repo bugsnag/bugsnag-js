@@ -39,7 +39,7 @@ describe('browser notifier', () => {
   })
 
   function getBugsnag (): typeof BugsnagBrowserStatic {
-    const Bugsnag = require('../src/notifier').default
+    const Bugsnag = require('../src/bugsnag').default
     return Bugsnag
   }
 
