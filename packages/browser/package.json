@@ -1,12 +1,12 @@
 {
   "name": "@bugsnag/browser",
   "version": "8.1.2",
-  "main": "dist/bugsnag.js",
+  "main": "dist/bugsnag.cjs",
   "types": "types/bugsnag.d.ts",
   "exports": {
     ".": {
       "types": "./types/bugsnag.d.ts",
-      "default": "./dist/bugsnag.js",
+      "default": "./dist/bugsnag.cjs",
       "import": "./dist/bugsnag.mjs"
     }
   },
