@@ -12,21 +12,27 @@ export default createRollupConfig({
   output: [
     {
       ...sharedOutput,
-      entryFileNames: '[name].js',
-      format: 'cjs'
-    },
-    {
-      ...sharedOutput,
       preserveModules: false,
       entryFileNames: '[name].mjs',
       format: 'esm'
-    }, {
+    },
+    {
+      ...sharedOutput,
+      entryFileNames: '[name].cjs',
+      format: 'cjs',
+    },
+    {
+      ...sharedOutput,
+      entryFileNames: '[name].js',
+      format: 'iife'
+    },
+    , {
       ...sharedOutput,
       entryFileNames: '[name].min.js',
-      format: 'cjs',
+      format: 'iife',
       compact: true,
       plugins: [terser({ ecma: 2015 })],
-    }
+    }, 
   ],
   plugins: [
     nodeResolve({ browser: true}),
