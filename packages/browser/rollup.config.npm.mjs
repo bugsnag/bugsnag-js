@@ -35,6 +35,6 @@ export default createRollupConfig({
         declarationDir: 'dist/types',
       }
     }),
-    // babel({ babelHelpers: 'bundled' }),
+    babel({ babelHelpers: 'bundled' }),
   ]
 });
