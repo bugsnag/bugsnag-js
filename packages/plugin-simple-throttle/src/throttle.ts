@@ -1,10 +1,26 @@
-import { Plugin } from '@bugsnag/core'
 import intRange from '@bugsnag/core/lib/validators/int-range'
+import { Client, Config, Logger, Plugin } from '@bugsnag/core'
+
+interface ThrottlePlugin extends Plugin {
+  configSchema: {
+    [key: string]: {
+      defaultValue: () => unknown
+      message: string
+      validate: (value: unknown) => boolean
+    }
+  }
+}
+
+interface InternalClient extends Client {
+  _config: Config & { maxEvents: number }
+  _logger: Logger
+}
+
 /*
  * Throttles and dedupes events
  */
 
-const plugin: Plugin = {
+const plugin: ThrottlePlugin = {
   load: (client) => {
     // track sent events for each init of the plugin
     let n = 0
@@ -12,10 +28,8 @@ const plugin: Plugin = {
     // add onError hook
     client.addOnError((event) => {
       // have max events been sent already?
-      // @ts-expect-error _config is private API
-      if (n >= client._config.maxEvents) {
-        // @ts-expect-error _config is private API
-        client._logger.warn(`Cancelling event send due to maxEvents per session limit of ${client._config.maxEvents} being reached`)
+      if (n >= (client as InternalClient)._config.maxEvents) {
+        (client as InternalClient)._logger.warn(`Cancelling event send due to maxEvents per session limit of ${(client as InternalClient)._config.maxEvents} being reached`)
         return false
       }
       n++
@@ -23,7 +37,6 @@ const plugin: Plugin = {
 
     client.resetEventCount = () => { n = 0 }
   },
-  // @ts-expect-error _config is private API
   configSchema: {
     maxEvents: {
       defaultValue: () => 10,

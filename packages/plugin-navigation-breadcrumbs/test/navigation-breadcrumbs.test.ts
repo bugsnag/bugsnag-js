@@ -1,4 +1,4 @@
-import plugin from '../navigation-breadcrumbs'
+import plugin from '../src/navigation-breadcrumbs'
 
 import Client from '@bugsnag/core/client'
 

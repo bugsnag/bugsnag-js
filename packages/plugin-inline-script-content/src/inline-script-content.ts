@@ -1,13 +1,33 @@
-const map = require('@bugsnag/core/lib/es-utils/map')
-const reduce = require('@bugsnag/core/lib/es-utils/reduce')
-const filter = require('@bugsnag/core/lib/es-utils/filter')
+import map from '@bugsnag/core/lib/es-utils/map'
+import reduce from '@bugsnag/core/lib/es-utils/reduce'
+import filter from '@bugsnag/core/lib/es-utils/filter'
+import type { Config, Plugin } from '@bugsnag/core/types'
+import type ClientWithInternals from 'packages/core/client'
 
 const MAX_LINE_LENGTH = 200
 const MAX_SCRIPT_LENGTH = 500000
 
-module.exports = (doc = document, win = window) => ({
+interface ExtendedConfig extends Config {
+  trackInlineScripts: boolean
+}
+
+interface ExtendedDocument extends Document {
+  attachEvent?: unknown
+}
+
+interface ValidationOption {
+  validate: (value: unknown) => boolean
+  defaultValue: () => unknown
+  message: string
+}
+
+interface ExtendedPlugin extends Plugin {
+  configSchema: Record<string, ValidationOption>
+}
+
+export default (doc: ExtendedDocument = document, win = window): ExtendedPlugin => ({
   load: (client) => {
-    if (!client._config.trackInlineScripts) return
+    if (!(client as ClientWithInternals<ExtendedConfig>)._config.trackInlineScripts) return
 
     const originalLocation = win.location.href
     let html = ''
@@ -28,15 +48,15 @@ module.exports = (doc = document, win = window) => ({
         html = getHtml()
         DOMContentLoaded = true
       }
-      try { prev.apply(this, arguments) } catch (e) {}
+      try { prev && prev.apply(this, arguments as unknown as Parameters<typeof prev>) } catch (e) {}
     }
 
-    let _lastScript = null
-    const updateLastScript = script => {
+    let _lastScript: HTMLOrSVGScriptElement | null = null
+    const updateLastScript = (script: HTMLOrSVGScriptElement | null) => {
       _lastScript = script
     }
 
-    const getCurrentScript = () => {
+    const getCurrentScript = (): HTMLOrSVGScriptElement | null => {
       let script = doc.currentScript || _lastScript
       if (!script && !DOMContentLoaded) {
         const scripts = doc.scripts || doc.getElementsByTagName('script')
@@ -45,7 +65,7 @@ module.exports = (doc = document, win = window) => ({
       return script
     }
 
-    const addSurroundingCode = lineNumber => {
+    const addSurroundingCode = (lineNumber: number) => {
       // get whatever html has rendered at this point
       if (!DOMContentLoaded || !html) html = getHtml()
       // simulate the raw html
@@ -62,12 +82,12 @@ module.exports = (doc = document, win = window) => ({
     client.addOnError(event => {
       // remove any of our own frames that may be part the stack this
       // happens before the inline script check as it happens for all errors
-      event.errors[0].stacktrace = filter(event.errors[0].stacktrace, f => !(/__trace__$/.test(f.method)))
+      event.errors[0].stacktrace = filter(event.errors[0].stacktrace, f => !(/__trace__$/.test(String(f.method))))
 
       const frame = event.errors[0].stacktrace[0]
 
       // remove hash and query string from url
-      const cleanUrl = (url) => url.replace(/#.*$/, '').replace(/\?.*$/, '')
+      const cleanUrl = (url: string) => url.replace(/#.*$/, '').replace(/\?.*$/, '')
 
       // if frame.file exists and is not the original location of the page, this can't be an inline script
       if (frame && frame.file && cleanUrl(frame.file) !== cleanUrl(originalLocation)) return
@@ -87,6 +107,7 @@ module.exports = (doc = document, win = window) => ({
           frame.code = addSurroundingCode(frame.lineNumber)
         }
       }
+      // @ts-expect-error second argument is private API
     }, true)
 
     // Proxy all the timer functions whose callback is their 0th argument.
@@ -105,6 +126,10 @@ module.exports = (doc = document, win = window) => ({
       )
     )
 
+    type ValidWindowProperties = 'EventTarget' | 'Window' | 'Node' | 'ChannelMergerNode' | 'EventSource' | 'FileReader' | 'HTMLUnknownElement' | 'IDBDatabase' | 'IDBRequest' | 'IDBTransaction' | 'MessagePort' | 'Notification' | 'Screen' | 'TextTrack' | 'TextTrackCue' | 'TextTrackList' | 'WebSocket' | 'Worker' | 'XMLHttpRequest' | 'XMLHttpRequestEventTarget' | 'XMLHttpRequestUpload'
+
+    type WindowProperties = keyof Pick<Window & typeof globalThis, ValidWindowProperties>
+
     // Proxy all the host objects whose prototypes have an addEventListener function
     map([
       'EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode',
@@ -112,7 +137,7 @@ module.exports = (doc = document, win = window) => ({
       'IDBRequest', 'IDBTransaction', 'KeyOperation', 'MediaController', 'MessagePort', 'ModalWindow',
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
       'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'
-    ], o => {
+    ] as WindowProperties[], o => {
       if (!win[o] || !win[o].prototype || !Object.prototype.hasOwnProperty.call(win[o].prototype, 'addEventListener')) return
       __proxy(win[o].prototype, 'addEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor)
@@ -122,7 +147,7 @@ module.exports = (doc = document, win = window) => ({
       )
     })
 
-    function __traceOriginalScript (fn, callbackAccessor, alsoCallOriginal = false) {
+    function __traceOriginalScript (fn: Function, callbackAccessor: EventTargetCallbackAccessor, alsoCallOriginal = false) {
       return function () {
         // this is required for removeEventListener to remove anything added with
         // addEventListener before the functions started being wrapped by Bugsnag
@@ -130,8 +155,8 @@ module.exports = (doc = document, win = window) => ({
         try {
           const cba = callbackAccessor(args)
           const cb = cba.get()
-          if (alsoCallOriginal) fn.apply(this, args)
-          if (typeof cb !== 'function') return fn.apply(this, args)
+          if (alsoCallOriginal) fn.apply(fn, args)
+          if (typeof cb !== 'function') return fn.apply(fn, args)
           if (cb.__trace__) {
             cba.replace(cb.__trace__)
           } else {
@@ -159,7 +184,7 @@ module.exports = (doc = document, win = window) => ({
           // WebDriverException: Message: Permission denied to access property "handleEvent"
         }
         // IE8 doesn't let you call .apply() on setTimeout/setInterval
-        if (fn.apply) return fn.apply(this, args)
+        if (fn.apply) return fn.apply(fn, args)
         switch (args.length) {
           case 1: return fn(args[0])
           case 2: return fn(args[0], args[1])
@@ -177,7 +202,7 @@ module.exports = (doc = document, win = window) => ({
   }
 })
 
-function __proxy (host, name, replacer) {
+function __proxy (host: any, name: string, replacer: (original: Function) => Function) {
   const original = host[name]
   if (!original) return original
   const replacement = replacer(original)
@@ -185,13 +210,19 @@ function __proxy (host, name, replacer) {
   return original
 }
 
-function eventTargetCallbackAccessor (args) {
+type NestedFunction = Function & { __trace__?: NestedFunction }
+
+type Argument = NestedFunction & {
+  handleEvent?: NestedFunction
+}
+
+function eventTargetCallbackAccessor (args: Argument[]) {
   const isEventHandlerObj = !!args[1] && typeof args[1].handleEvent === 'function'
   return {
     get: function () {
       return isEventHandlerObj ? args[1].handleEvent : args[1]
     },
-    replace: function (fn) {
+    replace: function (fn: Function) {
       if (isEventHandlerObj) {
         args[1].handleEvent = fn
       } else {
@@ -200,3 +231,5 @@ function eventTargetCallbackAccessor (args) {
     }
   }
 }
+
+type EventTargetCallbackAccessor = typeof eventTargetCallbackAccessor
