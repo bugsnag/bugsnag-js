@@ -1,5 +1,5 @@
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler } from '@angular/core';
 import { BugsnagErrorHandler } from '@bugsnag/plugin-angular';
 import bugsnagClient from './bugsnag';
 
@@ -16,9 +16,7 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule
   ],
-  providers: [
-    { provide: ErrorHandler, useFactory: errorHandlerFactory }
-  ],
+  providers: [{ provide: ErrorHandler, useFactory: errorHandlerFactory }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,24 +1,33 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
-  "files": [ "./src/index.ts" ],
+  "compileOnSave": false,
   "compilerOptions": {
-    "module": "ES2015",
-    "target": "ES2015",
-    "lib": [ "ES5", "ES6", "DOM" ],
-    "allowJs": false,
-    "declaration": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "outDir": "./dist/esm2015",
-    "rootDir": "./src",
+    "outDir": "./dist/out-tsc",
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "sourceRoot": "src",
-    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "plugin-angular": [
+        "dist"
+      ]
+    },
     "skipLibCheck": true,
-    "types": []
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022"
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
   }
 }

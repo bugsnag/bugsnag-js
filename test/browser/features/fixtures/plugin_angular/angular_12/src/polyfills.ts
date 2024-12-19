@@ -18,9 +18,6 @@
  * BROWSER POLYFILLS
  */
 
-import 'globalthis/auto';
-import 'core-js/modules/web.queue-microtask';
-
 /**
  * IE11 requires the following for NgClass support on SVG elements
  */
