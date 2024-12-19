@@ -6,8 +6,8 @@
   "exports": {
     ".": {
       "types": "./types/bugsnag.d.ts",
-      "default": "./dist/bugsnag.cjs",
-      "import": "./dist/bugsnag.mjs"
+      "import": "./dist/bugsnag.mjs",
+      "default": "./dist/bugsnag.cjs"
     }
   },
   "description": "Bugsnag error reporter for browser JavaScript",
