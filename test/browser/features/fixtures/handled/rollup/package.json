@@ -1,12 +1,13 @@
 {
   "name": "bugsnag-js-fixtures-handled-rollup",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "ENTRY_NAME=a rollup -c && ENTRY_NAME=b rollup -c && ENTRY_NAME=c rollup -c"
   },
   "dependencies": {
-    "rollup": "^0.59.0",
-    "rollup-plugin-commonjs": "^9.1.3",
-    "rollup-plugin-node-resolve": "^3.3.0"
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "rollup": "^4.28.1"
   }
 }
