@@ -1,15 +1,7 @@
 {
   "name": "@bugsnag/plugin-inline-script-content",
   "version": "8.1.1",
-  "main": "dist/inline-script-content.js",
-  "types": "dist/types/inline-script-content.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/types/inline-script-content.d.ts",
-      "default": "./dist/inline-script-content.js",
-      "import": "./dist/inline-script-content.mjs"
-    }
-  },
+  "main": "inline-script-content.js",
   "description": "@bugsnag/js plugin to attach inline script content to error events",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -22,11 +14,7 @@
   "files": [
     "*.js"
   ],
-  "scripts": {
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
-    "clean": "rm -rf dist/*"
-  },
+  "scripts": {},
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {

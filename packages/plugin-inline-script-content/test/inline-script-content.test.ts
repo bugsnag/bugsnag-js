@@ -1,4 +1,4 @@
-import plugin from '../'
+import plugin from '../inline-script-content'
 
 import Client from '@bugsnag/core/client'
 import Event from '@bugsnag/core/event'
