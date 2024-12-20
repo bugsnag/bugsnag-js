@@ -27,13 +27,13 @@ export default createRollupConfig({
     {
       ...sharedOutput,
       entryFileNames: '[name].js',
-      format: 'iife',
+      format: 'umd',
       name: 'Bugsnag'
     },
     , {
       ...sharedOutput,
       entryFileNames: '[name].min.js',
-      format: 'iife',
+      format: 'umd',
       compact: true,
       name: 'Bugsnag',
       plugins: [terser({ ecma: 2015 })],
