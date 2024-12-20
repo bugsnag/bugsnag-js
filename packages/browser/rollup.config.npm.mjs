@@ -4,8 +4,11 @@ import nodeResolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
+import fs from 'fs'
 
 import createRollupConfig, { sharedOutput } from "../../.rollup/index.mjs"
+
+const packageJson = JSON.parse(fs.readFileSync('./package.json'))
 
 export default createRollupConfig({
   input: "src/bugsnag.ts",
@@ -24,18 +27,22 @@ export default createRollupConfig({
     {
       ...sharedOutput,
       entryFileNames: '[name].js',
-      format: 'iife'
+      format: 'iife',
+      name: 'Bugsnag'
     },
     , {
       ...sharedOutput,
       entryFileNames: '[name].min.js',
       format: 'iife',
       compact: true,
+      name: 'Bugsnag',
       plugins: [terser({ ecma: 2015 })],
     }, 
   ],
   plugins: [
-    nodeResolve({ browser: true}),
+    nodeResolve({
+      browser: true
+    }),
     commonjs(),
     typescript({
       removeComments: true,
@@ -53,7 +60,8 @@ export default createRollupConfig({
     replace({
       preventAssignment: true,
       values: {
-        'process.env.NODE_ENV': JSON.stringify('production')
+        'process.env.NODE_ENV': JSON.stringify('production'),
+        values: { __VERSION__: packageJson.version },
       },
     }),
   ]
