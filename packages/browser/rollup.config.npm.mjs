@@ -5,7 +5,6 @@ import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
 import fs from 'fs'
-import dts from 'rollup-plugin-dts'
 
 import createRollupConfig, { sharedOutput } from "../../.rollup/index.mjs"
 
@@ -79,11 +78,5 @@ export default [
       }, 
     ],
     plugins
-  }),
-  {
-    // path to your declaration files root
-    input: './dist/types/index-es.d.ts',
-    output: [{ file: 'dist/bugsnag.d.ts', format: 'es' }],
-    plugins: [dts()],
-  },
+  })
 ];
