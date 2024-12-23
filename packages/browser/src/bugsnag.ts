@@ -1,8 +1,5 @@
 import Client from '@bugsnag/core/client'
-// import Event from '@bugsnag/core/event'
-// import Session from '@bugsnag/core/session'
-// import Breadcrumb from '@bugsnag/core/breadcrumb'
-import { Config } from '@bugsnag/core/types'
+import type { BugsnagStatic, Config } from '@bugsnag/core'
 
 import map from '@bugsnag/core/lib/es-utils/map'
 import keys from '@bugsnag/core/lib/es-utils/keys'
@@ -120,6 +117,16 @@ map(['resetEventCount'].concat(keys(Client.prototype)) as Method[], (m) => {
   }
 })
 
-// export { Client, Event, Session, Breadcrumb, Bugsnag }
-
 export default Bugsnag
+
+export interface BrowserConfig extends Config {
+  maxEvents?: number
+  collectUserIp?: boolean
+  generateAnonymousId?: boolean
+  trackInlineScripts?: boolean
+}
+
+export interface BrowserBugsnagStatic extends BugsnagStatic {
+  start(apiKeyOrOpts: string | BrowserConfig): Client
+  createClient(apiKeyOrOpts: string | BrowserConfig): Client
+}

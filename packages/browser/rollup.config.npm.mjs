@@ -5,64 +5,125 @@ import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
 import fs from 'fs'
+import dts from 'rollup-plugin-dts'
 
 import createRollupConfig, { sharedOutput } from "../../.rollup/index.mjs"
 
 const packageJson = JSON.parse(fs.readFileSync('./package.json'))
 
-export default createRollupConfig({
-  input: "src/bugsnag.ts",
-  output: [
-    {
-      ...sharedOutput,
-      preserveModules: false,
-      entryFileNames: '[name].mjs',
-      format: 'esm'
-    },
-    {
-      ...sharedOutput,
-      entryFileNames: '[name].cjs',
-      format: 'cjs',
-    },
-    {
-      ...sharedOutput,
-      entryFileNames: '[name].js',
-      format: 'umd',
-      name: 'Bugsnag'
-    },
-    , {
-      ...sharedOutput,
-      entryFileNames: '[name].min.js',
-      format: 'umd',
-      compact: true,
-      name: 'Bugsnag',
-      plugins: [terser({ ecma: 2015 })],
-    }, 
-  ],
-  plugins: [
-    nodeResolve({
-      browser: true
-    }),
-    commonjs(),
-    typescript({
-      removeComments: true,
-      // don't output anything if there's a TS error
-      noEmitOnError: true,
-      // turn on declaration files and declaration maps
-      compilerOptions: {
-        declaration: true,
-        declarationMap: true,
-        emitDeclarationOnly: true,
-        declarationDir: 'dist/types',
+export default [
+  createRollupConfig({
+    input: "src/index-es.ts",
+    output: [
+      {
+        ...sharedOutput,
+        preserveModules: false,
+        entryFileNames: '[name].mjs',
+        format: 'esm'
       }
-    }),
-    babel({ babelHelpers: 'bundled' }),
-    replace({
-      preventAssignment: true,
-      values: {
-        'process.env.NODE_ENV': JSON.stringify('production'),
-        values: { __VERSION__: packageJson.version },
+    ],
+    plugins: [
+      nodeResolve({
+        browser: true
+      }),
+      commonjs(),
+      typescript({
+        removeComments: true,
+        // don't output anything if there's a TS error
+        noEmitOnError: true,
+        // turn on declaration files and declaration maps
+        compilerOptions: {
+          declaration: false,
+        }
+      }),
+      babel({ babelHelpers: 'bundled' }),
+      replace({
+        preventAssignment: true,
+        values: {
+          'process.env.NODE_ENV': JSON.stringify('production'),
+          values: { __VERSION__: packageJson.version },
+        },
+      }),
+    ]
+  }),
+  createRollupConfig({
+    input: "src/index-cjs.ts",
+    output: [
+      {
+        ...sharedOutput,
+        entryFileNames: '[name].cjs',
+        format: 'cjs',
       },
-    }),
-  ]
-});
+    ],
+    plugins: [
+      nodeResolve({
+        browser: true
+      }),
+      commonjs(),
+      typescript({
+        removeComments: true,
+        // don't output anything if there's a TS error
+        noEmitOnError: true,
+        // turn on declaration files and declaration maps
+        compilerOptions: {
+          declaration: false,
+        }
+      }),
+      babel({ babelHelpers: 'bundled' }),
+      replace({
+        preventAssignment: true,
+        values: {
+          'process.env.NODE_ENV': JSON.stringify('production'),
+          values: { __VERSION__: packageJson.version },
+        },
+      }),
+    ]
+  }),
+  createRollupConfig({
+    input: "src/index-umd.ts",
+    output: [
+      {
+        ...sharedOutput,
+        entryFileNames: 'bugsnag.js',
+        format: 'umd',
+        name: 'Bugsnag'
+      },
+      {
+        ...sharedOutput,
+        entryFileNames: 'bugsnag.min.js',
+        format: 'umd',
+        compact: true,
+        name: 'Bugsnag',
+        plugins: [terser({ ecma: 2015 })],
+      }, 
+    ],
+    plugins: [
+      nodeResolve({
+        browser: true
+      }),
+      commonjs(),
+      typescript({
+        removeComments: true,
+        // don't output anything if there's a TS error
+        noEmitOnError: true,
+        compilerOptions: {
+          declaration: false,
+        }
+      }),
+      babel({ babelHelpers: 'bundled' }),
+      replace({
+        preventAssignment: true,
+        values: {
+          'process.env.NODE_ENV': JSON.stringify('production'),
+          values: { __VERSION__: packageJson.version },
+        },
+      }),
+    ]
+  }),
+  {
+    // path to your declaration files root
+    input: './dist/types/index-es.d.ts',
+    output: [{ file: 'dist/bugsnag.d.ts', format: 'es' }],
+    plugins: [dts()],
+  },
+];
