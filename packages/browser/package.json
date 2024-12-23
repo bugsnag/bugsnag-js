@@ -3,11 +3,14 @@
   "version": "8.1.2",
   "main": "dist/bugsnag.cjs",
   "types": "types/bugsnag.d.ts",
+  "browser": {
+    "types/bugsnag": "./dist/bugsnag.js"
+  },
   "exports": {
     ".": {
-      "types": "./types/bugsnag.d.ts",
-      "import": "./dist/bugsnag.mjs",
-      "default": "./dist/bugsnag.cjs"
+      "types": "./types/index-es.d.ts",
+      "import": "./dist/index-es.mjs",
+      "default": "./dist/index-cjs.cjs"
     }
   },
   "description": "Bugsnag error reporter for browser JavaScript",
@@ -16,9 +19,7 @@
     "type": "git",
     "url": "git@github.com:bugsnag/bugsnag-js.git"
   },
-  "browser": {
-    "types/bugsnag": "./dist/bugsnag.js"
-  },
+
   "publishConfig": {
     "access": "public"
   },
