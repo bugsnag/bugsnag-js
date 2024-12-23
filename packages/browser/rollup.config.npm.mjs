@@ -22,7 +22,6 @@ const plugins = [
     // turn on declaration files and declaration maps
     compilerOptions: {
       target: 'es3',
-      declaration: false,
     }
   }),
   babel({ babelHelpers: 'bundled' }),

@@ -2,13 +2,13 @@
   "name": "@bugsnag/browser",
   "version": "8.1.2",
   "main": "dist/index-cjs.cjs",
-  "types": "types/bugsnag.d.ts",
+  "types": "dist/types/index-es.d.ts",
   "browser": {
     "types/bugsnag": "./dist/bugsnag.js"
   },
   "exports": {
     ".": {
-      "types": "./types/index-es.d.ts",
+      "types": "./dist/types/index-es.d.ts",
       "import": "./dist/index-es.mjs",
       "default": "./dist/index-cjs.cjs"
     }
