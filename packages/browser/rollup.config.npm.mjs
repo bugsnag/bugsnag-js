@@ -11,6 +11,31 @@ import createRollupConfig, { sharedOutput } from "../../.rollup/index.mjs"
 
 const packageJson = JSON.parse(fs.readFileSync('./package.json'))
 
+const plugins = [
+  nodeResolve({
+    browser: true
+  }),
+  commonjs(),
+  typescript({
+    removeComments: true,
+    // don't output anything if there's a TS error
+    noEmitOnError: true,
+    // turn on declaration files and declaration maps
+    compilerOptions: {
+      target: 'es3',
+      declaration: false,
+    }
+  }),
+  babel({ babelHelpers: 'bundled' }),
+  replace({
+    preventAssignment: true,
+    values: {
+      'process.env.NODE_ENV': JSON.stringify('production'),
+      values: { __VERSION__: packageJson.version },
+    },
+  }),
+]
+
 export default [
   createRollupConfig({
     input: "src/index-es.ts",
@@ -22,29 +47,7 @@ export default [
         format: 'esm'
       }
     ],
-    plugins: [
-      nodeResolve({
-        browser: true
-      }),
-      commonjs(),
-      typescript({
-        removeComments: true,
-        // don't output anything if there's a TS error
-        noEmitOnError: true,
-        // turn on declaration files and declaration maps
-        compilerOptions: {
-          declaration: false,
-        }
-      }),
-      babel({ babelHelpers: 'bundled' }),
-      replace({
-        preventAssignment: true,
-        values: {
-          'process.env.NODE_ENV': JSON.stringify('production'),
-          values: { __VERSION__: packageJson.version },
-        },
-      }),
-    ]
+    plugins
   }),
   createRollupConfig({
     input: "src/index-cjs.ts",
@@ -55,29 +58,7 @@ export default [
         format: 'cjs',
       },
     ],
-    plugins: [
-      nodeResolve({
-        browser: true
-      }),
-      commonjs(),
-      typescript({
-        removeComments: true,
-        // don't output anything if there's a TS error
-        noEmitOnError: true,
-        // turn on declaration files and declaration maps
-        compilerOptions: {
-          declaration: false,
-        }
-      }),
-      babel({ babelHelpers: 'bundled' }),
-      replace({
-        preventAssignment: true,
-        values: {
-          'process.env.NODE_ENV': JSON.stringify('production'),
-          values: { __VERSION__: packageJson.version },
-        },
-      }),
-    ]
+    plugins
   }),
   createRollupConfig({
     input: "src/index-umd.ts",
@@ -97,28 +78,7 @@ export default [
         plugins: [terser({ ecma: 2015 })],
       }, 
     ],
-    plugins: [
-      nodeResolve({
-        browser: true
-      }),
-      commonjs(),
-      typescript({
-        removeComments: true,
-        // don't output anything if there's a TS error
-        noEmitOnError: true,
-        compilerOptions: {
-          declaration: false,
-        }
-      }),
-      babel({ babelHelpers: 'bundled' }),
-      replace({
-        preventAssignment: true,
-        values: {
-          'process.env.NODE_ENV': JSON.stringify('production'),
-          values: { __VERSION__: packageJson.version },
-        },
-      }),
-    ]
+    plugins
   }),
   {
     // path to your declaration files root
