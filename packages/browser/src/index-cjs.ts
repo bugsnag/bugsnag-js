@@ -12,5 +12,3 @@ import Bugsnag from './bugsnag'
 
 export default assign(Bugsnag, { Breadcrumb, Client, Event, Session })
 export /* type */ { BrowserBugsnagStatic, BrowserConfig } from './bugsnag'
-
-// export * from '@bugsnag/core'
