@@ -11,6 +11,6 @@ import assign from '@bugsnag/core/lib/es-utils/assign'
 import Bugsnag from './bugsnag'
 
 export default assign(Bugsnag, { Client, Event, Session, Breadcrumb })
-export type { BrowserBugsnagStatic, BrowserConfig } from './bugsnag'
+export /* type */ { BrowserBugsnagStatic, BrowserConfig } from './bugsnag'
 
 // export * from '@bugsnag/core'
