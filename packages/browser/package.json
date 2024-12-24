@@ -3,9 +3,7 @@
   "version": "8.1.2",
   "main": "dist/index-cjs.cjs",
   "types": "dist/types/index-es.d.ts",
-  "browser": {
-    "types/bugsnag": "./dist/bugsnag.js"
-  },
+  "browser": "./dist/bugsnag.js",
   "exports": {
     ".": {
       "types": "./dist/types/index-es.d.ts",
