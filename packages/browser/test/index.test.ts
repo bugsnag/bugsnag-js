@@ -52,7 +52,7 @@ describe('browser notifier', () => {
         load: client => 10
       }]
     })
-    expect(Bugsnag.getPlugin?.('foobar')).toBe(10)
+    expect(Bugsnag.getPlugin('foobar')).toBe(10)
   })
 
   it('notifies handled errors', (done) => {
