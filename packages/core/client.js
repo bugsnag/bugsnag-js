@@ -67,7 +67,7 @@ class Client {
     })
 
     // when notify() is called we need to know how many frames are from our own source
-    // this inital value is 1 not 0 because we wrap notify() to ensure it is always
+    // this initial value is 1 not 0 because we wrap notify() to ensure it is always
     // bound to have the client as its `this` value – see below.
     this._depth = 1
 

@@ -73,7 +73,7 @@ export default [
         format: 'umd',
         compact: true,
         name: 'Bugsnag',
-        plugins: [terser({ ecma: 2015 })],
+        // plugins: [terser({ ecma: 2015 })],
       }, 
     ],
     plugins
