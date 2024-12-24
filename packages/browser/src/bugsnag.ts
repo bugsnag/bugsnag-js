@@ -1,4 +1,4 @@
-import Client from '@bugsnag/core/client'
+import ClientWithInternals from '@bugsnag/core/client'
 import type { BugsnagStatic, Config } from '@bugsnag/core'
 
 import map from '@bugsnag/core/lib/es-utils/map'
@@ -36,21 +36,32 @@ const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const schema = assign({}, baseConfig, browserConfig)
 
+export interface BrowserConfig extends Config {
+  maxEvents?: number
+  collectUserIp?: boolean
+  generateAnonymousId?: boolean
+  trackInlineScripts?: boolean
+}
+
+export interface BrowserBugsnagStatic extends BugsnagStatic {
+  start(apiKeyOrOpts: string | BrowserConfig): ClientWithInternals
+  createClient(apiKeyOrOpts: string | BrowserConfig): ClientWithInternals
+}
+
 declare global {
   interface Window {
     XDomainRequest: unknown
   }
 }
 
-type BrowserClient = Partial<Client> & {
-  _client: Client | null
-  createClient: (opts?: Config) => Client
-  start: (opts?: Config) => Client
+type BrowserClient = Partial<ClientWithInternals> & {
+  _client: ClientWithInternals | null
+  createClient: (opts?: Config) => ClientWithInternals
+  start: (opts?: Config) => ClientWithInternals
   isStarted: () => boolean
-  _setDelivery?: (handler: typeof dXDomainRequest | typeof dXMLHttpRequest) => void
 }
 
-const Bugsnag: BrowserClient = {
+const notifier: BrowserClient = {
   _client: null,
   createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
@@ -79,7 +90,7 @@ const Bugsnag: BrowserClient = {
     ]
 
     // configure a client with user supplied options
-    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url });
+    const bugsnag = new ClientWithInternals(opts, schema, internalPlugins, { name, version, url });
 
     // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
     (bugsnag as BrowserClient)._setDelivery?.(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
@@ -92,41 +103,31 @@ const Bugsnag: BrowserClient = {
       : bugsnag
   },
   start: (opts) => {
-    if (Bugsnag._client) {
-      Bugsnag._client._logger.warn('Bugsnag.start() was called more than once. Ignoring.')
-      return Bugsnag._client
+    if (notifier._client) {
+      notifier._client._logger.warn('Bugsnag.start() was called more than once. Ignoring.')
+      return notifier._client
     }
-    Bugsnag._client = Bugsnag.createClient(opts)
-    return Bugsnag._client
+    notifier._client = notifier.createClient(opts)
+    return notifier._client
   },
   isStarted: () => {
-    return Bugsnag._client != null
+    return notifier._client != null
   }
 }
 
-type Method = keyof typeof Client.prototype
+type Method = keyof typeof ClientWithInternals.prototype
 
-map(['resetEventCount'].concat(keys(Client.prototype)) as Method[], (m) => {
+map(['resetEventCount'].concat(keys(ClientWithInternals.prototype)) as Method[], (m) => {
   if (/^_/.test(m)) return
-  Bugsnag[m] = function () {
-    if (!Bugsnag._client) return console.log(`Bugsnag.${m}() was called before Bugsnag.start()`)
-    Bugsnag._client._depth += 1
-    const ret = Bugsnag._client[m].apply(Bugsnag._client, arguments)
-    Bugsnag._client._depth -= 1
+  notifier[m] = function () {
+    if (!notifier._client) return console.log(`Bugsnag.${m}() was called before Bugsnag.start()`)
+    notifier._client._depth += 1
+    const ret = notifier._client[m].apply(notifier._client, arguments)
+    notifier._client._depth -= 1
     return ret
   }
 })
 
+const Bugsnag = notifier as BrowserBugsnagStatic
+
 export default Bugsnag
-
-export interface BrowserConfig extends Config {
-  maxEvents?: number
-  collectUserIp?: boolean
-  generateAnonymousId?: boolean
-  trackInlineScripts?: boolean
-}
-
-export interface BrowserBugsnagStatic extends BugsnagStatic {
-  start(apiKeyOrOpts: string | BrowserConfig): Client
-  createClient(apiKeyOrOpts: string | BrowserConfig): Client
-}
