@@ -49,9 +49,7 @@ module.exports = {
       'plugin-simple-throttle',
       'plugin-console-breadcrumbs',
       'plugin-browser-session'
-    ], {
-      setupFiles: ['<rootDir>/jest/setup/mockEventTarget.js']
-    }),
+    ]),
     project('react native', [
       'react-native',
       'delivery-react-native',

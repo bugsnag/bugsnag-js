@@ -12,7 +12,6 @@ COPY .rollup ./.rollup
 COPY bin ./bin
 COPY scripts ./scripts
 COPY test ./test
-COPY jest ./jest
 COPY packages ./packages
 
 RUN npm install --unsafe-perm
