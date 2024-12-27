@@ -21,7 +21,7 @@ export const sharedOutput = {
   }
 }
 
-function createRollupConfig (options = defaultOptions(), overrides = {}) {
+function createRollupConfig (options = defaultOptions()) {
   const packageJson = JSON.parse(fs.readFileSync(`${process.cwd()}/package.json`))
 
   return {
@@ -61,8 +61,7 @@ function createRollupConfig (options = defaultOptions(), overrides = {}) {
         }
       }),
       ...(options.plugins ?? [])
-    ],
-    ...overrides
+    ]
   }
 }
 
