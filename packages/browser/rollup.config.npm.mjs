@@ -24,7 +24,6 @@ const plugins = [
     removeComments: true,
     // don't output anything if there's a TS error
     noEmitOnError: true,
-    // turn on declaration files and declaration maps
     compilerOptions: {
       target: 'es3',
     }
