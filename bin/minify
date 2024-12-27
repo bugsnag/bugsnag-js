@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+cat - | ../../node_modules/.bin/uglifyjs \
+  --compress \
+  --mangle \
+  --ie8 \
+  --source-map "includeSources,content=inline,url=$(basename "$1").map" \
+  --output "$1"

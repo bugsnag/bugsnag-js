@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+const browserify = require('browserify')
+const babelConfig = require('../babel.config.js')()
+
+const { resolve } = require('path')
+
+const args = process.argv
+const entry = resolve(process.cwd(), args[2])
+const forNode = args.includes('--node')
+const excludes = (args.find(arg => /^--exclude=/.test(arg)) || '').replace('--exclude=', '').split(',')
+const standalone = (args.find(arg => /^--standalone=/.test(arg)) || '').replace('--standalone=', '')
+
+const b = browserify(entry, { debug: true, standalone, node: forNode })
+  .transform('babelify', { global: true, ...babelConfig })
+  .transform('browserify-versionify')
+  .plugin('browser-pack-flat/plugin')
+
+if (!forNode) {
+  b.transform('envify', { global: true })
+}
+
+b
+  .exclude(excludes)
+  .bundle()
+  .pipe(process.stdout)
