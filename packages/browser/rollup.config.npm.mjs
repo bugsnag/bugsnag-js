@@ -6,9 +6,14 @@ import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
 import fs from 'fs'
 
-import createRollupConfig, { sharedOutput } from "../../.rollup/index.mjs"
+import createRollupConfig, { sharedOutput as commonSharedOutput } from "../../.rollup/index.mjs"
 
 const packageJson = JSON.parse(fs.readFileSync('./package.json'))
+
+const sharedOutput = {
+  ...commonSharedOutput,
+  strict: false, // 'use strict' in WebKit enables Tail Call Optimization, which breaks stack trace handling
+}
 
 const plugins = [
   nodeResolve({
@@ -73,7 +78,7 @@ export default [
         format: 'umd',
         compact: true,
         name: 'Bugsnag',
-        // plugins: [terser({ ecma: 2015 })],
+        plugins: [terser()],
       }, 
     ],
     plugins
