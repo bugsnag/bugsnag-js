@@ -1,11 +1,10 @@
-import { ErrorHandler, Injectable } from '@angular/core'
+import { ErrorHandler } from '@angular/core'
 import Bugsnag, { Client } from '@bugsnag/js'
 
 type BugsnagWithInternals = typeof Bugsnag & {
   _client: Client
 }
 
-@Injectable()
 class BugsnagErrorHandler implements ErrorHandler {
   public bugsnagClient: Client;
 
@@ -35,7 +34,8 @@ class BugsnagErrorHandler implements ErrorHandler {
     this.bugsnagClient._notify(event)
 
     // Default Angular error handling
-    ErrorHandler.prototype.handleError.call(this, error)
+    // ErrorHandler.prototype.handleError.call(this, error)
+    console.error(error)
   }
 }
 
