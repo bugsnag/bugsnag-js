@@ -33,8 +33,7 @@ class BugsnagErrorHandler implements ErrorHandler {
 
     this.bugsnagClient._notify(event)
 
-    // TODO: Does this need to be called?
-    // ErrorHandler.prototype.handleError.call(this, error)
+    ErrorHandler.prototype.handleError.call(ErrorHandler, error)
   }
 }
 
