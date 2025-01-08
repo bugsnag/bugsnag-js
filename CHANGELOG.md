@@ -6,6 +6,10 @@
 
 - (plugin-angular) Generate type definition using Angular 17 [#2275](https://github.com/bugsnag/bugsnag-js/pull/2275)
 
+### Fixed
+
+- Corrected setUser TS interface to allow for null arguments [#2262](https://github.com/bugsnag/bugsnag-js/pull/2262)
+
 ## [8.1.3] - 2024-11-28
 
 ### Changed
