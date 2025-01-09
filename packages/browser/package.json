@@ -21,8 +21,7 @@
     "access": "public"
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "scripts": {
     "size": "../../bin/size dist/bugsnag.min.js",
