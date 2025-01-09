@@ -1,13 +1,9 @@
 import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
-import replace from '@rollup/plugin-replace'
 import typescript from '@rollup/plugin-typescript'
-import fs from 'fs'
 
 import createRollupConfig, { sharedOutput } from "../../.rollup/index.mjs"
-
-const packageJson = JSON.parse(fs.readFileSync('./package.json'))
 
 const plugins = [
   nodeResolve({
@@ -22,14 +18,7 @@ const plugins = [
       target: 'es2015',
     }
   }),
-  babel({ babelHelpers: 'bundled' }),
-  // replace({
-  //   preventAssignment: true,
-  //   values: {
-  //     'process.env.NODE_ENV': JSON.stringify('production'),
-  //     values: { __VERSION__: packageJson.version },
-  //   },
-  // }),
+  babel({ babelHelpers: 'bundled' })
 ]
 
 const external = ['react']
