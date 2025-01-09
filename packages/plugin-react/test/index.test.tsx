@@ -193,7 +193,7 @@ it('supports passing reference to React when the error boundary is created', () 
     undefined
   )
   // eslint-disable-next-line
-  const ErrorBoundary = client.getPlugin("react")!.createErrorBoundary(React);
+  const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
   expect(ErrorBoundary).toBeTruthy()
 })
 
@@ -217,7 +217,7 @@ describe('global React', () => {
     })
 
     // eslint-disable-next-line
-    const ErrorBoundary = client.getPlugin("react")!.createErrorBoundary();
+    const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
     expect(ErrorBoundary).toBeTruthy()
   })
@@ -232,7 +232,7 @@ describe('global React', () => {
     })
 
     // eslint-disable-next-line
-    const ErrorBoundary = client.getPlugin("react")!.createErrorBoundary(React);
+    const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
 
     expect(ErrorBoundary).toBeTruthy()
   })
