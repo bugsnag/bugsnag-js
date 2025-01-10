@@ -5,6 +5,7 @@
 ### Changed
 
 - (plugin-angular) Generate type definition using Angular 17 [#2275](https://github.com/bugsnag/bugsnag-js/pull/2275)
+- (plugin-angular) Update Angular support to cover v12 - 19 [#2278](https://github.com/bugsnag/bugsnag-js/pull/2278)
 
 ## [8.1.3] - 2024-11-28
 
