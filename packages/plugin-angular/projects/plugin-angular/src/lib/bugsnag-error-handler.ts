@@ -33,8 +33,9 @@ class BugsnagErrorHandler implements ErrorHandler {
 
     this.bugsnagClient._notify(event)
 
-    // Default Angular error handling
-    // ErrorHandler.prototype.handleError.call(this, error)
+    // Replicate the default behaviour of the angular error handler by calling console.error
+    // previously this called ErrorHandler.prototype.handleError but this caused a mismatch between
+    // the compiled code and the angular version used in the application.
     console.error(error)
   }
 }
