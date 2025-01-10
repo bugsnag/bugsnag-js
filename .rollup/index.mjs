@@ -14,7 +14,7 @@ const defaultOptions = () => ({
   output: undefined
 })
 
-const sharedOutput = {
+export const sharedOutput = {
   dir: 'dist',
   generatedCode: {
     preset: 'es2015',
@@ -59,7 +59,8 @@ function createRollupConfig (options = defaultOptions()) {
           emitDeclarationOnly: true,
           declarationDir: 'dist/types',
         }
-      })
+      }),
+      ...(options.plugins ?? [])
     ]
   }
 }
