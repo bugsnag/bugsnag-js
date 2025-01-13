@@ -14,8 +14,8 @@
     "dist"
   ],
   "scripts": {
-    "ng": "ng",
-    "build": "ng build",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && ng build",
     "test:types": "npm run build"
   },
   "author": "Bugsnag",
