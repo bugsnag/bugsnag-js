@@ -14,7 +14,8 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run clean && ng build",
-    "test:types": "npm run build"
+    "test:types": "npm run build",
+    "prepack": "npm run build"
   },
   "author": "Bugsnag",
   "license": "MIT",
