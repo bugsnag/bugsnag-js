@@ -10,9 +10,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run clean && ng build",

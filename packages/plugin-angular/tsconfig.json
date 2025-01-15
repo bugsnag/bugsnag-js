@@ -9,11 +9,6 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "paths": {
-      "plugin-angular": [
-        "./dist/plugin-angular"
-      ]
-    },
     "skipLibCheck": true,
     "isolatedModules": true,
     "esModuleInterop": true,
