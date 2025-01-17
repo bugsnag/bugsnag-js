@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+  # Disable all checks for the examples directory
+  - package-ecosystem: github-actions
+    directory: /examples
+    schedule:
+      interval: monthly
+    labels: [ ]
+    ignore:
+      - dependency-name: '*'
