@@ -38,8 +38,7 @@ export default class BugsnagPluginReact implements Plugin {
     this.lazy = !react && !globalReact
 
     if (!this.lazy) {
-      // @ts-ignore
-      this.React = react || globalReact
+      this.React = react || globalReact as typeof React
       if (!this.React) throw new Error('@bugsnag/plugin-react reference to `React` was undefined')
     }
   }
