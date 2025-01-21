@@ -1,22 +1,22 @@
 ### React-native testing
 
-The React-native tests drive real, remote mobile devices using BitBar in CI, or BrowserStack when run locally. As a Bugsnag employee you can access the 
+The React-native tests drive real, remote mobile devices using BitBar in CI, or BrowserStack when run locally. As a Bugsnag employee you can access the
 necessary credentials in our shared password manager.
 
-The test fixture (a React Native app) that tests are run against needs to be built with a published version of 
-@bugsnag/react-native.  By default, the build process will base this on the current branch/comment, 
-e.g. `7.5.2-my-branch.e8cbdad2f4`, which needs to be published first if building locally.  For example, if using 
+The test fixture (a React Native app) that tests are run against needs to be built with a published version of
+@bugsnag/react-native.  By default, the build process will base this on the current branch/comment,
+e.g. `7.5.2-my-branch.e8cbdad2f4`, which needs to be published first if building locally.  For example, if using
 [Verdaccio](https://verdaccio.org/docs/en/docker.html):
 
 ```shell script
 node ./scripts/publish.js http://localhost:5539
 ```
 
-This can also be overridden using the environment variable `NOTIFIER_VERSION`, which is useful during development when 
+This can also be overridden using the environment variable `NOTIFIER_VERSION`, which is useful during development when
 making test, but not notifier, changes.
 
-If building against the current branch/commit, the packages must be published to a locally owned NPM repository 
-(! Not the official NPMJS repository !). This can be locally or remotely hosted, but should be versioned appropriately.  
+If building against the current branch/commit, the packages must be published to a locally owned NPM repository
+(! Not the official NPMJS repository !). This can be locally or remotely hosted, but should be versioned appropriately.
 
 #### Generating a dynamic test fixture (React Native >=0.71)
 
@@ -44,13 +44,13 @@ Scenarios are driven via maze runner commands (see `react-native-steps.rb`). How
 
 For older React Native versions, static test fixtures can be found under `features/fixtures`.
 
-In CI, these are built using Docker. Three bits of information will need to be passed into the test run as environment variables in order to 
+In CI, these are built using Docker. Three bits of information will need to be passed into the test run as environment variables in order to
 access this package:
 - `REG_BASIC_CREDENTIAL`: the basic auth credentials of an account able to access the repository
 - `REG_NPM_EMAIL`: the email of the user accessing the repository
 - `REGISTRY_URL`: the remote address of the repository
 
-The targeted release of `@bugsnag/react-native` must be tagged with the short hash of the current commit in order to be 
+The targeted release of `@bugsnag/react-native` must be tagged with the short hash of the current commit in order to be
 picked up by the gradle build process.
 
 When building locally, use the appropriate npm scripts as documented below.
@@ -60,7 +60,7 @@ Remember to set the following variables:
 - `REGISTRY_URL`
 - `NOTIFIER_VERSION` (optionally)
 
-There are several react-native versions that can be targeted and the `REACT_NATIVE_VERSION` environment variable should 
+There are several react-native versions that can be targeted and the `REACT_NATIVE_VERSION` environment variable should
 be set accordingly:
 
 | React native fixture | `REACT_NATIVE_VERSION` |
@@ -87,8 +87,8 @@ Ensure that the following environment variables are set:
 - `MAZE_BS_LOCAL` - Location of the BrowserStack local testing binary
 
 See https://www.browserstack.com/local-testing/app-automate for details of the required local testing binary. In
-particular, these commands need the `BrowserStackLocal` binary (available 
-[here](https://www.browserstack.com/local-testing/releases) to reside in your home directory.  
+particular, these commands need the `BrowserStackLocal` binary (available
+[here](https://www.browserstack.com/local-testing/releases) to reside in your home directory.
 
 1. Change into the `test/react-native` directory
 1. Check the contents of `Gemfile` to select the version of `maze-runner` to use.
@@ -103,7 +103,7 @@ particular, these commands need the `BrowserStackLocal` binary (available
     ```shell script
     bundle exec maze-runner --app=<PATH_TO_TEST_FIXTURE_IPA> \
                             --farm=bs \
-                            --device=IOS_16 \
+                            --device=IOS_15 \
                             features/app.feature
     ```
 1. To run all features, omit the final argument.
