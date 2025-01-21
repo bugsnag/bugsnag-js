@@ -1,7 +1,10 @@
-module.exports = (Vue, client) => {
+import { Client } from '@bugsnag/core'
+import { VueConstructor } from './types'
+
+export default (Vue: VueConstructor, client: Client) => {
   const prev = Vue.config.errorHandler
 
-  const handler = (err, vm, info) => {
+  const handler = (err: any, vm: any, info: any) => {
     const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
     const event = client.Event.create(err, true, handledState, 'vue error handler', 1)
 
@@ -14,14 +17,14 @@ module.exports = (Vue, client) => {
     client._notify(event)
     if (typeof console !== 'undefined' && typeof console.error === 'function') console.error(err)
 
-    if (typeof prev === 'function') prev.call(this, err, vm, info)
+    if (typeof prev === 'function') prev(err, vm, info)
   }
 
   Vue.config.errorHandler = handler
 }
 
 // taken and reworked from Vue.js source
-const formatComponentName = (vm, includeFile) => {
+export const formatComponentName = (vm: any, includeFile?: boolean) => {
   if (vm.$root === vm) return '<Root>'
   const options = typeof vm === 'function' && vm.cid != null
     ? vm.options
@@ -42,5 +45,5 @@ const formatComponentName = (vm, includeFile) => {
 }
 
 // taken and reworked from Vue.js source
-const classify = module.exports.classify = str =>
+export const classify = (str: string) =>
   str.replace(/(?:^|[-_])(\w)/g, c => c.toUpperCase()).replace(/[-_]/g, '')
