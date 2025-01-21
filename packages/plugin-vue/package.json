@@ -2,14 +2,14 @@
   "name": "@bugsnag/plugin-vue",
   "version": "8.1.1",
   "description": "Vue.js integration for bugsnag-js",
-  "main": "dist/index-cjs.cjs",
-  "types": "dist/types/index-es.d.ts",
-  "browser": "./dist/bugsnag-react.js",
+  "main": "dist/index.cjs",
+  "types": "dist/types/index.d.ts",
+  "browser": "./dist/bugsnag-vue.js",
   "exports": {
     ".": {
-      "types": "./dist/types/index-es.d.ts",
-      "import": "./dist/index-es.mjs",
-      "default": "./dist/index-cjs.cjs"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.cjs"
     }
   },
   "homepage": "https://www.bugsnag.com/",
