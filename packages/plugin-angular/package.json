@@ -2,43 +2,41 @@
   "name": "@bugsnag/plugin-angular",
   "version": "8.1.2",
   "description": "Angular integration for bugsnag-js",
-  "main": "dist/esm5/index.js",
-  "browser": "dist/esm5/index.js",
-  "module": "dist/esm5/index.js",
-  "es2015": "dist/esm2015/index.js",
-  "esm5": "dist/esm5/index.js",
-  "types": "dist/esm5/index.d.ts",
-  "typings": "dist/esm5/index.d.ts",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
     "url": "git@github.com:bugsnag/bugsnag-js.git"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "dist"
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:esm2015 && npm run build:esm5",
-    "build:esm2015": "ngc -p tsconfig.json",
-    "build:esm5": "ngc -p tsconfig.esm5.json",
-    "test:types": "npm run build"
+    "clean": "rm -rf dist",
+    "build": "npm run clean && ng build",
+    "test:types": "npm run build",
+    "prepack": "npm run build"
   },
   "author": "Bugsnag",
   "license": "MIT",
-  "devDependencies": {
-    "@angular/cli": "^10.0.0",
-    "@angular/compiler": "^10.0.0",
-    "@angular/compiler-cli": "^10.0.0",
-    "@angular/core": "^10.0.0",
-    "@bugsnag/js": "^8.1.2",
-    "rxjs": "^5.5.8",
-    "zone.js": "^0.8.26"
-  },
   "peerDependencies": {
+    "@angular/common": ">= 12",
+    "@angular/core": ">= 12",
     "@bugsnag/js": "^8.0.0"
-  }
+  },
+  "devDependencies": {
+    "@angular/cli": "^19.0.5",
+    "@angular/common": "^19.0.0",
+    "@angular/compiler-cli": "^19.0.0",
+    "@angular/core": "^19.0.0",
+    "@angular-devkit/build-angular": "^19.0.5",
+    "@bugsnag/js": "^8.0.0",
+    "rxjs": "~7.8.0",
+    "typescript": "~5.6.2",
+    "zone.js": "~0.15.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
 }
