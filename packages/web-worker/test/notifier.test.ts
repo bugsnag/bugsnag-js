@@ -1,4 +1,4 @@
-import WorkerBugsnagStatic from '../src/notifier'
+import WorkerBugsnagStatic from '../src/bugsnag'
 
 const API_KEY = '030bab153e7c2349be364d23b5ae93b5'
 
