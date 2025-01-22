@@ -1,10 +1,17 @@
 {
   "name": "@bugsnag/plugin-react",
   "version": "8.1.1",
-  "main": "dist/bugsnag-react.js",
   "description": "React integration for @bugsnag/js",
-  "browser": "dist/bugsnag-react.js",
-  "types": "types/bugsnag-plugin-react.d.ts",
+  "main": "dist/index-cjs.cjs",
+  "types": "dist/types/index-es.d.ts",
+  "browser": "./dist/bugsnag-react.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index-es.d.ts",
+      "import": "./dist/index-es.mjs",
+      "default": "./dist/index-cjs.cjs"
+    }
+  },
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -14,12 +21,12 @@
     "access": "public"
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && ../../bin/bundle src/index.js --standalone=BugsnagPluginReact | ../../bin/extract-source-map dist/bugsnag-react.js"
+    "build": "npm run clean && npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs"
   },
   "author": "Bugsnag",
   "license": "MIT",
