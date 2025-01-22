@@ -82,4 +82,6 @@ export default class ClientWithInternals<T extends Config = Config> extends Clie
   _loadPlugin(plugin: Plugin): void
 
   _isBreadcrumbTypeEnabled(type: string): boolean
+
+  public addOnError(fn: OnErrorCallback, front?: boolean): void;
 }
