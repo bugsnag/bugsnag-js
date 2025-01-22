@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { create, act } from 'react-test-renderer'
-import BugsnagPluginReact from '..'
+import BugsnagPluginReact, { formatComponentStack } from '../src/plugin'
 import Client from '@bugsnag/core/client'
 
-const client = new Client({ apiKey: '123', plugins: [new BugsnagPluginReact(React)] }, undefined)
+const client = new Client(
+  { apiKey: '123', plugins: [new BugsnagPluginReact(React)] },
+  undefined
+)
 client._notify = jest.fn()
 
 interface FallbackComponentProps {
@@ -11,9 +14,9 @@ interface FallbackComponentProps {
   info: React.ErrorInfo
   clearError: () => void
 }
-type FallbackComponentType = React.ComponentType<FallbackComponentProps>
+type FallbackComponentType = React.ComponentType<FallbackComponentProps>;
 
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
 beforeAll(() => {
@@ -26,8 +29,7 @@ test('formatComponentStack(str)', () => {
   const str = `
   in BadButton
   in ErrorBoundary`
-  expect(BugsnagPluginReact.formatComponentStack(str))
-    .toBe('in BadButton\nin ErrorBoundary')
+  expect(formatComponentStack(str)).toBe('in BadButton\nin ErrorBoundary')
 })
 
 const BadComponent = () => {
@@ -35,7 +37,7 @@ const BadComponent = () => {
 }
 
 // see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20544
-const GoodComponent = (): JSX.Element => 'test' as unknown as JSX.Element
+const GoodComponent = (): JSX.Element => ('test' as unknown) as JSX.Element
 
 const ComponentWithBadButton = () => {
   const [clicked, setClicked] = useState(false)
@@ -47,60 +49,92 @@ const ComponentWithBadButton = () => {
 }
 
 it('renders correctly', () => {
-  const tree = create(<ErrorBoundary><GoodComponent /></ErrorBoundary>)
-    .toJSON()
-  expect(tree).toMatchSnapshot()
+  const tree = create(
+    <ErrorBoundary>
+      <GoodComponent />
+    </ErrorBoundary>
+  ).toJSON()
+  expect(tree).toMatchInlineSnapshot('"test"')
 })
 
 it('renders correctly on error', () => {
-  const tree = create(<ErrorBoundary><BadComponent /></ErrorBoundary>)
-    .toJSON()
+  const tree = create(
+    <ErrorBoundary>
+      <BadComponent />
+    </ErrorBoundary>
+  ).toJSON()
   expect(tree).toBe(null)
 })
 
 it('calls notify on error', () => {
-  create(<ErrorBoundary><BadComponent /></ErrorBoundary>)
-    .toJSON()
+  create(
+    <ErrorBoundary>
+      <BadComponent />
+    </ErrorBoundary>
+  ).toJSON()
   expect(client._notify).toHaveBeenCalledTimes(1)
 })
 
 it('does not render FallbackComponent when no error', () => {
-  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
-  const tree = create(<ErrorBoundary FallbackComponent={FallbackComponent}><GoodComponent /></ErrorBoundary>)
-    .toJSON()
-  expect(tree).toMatchSnapshot()
+  const FallbackComponent = (jest.fn(
+    () => 'fallback'
+  ) as unknown) as FallbackComponentType
+  const tree = create(
+    <ErrorBoundary FallbackComponent={FallbackComponent}>
+      <GoodComponent />
+    </ErrorBoundary>
+  ).toJSON()
+  expect(tree).toMatchInlineSnapshot('"test"')
   expect(FallbackComponent).toHaveBeenCalledTimes(0)
 })
 
 it('renders FallbackComponent on error', () => {
-  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
-  const tree = create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
-    .toJSON()
-  expect(tree).toMatchSnapshot()
+  const FallbackComponent = (jest.fn(
+    () => 'fallback'
+  ) as unknown) as FallbackComponentType
+  const tree = create(
+    <ErrorBoundary FallbackComponent={FallbackComponent}>
+      <BadComponent />
+    </ErrorBoundary>
+  ).toJSON()
+  expect(tree).toMatchInlineSnapshot('"fallback"')
 })
 
 it('passes the props to the FallbackComponent', () => {
-  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
-  create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
-  expect(FallbackComponent).toBeCalledWith({
-    error: expect.any(Error),
-    info: { componentStack: expect.any(String) },
-    clearError: expect.any(Function)
-  }, {})
+  const FallbackComponent = (jest.fn(
+    () => 'fallback'
+  ) as unknown) as FallbackComponentType
+  create(
+    <ErrorBoundary FallbackComponent={FallbackComponent}>
+      <BadComponent />
+    </ErrorBoundary>
+  )
+  expect(FallbackComponent).toBeCalledWith(
+    {
+      error: expect.any(Error),
+      info: { componentStack: expect.any(String) },
+      clearError: expect.any(Function)
+    },
+    {}
+  )
 })
 
 it('resets the error boundary when the FallbackComponent calls the passed clearError prop', () => {
   const FallbackComponent = ({ clearError }: FallbackComponentProps) => {
-    return (
-      <button onClick={() => clearError()}>clearError</button>
-    )
+    return <button onClick={() => clearError()}>clearError</button>
   }
 
-  const component = create(<ErrorBoundary FallbackComponent={FallbackComponent}><ComponentWithBadButton /></ErrorBoundary>)
+  const component = create(
+    <ErrorBoundary FallbackComponent={FallbackComponent}>
+      <ComponentWithBadButton />
+    </ErrorBoundary>
+  )
   const instance = component.root
 
   // Trigger a render exception
-  const badButton = instance.findByType(ComponentWithBadButton).findByType('button')
+  const badButton = instance
+    .findByType(ComponentWithBadButton)
+    .findByType('button')
   act(() => {
     badButton.props.onClick()
   })
@@ -112,11 +146,21 @@ it('resets the error boundary when the FallbackComponent calls the passed clearE
   })
 
   // expect to see ComponentWithBadButton again
-  expect(component.toJSON()).toMatchSnapshot()
+  expect(component.toJSON()).toMatchInlineSnapshot(`
+    <button
+      onClick={[Function]}
+    >
+      click for error
+    </button>
+  `)
 })
 
 it('a bad FallbackComponent implementation does not trigger stack overflow', () => {
-  const BadFallbackComponentImplementation = ({ error, info, clearError }: FallbackComponentProps) => {
+  const BadFallbackComponentImplementation = ({
+    error,
+    info,
+    clearError
+  }: FallbackComponentProps) => {
     function log (o: any) {}
     log(error)
     clearError()
@@ -125,22 +169,29 @@ it('a bad FallbackComponent implementation does not trigger stack overflow', () 
   }
 
   expect(() => {
-    create(<ErrorBoundary FallbackComponent={BadFallbackComponentImplementation}><BadComponent /></ErrorBoundary>)
+    create(
+      <ErrorBoundary FallbackComponent={BadFallbackComponentImplementation}>
+        <BadComponent />
+      </ErrorBoundary>
+    )
   }).toThrow()
 })
 
 it('it passes the onError function to the Bugsnag notify call', () => {
   const onError = () => {}
-  create(<ErrorBoundary onError={onError}><BadComponent /></ErrorBoundary>)
-    .toJSON()
-  expect(client._notify).toBeCalledWith(
-    expect.any(client.Event),
-    onError
-  )
+  create(
+    <ErrorBoundary onError={onError}>
+      <BadComponent />
+    </ErrorBoundary>
+  ).toJSON()
+  expect(client._notify).toBeCalledWith(expect.any(client.Event), onError)
 })
 
 it('supports passing reference to React when the error boundary is created', () => {
-  const client = new Client({ apiKey: '123', plugins: [new BugsnagPluginReact()] }, undefined)
+  const client = new Client(
+    { apiKey: '123', plugins: [new BugsnagPluginReact()] },
+    undefined
+  )
   // eslint-disable-next-line
   const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
   expect(ErrorBoundary).toBeTruthy()
@@ -160,7 +211,10 @@ describe('global React', () => {
   it('can pull React out of the window object', () => {
     globalReference.window.React = React
 
-    const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagPluginReact()] })
+    const client = new Client({
+      apiKey: 'API_KEYYY',
+      plugins: [new BugsnagPluginReact()]
+    })
 
     // eslint-disable-next-line
     const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
@@ -172,7 +226,10 @@ describe('global React', () => {
     // Delete the window object so that any unsafe check for 'window.React' will throw
     delete globalReference.window
 
-    const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagPluginReact()] })
+    const client = new Client({
+      apiKey: 'API_KEYYY',
+      plugins: [new BugsnagPluginReact()]
+    })
 
     // eslint-disable-next-line
     const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
