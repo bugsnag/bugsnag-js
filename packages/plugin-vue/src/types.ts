@@ -11,4 +11,13 @@ export interface VueApp {
   config: VueConfig
 }
 
-export type VueErrorHandler = (err: any, instance: any, info: any) => void
+export type VueErrorHandler = (err: unknown, instance: ComponentPublicInstance, info: string) => void
+
+export interface ComponentPublicInstance {
+  $parent: ComponentPublicInstance | null
+  $root?: ComponentPublicInstance | null
+  $options: {
+    name?: string
+    propsData?: unknown
+  }
+}

@@ -1,10 +1,10 @@
 import { Client } from '@bugsnag/core'
-import { VueConstructor } from './types'
+import { ComponentPublicInstance, VueConstructor, VueErrorHandler } from './types'
 
 export default (app: VueConstructor, client: Client) => {
   const prev = app.config.errorHandler
 
-  const handler = (err: any, vm: any, info: any) => {
+  const handler: VueErrorHandler = (err, vm, info) => {
     const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
     const event = client.Event.create(err, true, handledState, 'vue error handler', 1)
 
@@ -28,7 +28,7 @@ export default (app: VueConstructor, client: Client) => {
   app.config.errorHandler = handler
 }
 
-function formatComponentName (vm: any) {
+function formatComponentName (vm: ComponentPublicInstance) {
   if (vm.$parent === null) return 'App'
   return (vm.$options && vm.$options.name) ? vm.$options.name : 'Anonymous'
 }
