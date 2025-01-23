@@ -2,9 +2,16 @@
   "name": "@bugsnag/plugin-vue",
   "version": "8.1.1",
   "description": "Vue.js integration for bugsnag-js",
-  "main": "dist/bugsnag-vue.js",
-  "browser": "dist/bugsnag-vue.js",
-  "types": "types/bugsnag-plugin-vue.d.ts",
+  "main": "dist/index.cjs",
+  "types": "dist/types/index.d.ts",
+  "browser": "./dist/bugsnag-vue.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.cjs"
+    }
+  },
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -14,12 +21,12 @@
     "access": "public"
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && ../../bin/bundle src/index.js --standalone=BugsnagPluginVue | ../../bin/extract-source-map dist/bugsnag-vue.js"
+    "build": "npm run clean && npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs"
   },
   "author": "Bugsnag",
   "license": "MIT",
