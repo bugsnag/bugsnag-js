@@ -32,7 +32,7 @@ import dXMLHttpRequest from '@bugsnag/delivery-xml-http-request'
 
 const name = 'Bugsnag JavaScript'
 // @ts-ignore
-const version = __BUGSNAG_NOTIFIER_VERSION__ // eslint-disable-line no-undef
+const version = __BUGSNAG_NOTIFIER_VERSION__
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const schema = assign({}, baseConfig, browserConfig)

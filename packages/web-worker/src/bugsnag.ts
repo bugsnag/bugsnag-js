@@ -28,7 +28,7 @@ export interface WorkerBugsnagStatic extends BugsnagStatic {
 const name = 'Bugsnag Web Worker'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 // @ts-ignore
-const version = __BUGSNAG_NOTIFIER_VERSION__ // eslint-disable-line no-undef
+const version = __BUGSNAG_NOTIFIER_VERSION__
 
 // extend the base config schema with some worker-specific options
 const schema = assign({}, baseConfig, workerConfig)
