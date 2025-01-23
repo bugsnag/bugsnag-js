@@ -1,10 +1,25 @@
 # Changelog
 
-## Unreleased
+## [Unreleased]
 
 ### Added
 
 - Introduce `sendPayloadChecksums` option and set `Bugsnag-Integrity` headers on events and sessions [#2221](https://github.com/bugsnag/bugsnag-js/pull/2221)
+
+### Changed
+
+- (plugin-angular) Generate type definition using Angular 17 [#2275](https://github.com/bugsnag/bugsnag-js/pull/2275)
+- (plugin-angular) Update Angular support to cover v12 - 19 [#2278](https://github.com/bugsnag/bugsnag-js/pull/2278)
+
+### Fixed
+
+- Corrected setUser TS interface to allow for null arguments [#2262](https://github.com/bugsnag/bugsnag-js/pull/2262)
+
+## [8.1.3] - 2024-11-28
+
+### Changed
+
+- (react-native) Update bugsnag-android from v6.6.1 to [v6.10.0](https://github.com/bugsnag/bugsnag-android/blob/next/CHANGELOG.md#6100-2024-11-14)
 
 ## [8.1.2] - 2024-10-25
 
@@ -37,7 +52,7 @@ As well as some bug fixes and **breaking changes** described in the [Upgrade Gui
 ### Added
 
 - (node) Add support for manual breadcrumbs [#1927](https://github.com/bugsnag/bugsnag-js/pull/1927) and automatic console breadcrumbs [#2107](https://github.com/bugsnag/bugsnag-js/pull/2107)
-- Support error correlation properties in event payloads [#2174](https://github.com/bugsnag/bugsnag-js/pull/2174) 
+- Support error correlation properties in event payloads [#2174](https://github.com/bugsnag/bugsnag-js/pull/2174)
 
 ### Fixed
 

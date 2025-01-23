@@ -1,3 +1,6 @@
+agents:
+  queue: opensource
+
 steps:
 
   - group: "React Native (Android) Tests"
@@ -7,7 +10,7 @@ steps:
       #
       - label: ":docker: Build RN Android Builder image (Java 11, Node 16)"
         key: "android-builder-image-java-11-node-16"
-        timeout_in_minutes: 30
+        timeout_in_minutes: 20
         plugins:
           - docker-compose#v4.12.0:
               build: react-native-android-builder-java-11-node-16
@@ -27,7 +30,7 @@ steps:
         key: "rn-0-66-apk"
         depends_on:
           - "android-builder-image-java-11-node-16"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 20
         env:
           REACT_NATIVE_VERSION: "rn0.66"
         plugins:
@@ -45,7 +48,7 @@ steps:
         key: "rn-0-67-apk"
         depends_on:
           - "android-builder-image-java-11-node-16"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 20
         env:
           REACT_NATIVE_VERSION: "rn0.67"
         plugins:
@@ -63,7 +66,7 @@ steps:
         key: "rn-0-68-hermes-apk"
         depends_on:
           - "android-builder-image-java-11-node-16"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 20
         env:
           REACT_NATIVE_VERSION: "rn0.68-hermes"
         plugins:
@@ -81,7 +84,7 @@ steps:
         key: "rn-0-69-apk"
         depends_on:
           - "android-builder-image-java-11-node-16"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 20
         env:
           REACT_NATIVE_VERSION: "rn0.69"
         plugins:
@@ -97,7 +100,7 @@ steps:
 
       - label: ':android: Build RN {{matrix}} test fixture APK (Old Arch)'
         key: "build-react-native-android-fixture-old-arch-full"
-        timeout_in_minutes: 30
+        timeout_in_minutes: 15
         agents:
           queue: macos-14
         env:
@@ -123,7 +126,7 @@ steps:
 
       - label: ':android: Build RN {{matrix}} test fixture APK (New Arch)'
         key: "build-react-native-android-fixture-new-arch-full"
-        timeout_in_minutes: 30
+        timeout_in_minutes: 15
         agents:
           queue: macos-14
         env:
@@ -202,7 +205,7 @@ steps:
       #
       - label: ":bitbar: :android: RN 0.66 Android end-to-end tests"
         depends_on: "rn-0-66-apk"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 30
         plugins:
           artifacts#v1.9.0:
             download: "build/rn0.66.apk"
@@ -234,7 +237,7 @@ steps:
 
       - label: ":bitbar: :android: RN 0.67 Android end-to-end tests"
         depends_on: "rn-0-67-apk"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 30
         plugins:
           artifacts#v1.9.0:
             download: "build/rn0.67.apk"
@@ -267,7 +270,7 @@ steps:
 
       - label: ":bitbar: :android: RN 0.69 Android end-to-end tests"
         depends_on: "rn-0-69-apk"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 30
         plugins:
           artifacts#v1.9.0:
             download: "build/rn0.69.apk"
@@ -300,7 +303,7 @@ steps:
 
       - label: ":bitbar: :android: RN 0.68 (Hermes) Android end-to-end tests"
         depends_on: "rn-0-68-hermes-apk"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 30
         plugins:
           artifacts#v1.9.0:
             download: "build/rn0.68-hermes.apk"
@@ -333,7 +336,7 @@ steps:
 
       - label: ":bitbar: :android: RN {{matrix}} Android 12 (Old Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-old-arch-full"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 30
         plugins:
           artifacts#v1.9.0:
             download: "test/react-native/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk"
@@ -375,7 +378,7 @@ steps:
       # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
       - label: ":bitbar: :android: RN {{matrix}} Android 12 (New Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch-full"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 30
         plugins:
           artifacts#v1.9.0:
             download: "test/react-native/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk"
@@ -414,7 +417,7 @@ steps:
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (Old Arch) end-to-end tests"
         depends_on: "build-react-native-navigation-android-fixture-old-arch"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 10
         plugins:
           artifacts#v1.9.0:
             download: "test/react-native/features/fixtures/generated/react-native-navigation/old-arch/{{matrix}}/reactnative.apk"
@@ -453,7 +456,7 @@ steps:
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (New Arch) end-to-end tests"
         depends_on: "build-react-native-navigation-android-fixture-new-arch"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 10
         plugins:
           artifacts#v1.9.0:
             download: "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/reactnative.apk"

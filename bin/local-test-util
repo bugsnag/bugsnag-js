@@ -73,7 +73,8 @@ async function updateNotifiers (notifier) {
   await buildNotifiers(notifier)
   await packNotifiers(notifier)
   await installNotifiers(notifier)
-  await installNgNotifier(notifier)
+  await installNgNotifier(notifier, '12')
+  await installNgNotifier(notifier, '17')
 }
 
 async function updateFixtures (fixture) {
@@ -148,7 +149,7 @@ async function installNotifiers (notifier) {
   })
 }
 
-async function installNgNotifier (notifier) {
+async function installNgNotifier (notifier, version = '12') {
   trace('install ng notifier')
   if (notifier && ![ 'browser', 'node', 'js', 'plugin-angular', 'web-worker' ].includes(notifier)) return
   await ex(`npm`, [
@@ -161,7 +162,7 @@ async function installNgNotifier (notifier) {
     `../../../../../../bugsnag-web-worker-${require('../packages/web-worker/package.json').version}.tgz`,
     `../../../../../../bugsnag-plugin-angular-${require('../packages/plugin-angular/package.json').version}.tgz`
   ], {
-    cwd: `${__dirname}/../test/browser/features/fixtures/plugin_angular/ng`
+    cwd: `${__dirname}/../test/browser/features/fixtures/plugin_angular/angular_${version}`
   })
 }
 

@@ -1,3 +1,6 @@
+agents:
+  queue: "opensource"
+
 steps:
 
   - group: "React Native (iOS) Tests"
@@ -8,7 +11,7 @@ steps:
       #
       - label: ":ios: Build RN 0.66 ipa"
         key: "rn-0-66-ipa"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 20
         agents:
           queue: "macos-12-arm"
         env:
@@ -25,7 +28,7 @@ steps:
 
       - label: ":ios: Build RN 0.67 ipa"
         key: "rn-0-67-ipa"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 20
         agents:
           queue: "macos-12-arm"
         env:
@@ -42,7 +45,7 @@ steps:
 
       - label: ":ios: Build RN 0.68 Hermes ipa"
         key: "rn-0-68-hermes-ipa"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 20
         agents:
           queue: "macos-12-arm"
         env:
@@ -59,7 +62,7 @@ steps:
 
       - label: ":ios: Build RN 0.69 ipa"
         key: "rn-0-69-ipa"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 20
         agents:
           queue: "macos-12-arm"
         env:
@@ -181,9 +184,9 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":bitbar: :ios: RN 0.66 iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.66 iOS end-to-end tests"
         depends_on: "rn-0-66-ipa"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 40
         plugins:
           artifacts#v1.5.0:
             download: "build/rn0.66.ipa"
@@ -211,9 +214,9 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
 
-      - label: ":bitbar: :ios: RN 0.67 iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.67 iOS end-to-end tests"
         depends_on: "rn-0-67-ipa"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 40
         plugins:
           artifacts#v1.5.0:
             download: "build/rn0.67.ipa"
@@ -242,9 +245,9 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":bitbar: :ios: RN 0.69 iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.69 iOS end-to-end tests"
         depends_on: "rn-0-69-ipa"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 40
         plugins:
           artifacts#v1.5.0:
             download: "build/rn0.69.ipa"
@@ -273,9 +276,9 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
       #
-      - label: ":bitbar: :ios: RN 0.68 (hermes) iOS 16 end-to-end tests"
+      - label: ":bitbar: :ios: RN 0.68 (hermes) iOS end-to-end tests"
         depends_on: "rn-0-68-hermes-ipa"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 40
         plugins:
           artifacts#v1.5.0:
             download: "build/rn0.68-hermes.ipa"
@@ -304,9 +307,9 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
 
-      - label: ":bitbar: :mac: RN {{matrix}} iOS 16 (Old Arch) end-to-end tests"
+      - label: ":bitbar: :mac: RN {{matrix}} iOS (Old Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-old-arch-full"
-        timeout_in_minutes: 60
+        timeout_in_minutes: 40
         plugins:
           artifacts#v1.9.0:
             download: "test/react-native/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa"
@@ -318,7 +321,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
-              - --device=IOS_16
+              - --device=IOS_15
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -342,7 +345,7 @@ steps:
           - "0.73"
           - "0.74"
 
-      - label: ":bitbar: :mac: RN {{matrix}} iOS 16 (New Arch) end-to-end tests"
+      - label: ":bitbar: :mac: RN {{matrix}} iOS (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch-full"
         timeout_in_minutes: 60
         plugins:
@@ -356,7 +359,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
-              - --device=IOS_16
+              - --device=IOS_15
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -383,7 +386,7 @@ steps:
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't currently support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
       # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
-      - label: ":bitbar: :mac: react-native-navigation {{matrix}} iOS 16 (Old Arch) end-to-end tests"
+      - label: ":bitbar: :mac: react-native-navigation {{matrix}} iOS (Old Arch) end-to-end tests"
         depends_on: "build-react-native-navigation-ios-fixture-old-arch"
         timeout_in_minutes: 60
         plugins:
@@ -397,7 +400,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/react-native-navigation/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
-              - --device=IOS_16
+              - --device=IOS_15
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -423,7 +426,7 @@ steps:
 
       # Skipped due to build failures with react-native-navigation when new arch is enabled
       # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
-      # - label: ":bitbar: :mac: react-native-navigation {{matrix}} iOS 16 (New Arch) end-to-end tests"
+      # - label: ":bitbar: :mac: react-native-navigation {{matrix}} iOS (New Arch) end-to-end tests"
       #   depends_on: "build-react-native-navigation-ios-fixture-new-arch"
       #   timeout_in_minutes: 60
       #   plugins:
@@ -437,7 +440,7 @@ steps:
       #       command:
       #         - --app=/app/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/output/reactnative.ipa
       #         - --farm=bb
-      #         - --device=IOS_16
+      #         - --device=IOS_15
       #         - --fail-fast
       #         - --no-tunnel
       #         - --aws-public-ip
