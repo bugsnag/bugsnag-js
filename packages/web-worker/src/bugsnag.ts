@@ -48,7 +48,7 @@ const notifier: WorkerClient = {
     if (!opts) opts = {} as unknown as Config
 
     const internalPlugins = [
-      pluginBrowserDevice(navigator),
+      pluginBrowserDevice(navigator, null),
       pluginBrowserSession,
       pluginClientIp,
       pluginPreventDiscard,

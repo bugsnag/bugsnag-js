@@ -15,7 +15,7 @@ declare global {
 /*
  * Automatically detects browser device details
  */
-export default (nav = navigator, win = window): Plugin => ({
+export default (nav = navigator, win: Window | null = window): Plugin => ({
   name: 'device',
   load: (client) => {
     const device: Device = {
@@ -33,7 +33,7 @@ export default (nav = navigator, win = window): Plugin => ({
     }
 
     // @ts-expect-error _config is private API
-    if (client._config.generateAnonymousId) {
+    if (client._config.generateAnonymousId && win) {
       device.id = getDeviceId(win)
     }
 
