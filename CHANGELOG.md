@@ -10,6 +10,8 @@
 
 - (plugin-angular) Generate type definition using Angular 17 [#2275](https://github.com/bugsnag/bugsnag-js/pull/2275)
 - (plugin-angular) Update Angular support to cover v12 - 19 [#2278](https://github.com/bugsnag/bugsnag-js/pull/2278)
+- (react-native) Update bugsnag-android from v6.10.0 to [v6.11.0](https://github.com/bugsnag/bugsnag-android/blob/next/CHANGELOG.md#6110-2025-01-02)
+- (react-native) Update bugsnag-cocoa from v6.30.1 to [v6.31.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6310-2025-01-13)
 
 ### Fixed
 
