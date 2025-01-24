@@ -9,6 +9,7 @@ Scenario Outline: basic error handler usage
   And the test should run in this browser
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
+  And the error payload field "events.0.device.runtimeVersions.angular" is not null
   Examples:
     | version |
     | 12      |
