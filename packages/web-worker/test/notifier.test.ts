@@ -9,8 +9,11 @@ function getBugsnag (): typeof WorkerBugsnagStatic {
   return bugsnag
 }
 
-function mockFetch () {
-  typedGlobal.fetch = jest.fn(() => Promise.resolve({ json: () => Promise.resolve() }))
+function mockFetch (onFetch?: () => void) {
+  typedGlobal.fetch = jest.fn(() => {
+    onFetch?.()
+    return Promise.resolve({ json: () => Promise.resolve() })
+  })
 }
 
 const testConfig = {
@@ -28,6 +31,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   jest.resetModules()
+  jest.resetAllMocks()
 })
 
 describe('worker notifier', () => {
@@ -85,41 +89,125 @@ describe('worker notifier', () => {
 
   describe('session management', () => {
     it('successfully starts a session', (done) => {
+      expect.assertions(2)
+
+      const onFetch = () => {
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.bugsnag.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Bugsnag-Api-Key': API_KEY,
+            'Bugsnag-Payload-Version': '1',
+            'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+            'Content-Type': 'application/json'
+          })
+        }))
+
+        done()
+      }
+
+      mockFetch(onFetch)
+
       const Bugsnag = getBugsnag()
-      Bugsnag.start(API_KEY)
+      Bugsnag.start({ apiKey: API_KEY })
 
       expect(typedGlobal.fetch).not.toHaveBeenCalled()
 
       Bugsnag.startSession()
-
-      expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.bugsnag.com', expect.objectContaining({
-        method: 'POST',
-        headers: expect.objectContaining({
-          'Bugsnag-Api-Key': API_KEY,
-          'Bugsnag-Payload-Version': '1',
-          'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
-          'Content-Type': 'application/json'
-        })
-      }))
-
-      done()
     })
 
     it('automatically starts a session', (done) => {
+      expect.assertions(1)
+      const onFetch = () => {
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.bugsnag.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Bugsnag-Api-Key': API_KEY,
+            'Bugsnag-Payload-Version': '1',
+            'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+            'Content-Type': 'application/json'
+          })
+        }))
+        done()
+      }
+
+      mockFetch(onFetch)
       const Bugsnag = getBugsnag()
       Bugsnag.start({ apiKey: API_KEY, autoTrackSessions: true })
+    })
+  })
 
-      expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.bugsnag.com', expect.objectContaining({
-        method: 'POST',
-        headers: expect.objectContaining({
-          'Bugsnag-Api-Key': API_KEY,
-          'Bugsnag-Payload-Version': '1',
-          'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
-          'Content-Type': 'application/json'
-        })
-      }))
+  describe('payload checksum behavior (Bugsnag-Integrity header)', () => {
+    beforeEach(() => {
+      // @ts-ignore
+      window.isSecureContext = true
+    })
 
-      done()
+    afterEach(() => {
+      // @ts-ignore
+      window.isSecureContext = false
+    })
+
+    it('includes the integrity header by default', (done) => {
+      const Bugsnag = getBugsnag()
+      Bugsnag.start({ apiKey: API_KEY, autoTrackSessions: true })
+      Bugsnag.notify(new Error('123'), undefined, (err, event) => {
+        if (err) done(err)
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.bugsnag.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://notify.bugsnag.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        done()
+      })
+    })
+
+    it('does not include the integrity header if endpoint configuration is supplied', (done) => {
+      const Bugsnag = getBugsnag()
+      Bugsnag.start({ apiKey: API_KEY, autoTrackSessions: true, endpoints: { notify: 'https://notify.custom.com', sessions: 'https://sessions.custom.com' } })
+      Bugsnag.notify(new Error('123'), undefined, (err, event) => {
+        if (err) done(err)
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.custom.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.not.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://notify.custom.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.not.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        done()
+      })
+    })
+
+    it('can be enabled for a custom endpoint configuration by using sendPayloadChecksums', (done) => {
+      const Bugsnag = getBugsnag()
+      Bugsnag.start({ apiKey: API_KEY, autoTrackSessions: true, endpoints: { notify: 'https://notify.custom.com', sessions: 'https://sessions.custom.com' }, sendPayloadChecksums: true })
+      Bugsnag.notify(new Error('123'), undefined, (err, event) => {
+        if (err) done(err)
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://sessions.custom.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        expect(typedGlobal.fetch).toHaveBeenCalledWith('https://notify.custom.com', expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Bugsnag-Integrity': expect.any(String)
+          })
+        }))
+        done()
+      })
     })
   })
 })

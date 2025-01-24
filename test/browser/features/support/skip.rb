@@ -15,3 +15,7 @@
         end
     end
 end
+
+Before('@skip_http') do |_scenario|
+    skip_this_scenario("Skipping scenario") if Maze.config.https == false
+end

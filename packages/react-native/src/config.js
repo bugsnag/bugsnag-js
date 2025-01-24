@@ -3,7 +3,21 @@ const stringWithLength = require('@bugsnag/core/lib/validators/string-with-lengt
 const rnPackage = require('react-native/package.json')
 const iserror = require('iserror')
 
-const ALLOWED_IN_JS = ['onError', 'onBreadcrumb', 'logger', 'metadata', 'user', 'context', 'codeBundleId', 'plugins', 'featureFlags', 'reportUnhandledPromiseRejectionsAsHandled']
+const ALLOWED_IN_JS = [
+  'onError',
+  'onBreadcrumb',
+  'logger',
+  'metadata',
+  'user',
+  'context',
+  'codeBundleId',
+  'plugins',
+  'featureFlags',
+  'reportUnhandledPromiseRejectionsAsHandled',
+  // sendPayloadChecksums gets set in core because its 'default value' depends on other config values and so cannot remain unset
+  'sendPayloadChecksums'
+]
+
 const allowedErrorTypes = () => ({
   unhandledExceptions: true,
   unhandledRejections: true,
