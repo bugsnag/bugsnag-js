@@ -5,6 +5,7 @@
 ### Added
 
 - Introduce `sendPayloadChecksums` option and set `Bugsnag-Integrity` headers on events and sessions [#2221](https://github.com/bugsnag/bugsnag-js/pull/2221)
+- (plugin-angular) Added Angular runtime version to device info [#2288](https://github.com/bugsnag/bugsnag-js/pull/2288)
 
 ### Changed
 

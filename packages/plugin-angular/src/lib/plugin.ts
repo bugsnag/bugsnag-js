@@ -18,7 +18,6 @@ const plugin: Plugin = {
   name: 'Angular',
   load: (client: Client): ErrorHandler => {
     const originalNotify = client._notify
-
     client._notify = function () {
       const event = arguments as unknown as Event
       if (isNgZoneEnabled) {

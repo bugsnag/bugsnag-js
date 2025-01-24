@@ -1,4 +1,4 @@
-import { ErrorHandler } from '@angular/core'
+import { ErrorHandler, VERSION } from '@angular/core'
 import Bugsnag, { Client } from '@bugsnag/js'
 
 type BugsnagWithInternals = typeof Bugsnag & {
@@ -14,6 +14,15 @@ class BugsnagErrorHandler implements ErrorHandler {
     } else {
       this.bugsnagClient = (Bugsnag as BugsnagWithInternals)._client
     }
+
+    // Add angular runtime to device metadata
+    const device = { runtimeVersions: { angular: VERSION.full } }
+    this.bugsnagClient.addOnSession(session => {
+      session.device = { ...session.device, ...device }
+    })
+    this.bugsnagClient.addOnError((event) => {
+      event.device = { ...event.device, ...device }
+    })
   }
 
   handleError (error: any): void {
