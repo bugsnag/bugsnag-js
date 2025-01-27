@@ -6,6 +6,8 @@ const globalAny: any = global
 
 describe('delivery:fetch', () => {
   it('sends events successfully', done => {
+    window.isSecureContext = true
+
     globalAny.fetch = jest.fn(() => Promise.resolve({
       json: () => Promise.resolve()
     }))
@@ -13,7 +15,8 @@ describe('delivery:fetch', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { notify: '/echo/' },
-      redactedKeys: []
+      redactedKeys: [],
+      sendPayloadChecksums: true
     }
 
     const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
@@ -28,11 +31,59 @@ describe('delivery:fetch', () => {
           'Bugsnag-Api-Key': 'aaaaaaaa',
           'Bugsnag-Payload-Version': '4',
           'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Bugsnag-Integrity': 'sha1 14faf2461b0519f9d9d62cfb8d79483fcc8f825c'
         })
       }))
       done()
     })
+
+    window.isSecureContext = false
+  })
+
+  it('omits the bugsnag integrity header when not in a secure context', done => {
+    globalAny.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve()
+    }))
+
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: '/echo/' },
+      redactedKeys: [],
+      sendPayloadChecksums: true
+    }
+
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+
+    delivery({ logger: { }, _config: config } as unknown as Client).sendEvent(payload, (err) => {
+      expect(err).toBeNull()
+      expect(globalAny.fetch.mock.calls[0][1].headers['Bugsnag-Integrity']).toBeUndefined()
+      done()
+    })
+  })
+
+  it('omits the bugsnag integrity header when sendPayloadChecksums is false', done => {
+    window.isSecureContext = true
+    globalAny.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve()
+    }))
+
+    const config = {
+      apiKey: 'aaaaaaaa',
+      endpoints: { notify: '/echo/' },
+      redactedKeys: [],
+      sendPayloadChecksums: false
+    }
+
+    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+
+    delivery({ logger: { }, _config: config } as unknown as Client).sendEvent(payload, (err) => {
+      expect(err).toBeNull()
+      expect(globalAny.fetch.mock.calls[0][1].headers['Bugsnag-Integrity']).toBeUndefined()
+      done()
+    })
+
+    window.isSecureContext = false
   })
 
   it('returns an error for failed event delivery', done => {
@@ -56,6 +107,8 @@ describe('delivery:fetch', () => {
   })
 
   it('sends sessions successfully', done => {
+    window.isSecureContext = true
+
     globalAny.fetch = jest.fn(() => Promise.resolve({
       json: () => Promise.resolve()
     }))
@@ -63,7 +116,8 @@ describe('delivery:fetch', () => {
     const config = {
       apiKey: 'aaaaaaaa',
       endpoints: { sessions: '/echo/' },
-      redactedKeys: []
+      redactedKeys: [],
+      sendPayloadChecksums: true
     }
 
     const payload = { sample: 'payload' } as unknown as SessionDeliveryPayload
@@ -77,11 +131,14 @@ describe('delivery:fetch', () => {
           'Bugsnag-Api-Key': 'aaaaaaaa',
           'Bugsnag-Payload-Version': '1',
           'Bugsnag-Sent-At': expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Bugsnag-Integrity': 'sha1 14faf2461b0519f9d9d62cfb8d79483fcc8f825c'
         })
       }))
       done()
     })
+
+    window.isSecureContext = false
   })
 
   it('returns an error for failed sessions', done => {

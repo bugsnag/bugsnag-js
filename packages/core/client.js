@@ -121,6 +121,11 @@ class Client {
       return schema
     }, this._schema)
 
+    // sendPayloadChecksums is false by default unless custom endpoints are not specified
+    if (!opts.endpoints) {
+      opts.sendPayloadChecksums = 'sendPayloadChecksums' in opts ? opts.sendPayloadChecksums : true
+    }
+
     // accumulate configuration and error messages
     const { errors, config } = reduce(keys(schema), (accum, key) => {
       const defaultValue = schema[key].defaultValue(opts[key])
