@@ -46,3 +46,12 @@ Feature: worker notifier
     When I navigate to the test URL "/web_worker/auto_track_sessions"
     And I wait to receive a session
     Then the session is a valid browser payload for the session tracking API
+
+  @skip_safari_16
+  Scenario: Integrity headers are set when setPayloadChecksums is true
+    When I navigate to the test URL "/web_worker/integrity"
+    And I wait to receive an error
+    And I wait to receive a session
+    Then the error is a valid browser payload for the error reporting API
+    And the session "bugsnag-integrity" header matches the regex "^sha1 (\d|[abcdef]){40}$"
+    And the error "bugsnag-integrity" header matches the regex "^sha1 (\d|[abcdef]){40}$"
