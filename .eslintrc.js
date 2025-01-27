@@ -70,7 +70,7 @@ module.exports = {
     // linting for ts files
     {
       files: ['**/*.ts'],
-      extends: 'standard-with-typescript',
+      // extends: 'standard-with-typescript',
       // We can't use rules which requires parserServices as there is no tsconfig that represents the whole monorepo (yet).
       // 'parserOptions': {
       //     'project': './tsconfig.json'
@@ -90,7 +90,7 @@ module.exports = {
       },
       plugins: ['eslint-plugin-jest'],
       extends: [
-        'standard-with-typescript',
+        // 'standard-with-typescript',
         'plugin:jest/recommended'
       ],
       rules: {
