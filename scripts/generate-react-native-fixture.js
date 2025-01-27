@@ -203,6 +203,7 @@ function configureIOSProject () {
   if (fs.existsSync(gemfilePath)) {
     let gemfileContents = fs.readFileSync(gemfilePath, 'utf8')
     gemfileContents += '\ngem \'xcodeproj\', \'< 1.26.0\''
+    gemfileContents += '\ngem \'concurrent-ruby\', \'<= 1.3.4\''
     fs.writeFileSync(gemfilePath, gemfileContents)
   }
 
