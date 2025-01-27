@@ -25,7 +25,7 @@ const plugins = [
     // don't output anything if there's a TS error
     noEmitOnError: true,
     compilerOptions: {
-      target: 'es3',
+      target: 'es5',
     }
   }),
   babel({ babelHelpers: 'bundled' }),
