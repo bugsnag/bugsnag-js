@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-event-sync",
-  "version": "8.1.1",
+  "version": "8.2.0",
   "main": "event-sync.js",
   "description": "@bugsnag/react-native plugin to sync native event information in an onError callbacks",
   "homepage": "https://www.bugsnag.com/",
@@ -17,7 +17,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.1.1"
+    "@bugsnag/core": "^8.2.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
