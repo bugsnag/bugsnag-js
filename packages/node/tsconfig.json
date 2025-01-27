@@ -1,5 +1,4 @@
 {
   "extends": "../../tsconfig.json",
-  "module": "es2015",
   "include": ["src/**/*.ts"]
 }
