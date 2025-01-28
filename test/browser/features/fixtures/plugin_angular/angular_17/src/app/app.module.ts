@@ -1,9 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BugsnagErrorHandler } from '@bugsnag/plugin-angular';
+import bugsnagClient from './bugsnag';
 
 export function errorHandlerFactory() {
-  return new BugsnagErrorHandler();
+  return new BugsnagErrorHandler(bugsnagClient);
 }
 import { AppComponent } from './app.component';
 @NgModule({
