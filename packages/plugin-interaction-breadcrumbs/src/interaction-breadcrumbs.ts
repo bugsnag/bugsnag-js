@@ -1,5 +1,5 @@
 import { Plugin } from '@bugsnag/core'
-import type ClientWithInternals from 'packages/core/client'
+import type ClientWithInternals from '@bugsnag/core/client'
 
 /*
  * Leaves breadcrumbs when the user interacts with the DOM

@@ -1,4 +1,4 @@
-import Session from './types/session'
+import Session from '../types/session'
 
 interface MinimalEvent {
   _handledState: {

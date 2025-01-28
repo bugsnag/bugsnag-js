@@ -1,5 +1,5 @@
-import { App, Device, Event, Request, Breadcrumb, User, Session, FeatureFlag } from './types'
-import { Error } from './types/event'
+import { App, Device, Event, Request, Breadcrumb, User, Session, FeatureFlag } from '../types'
+import { Error } from '../types/event'
 
 interface HandledState {
   unhandled: boolean

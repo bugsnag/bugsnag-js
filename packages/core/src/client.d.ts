@@ -1,4 +1,4 @@
-import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback, Plugin, Device, App, User, FeatureFlag } from './types'
+import { Client, OnErrorCallback, Config, Breadcrumb, Session, OnSessionCallback, OnBreadcrumbCallback, Plugin, Device, App, User, FeatureFlag } from '../types'
 import EventWithInternals from './event'
 
 interface LoggerConfig {

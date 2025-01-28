@@ -1,4 +1,4 @@
-import { Breadcrumb } from './types'
+import { Breadcrumb } from '../types'
 
 export default class BreadcrumbWithInternals extends Breadcrumb {
   constructor (message: string, metadata: Breadcrumb['metadata'], type: Breadcrumb['type'], timestamp?: Date)

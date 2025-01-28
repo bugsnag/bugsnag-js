@@ -1,7 +1,7 @@
-import Client from '../client'
-import Event from '../event'
-import Session from '../session'
-import breadcrumbTypes from '../lib/breadcrumb-types'
+import Client from '../src/client'
+import Event from '../src/event'
+import Session from '../src/session'
+import breadcrumbTypes from '../src/lib/breadcrumb-types'
 import { BreadcrumbType } from '../types/common'
 
 const noop = () => {}

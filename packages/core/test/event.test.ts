@@ -1,5 +1,5 @@
 import ErrorStackParser from 'error-stack-parser'
-import Event from '../event'
+import Event from '../src/event'
 
 jest.mock('stack-generator', () => ({
   backtrace: () => [{}, {}]
