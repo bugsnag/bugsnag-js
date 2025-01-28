@@ -18,7 +18,7 @@
     "./lib/iserror": "./src/lib/iserror.js",
     "./lib/es-utils/reduce": "./src/lib/es-utils/reduce.js",
     "./lib/es-utils/keys": "./src/lib/es-utils/keys.js",
-    "./client": "./src/client.js",
+    "./client": { "default": "./src/client.js", "types": "./src/client.d.ts" },
     "./config": "./src/config.js",
     "./event": "./src/event.js",
     "./session": "./src/session.js",
