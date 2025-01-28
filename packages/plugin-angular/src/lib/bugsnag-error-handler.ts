@@ -1,6 +1,10 @@
 import { ErrorHandler, VERSION } from '@angular/core'
 import Bugsnag, { Client } from '@bugsnag/js'
 
+type BugsnagWithInternals = typeof Bugsnag & {
+  _client: Client
+}
+
 class BugsnagErrorHandler implements ErrorHandler {
   public bugsnagClient: Client;
 
@@ -8,7 +12,7 @@ class BugsnagErrorHandler implements ErrorHandler {
     if (client) {
       this.bugsnagClient = client
     } else {
-      this.bugsnagClient = Bugsnag
+      this.bugsnagClient = (Bugsnag as BugsnagWithInternals)._client
     }
 
     // Add angular runtime to device metadata
