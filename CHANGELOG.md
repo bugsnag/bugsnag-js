@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- (plugin-angular) Added a null check so BugsnagErrorHandler fails silently when misconfigured [#2295](https://github.com/bugsnag/bugsnag-js/pull/2295)
+
 ## [8.2.0] - 2025-01-27
 
 ### Added
