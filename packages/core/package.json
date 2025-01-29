@@ -54,8 +54,7 @@
     "size": "../../bin/size dist/bugsnag.min.js",
     "clean": "rm -fr dist && mkdir dist",
     "build": "npm run clean && npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
-    "cdn-upload": "../../bin/cdn-upload dist/*"
+    "build:npm": "rollup --config rollup.config.npm.mjs"
   },
   "author": "Bugsnag",
   "license": "MIT",
