@@ -9,6 +9,7 @@
       "import": "./src/index.js",
       "default": "./src/index.js"
     },
+    "./lib/clone-client": "./src/lib/clone-client.js",
     "./lib/json-payload": "./src/lib/json-payload.js",
     "./lib/es-utils/assign":"./src/lib/es-utils/assign.js",
     "./lib/validators/int-range": "./src/lib/validators/int-range.js",
