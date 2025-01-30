@@ -63,7 +63,9 @@
     "@bugsnag/plugin-react-native-hermes": "^8.1.1",
     "@bugsnag/plugin-react-native-session": "^8.1.1",
     "@bugsnag/plugin-react-native-unhandled-rejection": "^8.1.1",
-    "iserror": "^0.0.2"
+    "iserror": "^0.0.2",
+    "@types/react-native": "0.67.8",
+    "react-native": "^0.63.4"
   },
   "scripts": {
     "prepare": "bash prepare-android-vendor.sh",
