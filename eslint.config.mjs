@@ -23,6 +23,7 @@ const c = tseslint.config(
       'test/browser',
       'test/node',
       'test/react-native-cli/features/fixtures',
+      'packages/react-native/ios/vendor'
     ],
   },
   eslint.configs.recommended,
