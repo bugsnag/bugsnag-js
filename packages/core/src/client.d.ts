@@ -83,5 +83,5 @@ export default class ClientWithInternals<T extends Config = Config> extends Clie
 
   _isBreadcrumbTypeEnabled(type: string): boolean
 
-  public addOnError(fn: OnErrorCallback, front?: boolean): void;
+  public addOnError(fn: OnErrorCallback, moveToFront?: boolean): void;
 }
