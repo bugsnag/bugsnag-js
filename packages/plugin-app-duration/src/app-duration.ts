@@ -1,4 +1,4 @@
-import { Plugin } from '@bugsnag/core/types'
+import { Plugin } from '@bugsnag/core'
 
 let appStart = new Date()
 const reset = () => { appStart = new Date() }
