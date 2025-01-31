@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "lib": [ "dom", "es2022" ],               /* Specify library files to be included in the compilation. */
+    "lib": [ "dom", "es2022" ],
     "allowJs": true,
     "outDir": "dist",
     "removeComments": true,

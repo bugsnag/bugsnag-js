@@ -98,8 +98,6 @@ function getPackageJson (packageName) {
 module.exports = (request, options) => {
   const { conditions = defaultConditions, defaultResolver } = options
 
-  // console.log('resovler', request, options)
-
   // NOTE: jest-sequencer is a special prefixed jest request
   const isNodeModuleRequest =
   !(
