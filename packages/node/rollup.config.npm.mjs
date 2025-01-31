@@ -11,7 +11,7 @@ const packageJson = JSON.parse(fs.readFileSync('./package.json'))
 
 const plugins = [
   nodeResolve({
-    browser: true
+    preferBuiltins: true
   }),
   commonjs(),
   typescript({

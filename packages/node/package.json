@@ -18,8 +18,8 @@
   ],
   "scripts": {
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:dist",
-    "build:dist": "../../bin/bundle src/notifier.js --node --exclude=iserror,stack-generator,error-stack-parser,pump,byline,async_hooks --standalone=bugsnag | ../../bin/extract-source-map dist/bugsnag.js"
+    "build": "npm run clean && npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs"
   },
   "author": "Bugsnag",
   "license": "MIT",
@@ -36,7 +36,8 @@
     "@bugsnag/plugin-node-unhandled-rejection": "^8.1.1",
     "@bugsnag/plugin-server-session": "^8.1.1",
     "@bugsnag/plugin-stackframe-path-normaliser": "^8.1.1",
-    "@bugsnag/plugin-strip-project-root": "^8.1.1"
+    "@bugsnag/plugin-strip-project-root": "^8.1.1",
+    "@types/node": "^18.19.74"
   },
   "dependencies": {
     "@bugsnag/core": "^8.1.1",

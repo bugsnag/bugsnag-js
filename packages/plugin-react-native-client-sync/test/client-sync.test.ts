@@ -2,10 +2,6 @@ import Client from '@bugsnag/core/client'
 import plugin from '../'
 import { Breadcrumb } from '@bugsnag/core'
 
-// @types/react-native conflicts with lib dom so disable ts for
-// react-native imports until a better solution is found.
-// See DefinitelyTyped/DefinitelyTyped#33311
-// @ts-ignore
 import { DeviceEventEmitter } from 'react-native'
 
 jest.mock('react-native', () => ({

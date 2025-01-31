@@ -1,10 +1,6 @@
 import Client from '@bugsnag/core/client'
 import plugin from '..'
 
-// @types/react-native conflicts with lib dom so disable ts for
-// react-native imports until a better solution is found.
-// See DefinitelyTyped/DefinitelyTyped#33311
-// @ts-ignore
 import { Dimensions } from 'react-native'
 
 jest.mock('react-native', () => ({
