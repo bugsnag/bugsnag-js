@@ -2,7 +2,7 @@
  * Automatically notifies Bugsnag when window.onerror is called
  */
 
-import type { Plugin, Stackframe } from 'packages/core/types'
+import type { Plugin, Stackframe } from '@bugsnag/core'
 
 export default (win = window, component = 'window onerror'): Plugin => ({
   load: (client) => {

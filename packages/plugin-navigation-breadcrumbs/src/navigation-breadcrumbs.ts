@@ -1,4 +1,4 @@
-import { Client, Plugin } from 'packages/core/types'
+import { Client, Plugin } from '@bugsnag/core'
 
 interface PluginClient extends Client {
   _isBreadcrumbTypeEnabled: (type: string) => boolean

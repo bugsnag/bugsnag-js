@@ -1,7 +1,7 @@
 import type { Client, Config, Session } from '@bugsnag/core'
 
 import payload from '@bugsnag/core/lib/json-payload'
-import { Event } from 'packages/core'
+import { Event } from '@bugsnag/core'
 import ClientWithInternals, { Delivery } from '@bugsnag/core/client'
 
 const delivery = (client: Client, win = window): Delivery => ({
