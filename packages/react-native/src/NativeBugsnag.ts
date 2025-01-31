@@ -44,14 +44,14 @@ export interface Spec extends TurboModule {
   clearFeatureFlags(): void
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+ 
 export type ReactNativeConfiguration = {
   reactNativeVersion?: string
   engine?: string
   notifierVersion: string
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+ 
 export type NativeConfiguration = {
   apiKey: string
   autoDetectErrors?: boolean
@@ -73,7 +73,7 @@ export type NativeConfiguration = {
   endpoints: NativeEndpointConfig
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+ 
 export type NativeBreadcrumb = {
   timestamp: string
   message: string
@@ -81,13 +81,13 @@ export type NativeBreadcrumb = {
   metadata?: UnsafeObject
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+ 
 export type NativeEndpointConfig = {
   notify: string
   sessions: string
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+ 
 export type NativeEnabledErrorTypes = {
   anrs?: boolean
   ndkCrashes?: boolean
@@ -95,7 +95,7 @@ export type NativeEnabledErrorTypes = {
   unhandledRejections?: boolean
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+ 
 export type NativeFeatureFlag = {
   name: string
   variant?: string

@@ -58,7 +58,7 @@ describe('plugin: node uncaught exception handler', () => {
       sendEvent: (payload, cb) => cb(),
       sendSession: (payload, cb) => cb()
     }))
-    process.listeners('uncaughtException')[0](new Error('never gonna catch me'))
+    process.listeners('uncaughtException')[0](new Error('never gonna catch me'), 'uncaughtException')
   })
 
   it('should tolerate delivery errors', done => {
@@ -86,6 +86,6 @@ describe('plugin: node uncaught exception handler', () => {
       sendEvent: (payload, cb) => cb(new Error('failed')),
       sendSession: (payload, cb) => cb()
     }))
-    process.listeners('uncaughtException')[0](new Error('never gonna catch me'))
+    process.listeners('uncaughtException')[0](new Error('never gonna catch me'), 'uncaughtException')
   })
 })
