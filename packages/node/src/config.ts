@@ -1,7 +1,7 @@
 import { schema } from '@bugsnag/core/config'
 import stringWithLength from '@bugsnag/core/lib/validators/string-with-length'
-import os from 'node:os'
-import { inspect } from 'node:util'
+import os from 'os'
+import { inspect } from 'util'
 
 import assign from '@bugsnag/core/lib/es-utils/assign'
 import getPrefixedConsole from './get-prefixed-console'
