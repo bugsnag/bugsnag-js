@@ -44,7 +44,8 @@ export interface NodeBugsnagStatic extends BugsnagStatic {
 }
 
 const name = 'Bugsnag Node'
-const version = '__VERSION__'
+// @ts-ignore
+const version = __BUGSNAG_NOTIFIER_VERSION__
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 // @ts-ignore
