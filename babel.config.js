@@ -1,5 +1,5 @@
 module.exports = api => {
-  // NB: This function can be called without an api argument, e.g. by bin/bundle
+  // NB: This function can be called without an api argument
 
   const presets = []
   const plugins = []
