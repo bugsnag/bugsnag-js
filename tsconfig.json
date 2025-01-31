@@ -78,6 +78,7 @@
     "packages/plugin-vue",
     "packages/plugin-express",
     "packages/plugin-koa",
+    "packages/plugin-hono",
     "packages/plugin-restify",
     "packages/node",
     "packages/plugin-client-ip",
