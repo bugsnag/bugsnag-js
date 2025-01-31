@@ -29,7 +29,6 @@ function mockFetch () {
 
 describe('browser notifier', () => {
   beforeAll(() => {
-    (global as any).__BUGSNAG_NOTIFIER_VERSION__ = ''
     jest.spyOn(console, 'debug').mockImplementation(() => {})
     jest.spyOn(console, 'warn').mockImplementation(() => {})
   })
