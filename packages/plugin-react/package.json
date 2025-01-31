@@ -31,10 +31,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.1.1",
-    "react": "^16.13.1",
-    "@types/react": "^16.9.49",
-    "@types/react-dom": "^16.9.16"
+    "@bugsnag/core": "^8.1.1"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
