@@ -184,6 +184,22 @@ services:
           - hono
     restart: "no"
 
+  hono-disabled:
+    build:
+      context: hono
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      default:
+        aliases:
+          - hono-disabled
+    restart: "no"
+    entrypoint: "node scenarios/app-disabled"
+
   koa:
     build:
       context: koa
