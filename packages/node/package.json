@@ -36,8 +36,7 @@
     "@bugsnag/plugin-node-unhandled-rejection": "^8.1.1",
     "@bugsnag/plugin-server-session": "^8.1.1",
     "@bugsnag/plugin-stackframe-path-normaliser": "^8.1.1",
-    "@bugsnag/plugin-strip-project-root": "^8.1.1",
-    "@types/node": "^13.7.1"
+    "@bugsnag/plugin-strip-project-root": "^8.1.1"
   },
   "dependencies": {
     "@bugsnag/core": "^8.1.1",
