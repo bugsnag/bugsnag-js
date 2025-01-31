@@ -17,42 +17,14 @@ const middleware = Bugsnag.getPlugin('hono')
 
 app.use(middleware.requestHandler)
 
-app.get('/handled', (c) => {
+app.get('/', (c) => {
+    return c.text('Hello from Hono!')
+})
+
+app.get('/handled', async (c, next) => {
     Bugsnag.notify(new Error('unresolveable musical differences'));
-    return c.text('Handled error')
+    await next();
 });
-
-app.get('/sync', (c) => {
-    throw new Error('sync')
-  })
-  
-app.get('/async', (c) => {
-    setTimeout(function () {
-        throw new Error('async')
-    }, 100)
-})
-  
-app.get('/next', (c, next) => {
-    next(new Error('next'))
-})
-
-app.get('/rejection-sync', (c) => {
-    Promise.reject(new Error('reject sync'))
-})
-
-app.get('/rejection-async', (c) => {
-    setTimeout(function () {
-        Promise.reject(new Error('reject async'))
-    }, 100)
-})
-
-app.get('/string-as-error', (c, next) => {
-    next('errrr')
-})
-
-app.get('/throw-non-error', (c) => {
-    throw 1 // eslint-disable-line
-})
 
 serve({
     fetch: app.fetch,
