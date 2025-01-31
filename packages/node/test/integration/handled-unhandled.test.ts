@@ -1,4 +1,4 @@
-import Bugsnag from '../../src/notifier'
+import Bugsnag from '../../src/bugsnag'
 import https from 'https'
 
 // extend the https module type with the utilities added in mocks
