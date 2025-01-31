@@ -1,8 +1,15 @@
 {
   "name": "@bugsnag/node",
   "version": "8.1.1",
-  "main": "dist/bugsnag.js",
-  "types": "types/bugsnag.d.ts",
+  "main": "dist/index-cjs.cjs",
+  "types": "dist/types/index-es.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index-es.d.ts",
+      "import": "./dist/index-es.mjs",
+      "default": "./dist/index-cjs.cjs"
+    }
+  },
   "description": "Bugsnag error reporter for Node.js",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
