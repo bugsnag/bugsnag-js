@@ -1,7 +1,7 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import Bugsnag from '@bugsnag/node';
-import * as bugsnagHono from '@bugsnag/plugin-hono';
+import bugsnagHono from '@bugsnag/plugin-hono';
 
 Bugsnag.start({
     apiKey: process.env.BUGSNAG_API_KEY,
@@ -12,13 +12,14 @@ Bugsnag.start({
     plugins: [bugsnagHono],
 })
 
+const app = new Hono();
 const middleware = Bugsnag.getPlugin('hono')
 
 app.use(middleware.requestHandler)
 
-const app = new Hono();
 app.get('/handled', (c) => {
     Bugsnag.notify(new Error('unresolveable musical differences'));
+    return c.text('Handled error')
 });
 
 app.get('/sync', (c) => {
