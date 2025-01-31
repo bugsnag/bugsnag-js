@@ -92,7 +92,7 @@ const notifier: NodeClient = {
      * plugin where we want to call `leaveBreadcrumb` on the request-scoped client, if it exists.
      */
     (Object.keys(ClientWithInternals.prototype) as Method[]).forEach((m) => {
-      const original = notifier[m]
+      const original = bugsnag[m]
       bugsnag[m] = function () {
         // if we are in an async context, use the client from that context
         const contextClient = bugsnag._clientContext && typeof bugsnag._clientContext.getStore === 'function' ? bugsnag._clientContext.getStore() : null
