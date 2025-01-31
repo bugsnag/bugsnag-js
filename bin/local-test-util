@@ -123,7 +123,9 @@ async function packNotifiers (notifier) {
     ? [ notifier ]
     : [ 'js', 'browser', 'node', 'web-worker', 'plugin-angular', 'plugin-react', 'plugin-vue' ]
   for (const n of notifiers) {
-    await ex(`npm`, [ `pack`, `--verbose`, `packages/${n}/` ])
+    let packageLocation = `packages/${n}/`
+    if (n === 'plugin-angular') packageLocation += 'dist/'
+    await ex(`npm`, [ `pack`, `--verbose`, packageLocation ])
   }
 }
 

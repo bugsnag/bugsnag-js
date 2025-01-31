@@ -15,7 +15,7 @@ describe('runCallbacks()', () => {
     const callbacks: Array<Callback<TestEvent>> = [
       (event) => { event.age = 10 },
       (event, cb) => { setTimeout(() => cb(null, true), 5) },
-      (event) => new Promise((resolve) => {
+      (event) => new Promise<void>((resolve) => {
         event.promiseRan = 'yes'
         resolve()
       })
@@ -48,9 +48,9 @@ describe('runCallbacks()', () => {
     const event = {}
     let called = false
     const callbacks: Array<Callback<{}>> = [
-      (event) => new Promise((resolve) => resolve()),
+      (event) => new Promise<void>((resolve) => resolve()),
       (event) => new Promise((resolve, reject) => reject(new Error('derp'))),
-      (event) => new Promise((resolve) => {
+      (event) => new Promise<void>((resolve) => {
         called = true
         resolve()
       })

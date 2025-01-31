@@ -1,4 +1,4 @@
-/* eslint-disable import/no-duplicates */
+ 
 import payload from '@bugsnag/core/lib/json-payload'
 
 import { Client, Config, Event, Session } from '@bugsnag/core'

@@ -3,9 +3,16 @@
     "version": "8.1.1",
     "description": "BugSnag error reporter for JavaScript web workers and service workers",
     "homepage": "https://www.bugsnag.com/",
-    "main": "dist/bugsnag.web-worker.js",
-    "module": "dist/bugsnag.web-worker.js",
-    "types": "types/notifier.ts",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
+    "types": "dist/types/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/types/index.d.ts",
+            "import": "./dist/index.js",
+            "default": "./dist/index.js"
+        }
+    },
     "repository": {
         "type": "git",
         "url": "git@github.com:bugsnag/bugsnag-js.git"
@@ -14,8 +21,7 @@
         "access": "public"
     },
     "files": [
-        "dist",
-        "types"
+        "dist"
     ],
     "keywords": [
         "worker",
@@ -28,11 +34,8 @@
     ],
     "scripts": {
         "clean": "rm -fr dist && mkdir dist",
-        "build": "npm run clean && npm run build:dist && npm run build:dist:min",
-        "build:dist": "webpack",
-        "build:dist:min": "webpack --optimization-minimize --output-filename=bugsnag.web-worker.min.js",
-        "build:dist:esm": "webpack --config esm.config.js",
-        "build:dist:esm.min": "webpack --config esm.config.js --optimization-minimize --output-filename=bugsnag.web-worker.min.mjs",
+        "build": "npm run clean && npm run build:npm",
+        "build:npm": "rollup --config rollup.config.npm.mjs",
         "size": "../../bin/size dist/bugsnag.web-worker.min.js",
         "cdn-upload": "../../bin/cdn-upload dist/*"
     },
@@ -46,9 +49,15 @@
         "@bugsnag/plugin-client-ip": "^8.1.1",
         "@bugsnag/plugin-window-onerror": "^8.1.1",
         "@bugsnag/plugin-window-unhandled-rejection": "^8.1.1",
-        "ts-loader": "^9.4.1",
-        "typescript": "^4.9.3",
-        "webpack": "^5.75.0",
-        "webpack-cli": "^5.0.0"
+        "@rollup/plugin-babel": "^6.0.4",
+        "@rollup/plugin-commonjs": "^28.0.2",
+        "@rollup/plugin-node-resolve": "^16.0.0",
+        "@rollup/plugin-replace": "^6.0.2",
+        "@rollup/plugin-terser": "^0.4.4",
+        "rollup": "^4.31.0",
+        "typescript": "^4.9.3"
+    },
+    "dependencies": {
+        "@bugsnag/core": "^8.1.1"
     }
 }
