@@ -1,4 +1,3 @@
-/* eslint-disable no-inner-declarations */
 const fs = require('fs')
 const path = require('path')
 const packageUp = require('pkg-up')
