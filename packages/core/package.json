@@ -31,7 +31,7 @@
     "./lib/feature-flag-delegate": "./src/lib/feature-flag-delegate.js",
     "./client": { "import": "./src/client.js", "default": "./src/client.js", "types": "./src/client.d.ts" },
     "./config": "./src/config.js",
-    "./event": "./src/event.js",
+    "./event": { "import": "./src/event.js", "default": "./src/event.js", "types": "./src/event.d.ts" },
     "./session": "./src/session.js",
     "./breadcrumb": "./src/breadcrumb.js"
   },
