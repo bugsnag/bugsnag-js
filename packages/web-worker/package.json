@@ -1,6 +1,6 @@
 {
     "name": "@bugsnag/web-worker",
-    "version": "8.1.1",
+    "version": "8.2.0",
     "description": "BugSnag error reporter for JavaScript web workers and service workers",
     "homepage": "https://www.bugsnag.com/",
     "main": "dist/index.js",
@@ -42,13 +42,13 @@
     "author": "Bugsnag",
     "license": "MIT",
     "devDependencies": {
-        "@bugsnag/core": "^8.1.1",
-        "@bugsnag/delivery-fetch": "^8.1.1",
-        "@bugsnag/plugin-browser-device": "^8.1.1",
-        "@bugsnag/plugin-browser-session": "^8.1.1",
-        "@bugsnag/plugin-client-ip": "^8.1.1",
-        "@bugsnag/plugin-window-onerror": "^8.1.1",
-        "@bugsnag/plugin-window-unhandled-rejection": "^8.1.1",
+        "@bugsnag/core": "^8.2.0",
+        "@bugsnag/delivery-fetch": "^8.2.0",
+        "@bugsnag/plugin-browser-device": "^8.2.0",
+        "@bugsnag/plugin-browser-session": "^8.2.0",
+        "@bugsnag/plugin-client-ip": "^8.2.0",
+        "@bugsnag/plugin-window-onerror": "^8.2.0",
+        "@bugsnag/plugin-window-unhandled-rejection": "^8.2.0",
         "@rollup/plugin-babel": "^6.0.4",
         "@rollup/plugin-commonjs": "^28.0.2",
         "@rollup/plugin-node-resolve": "^16.0.0",
@@ -56,8 +56,5 @@
         "@rollup/plugin-terser": "^0.4.4",
         "rollup": "^4.31.0",
         "typescript": "^4.9.3"
-    },
-    "dependencies": {
-        "@bugsnag/core": "^8.1.1"
     }
 }

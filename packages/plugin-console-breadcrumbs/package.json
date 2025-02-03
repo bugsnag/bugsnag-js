@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-console-breadcrumbs",
-  "version": "8.1.1",
+  "version": "8.2.0",
   "main": "dist/console-breadcrumbs.js",
   "types": "dist/types/console-breadcrumbs.d.ts",
   "exports": {
@@ -25,7 +25,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.1.1"
+    "@bugsnag/core": "^8.2.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"

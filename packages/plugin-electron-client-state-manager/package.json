@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-client-state-manager",
-  "version": "8.1.1",
+  "version": "8.2.0",
   "main": "client-state-manager.js",
   "description": "@bugsnag/electron plugin to sync state between various processes",
   "homepage": "https://www.bugsnag.com/",
@@ -19,7 +19,7 @@
     "client-state-manager.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^8.1.1"
+    "@bugsnag/core": "^8.2.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"

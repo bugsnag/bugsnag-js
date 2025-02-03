@@ -68,13 +68,13 @@ To start a release:
 - create a new release branch from `next` with the version number in the branch name
 `git checkout -b release/vX.Y.Z`
 - update the version number and date in the changelog
-- make a PR from your release branch to `master` entitled `Release vX.Y.Z`
+- make a PR from your release branch to `main` entitled `Release vX.Y.Z`
 - get the release PR reviewed – all code changes should have been reviewed already, this should be a review of the integration of all changes to be shipped and the changelog
 - consider shipping a [prerelease](#prereleases) to aid testing the release
 
 Once the release PR has been approved:
 
-- merge the PR into master
+- merge the PR into main
 
 You are now ready to make the release. Releases are done using Docker and Docker compose. You do not need to have the release branch checked out on your local machine to make a release – the container pulls a fresh clone of the repo down from GitHub. Prerequisites:
 
@@ -95,7 +95,7 @@ GITHUB_USER=<your github username> \
 GITHUB_ACCESS_TOKEN=<generate a personal access token> \
 AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
-RELEASE_BRANCH=master \
+RELEASE_BRANCH=main \
 VERSION=patch \
 DIST_TAG=latest \
   docker-compose run release
@@ -116,7 +116,7 @@ Finally:
 - update and push `next`:
     ```
     git checkout next
-    git merge master
+    git merge main
     git push
     ```
 
@@ -141,7 +141,7 @@ GITHUB_USER=<your github username> \
 GITHUB_ACCESS_TOKEN=<generate a personal access token> \
 AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
-RELEASE_BRANCH=master \
+RELEASE_BRANCH=main \
 VERSION=preminor \
 DIST_TAG=next \
   docker-compose run release
@@ -166,7 +166,7 @@ GITHUB_USER=<your github username> \
 GITHUB_ACCESS_TOKEN=<generate a personal access token> \
 AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
-RELEASE_BRANCH=master \
+RELEASE_BRANCH=main \
 VERSION=patch \
 DIST_TAG=latest \
 RETRY_PUBLISH=1 \
