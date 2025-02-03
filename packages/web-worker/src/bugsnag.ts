@@ -58,7 +58,7 @@ const notifier: WorkerClient = {
     // configure a client with user supplied options
     const bugsnag = new ClientWithInternals(opts, schema, internalPlugins, { name, version, url })
 
-    bugsnag._setDelivery(client => delivery(client, self.fetch))
+    bugsnag._setDelivery(client => delivery(client, self.fetch, self))
 
     bugsnag._logger.debug('Loaded!')
 
