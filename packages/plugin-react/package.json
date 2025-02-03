@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react",
-  "version": "8.1.1",
+  "version": "8.2.0",
   "description": "React integration for @bugsnag/js",
   "main": "dist/index-cjs.cjs",
   "types": "dist/types/index-es.d.ts",
@@ -31,7 +31,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.1.1"
+    "@bugsnag/core": "^8.2.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
