@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browser",
-  "version": "8.1.2",
+  "version": "8.2.0",
   "main": "dist/index-cjs.cjs",
   "types": "dist/types/index-es.d.ts",
   "browser": "./dist/bugsnag.js",
@@ -33,23 +33,23 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-x-domain-request": "^8.1.1",
-    "@bugsnag/delivery-xml-http-request": "^8.1.1",
-    "@bugsnag/plugin-app-duration": "^8.1.1",
-    "@bugsnag/plugin-browser-context": "^8.1.1",
-    "@bugsnag/plugin-browser-device": "^8.1.1",
-    "@bugsnag/plugin-browser-request": "^8.1.1",
-    "@bugsnag/plugin-browser-session": "^8.1.1",
-    "@bugsnag/plugin-client-ip": "^8.1.1",
-    "@bugsnag/plugin-console-breadcrumbs": "^8.1.1",
-    "@bugsnag/plugin-inline-script-content": "^8.1.1",
-    "@bugsnag/plugin-interaction-breadcrumbs": "^8.1.1",
-    "@bugsnag/plugin-navigation-breadcrumbs": "^8.1.1",
-    "@bugsnag/plugin-network-breadcrumbs": "^8.1.1",
-    "@bugsnag/plugin-simple-throttle": "^8.1.1",
-    "@bugsnag/plugin-strip-query-string": "^8.1.1",
-    "@bugsnag/plugin-window-onerror": "^8.1.1",
-    "@bugsnag/plugin-window-unhandled-rejection": "^8.1.1",
+    "@bugsnag/delivery-x-domain-request": "^8.2.0",
+    "@bugsnag/delivery-xml-http-request": "^8.2.0",
+    "@bugsnag/plugin-app-duration": "^8.2.0",
+    "@bugsnag/plugin-browser-context": "^8.2.0",
+    "@bugsnag/plugin-browser-device": "^8.2.0",
+    "@bugsnag/plugin-browser-request": "^8.2.0",
+    "@bugsnag/plugin-browser-session": "^8.2.0",
+    "@bugsnag/plugin-client-ip": "^8.2.0",
+    "@bugsnag/plugin-console-breadcrumbs": "^8.2.0",
+    "@bugsnag/plugin-inline-script-content": "^8.2.0",
+    "@bugsnag/plugin-interaction-breadcrumbs": "^8.2.0",
+    "@bugsnag/plugin-navigation-breadcrumbs": "^8.2.0",
+    "@bugsnag/plugin-network-breadcrumbs": "^8.2.0",
+    "@bugsnag/plugin-simple-throttle": "^8.2.0",
+    "@bugsnag/plugin-strip-query-string": "^8.2.0",
+    "@bugsnag/plugin-window-onerror": "^8.2.0",
+    "@bugsnag/plugin-window-unhandled-rejection": "^8.2.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
@@ -57,6 +57,6 @@
     "@rollup/plugin-terser": "^0.4.4"
   },
   "dependencies": {
-    "@bugsnag/core": "^8.1.1"
+    "@bugsnag/core": "^8.2.0"
   }
 }

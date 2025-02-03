@@ -2,10 +2,23 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- (plugin-angular) Added a null check so BugsnagErrorHandler fails silently when misconfigured [#2295](https://github.com/bugsnag/bugsnag-js/pull/2295)
+
+## [8.2.0] - 2025-01-27
+
+### Added
+
+- Introduce `sendPayloadChecksums` option and set `Bugsnag-Integrity` headers on events and sessions [#2221](https://github.com/bugsnag/bugsnag-js/pull/2221)
+- (plugin-angular) Added Angular runtime version to device info [#2288](https://github.com/bugsnag/bugsnag-js/pull/2288)
+
 ### Changed
 
 - (plugin-angular) Generate type definition using Angular 17 [#2275](https://github.com/bugsnag/bugsnag-js/pull/2275)
 - (plugin-angular) Update Angular support to cover v12 - 19 [#2278](https://github.com/bugsnag/bugsnag-js/pull/2278)
+- (react-native) Update bugsnag-android from v6.10.0 to [v6.11.0](https://github.com/bugsnag/bugsnag-android/blob/next/CHANGELOG.md#6110-2025-01-02)
+- (react-native) Update bugsnag-cocoa from v6.30.1 to [v6.31.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6310-2025-01-13)
 
 ### Fixed
 

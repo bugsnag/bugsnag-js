@@ -1,7 +1,7 @@
 {
     "name": "@bugsnag/delivery-fetch",
     "author": "Bugsnag",
-    "version": "8.1.1",
+    "version": "8.2.0",
     "main": "delivery.js",
     "description": "@bugsnag/js delivery mechanism using the fetch API",
     "homepage": "https://www.bugsnag.com/",
@@ -14,7 +14,7 @@
     },
     "license": "MIT",
     "devDependencies": {
-        "@bugsnag/core": "^8.1.1"
+        "@bugsnag/core": "^8.2.0"
     },
     "peerDependencies": {
         "@bugsnag/core": "^8.0.0"

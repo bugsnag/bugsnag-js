@@ -42,6 +42,7 @@ export interface BrowserConfig extends Config {
   collectUserIp?: boolean
   generateAnonymousId?: boolean
   trackInlineScripts?: boolean
+  sendPayloadChecksums?: boolean
 }
 
 export interface BrowserBugsnagStatic extends BugsnagStatic {

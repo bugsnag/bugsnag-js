@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-xml-http-request",
-  "version": "8.1.1",
+  "version": "8.2.0",
   "main": "dist/delivery.js",
   "types": "dist/types/delivery.d.ts",
   "exports": {
@@ -30,7 +30,7 @@
     "clean": "rm -rf dist/*"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.1.1"
+    "@bugsnag/core": "^8.2.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"

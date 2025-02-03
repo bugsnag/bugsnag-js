@@ -173,5 +173,10 @@ module.exports.schema = {
     defaultValue: () => false,
     message: 'should be true|false',
     validate: value => value === true || value === false
+  },
+  sendPayloadChecksums: {
+    defaultValue: () => false,
+    message: 'should be true|false',
+    validate: value => value === true || value === false
   }
 }
