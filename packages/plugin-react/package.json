@@ -34,11 +34,7 @@
     "@bugsnag/core": "^8.2.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^8.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@bugsnag/core": {
-      "optional": true
-    }
+    "@bugsnag/core": "^8.0.0",
+    "react": "*"
   }
 }
