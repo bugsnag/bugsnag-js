@@ -1,5 +1,5 @@
-import runCallbacks from '../callback-runner'
-import { NodeCallbackType } from '../async-every'
+import runCallbacks from '../../src/lib/callback-runner'
+import { NodeCallbackType } from '../../src/lib/async-every'
 
 interface TestEvent {
   name: string

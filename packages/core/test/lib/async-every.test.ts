@@ -1,4 +1,4 @@
-import every from '../async-every'
+import every from '../../src/lib/async-every'
 
 describe('async-every', () => {
   it('handles iterator errors', done => {
