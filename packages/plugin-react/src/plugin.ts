@@ -100,6 +100,7 @@ const createClass = (react: typeof React, client: Client) => class BugsnagErrorB
       error,
       true,
       handledState,
+      'react plugin',
       1
     )
     if (info && info.componentStack) info.componentStack = formatComponentStack(info.componentStack)
