@@ -36,25 +36,25 @@ module.exports = {
       await client._clientContext.run(requestClient, next)
     }
 
-    const errorHandler = (c, next) => {
-      // if (!client._config.autoDetectErrors) return next(c.error)
+    const errorHandler = (err, c, next) => {
+      if (!client._config.autoDetectErrors) return next(err)
 
-      const event = client.Event.create(c.error, false, handledState, 'hono middleware', 1)
+      const event = client.Event.create(err, false, handledState, 'hono middleware', 1)
 
       const { metadata, request } = getRequestAndMetadataFromReq(c.req)
       event.request = { ...event.request, ...request }
       event.addMetadata('request', metadata)
 
-      if (c.bugsnag) {
-        c.bugsnag._notify(event)
+      if (c.req.bugsnag) {
+        c.req.bugsnag._notify(event)
       } else {
         client._logger.warn(
-          ''
+          'c.req.bugsnag is not defined. Make sure the @bugsnag/plugin-hono requestHandler middleware is added first.'
         )
         client._notify(event)
       }
 
-      // next(c.error)
+      next(err)
     }
 
     return { requestHandler, errorHandler }
@@ -67,7 +67,10 @@ const getRequestAndMetadataFromReq = c => {
     metadata: requestInfo,
     request: {
       body,
-      url: requestInfo.url
+      url: requestInfo.url,
+      httpMethod: requestInfo.httpMethod,
+      headers: requestInfo.headers,
+      referrer: requestInfo.referrer
     }
   }
 }
