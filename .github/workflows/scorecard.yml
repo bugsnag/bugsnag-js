@@ -12,7 +12,7 @@ on:
   schedule:
     - cron: '0 0 * * 0'
   push:
-    branches: [ "PLAT-13450/open-ssf-config" ]
+    branches: [ "next" ]
 
 # Declare default permissions as read only.
 permissions: read-all
