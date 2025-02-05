@@ -26,6 +26,36 @@ app.get('/handled', async (c, next) => {
     await next();
 });
 
+app.get('/sync', (c) => {
+    throw new Error('sync')
+})
+  
+
+app.get('/async', (c) => {
+    setTimeout(function () {
+        throw new Error('async')
+    }, 100)
+})
+
+app.get('/next', (c, next) => {
+    next(new Error('next'))
+})
+
+app.get('/rejection-async', (c) => {
+    setTimeout(function () {
+        Promise.reject(new Error('reject async'))
+    }, 100)
+})
+    
+    
+app.get('/string-as-error', async (c, next) => {
+    setTimeout(function () {
+        next('errrr')
+    }, 100)
+})
+
+app.use(middleware.errorHandler)
+
 serve({
     fetch: app.fetch,
     port: 80
