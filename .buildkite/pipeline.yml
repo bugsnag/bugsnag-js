@@ -37,26 +37,26 @@ steps:
         - exit_status: "*"
           limit: 1
 
-  # - label: ":aws-lambda: AWS Lambda tests"
-  #   timeout_in_minutes: 35
-  #   agents:
-  #     queue: "macos-14"
-  #   env:
-  #     NODE_VERSION: "18"
-  #     PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
-  #   plugins:
-  #     test-collector#v1.10.2:
-  #       files: "test/aws-lambda/reports/TEST-*.xml"
-  #       format: "junit"
-  #       branch: "^main|next$$"
-  #       api-token-env-name: "JS_AWS_LAMBDA_BUILDKITE_ANALYTICS_TOKEN"
-  #   commands:
-  #     # force the NPM registry as the default on CI is artifactory, which can't
-  #     # currently install from our lockfile
-  #     - npm ci --registry https://registry.npmjs.org
-  #     - cd test/aws-lambda
-  #     - bundle install
-  #     - bundle exec maze-runner
+  - label: ":aws-lambda: AWS Lambda tests"
+    timeout_in_minutes: 35
+    agents:
+      queue: "macos-14"
+    env:
+      NODE_VERSION: "18"
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+    plugins:
+      test-collector#v1.10.2:
+        files: "test/aws-lambda/reports/TEST-*.xml"
+        format: "junit"
+        branch: "^main|next$$"
+        api-token-env-name: "JS_AWS_LAMBDA_BUILDKITE_ANALYTICS_TOKEN"
+    commands:
+      # force the NPM registry as the default on CI is artifactory, which can't
+      # currently install from our lockfile
+      - npm ci --registry https://registry.npmjs.org
+      - cd test/aws-lambda
+      - bundle install
+      - bundle exec maze-runner
 
   #
   # Core tests and checks
@@ -108,46 +108,46 @@ steps:
         run: ci
     command: "npm run test:types"
 
-  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-  #   depends_on: "package-js"
-  #   agents:
-  #     queue: "macos"
-  #   timeout_in_minutes: 5
-  #   commands:
-  #     - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on: "package-js"
+    agents:
+      queue: "macos"
+    timeout_in_minutes: 5
+    commands:
+      - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
 
-  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-  #   agents:
-  #     queue: "macos"
-  #   timeout_in_minutes: 5
-  #   commands:
-  #     - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    agents:
+      queue: "macos"
+    timeout_in_minutes: 5
+    commands:
+      - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
 
-  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-  #   depends_on: "package-js"
-  #   agents:
-  #     queue: "macos"
-  #   timeout_in_minutes: 5
-  #   commands:
-  #     - buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on: "package-js"
+    agents:
+      queue: "macos"
+    timeout_in_minutes: 5
+    commands:
+      - buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
 
-  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-  #   depends_on:
-  #     - "publish-js"
-  #   agents:
-  #     queue: "macos"
-  #   timeout_in_minutes: 5
-  #   commands:
-  #     - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+      - "publish-js"
+    agents:
+      queue: "macos"
+    timeout_in_minutes: 5
+    commands:
+      - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
 
-  # - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-  #   depends_on:
-  #     - "publish-js"
-  #   agents:
-  #     queue: "macos"
-  #   timeout_in_minutes: 5
-  #   commands:
-  #     - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
+  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
+    depends_on:
+      - "publish-js"
+    agents:
+      queue: "macos"
+    timeout_in_minutes: 5
+    commands:
+      - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
 
   #
   # Conditionally trigger full pipeline
