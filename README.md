@@ -5,7 +5,7 @@
       <img alt="SmartBear BugSnag logo" src="https://assets.smartbear.com/m/3945e02cdc983893/original/BugSnag-Repository-Header-Light.svg">
     </picture>
   </a>
-  <h1>Bugsnag error monitoring & reporting for JavaScript</h1>
+  <h1>Error monitoring & reporting for JavaScript</h1>
 </div>
 
 [![Documentation](https://img.shields.io/badge/documentation-latest-blue.svg)](https://docs.bugsnag.com/platforms/javascript/)
