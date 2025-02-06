@@ -1,0 +1,3 @@
+[[IgnoredVulns]]
+id = "GHSA-r683-j2x4-v87g" # CVE-2022-0235
+reason = "Dev dependency not used in production, and cannot be manually overridden due to lerna support"
