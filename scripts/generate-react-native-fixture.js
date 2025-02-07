@@ -221,7 +221,6 @@ function configureIOSProject () {
       gemfileContents += '\ngem \'concurrent-ruby\', \'<= 1.3.4\''
     }
     fs.writeFileSync(gemfilePath, gemfileContents)
-    fs.writeFileSync(gemfilePath, gemfileContents.replace(/concurrent-ruby/, 'concurrent-ruby', '<= 1.3.4'))
   }
 
   // set NSAllowsArbitraryLoads to allow http traffic for all domains (bitbar public IP + bs-local.com)
