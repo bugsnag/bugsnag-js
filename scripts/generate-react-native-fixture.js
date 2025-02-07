@@ -59,8 +59,9 @@ const REACT_NAVIGATION_PEER_DEPENDENCIES = [
   `react-native-safe-area-context@${reactNativeSafeAreaContextVersion}`
 ]
 
+const reactNativeNavigationVersion = '7.41.0' // Issue with 7.42.0
 const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
-  'react-native-navigation'
+  `react-native-navigation@${reactNativeNavigationVersion}`
 ]
 
 // Generate the fixture
@@ -203,7 +204,9 @@ function configureIOSProject () {
   if (fs.existsSync(gemfilePath)) {
     let gemfileContents = fs.readFileSync(gemfilePath, 'utf8')
     gemfileContents += '\ngem \'xcodeproj\', \'< 1.26.0\''
-    gemfileContents += '\ngem \'concurrent-ruby\', \'<= 1.3.4\''
+    if (!gemfileContents.includes('concurrent-ruby')) {
+      gemfileContents += '\ngem \'concurrent-ruby\', \'<= 1.3.4\''
+    }
     fs.writeFileSync(gemfilePath, gemfileContents)
   }
 
