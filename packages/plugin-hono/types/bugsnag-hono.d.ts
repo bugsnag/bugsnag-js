@@ -5,8 +5,8 @@ declare const bugsnagPluginHono: Plugin
 export default bugsnagPluginHono
 
 interface BugsnagPluginHonoResult {
-  errorHandler: (err: Error, c: hono.Context) => void
-  requestHandler: (c: hono.Context) => void
+  errorHandler: hono.ErrorHandler
+  requestHandler: hono.MiddlewareHandler
 }
 
 declare module '@bugsnag/core' {
