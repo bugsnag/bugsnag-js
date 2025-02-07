@@ -19,8 +19,7 @@ module.exports = {
         requestClient.startSession()
       }
 
-      // attach it to the request
-      c.req.bugsnag = requestClient
+      c.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
       requestClient.addOnError((event) => {
@@ -37,20 +36,19 @@ module.exports = {
     }
 
     const errorHandler = (err, c, next) => {
-      if (!client._config.autoDetectErrors) return next(err)
+      if (!client._config.autoDetectErrors) return next
 
       const event = client.Event.create(err, false, handledState, 'hono middleware', 1)
 
-      const { metadata, request } = getRequestAndMetadataFromReq(c.req)
-      event.request = { ...event.request, ...request }
-      event.addMetadata('request', metadata)
-
-      if (c.req.bugsnag) {
-        c.req.bugsnag._notify(event)
+      if (c.bugsnag) {
+        c.bugsnag._notify(event)
       } else {
         client._logger.warn(
-          'c.req.bugsnag is not defined. Make sure the @bugsnag/plugin-hono requestHandler middleware is added first.'
+          'c.bugsnag is not defined. Make sure the @bugsnag/plugin-hono requestHandler middleware is added first.'
         )
+        const { metadata, request } = getRequestAndMetadataFromReq(c)
+        event.request = { ...event.request, ...request }
+        event.addMetadata('request', metadata)
         client._notify(event)
       }
 
@@ -69,8 +67,7 @@ const getRequestAndMetadataFromReq = c => {
       body,
       url: requestInfo.url,
       httpMethod: requestInfo.httpMethod,
-      headers: requestInfo.headers,
-      referrer: requestInfo.referrer
+      headers: requestInfo.headers
     }
   }
 }
