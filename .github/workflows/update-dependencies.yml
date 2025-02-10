@@ -1,4 +1,5 @@
 name: update-dependencies
+permissions: read-all
 
 on:
   repository_dispatch:

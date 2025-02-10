@@ -1,6 +1,7 @@
 name: '@bugsnag/electron'
 
 on: push
+permissions: read-all
 
 jobs:
   test:
