@@ -13,7 +13,7 @@ jobs:
           node-version: 18.x
 
       - name: Checkout base branch
-        uses: actions/checkout@50fbc622fc4ef5163becd7fab6573eac35f8462e # v1.2.0
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ github.base_ref }}
 
@@ -28,7 +28,7 @@ jobs:
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-before-gzipped
 
       - name: Checkout PR branch
-        uses: actions/checkout@50fbc622fc4ef5163becd7fab6573eac35f8462e # v1.2.0
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           clean: false
 
