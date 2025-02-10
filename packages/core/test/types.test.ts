@@ -1,7 +1,7 @@
-import Bugsnag, { Client, Config } from '..'
+import Bugsnag, { Client } from '@bugsnag/core'
 
 // the client's constructor isn't public in TS so this drops down to JS to create one for the tests
-function createClient (opts: Config): Client {
+function createClient (opts: any): Client {
   const c = new (Bugsnag.Client as any)(opts, undefined, [], { name: 'Type Tests', version: 'nope', url: 'https://github.com/bugsnag/bugsnag-js' })
   c._setDelivery(() => ({
     sendSession: (p: any, cb: () => void): void => { cb() },

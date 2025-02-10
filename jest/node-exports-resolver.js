@@ -54,7 +54,7 @@ function getPackageJson (packageName) {
     return require(`${packageName}/package.json`)
   } catch (requireError) {
     if (requireError.code === 'MODULE_NOT_FOUND') {
-      throw requireError
+      return null
     }
     if (requireError.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') {
       return console.error(
@@ -121,59 +121,57 @@ module.exports = (request, options) => {
       submoduleName = length > 2 ? `./${pkgPathParts.join('/')}` : '.'
     }
 
-    if (packageName && submoduleName !== '.') {
+    if (packageName) {
       const selfReferencePath = getSelfReferencePath(packageName)
       if (selfReferencePath) packageName = selfReferencePath
 
       const packageJson = getPackageJson(packageName)
 
-      if (!packageJson) {
-        console.error(`Failed to find package.json for ${packageName}`)
-      }
+      if (packageJson) {
+        const { exports } = packageJson || {}
+        if (exports) {
+          let targetFilePath
 
-      const { exports } = packageJson || {}
-      if (exports) {
-        let targetFilePath
+          if (typeof exports === 'string') { targetFilePath = exports } else if (Object.keys(exports).every((k) => k.startsWith('.'))) {
+            const [exportKey, exportValue] = Object.entries(exports)
+              .find(([k]) => {
+                if (k === submoduleName) return true
+                if (k.endsWith('*')) return submoduleName.startsWith(k.slice(0, -1))
 
-        if (typeof exports === 'string') { targetFilePath = exports } else if (Object.keys(exports).every((k) => k.startsWith('.'))) {
-          const [exportKey, exportValue] = Object.entries(exports)
-            .find(([k]) => {
-              if (k === submoduleName) return true
-              if (k.endsWith('*')) return submoduleName.startsWith(k.slice(0, -1))
+                return false
+              }) || []
 
-              return false
-            }) || []
+            if (typeof exportValue === 'string') {
+              targetFilePath = exportKey.endsWith('*')
+                ? exportValue.replace(
+                  /\*/, submoduleName.slice(exportKey.length - 1)
+                )
+                : exportValue
+            } else if (
+              conditions && exportValue != null && typeof exportValue === 'object'
+            ) {
+              function resolveExport (exportValue, prevKeys) {
+                for (const [key, value] of Object.entries(exportValue)) {
+                  // Duplicated nested conditions are undefined behaviour (and
+                  // probably a format error or spec loop-hole), abort and
+                  // delegate to Jest default resolver
+                  if (prevKeys.includes(key)) return
 
-          if (typeof exportValue === 'string') {
-            targetFilePath = exportKey.endsWith('*')
-              ? exportValue.replace(
-                /\*/, submoduleName.slice(exportKey.length - 1)
-              )
-              : exportValue
-          } else if (
-            conditions && exportValue != null && typeof exportValue === 'object'
-          ) {
-            function resolveExport (exportValue, prevKeys) {
-              for (const [key, value] of Object.entries(exportValue)) {
-                // Duplicated nested conditions are undefined behaviour (and
-                // probably a format error or spec loop-hole), abort and
-                // delegate to Jest default resolver
-                if (prevKeys.includes(key)) return
+                  if (!conditions.includes(key)) continue
 
-                if (!conditions.includes(key)) continue
+                  if (typeof value === 'string') return value
 
-                if (typeof value === 'string') return value
-
-                return resolveExport(value, prevKeys.concat(key))
+                  return resolveExport(value, prevKeys.concat(key))
+                }
               }
+
+              targetFilePath = resolveExport(exportValue, [])
             }
-
-            targetFilePath = resolveExport(exportValue, [])
           }
-        }
 
-        if (targetFilePath) {
-          request = targetFilePath.replace('./', `${packageName}/`)
+          if (targetFilePath) {
+            request = targetFilePath.replace('./', `${packageName}/`)
+          }
         }
       }
     }
