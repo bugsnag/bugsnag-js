@@ -6,15 +6,30 @@ import {
   OnSessionCallback,
   OnBreadcrumbCallback,
   User,
-  FeatureFlag
+  FeatureFlag,
+  Config,
+  Plugin,
 } from './common'
 import Event from './event'
 import Session from './session'
 
-declare class Client {
-  protected constructor();
+interface Notifier {
+  name: string
+  version: string
+  url: string
+}
 
-  // reporting errors
+declare class Client<T extends Config = Config> {
+  // "private" interfaces
+  public constructor(opts: T, schema?: {[key: string]: any}, internalPlugins?: Plugin[], notifier?: Notifier)
+  _breadcrumbs: Breadcrumb[]
+
+  // access to internal classes
+  public Breadcrumb: typeof Breadcrumb;
+  public Event: typeof Event;
+  public Session: typeof Session;
+
+    // reporting errors
   public notify(
     error: NotifiableError,
     onError?: OnErrorCallback,
@@ -74,11 +89,6 @@ declare class Client {
 
   // implemented on the browser notifier only
   public resetEventCount?(): void;
-
-  // access to internal classes
-  public Breadcrumb: typeof Breadcrumb;
-  public Event: typeof Event;
-  public Session: typeof Session;
 }
 
 export default Client

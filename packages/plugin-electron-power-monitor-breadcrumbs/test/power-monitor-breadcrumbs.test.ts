@@ -1,7 +1,7 @@
 import { PowerMonitorEvent } from '@bugsnag/electron-test-helpers/src/PowerMonitor'
 import { makePowerMonitor, makeClientForPlugin } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { Breadcrumb } from '@bugsnag/core'
 
 describe('plugin: electron power monitor breadcrumbs', () => {
   const events: Array<[PowerMonitorEvent, string]> = [

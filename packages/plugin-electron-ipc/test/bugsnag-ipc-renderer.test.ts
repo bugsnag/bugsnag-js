@@ -1,6 +1,6 @@
 import BugsnagIpcRenderer from '../bugsnag-ipc-renderer'
 import { CHANNEL_RENDERER_TO_MAIN, CHANNEL_RENDERER_TO_MAIN_SYNC } from '../lib/constants'
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { Breadcrumb } from '@bugsnag/core'
 
 import * as electron from 'electron'
 

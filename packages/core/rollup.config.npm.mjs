@@ -15,7 +15,7 @@ const plugins = [
 ]
 
 const external = [
-  // '@bugsnag/cuid',
+  '@bugsnag/cuid',
 ]
 
 export default [

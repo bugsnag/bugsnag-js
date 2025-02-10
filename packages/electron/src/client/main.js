@@ -2,7 +2,7 @@ const electron = require('electron')
 
 const Client = require('@bugsnag/core/client')
 const Event = require('@bugsnag/core/event')
-const Breadcrumb = require('@bugsnag/core/breadcrumb')
+const { Breadcrumb } = require('@bugsnag/core')
 const Session = require('@bugsnag/core/session')
 const {
   plugin: PluginClientStatePersistence,

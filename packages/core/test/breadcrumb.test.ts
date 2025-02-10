@@ -1,6 +1,6 @@
 import Breadcrumb from '../src/breadcrumb'
 
-describe('@bugsnag/core/breadcrumb', () => {
+describe('Breadcrumb', () => {
   describe('toJSON()', () => {
     it('returns the correct data structure', () => {
       const d = new Date()

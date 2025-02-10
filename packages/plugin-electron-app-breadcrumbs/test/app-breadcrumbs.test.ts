@@ -1,4 +1,4 @@
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { Breadcrumb } from '@bugsnag/core'
 import Client from '@bugsnag/core/client'
 import { makeApp, makeBrowserWindow } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
