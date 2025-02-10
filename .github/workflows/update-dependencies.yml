@@ -36,7 +36,7 @@ jobs:
       - run: git fetch --prune --unshallow
 
       - name: Install ruby
-        uses: ruby/setup-ruby@8711a86ab6f9aa72890da4123b2ef7283b6b22b6 # v1.217.0
+        uses: ruby/setup-ruby@d781c1b4ed31764801bfae177617bb0446f5ef8d # v1.218.0
         with:
           ruby-version: 2.7
 
