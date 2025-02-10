@@ -1,8 +1,7 @@
-import Client from '@bugsnag/core/client'
 import Event from '@bugsnag/core/event'
 import Session from '@bugsnag/core/session'
 
-import { Breadcrumb } from '@bugsnag/core'
+import { Breadcrumb, Client } from '@bugsnag/core'
 
 import assign from '@bugsnag/core/lib/es-utils/assign'
 

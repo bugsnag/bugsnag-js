@@ -1,19 +1,19 @@
-import { Plugin, Session } from '@bugsnag/core'
-import ClientWithInternals, { Notifier } from '@bugsnag/core/client'
+import { Client, Plugin, Session } from '@bugsnag/core'
+import type { Notifier } from '@bugsnag/core/client'
 import includes from '@bugsnag/core/lib/es-utils/includes'
 
-interface InternalClient extends ClientWithInternals {
+interface InternalClient {
   _notifier?: Notifier
 }
 
 const plugin: Plugin = {
   load: client => {
-    (client as InternalClient)._sessionDelegate = sessionDelegate
+    client._sessionDelegate = sessionDelegate
   }
 }
 
 const sessionDelegate = {
-  startSession: (client: InternalClient, session: Session) => {
+  startSession: (client: Client, session: Session) => {
     const sessionClient = client
     sessionClient._session = session
     sessionClient._pausedSession = null
@@ -25,7 +25,7 @@ const sessionDelegate = {
     }
 
     sessionClient._delivery.sendSession({
-      notifier: sessionClient._notifier,
+      notifier: (sessionClient as unknown as InternalClient)._notifier,
       device: session.device,
       app: session.app,
       sessions: [
@@ -38,7 +38,7 @@ const sessionDelegate = {
     }, () => {})
     return sessionClient
   },
-  resumeSession: (client: InternalClient) => {
+  resumeSession: (client: Client) => {
     // Do nothing if there's already an active session
     if (client._session) {
       return client
@@ -55,7 +55,7 @@ const sessionDelegate = {
     // Otherwise start a new session
     return client.startSession()
   },
-  pauseSession: (client: InternalClient) => {
+  pauseSession: (client: Client) => {
     client._pausedSession = client._session
     client._session = null
   }

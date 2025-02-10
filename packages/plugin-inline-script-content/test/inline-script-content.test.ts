@@ -1,6 +1,6 @@
 import plugin from '../inline-script-content'
 
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import Event from '@bugsnag/core/event'
 
 describe('plugin: inline script content', () => {

@@ -1,7 +1,7 @@
 import plugin from '../'
 import { join } from 'path'
 import Event from '@bugsnag/core/event'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import { schema } from '@bugsnag/core/config'
 
 describe('plugin: strip project root', () => {

@@ -1,5 +1,4 @@
 import { Plugin } from '@bugsnag/core'
-import type ClientWithInternals from '@bugsnag/core/client'
 
 /*
  * Leaves breadcrumbs when the user interacts with the DOM
@@ -7,7 +6,7 @@ import type ClientWithInternals from '@bugsnag/core/client'
 export default (win = window): Plugin => ({
   load: (client) => {
     if (!('addEventListener' in win)) return
-    if (!(client as ClientWithInternals)._isBreadcrumbTypeEnabled('user')) return
+    if (!client._isBreadcrumbTypeEnabled('user')) return
 
     win.addEventListener('click', (event) => {
       let targetText, targetSelector
@@ -17,7 +16,7 @@ export default (win = window): Plugin => ({
       } catch (e) {
         targetText = '[hidden]'
         targetSelector = '[hidden]';
-        (client as ClientWithInternals)._logger.error('Cross domain error when tracking click event. See docs: https://tinyurl.com/yy3rn63z')
+        client._logger.error('Cross domain error when tracking click event. See docs: https://tinyurl.com/yy3rn63z')
       }
       client.leaveBreadcrumb('UI click', { targetText, targetSelector }, 'user')
     }, true)

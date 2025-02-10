@@ -1,6 +1,6 @@
 import plugin from '../src/throttle'
 
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 describe('plugin: throttle', () => {
   const payloads = []

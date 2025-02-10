@@ -1,4 +1,4 @@
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import { schema } from '@bugsnag/core/config'
 import plugin from '../'
 import EventWithInternals from '@bugsnag/core/event'

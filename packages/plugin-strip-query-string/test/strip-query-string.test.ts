@@ -1,6 +1,7 @@
 import plugin from '../'
 
-import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+import type { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import { Stackframe } from '@bugsnag/core'
 
 describe('plugin: strip query string', () => {

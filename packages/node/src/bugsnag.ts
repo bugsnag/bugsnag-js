@@ -21,7 +21,6 @@ import pluginContextualize from '@bugsnag/plugin-contextualize'
 import pluginStackframePathNormaliser from '@bugsnag/plugin-stackframe-path-normaliser'
 import pluginConsoleBreadcrumbs from '@bugsnag/plugin-console-breadcrumbs'
 import { BugsnagStatic, Client, Config, Event, Logger } from '@bugsnag/core'
-import ClientWithInternals from '@bugsnag/core/client'
 import EventWithInternals from '@bugsnag/core/event'
 
 type AfterErrorCb = (err: any, event: Event, logger: Logger) => void;
@@ -65,14 +64,14 @@ const internalPlugins = [
   pluginConsoleBreadcrumbs
 ]
 
-type NodeClient = Partial<ClientWithInternals> & {
-  _client: ClientWithInternals | null
+type NodeClient = Partial<Client> & {
+  _client: Client | null
   createClient: (opts?: Config) => Client
-  start: (opts?: Config) => ClientWithInternals
+  start: (opts?: Config) => Client
   isStarted: () => boolean
 }
 
-type Method = keyof typeof ClientWithInternals.prototype
+type Method = keyof typeof Client.prototype
 
 const notifier: NodeClient = {
   _client: null,
@@ -81,7 +80,7 @@ const notifier: NodeClient = {
     if (typeof opts === 'string') opts = { apiKey: opts }
     if (!opts) opts = {} as unknown as Config
 
-    const bugsnag = new ClientWithInternals(opts, schema, internalPlugins, { name, version, url });
+    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url });
 
     /**
      * Patch all calls to the client in order to forwards them to the context client if it exists
@@ -89,7 +88,7 @@ const notifier: NodeClient = {
      * This is useful for when client methods are called later, such as in the console breadcrumbs
      * plugin where we want to call `leaveBreadcrumb` on the request-scoped client, if it exists.
      */
-    (Object.keys(ClientWithInternals.prototype) as Method[]).forEach((m) => {
+    (Object.keys(Client.prototype) as Method[]).forEach((m) => {
       const original = bugsnag[m]
       bugsnag[m] = function () {
         // if we are in an async context, use the client from that context
@@ -120,7 +119,7 @@ const notifier: NodeClient = {
       notifier._client._logger.warn('Bugsnag.start() was called more than once. Ignoring.')
       return notifier._client
     }
-    notifier._client = notifier.createClient(opts) as ClientWithInternals
+    notifier._client = notifier.createClient(opts)
     return notifier._client
   },
   isStarted: () => {
@@ -128,7 +127,7 @@ const notifier: NodeClient = {
   }
 }
 
-;(Object.keys(ClientWithInternals.prototype) as Method[]).forEach((m) => {
+;(Object.keys(Client.prototype) as Method[]).forEach((m) => {
   if (/^_/.test(m)) return
   notifier[m] = function () {
     // if we are in an async context, use the client from that context

@@ -1,5 +1,5 @@
 import BugsnagIpcMain from '../bugsnag-ipc-main'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import InternalEvent from '@bugsnag/core/event'
 import { User, Plugin, Event, FeatureFlag } from '@bugsnag/core'
 

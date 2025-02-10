@@ -19,10 +19,9 @@ const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const React = require('react')
 
-const Client = require('@bugsnag/core/client')
 const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
-const { Breadcrumb } = require('@bugsnag/core')
+const { Breadcrumb, Client } = require('@bugsnag/core')
 
 Event.__type = 'reactnativejs'
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { create, act } from 'react-test-renderer'
 import BugsnagPluginReact, { formatComponentStack } from '../src/plugin'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 const client = new Client(
   { apiKey: '123', plugins: [new BugsnagPluginReact(React)] },

@@ -56,6 +56,9 @@ declare class Event {
 
   // trace correlation
   public setTraceCorrelation(traceId: string, spanId?: string): void
+
+  // "private" api
+  _metadata: { [key: string]: any }
 }
 
 interface HandledState {

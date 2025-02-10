@@ -1,6 +1,5 @@
 import Plugin from '../react-native-navigation'
-import { Breadcrumb } from '@bugsnag/core'
-import Client from '@bugsnag/core/client'
+import { Breadcrumb, Client } from '@bugsnag/core'
 
 interface Event {
   componentId: number

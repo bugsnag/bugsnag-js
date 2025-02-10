@@ -1,6 +1,7 @@
-import Client, { Delivery } from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import Event from '@bugsnag/core/event'
 import plugin from '../'
+import type { Delivery } from '@bugsnag/core/client'
 
 describe('plugin: electron process info', () => {
   const makeClient = (sendEvent: Delivery['sendEvent'], source: any): Client => {

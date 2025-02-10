@@ -1,4 +1,4 @@
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import { schema as defaultSchema } from '@bugsnag/core/config'
 import { Event, Session, SessionPayload, EventPayload, Plugin } from '@bugsnag/core'
 

@@ -1,4 +1,4 @@
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import delivery from '../'
 import EventWithInternals from '@bugsnag/core/event'
 

@@ -1,5 +1,5 @@
 import plugin from '../device'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 const schema = {
   ...require('@bugsnag/core/config').schema,
