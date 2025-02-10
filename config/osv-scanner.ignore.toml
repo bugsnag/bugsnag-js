@@ -1,0 +1,186 @@
+# Ignore all vulnerabilities in example and test apps
+[[IgnoredVulns]]
+id = "GHSA-fwr7-v2mv-hh25"
+
+[[IgnoredVulns]]
+id = "GHSA-qwcr-r2fm-qrc7"
+
+[[IgnoredVulns]]
+id = "GHSA-grv7-fg5c-xmjg"
+
+[[IgnoredVulns]]
+id = "GHSA-pxg6-pf52-xh8x"
+
+[[IgnoredVulns]]
+id = "GHSA-3xgq-45jj-v275"
+
+[[IgnoredVulns]]
+id = "GHSA-rv95-896h-c2vc"
+
+[[IgnoredVulns]]
+id = "GHSA-qw6h-vgh9-j6wx"
+
+[[IgnoredVulns]]
+id = "GHSA-2p57-rm9w-gvfp"
+
+[[IgnoredVulns]]
+id = "GHSA-8cf7-32gw-wr33"
+
+[[IgnoredVulns]]
+id = "GHSA-hjrf-2m68-5959"
+
+[[IgnoredVulns]]
+id = "GHSA-qwph-4952-7xr6"
+
+[[IgnoredVulns]]
+id = "GHSA-5v2h-r2cx-5xgj"
+
+[[IgnoredVulns]]
+id = "GHSA-rrrm-qjm4-v8hf"
+
+[[IgnoredVulns]]
+id = "GHSA-952p-6rrq-rcjv"
+
+[[IgnoredVulns]]
+id = "GHSA-f8q6-p94x-37v3"
+
+[[IgnoredVulns]]
+id = "GHSA-r683-j2x4-v87g"
+
+[[IgnoredVulns]]
+id = "GHSA-9wv6-86v2-598j"
+
+[[IgnoredVulns]]
+id = "GHSA-rhx6-c78j-4q9w"
+
+[[IgnoredVulns]]
+id = "GHSA-hrpp-h998-j3pp"
+
+[[IgnoredVulns]]
+id = "GHSA-7f53-fmmv-mfjv"
+
+[[IgnoredVulns]]
+id = "GHSA-p8p7-x288-28g6"
+
+[[IgnoredVulns]]
+id = "GHSA-c2qf-rxjj-qqgw"
+
+[[IgnoredVulns]]
+id = "GHSA-m6fv-jmcg-4jfg"
+
+[[IgnoredVulns]]
+id = "GHSA-cm22-4g7w-348p"
+
+[[IgnoredVulns]]
+id = "GHSA-72xf-g2v4-qvf3"
+
+[[IgnoredVulns]]
+id = "GHSA-vg6x-rcgg-rjx6"
+
+[[IgnoredVulns]]
+id = "GHSA-c7qv-q95q-8v27"
+
+[[IgnoredVulns]]
+id = "GHSA-35jh-r3h4-6jhm"
+
+[[IgnoredVulns]]
+id = "GHSA-4vvj-4cpr-p986"
+
+[[IgnoredVulns]]
+id = "GHSA-3h5v-q93c-6h6q"
+
+[[IgnoredVulns]]
+id = "GHSA-r95h-9x8f-r3f7"
+
+[[IgnoredVulns]]
+id = "GHSA-vcc3-rw6f-jv97"
+
+[[IgnoredVulns]]
+id = "GHSA-xc9x-jj77-9p9j"
+
+[[IgnoredVulns]]
+id = "GHSA-22f2-v57c-j9cx"
+
+[[IgnoredVulns]]
+id = "GHSA-54rr-7fvw-6x8f"
+
+[[IgnoredVulns]]
+id = "GHSA-xj5v-6v4g-jfw6"
+
+[[IgnoredVulns]]
+id = "GHSA-2rxp-v6pw-ch6m"
+
+[[IgnoredVulns]]
+id = "GHSA-4xqq-m2hx-25v8"
+
+[[IgnoredVulns]]
+id = "GHSA-5866-49gr-22v4"
+
+[[IgnoredVulns]]
+id = "GHSA-r55c-59qm-vjw6"
+
+[[IgnoredVulns]]
+id = "GHSA-vg3r-rm7w-2xgh"
+
+[[IgnoredVulns]]
+id = "GHSA-vmwr-mc7x-5vc3"
+
+[[IgnoredVulns]]
+id = "GHSA-6f62-3596-g6w7"
+
+[[IgnoredVulns]]
+id = "GHSA-rrr8-f88r-h8q6"
+
+[[IgnoredVulns]]
+id = "GHSA-434g-2637-qmqr"
+
+[[IgnoredVulns]]
+id = "GHSA-49q7-c7j4-3p7m"
+
+[[IgnoredVulns]]
+id = "GHSA-977x-g7h5-7qgw"
+
+[[IgnoredVulns]]
+id = "GHSA-f7q4-pwc6-w24p"
+
+[[IgnoredVulns]]
+id = "GHSA-fc9h-whq2-v747"
+
+[[IgnoredVulns]]
+id = "GHSA-cr5q-6q9f-rq6q"
+
+[[IgnoredVulns]]
+id = "GHSA-j6gc-792m-qgm2"
+
+[[IgnoredVulns]]
+id = "GHSA-pj73-v5mw-pm9j"
+
+[[IgnoredVulns]]
+id = "GHSA-7627-mp87-jf6q"
+
+[[IgnoredVulns]]
+id = "GHSA-g397-v4w5-4m79"
+
+[[IgnoredVulns]]
+id = "GHSA-67hx-6x53-jw92"
+
+[[IgnoredVulns]]
+id = "GHSA-c2jc-4fpr-4vhg"
+
+[[IgnoredVulns]]
+id = "GHSA-w573-4hg7-7wgq"
+
+[[IgnoredVulns]]
+id = "GHSA-7mhc-prgv-r3q4"
+
+[[IgnoredVulns]]
+id = "GHSA-78xj-cgh5-2h22"
+
+[[IgnoredVulns]]
+id = "GHSA-9c47-m6qq-7p4h"
+
+[[IgnoredVulns]]
+id = "GHSA-rxrc-rgv4-jpvx"
+
+[[IgnoredVulns]]
+id = "GHSA-j8xg-fqg3-53r7"
