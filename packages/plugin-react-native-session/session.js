@@ -2,14 +2,14 @@ module.exports = NativeClient => ({
   load: (client) => {
     const delegate = {
       startSession: client => {
-        NativeClient.startSession()
+        // NativeClient.startSession()
         return client
       },
       pauseSession: client => {
-        NativeClient.pauseSession()
+        // NativeClient.pauseSession()
       },
       resumeSession: client => {
-        NativeClient.resumeSession()
+        // NativeClient.resumeSession()
         return client
       }
     }
