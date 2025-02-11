@@ -16,6 +16,7 @@ steps:
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_IOS: "true"
           XCODE_VERSION: "15.3.0"
+          ENABLE_SOURCE_MAPS: "true"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
