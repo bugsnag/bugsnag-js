@@ -28,7 +28,7 @@ const plugins = [
     preventAssignment: true,
     values: {
       'process.env.NODE_ENV': JSON.stringify('production'),
-      __BUGSNAG_NOTIFIER_VERSION__: JSON.stringify(packageJson.version),
+      __BUGSNAG_NOTIFIER_VERSION__: packageJson.version,
     }
   })
 ]

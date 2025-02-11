@@ -1,4 +1,4 @@
-import Bugsnag from '../src/notifier'
+import Bugsnag from '../src/bugsnag'
 
 describe('node notifier', () => {
   beforeAll(() => {

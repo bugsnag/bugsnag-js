@@ -31,8 +31,7 @@ import dXDomainRequest from '@bugsnag/delivery-x-domain-request'
 import dXMLHttpRequest from '@bugsnag/delivery-xml-http-request'
 
 const name = 'Bugsnag JavaScript'
-// @ts-ignore
-const version = __BUGSNAG_NOTIFIER_VERSION__
+const version = '__BUGSNAG_NOTIFIER_VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const schema = assign({}, baseConfig, browserConfig)
