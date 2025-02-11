@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { execFileSync, execSync } = require('child_process')
 const { resolve } = require('path')
 const fs = require('fs')
@@ -164,10 +166,4 @@ function replaceGeneratedFixtureFiles () {
     resolve(replacementFilesDir, 'ios/exportOptions.plist'),
     resolve(fixtureDir, 'exportOptions.plist')
   )
-}
-
-function enableSourceMaps () {
-  common.changeDir(`${ROOT_DIR}/scripts`)
-  const initCommand = `./init-rn-cli.sh ${notifierVersion} ${reactNativeVersion} ${fixtureDir}`
-  common.run(initCommand, true)
 }

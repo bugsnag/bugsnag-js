@@ -3,7 +3,7 @@ require 'securerandom'
 
 fixtures = Dir["#{__dir__}/../fixtures/rn0_*"].map { |dir| File.basename(dir) }.sort
 current_fixture = ENV['RN_VERSION']
-fixture_dir = "#{__dir__}/../../../react-native/features/fixtures/generated/"
+fixture_dir = "#{__dir__}/../../../react-native-cli/features/fixtures/generated/"
 
 # if RCT_NEW_ARCH_ENABLED is set add new-arch/ to the fixture_dir
 if ENV['RCT_NEW_ARCH_ENABLED'] == 'true' || ENV['RCT_NEW_ARCH_ENABLED'] == '1'
@@ -33,7 +33,7 @@ end
 
 def find_cli_helper_script
   # Handle both Dockerized and local Maze Runner executions
-  script = 'generate-react-native-fixture.js'
+  script = 'generate-react-native-cli-fixture.js'
   possible_locations = %W[
     #{__dir__}/../../../../scripts/#{script}
   ]

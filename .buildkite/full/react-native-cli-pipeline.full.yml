@@ -5,34 +5,8 @@ steps:
 
   - group: "React Native CLI Tests"
     steps:
-      - label: ':mac: Build RN {{matrix}} test fixture ipa (Old Arch)'
-        key: "build-react-native-ios-fixture-old-arch"
-        timeout_in_minutes: 20
-        agents:
-          queue: "macos-14"
-        env:
-          NODE_VERSION: "18"
-          RN_VERSION: "{{matrix}}"
-          RCT_NEW_ARCH_ENABLED: "0"
-          BUILD_IOS: "true"
-          XCODE_VERSION: "15.3.0"
-          ENABLE_SOURCE_MAPS: "true"
-        artifact_paths:
-          - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
-        commands:
-          - "cd test/react-native-cli"
-          - "bundle install"
-          - "bundle exec maze-runner features/build-app-tests/build-ios-app.feature"
-        matrix:
-          - "0.71"
-          - "0.72"
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
-      - label: ':android: Build RN {{matrix}} test fixture APK (Old Arch)'
-        key: "build-react-native-android-fixture-old-arch"
+      - label: ':android: Build RN {{matrix}} CLI test fixture'
+        key: "build-react-native-cli-android-fixture"
         timeout_in_minutes: 15
         agents:
           queue: macos-14
@@ -42,9 +16,9 @@ steps:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
-          ENABLE_SOURCE_MAPS: "true"
+          INIT_RN_CLI: "true"
         artifact_paths:
-          - "test/react-native/features/fixtures/generated/old-arch/**/reactnative.apk"
+          - "test/react-native-cli/features/fixtures/generated/old-arch/**/reactnative.apk"
         commands:
           - "cd test/react-native-cli"
           - "bundle install"
