@@ -92,8 +92,6 @@ declare class Client<T extends Config = Config> {
 
   _isBreadcrumbTypeEnabled(type: string): boolean
 
-  public addOnError(fn: OnErrorCallback, moveToFront?: boolean): void;
-
   // access to internal classes
   public Breadcrumb: typeof Breadcrumb;
   public Event: typeof Event;
@@ -145,7 +143,7 @@ declare class Client<T extends Config = Config> {
   public resumeSession(): Client;
 
   // callbacks
-  public addOnError(fn: OnErrorCallback): void;
+  public addOnError(fn: OnErrorCallback, moveToFront?: boolean): void;
   public removeOnError(fn: OnErrorCallback): void;
 
   public addOnSession(fn: OnSessionCallback): void;
