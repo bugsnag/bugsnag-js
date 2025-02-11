@@ -1,8 +1,8 @@
 import type { Client, Config } from '@bugsnag/core'
 
 import payload from '@bugsnag/core/lib/json-payload'
-import { Event } from 'packages/core'
-import ClientWithInternals, { Delivery } from 'packages/core/client'
+import { Event } from '@bugsnag/core'
+import ClientWithInternals, { Delivery } from '@bugsnag/core/client'
 
 
 function getIntegrityHeaderValue (windowOrWorkerGlobalScope: Window, requestBody: string) {

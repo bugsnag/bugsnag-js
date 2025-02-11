@@ -5,8 +5,8 @@ import { Client, Config, Event, Session } from '@bugsnag/core'
 import getApiUrl from './get-api-url'
 import matchPageProtocol from './match-page-protocol'
 
-import type ClientWithInternals from 'packages/core/client'
-import type { Delivery } from 'packages/core/client'
+import type ClientWithInternals from '@bugsnag/core/client'
+import type { Delivery } from '@bugsnag/core/client'
 
 const delivery = (client: Client, win = window): Delivery => ({
   sendEvent: (event, cb = () => {}) => {

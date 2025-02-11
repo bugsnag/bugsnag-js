@@ -1,4 +1,4 @@
-import delegate from '../feature-flag-delegate'
+import delegate from '../../src/lib/feature-flag-delegate'
 
 describe('feature flag delegate', () => {
   describe('#add', () => {

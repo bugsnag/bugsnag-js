@@ -6,8 +6,6 @@ import assign from '@bugsnag/core/lib/es-utils/assign'
 import { schema as baseConfig } from '@bugsnag/core/config'
 import browserConfig from './config'
 
-import Event from '@bugsnag/core/event'
-
 import delivery from '@bugsnag/delivery-node'
 
 import pluginApp from '@bugsnag/plugin-app-duration'
@@ -22,8 +20,9 @@ import pluginIntercept from '@bugsnag/plugin-intercept'
 import pluginContextualize from '@bugsnag/plugin-contextualize'
 import pluginStackframePathNormaliser from '@bugsnag/plugin-stackframe-path-normaliser'
 import pluginConsoleBreadcrumbs from '@bugsnag/plugin-console-breadcrumbs'
-import { BugsnagStatic, Config, Logger } from '@bugsnag/core'
+import { BugsnagStatic, Client, Config, Event, Logger } from '@bugsnag/core'
 import ClientWithInternals from '@bugsnag/core/client'
+import EventWithInternals from '@bugsnag/core/event'
 
 type AfterErrorCb = (err: any, event: Event, logger: Logger) => void;
 
@@ -39,8 +38,8 @@ export interface NodeConfig extends Config {
 }
 
 export interface NodeBugsnagStatic extends BugsnagStatic {
-  start(apiKeyOrOpts: string | NodeConfig): ClientWithInternals
-  createClient(apiKeyOrOpts: string | NodeConfig): ClientWithInternals
+  start(apiKeyOrOpts: string | NodeConfig): Client
+  createClient(apiKeyOrOpts: string | NodeConfig): Client
 }
 
 const name = 'Bugsnag Node'
@@ -48,7 +47,7 @@ const version = '__BUGSNAG_NOTIFIER_VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 // @ts-ignore
-Event.__type = 'nodejs'
+EventWithInternals.__type = 'nodejs'
 
 // extend the base config schema with some node-specific options
 const internalPlugins = [
@@ -68,7 +67,7 @@ const internalPlugins = [
 
 type NodeClient = Partial<ClientWithInternals> & {
   _client: ClientWithInternals | null
-  createClient: (opts?: Config) => ClientWithInternals
+  createClient: (opts?: Config) => Client
   start: (opts?: Config) => ClientWithInternals
   isStarted: () => boolean
 }
@@ -121,7 +120,7 @@ const notifier: NodeClient = {
       notifier._client._logger.warn('Bugsnag.start() was called more than once. Ignoring.')
       return notifier._client
     }
-    notifier._client = notifier.createClient(opts)
+    notifier._client = notifier.createClient(opts) as ClientWithInternals
     return notifier._client
   },
   isStarted: () => {

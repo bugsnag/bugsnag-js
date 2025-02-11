@@ -1,4 +1,4 @@
-import derecursift from '../derecursify'
+import derecursift from '../../src/lib/derecursify'
 
 describe('delivery: react native makeSafe', () => {
   it('leaves simple types intact', () => {

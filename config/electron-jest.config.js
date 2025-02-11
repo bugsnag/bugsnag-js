@@ -1,6 +1,7 @@
 module.exports = {
   projects: [
     {
+      resolver: '<rootDir>/jest/node-exports-resolver',
       setupFilesAfterEnv: ['<rootDir>/test/electron/setup.ts'],
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures', 'examples'],
@@ -9,6 +10,7 @@ module.exports = {
       testMatch: ['**/test/**/*.test-main.ts']
     },
     {
+      resolver: '<rootDir>/jest/node-exports-resolver',
       setupFilesAfterEnv: ['<rootDir>/test/electron/setup.ts'],
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures', 'examples'],

@@ -1,4 +1,4 @@
-import { Client, Plugin } from 'packages/core/types'
+import { Client, Plugin } from '@bugsnag/core'
 import assign from '@bugsnag/core/lib/es-utils/assign'
 
 interface InternalClient extends Client {

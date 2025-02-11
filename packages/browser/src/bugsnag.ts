@@ -1,5 +1,5 @@
 import ClientWithInternals from '@bugsnag/core/client'
-import type { BugsnagStatic, Config } from '@bugsnag/core'
+import type { BugsnagStatic, Config, Client } from '@bugsnag/core'
 
 import map from '@bugsnag/core/lib/es-utils/map'
 import keys from '@bugsnag/core/lib/es-utils/keys'
@@ -45,8 +45,8 @@ export interface BrowserConfig extends Config {
 }
 
 export interface BrowserBugsnagStatic extends BugsnagStatic {
-  start(apiKeyOrOpts: string | BrowserConfig): ClientWithInternals
-  createClient(apiKeyOrOpts: string | BrowserConfig): ClientWithInternals
+  start(apiKeyOrOpts: string | BrowserConfig): Client
+  createClient(apiKeyOrOpts: string | BrowserConfig): Client
 }
 
 declare global {
@@ -57,7 +57,7 @@ declare global {
 
 type BrowserClient = Partial<ClientWithInternals> & {
   _client: ClientWithInternals | null
-  createClient: (opts?: Config) => ClientWithInternals
+  createClient: (opts?: Config) => Client
   start: (opts?: Config) => ClientWithInternals
   isStarted: () => boolean
 }
@@ -108,7 +108,7 @@ const notifier: BrowserClient = {
       notifier._client._logger.warn('Bugsnag.start() was called more than once. Ignoring.')
       return notifier._client
     }
-    notifier._client = notifier.createClient(opts)
+    notifier._client = notifier.createClient(opts) as ClientWithInternals
     return notifier._client
   },
   isStarted: () => {

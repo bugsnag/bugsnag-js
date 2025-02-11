@@ -1,4 +1,4 @@
-import extractObject from '../extract-object'
+import extractObject from '../../src/lib/extract-object'
 
 describe('extractObject', () => {
   it('returns undefined if the key is not an object, or the value otherwise', () => {

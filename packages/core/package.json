@@ -1,8 +1,40 @@
 {
   "name": "@bugsnag/core",
-  "main": "index.js",
+  "main": "src/index.js",
   "version": "8.2.0",
   "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./lib/clone-client": "./src/lib/clone-client.js",
+    "./lib/json-payload": "./src/lib/json-payload.js",
+    "./lib/es-utils/assign":"./src/lib/es-utils/assign.js",
+    "./lib/validators/int-range": "./src/lib/validators/int-range.js",
+    "./lib/es-utils/map": "./src/lib/es-utils/map.js",
+    "./lib/es-utils/includes": "./src/lib/es-utils/includes.js",
+    "./lib/es-utils/filter": "./src/lib/es-utils/filter.js",
+    "./lib/iserror": "./src/lib/iserror.js",
+    "./lib/es-utils/reduce": "./src/lib/es-utils/reduce.js",
+    "./lib/es-utils/keys": "./src/lib/es-utils/keys.js",
+    "./lib/derecursify": "./src/lib/derecursify.js",
+    "./lib/metadata-delegate": "./src/lib/metadata-delegate.js",
+    "./lib/callback-runner": "./src/lib/callback-runner.js",
+    "./lib/node-fallback-stack": "./src/lib/node-fallback-stack.js",
+    "./lib/sync-callback-runner": "./src/lib/sync-callback-runner.js",
+    "./lib/path-normalizer": "./src/lib/path-normalizer.js",
+    "./lib/validators/string-with-length": "./src/lib/validators/string-with-length.js",
+    "./lib/validators/list-of-functions": "./src/lib/validators/list-of-functions.js",
+    "./lib/extract-object": "./src/lib/extract-object.js",
+    "./lib/feature-flag-delegate": "./src/lib/feature-flag-delegate.js",
+    "./client": { "import": "./src/client.js", "default": "./src/client.js", "types": "./src/client.d.ts" },
+    "./config": "./src/config.js",
+    "./event": { "import": "./src/event.js", "default": "./src/event.js", "types": "./src/event.d.ts" },
+    "./session": "./src/session.js",
+    "./breadcrumb": "./src/breadcrumb.js"
+  },
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -13,10 +45,17 @@
     "access": "public"
   },
   "files": [
-    "lib",
+    "src",
     "types",
-    "*.js"
+    "*.js",
+    "dist"
   ],
+  "scripts": {
+    "size": "../../bin/size dist/bugsnag.min.js",
+    "clean": "rm -fr dist && mkdir dist",
+    "build": "npm run clean && npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs"
+  },
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
@@ -25,5 +64,13 @@
     "error-stack-parser": "^2.0.3",
     "iserror": "^0.0.2",
     "stack-generator": "^2.0.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^26",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-replace": "^6.0.2",
+    "rollup": "^4.24.0"
   }
 }

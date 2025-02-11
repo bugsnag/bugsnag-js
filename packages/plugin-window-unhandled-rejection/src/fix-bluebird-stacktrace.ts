@@ -1,4 +1,4 @@
-import { Stackframe } from 'packages/core/types'
+import { Stackframe } from '@bugsnag/core'
 
 // The stack parser on bluebird stacks in FF get a suprious first frame:
 //

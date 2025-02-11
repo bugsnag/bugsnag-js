@@ -5,8 +5,8 @@ import { inspect } from 'util'
 
 import assign from '@bugsnag/core/lib/es-utils/assign'
 import getPrefixedConsole from './get-prefixed-console'
-import EventWithInternals from 'packages/core/event'
-import { LoggerConfig } from 'packages/core/client'
+import EventWithInternals from '@bugsnag/core/event'
+import { LoggerConfig } from '@bugsnag/core/client'
 
 const config = {
   appType: {

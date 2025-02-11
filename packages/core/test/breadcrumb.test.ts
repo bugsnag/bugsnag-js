@@ -1,4 +1,4 @@
-import Breadcrumb from '../breadcrumb'
+import Breadcrumb from '../src/breadcrumb'
 
 describe('@bugsnag/core/breadcrumb', () => {
   describe('toJSON()', () => {

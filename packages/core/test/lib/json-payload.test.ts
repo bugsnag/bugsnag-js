@@ -1,4 +1,4 @@
-import jsonPayload from '../json-payload'
+import jsonPayload from '../../src/lib/json-payload'
 
 function makeBigObject () {
   var big: Record<string, string> = {}

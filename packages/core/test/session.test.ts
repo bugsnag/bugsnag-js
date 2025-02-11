@@ -1,4 +1,4 @@
-import Session from '../session'
+import Session from '../src/session'
 
 describe('@bugsnag/core/session', () => {
   describe('toJSON()', () => {
