@@ -6,12 +6,12 @@
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
-      "import": "./src/index.js",
-      "default": "./src/index.js"
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.cjs"
     },
     "./lib/clone-client": "./src/lib/clone-client.js",
     "./lib/json-payload": "./src/lib/json-payload.js",
-    "./lib/es-utils/assign":"./src/lib/es-utils/assign.js",
+    "./lib/es-utils/assign": "./src/lib/es-utils/assign.js",
     "./lib/validators/int-range": "./src/lib/validators/int-range.js",
     "./lib/es-utils/map": "./src/lib/es-utils/map.js",
     "./lib/es-utils/includes": "./src/lib/es-utils/includes.js",
@@ -29,9 +29,17 @@
     "./lib/validators/list-of-functions": "./src/lib/validators/list-of-functions.js",
     "./lib/extract-object": "./src/lib/extract-object.js",
     "./lib/feature-flag-delegate": "./src/lib/feature-flag-delegate.js",
-    "./client": { "import": "./src/client.js", "default": "./src/client.js", "types": "./src/client.d.ts" },
+    "./client": {
+      "import": "./src/client.js",
+      "default": "./src/client.js",
+      "types": "./src/client.d.ts"
+    },
     "./config": "./src/config.js",
-    "./event": { "import": "./src/event.js", "default": "./src/event.js", "types": "./src/event.d.ts" },
+    "./event": {
+      "import": "./src/event.js",
+      "default": "./src/event.js",
+      "types": "./src/event.d.ts"
+    },
     "./session": "./src/session.js",
     "./breadcrumb": "./src/breadcrumb.js"
   },
@@ -66,11 +74,12 @@
     "stack-generator": "^2.0.3"
   },
   "devDependencies": {
-    "@types/jest": "^26",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.2",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/jest": "^26",
     "rollup": "^4.24.0"
   }
 }

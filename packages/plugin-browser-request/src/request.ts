@@ -9,7 +9,6 @@ export default (win = window): Plugin => ({
     client.addOnError(event => {
       if (event.request && event.request.url) return
       event.request = assign({}, event.request, { url: win.location.href })
-      // @ts-expect-error second parameter is private API
     }, true)
   }
 })

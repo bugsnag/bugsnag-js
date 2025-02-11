@@ -6,15 +6,98 @@ import {
   OnSessionCallback,
   OnBreadcrumbCallback,
   User,
-  FeatureFlag
+  FeatureFlag,
+  Config,
+  Plugin,
+  Device,
+  App,
 } from './common'
 import Event from './event'
 import Session from './session'
 
-declare class Client {
-  protected constructor();
+interface LoggerConfig {
+  debug: (msg: any) => void
+  info: (msg: any) => void
+  warn: (msg: any) => void
+  error: (msg: any, err?: unknown) => void
+}
 
-  // reporting errors
+interface Notifier {
+  name: string
+  version: string
+  url: string
+}
+
+interface EventDeliveryPayload {
+  apiKey: string
+  notifier: Notifier
+  events: Event[]
+}
+
+interface SessionDeliveryPayload {
+  notifier?: Notifier
+  device?: Device
+  app?: App
+  sessions?: Array<{
+    id: string
+    startedAt: Date
+    user?: User
+  }>
+}
+
+interface Delivery {
+  sendEvent(payload: EventDeliveryPayload, cb: (err?: Error | null) => void): void
+  sendSession(session: SessionDeliveryPayload, cb: (err?: Error | null) => void): void
+}
+
+interface SessionDelegate {
+  startSession: (client: Client, session: Session) => Client
+  pauseSession: (client: Client) => void
+  resumeSession: (client: Client) => Client
+}
+
+declare class Client<T extends Config = Config> {
+  // "private" interfaces
+  public constructor(opts: T, schema?: {[key: string]: any}, internalPlugins?: Plugin[], notifier?: Notifier)
+  _config: T
+  _depth: number
+  _logger: LoggerConfig
+  _breadcrumbs: Breadcrumb[]
+  _delivery: Delivery
+  _setDelivery: (handler: (client: Client) => Delivery) => void
+  _clientContext: any
+  _user: User
+
+  _metadata: { [key: string]: any }
+  _features: Array<FeatureFlag | null>
+  _featuresIndex: { [key: string]: number }
+
+  startSession(): Client
+  resumeSession(): Client
+  _session: Session | null
+  _pausedSession: Session | null
+
+  _sessionDelegate: SessionDelegate
+
+  _addOnSessionPayload: (cb: (sessionPayload: Session) => void) => void
+
+  _cbs: {
+    e: OnErrorCallback[]
+    s: OnSessionCallback[]
+    sp: any[]
+    b: OnBreadcrumbCallback[]
+  }
+
+  _loadPlugin(plugin: Plugin): void
+
+  _isBreadcrumbTypeEnabled(type: string): boolean
+
+  // access to internal classes
+  public Breadcrumb: typeof Breadcrumb;
+  public Event: typeof Event;
+  public Session: typeof Session;
+
+    // reporting errors
   public notify(
     error: NotifiableError,
     onError?: OnErrorCallback,
@@ -60,7 +143,7 @@ declare class Client {
   public resumeSession(): Client;
 
   // callbacks
-  public addOnError(fn: OnErrorCallback): void;
+  public addOnError(fn: OnErrorCallback, moveToFront?: boolean): void;
   public removeOnError(fn: OnErrorCallback): void;
 
   public addOnSession(fn: OnSessionCallback): void;
@@ -74,11 +157,6 @@ declare class Client {
 
   // implemented on the browser notifier only
   public resetEventCount?(): void;
-
-  // access to internal classes
-  public Breadcrumb: typeof Breadcrumb;
-  public Event: typeof Event;
-  public Session: typeof Session;
 }
 
 export default Client
