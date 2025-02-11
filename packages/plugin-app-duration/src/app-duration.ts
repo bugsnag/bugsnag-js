@@ -10,7 +10,6 @@ const plugin: Plugin = {
       const now = new Date()
 
       event.app.duration = Number(now) - Number(appStart)
-      // @ts-expect-error second argument is private API
     }, true)
 
     return { reset }

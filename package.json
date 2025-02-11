@@ -87,6 +87,7 @@
     "@types/prettier": "2.6.0",
     "@types/yargs": "17.0.10",
     "@types/node": "^18",
+    "node-fetch": "^2.6.7",
     "hermes-engine": "^0.10.0",
     "json-schema": "^0.4.0",
     "shell-quote": "^1.7.3",

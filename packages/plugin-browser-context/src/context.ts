@@ -7,7 +7,6 @@ export default (win = window): Plugin => ({
     client.addOnError(event => {
       if (event.context !== undefined) return
       event.context = win.location.pathname
-      // @ts-expect-error second parameter is private API
     }, true)
   }
 })
