@@ -13,7 +13,6 @@ export default (win = window, component = 'window onerror'): Plugin => ({
     function onerror (messageOrEvent: string | Event, url?: string, lineNo?: number, charNo?: number, error?: Error) {
       // Ignore errors with no info due to CORS settings
       if (lineNo === 0 && /Script error\.?/.test(messageOrEvent.toString())) {
-        // @ts-expect-error _logger is private API
         client._logger.warn('Ignoring cross-domain or eval script error. See docs: https://tinyurl.com/yy3rn63z')
       } else {
         // any error sent to window.onerror is unhandled and has severity=error
