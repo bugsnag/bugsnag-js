@@ -30,6 +30,32 @@ steps:
           automatic:
             - exit_status: "*"
               limit: 1
+
+      - label: ':android: Build RN {{matrix}} test fixture APK (Old Arch)'
+        key: "build-react-native-android-fixture-old-arch"
+        timeout_in_minutes: 15
+        agents:
+          queue: macos-14
+        env:
+          JAVA_VERSION: "17"
+          NODE_VERSION: "18"
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
+          BUILD_ANDROID: "true"
+          ENABLE_SOURCE_MAPS: "true"
+        artifact_paths:
+          - "test/react-native/features/fixtures/generated/old-arch/**/reactnative.apk"
+        commands:
+          - "cd test/react-native-cli"
+          - "bundle install"
+          - "bundle exec maze-runner features/build-app-tests/build-android-app.feature"
+        matrix:
+          - "0.75"
+          - "0.76"
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 #      #
 #      # CLI tests
 #      #
