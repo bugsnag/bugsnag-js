@@ -1,9 +1,9 @@
-import map from '../es-utils/map'
-import reduce from '../es-utils/reduce'
-import filter from '../es-utils/filter'
-import keys from '../es-utils/keys'
-import isArray from '../es-utils/is-array'
-import includes from '../es-utils/includes'
+import map from '../../src/lib/es-utils/map'
+import reduce from '../../src/lib/es-utils/reduce'
+import filter from '../../src/lib/es-utils/filter'
+import keys from '../../src/lib/es-utils/keys'
+import isArray from '../../src/lib/es-utils/is-array'
+import includes from '../../src/lib/es-utils/includes'
 
 describe('es-utils', () => {
   describe('reduce(arr, fn, accum)', () => {
