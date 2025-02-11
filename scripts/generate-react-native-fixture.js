@@ -52,14 +52,19 @@ const PEER_DEPENDENCIES = [
   `@bugsnag/plugin-react-native-navigation@${notifierVersion}`
 ]
 
-const SOURCE_MAP_DEPENDENCIES = [
-  `@bugsnag/react-native-cli@${notifierVersion}`
-]
+let reactNavigationVersion = '6.1.18'
+let reactNavigationNativeStackVersion = '6.11.0'
+let reactNativeScreensVersion = '3.35.0'
+let reactNativeSafeAreaContextVersion = '4.14.0'
 
-const reactNavigationVersion = '6.1.18'
-const reactNavigationNativeStackVersion = '6.11.0'
-const reactNativeScreensVersion = '3.35.0'
-const reactNativeSafeAreaContextVersion = '4.14.0'
+// RN 0.77 requires react-native-screens 4.6.0, which in turn requires react navigation v7
+if (parseFloat(reactNativeVersion) >= 0.77) {
+  reactNavigationVersion = '7.0.14'
+  reactNavigationNativeStackVersion = '7.2.0'
+  reactNativeScreensVersion = '4.6.0'
+  reactNativeSafeAreaContextVersion = '5.2.0'
+}
+
 const REACT_NAVIGATION_PEER_DEPENDENCIES = [
   `@react-navigation/native@${reactNavigationVersion}`,
   `@react-navigation/native-stack@${reactNavigationNativeStackVersion}`,
@@ -120,11 +125,6 @@ function installFixtureDependencies () {
   } else if (!isNewArchEnabled) {
     // add dependencies for @react-navigation
     PEER_DEPENDENCIES.push(...REACT_NAVIGATION_PEER_DEPENDENCIES)
-  }
-
-  // add source map dependencies
-  if (process.env.ENABLE_SOURCE_MAPS === 'true' || process.env.ENABLE_SOURCE_MAPS === '1') {
-    PEER_DEPENDENCIES.push(...SOURCE_MAP_DEPENDENCIES)
   }
 
   const fixtureDependencyArgs = PEER_DEPENDENCIES.join(' ')
