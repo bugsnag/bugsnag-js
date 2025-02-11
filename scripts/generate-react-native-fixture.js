@@ -48,6 +48,10 @@ const PEER_DEPENDENCIES = [
   `@bugsnag/plugin-react-native-navigation@${notifierVersion}`
 ]
 
+const SOURCE_MAP_DEPENDENCIES = [
+  `@bugsnag/react-native-cli@${notifierVersion}`
+]
+
 const reactNavigationVersion = '6.1.18'
 const reactNavigationNativeStackVersion = '6.11.0'
 const reactNativeScreensVersion = '3.35.0'
@@ -59,8 +63,9 @@ const REACT_NAVIGATION_PEER_DEPENDENCIES = [
   `react-native-safe-area-context@${reactNativeSafeAreaContextVersion}`
 ]
 
+const reactNativeNavigationVersion = '7.41.0' // Issue with 7.42.0
 const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
-  'react-native-navigation'
+  `react-native-navigation@${reactNativeNavigationVersion}`
 ]
 
 // Generate the fixture
@@ -81,6 +86,10 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
   configureIOSProject()
 
   installFixtureDependencies()
+
+  if (process.env.ENABLE_SOURCE_MAPS === 'true' || process.env.ENABLE_SOURCE_MAPS === '1') {
+    enableSourceMaps()
+  }
 
   // link react-native-navigation using rnn-link tool
   if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
@@ -145,6 +154,11 @@ function installFixtureDependencies () {
     PEER_DEPENDENCIES.push(...REACT_NAVIGATION_PEER_DEPENDENCIES)
   }
 
+  // add source map dependencies
+  if (process.env.ENABLE_SOURCE_MAPS === 'true' || process.env.ENABLE_SOURCE_MAPS === '1') {
+    PEER_DEPENDENCIES.push(...SOURCE_MAP_DEPENDENCIES)
+  }
+
   const fixtureDependencyArgs = PEER_DEPENDENCIES.join(' ')
 
   // install test fixture dependencies
@@ -203,7 +217,9 @@ function configureIOSProject () {
   if (fs.existsSync(gemfilePath)) {
     let gemfileContents = fs.readFileSync(gemfilePath, 'utf8')
     gemfileContents += '\ngem \'xcodeproj\', \'< 1.26.0\''
-    gemfileContents += '\ngem \'concurrent-ruby\', \'<= 1.3.4\''
+    if (!gemfileContents.includes('concurrent-ruby')) {
+      gemfileContents += '\ngem \'concurrent-ruby\', \'<= 1.3.4\''
+    }
     fs.writeFileSync(gemfilePath, gemfileContents)
   }
 
@@ -286,4 +302,10 @@ class MainActivity : ReactActivity() {
   let mainActivityContents = fs.readFileSync(mainActivityPath, 'utf8')
   mainActivityContents = mainActivityContents.replace(mainActivityPattern, mainActivityReplacement)
   fs.writeFileSync(mainActivityPath, mainActivityContents)
+}
+
+function enableSourceMaps () {
+  common.changeDir(`${ROOT_DIR}/scripts`)
+  const initCommand = `./init-rn-cli.sh ${notifierVersion} ${reactNativeVersion} ${fixtureDir}`
+  common.run(initCommand, true)
 }
