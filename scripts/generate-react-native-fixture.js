@@ -96,10 +96,6 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 
   installFixtureDependencies()
 
-  if (process.env.ENABLE_SOURCE_MAPS === 'true' || process.env.ENABLE_SOURCE_MAPS === '1') {
-    enableSourceMaps()
-  }
-
   // link react-native-navigation using rnn-link tool
   if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
     execSync('npx rnn-link', { cwd: fixtureDir, stdio: 'inherit' })
