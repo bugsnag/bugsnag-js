@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/core",
-  "main": "src/index.js",
+  "main": "./dist/index.cjs",
   "version": "8.2.0",
   "types": "types/index.d.ts",
   "exports": {
