@@ -76,21 +76,21 @@ module.exports = {
 
     execFileSync('xcrun', archiveArgs, { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
 
-    // export the archive
-    const exportArgs = [
-      'xcodebuild',
-      '-exportArchive',
-      '-exportPath',
-      'output/',
-      '-exportOptionsPlist',
-      'exportOptions.plist'
-    ]
-
     if (exportArchive) {
-      exportArgs.splice(3, 0, '-archivePath', 'reactnative.xcarchive')
-    }
+      // export the archive
+      const exportArgs = [
+        'xcodebuild',
+        '-exportArchive',
+        '-archivePath',
+        'reactnative.xcarchive',
+        '-exportPath',
+        'output/',
+        '-exportOptionsPlist',
+        'exportOptions.plist'
+      ]
 
-    execFileSync('xcrun', exportArgs, { cwd: fixtureDir, stdio: 'inherit' })
+      execFileSync('xcrun', exportArgs, { cwd: fixtureDir, stdio: 'inherit' })
+    }
   }
 
 }
