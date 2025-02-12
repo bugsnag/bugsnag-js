@@ -29,6 +29,8 @@ const ROOT_DIR = resolve(__dirname, '../')
 
 const isNewArchEnabled = process.env.RCT_NEW_ARCH_ENABLED === '1'
 
+let exportArchive = true
+
 let fixturePath = process.env.FIXTURE_DIR || 'test/react-native-cli/features/fixtures/generated/'
 
 if (isNewArchEnabled) {
@@ -80,8 +82,6 @@ if (process.env.BUILD_ANDROID === 'true' || process.env.BUILD_ANDROID === '1') {
 if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
   if (process.env.EXPORT_ARCHIVE !== 'true' || process.env.EXPORT_ARCHIVE !== '1') {
     exportArchive = false
-  } else {
-    exportArchive = true
   }
   iosUtils.buildIPA(fixtureDir, exportArchive)
 }
