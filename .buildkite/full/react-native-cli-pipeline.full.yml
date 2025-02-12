@@ -3,7 +3,7 @@ agents:
 
 steps:
 
-  - group: "React Native CLI Tests"
+  - group: "React Native CLI Build Tests"
     steps:
       - label: ':android: Build RN {{matrix}} CLI test fixture'
         key: "build-react-native-cli-android-fixture"
@@ -55,6 +55,77 @@ steps:
           automatic:
             - exit_status: "*"
               limit: 1
+
+  - group: "React Native CLI end-to-end tests"
+      steps:
+        - label: ":bitbar: :android: RN {{matrix}} CLI Android end-to-end tests"
+          depends_on: "build-react-native-cli-android-fixture"
+          timeout_in_minutes: 30
+          plugins:
+            artifacts#v1.9.0:
+              download: "test/react-native-cli/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk"
+              upload: ./test/react-native/maze_output/**/*
+            docker-compose#v4.12.0:
+              pull: react-native-cli-maze-runner
+              run: react-native-cli-maze-runner
+              service-ports: true
+              command:
+                - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk
+#                - --app-activity=com.reactnative.MainActivity
+#                - --app-package=com.reactnative
+                - --farm=bb
+                - --device=ANDROID_12
+                - --appium-version=1.22
+                - --no-tunnel
+                - --aws-public-ip
+                - features/run-app-tests
+            test-collector#v1.10.2:
+              files: "reports/TEST-*.xml"
+              format: "junit"
+              branch: "^main|next$$"
+              api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
+          retry:
+            manual:
+              permit_on_passed: true
+          env:
+            RN_VERSION: "{{matrix}}"
+            RCT_NEW_ARCH_ENABLED: "0"
+          concurrency: 25
+          concurrency_group: "bitbar"
+          concurrency_method: eager
+          matrix:
+            - "0.75"
+            - "0.76"
+
+#        - label: ":bitbar: :android: RN CLI Android end-to-end tests"
+#          depends_on: "rn-cli-0-66-apk"
+#          timeout_in_minutes: 10
+#          plugins:
+#            artifacts#v1.9.0:
+#              download: "build/rn0_66.apk"
+#              upload: ./test/react-native-cli/maze_output/**/*
+#            docker-compose#v4.12.0:
+#              pull: react-native-cli-maze-runner
+#              run: react-native-cli-maze-runner
+#              service-ports: true
+#              command:
+#                - --app=build/rn0_66.apk
+#                - --app-activity=com.reactnative.MainActivity
+#                - --app-package=com.reactnative
+#                - --farm=bb
+#                - --device=ANDROID_10|ANDROID_11|ANDROID_12
+#                - --appium-version=1.22
+#                - --no-tunnel
+#                - --aws-public-ip
+#                - features/run-app-tests
+#            test-collector#v1.10.2:
+#              files: "reports/TEST-*.xml"
+#              format: "junit"
+#              branch: "^main|next$$"
+#              api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
+#          concurrency: 25
+#          concurrency_group: 'bitbar'
+#          concurrency_method: eager
 #      #
 #      # CLI tests
 #      #
@@ -192,35 +263,7 @@ steps:
 #      #
 #      # Init, build and notify end-to-end tests - Android
 #      #
-#      - label: ":bitbar: :android: RN CLI 0.66 Android end-to-end tests"
-#        depends_on: "rn-cli-0-66-apk"
-#        timeout_in_minutes: 10
-#        plugins:
-#          artifacts#v1.9.0:
-#            download: "build/rn0_66.apk"
-#            upload: ./test/react-native-cli/maze_output/**/*
-#          docker-compose#v4.12.0:
-#            pull: react-native-cli-maze-runner
-#            run: react-native-cli-maze-runner
-#            service-ports: true
-#            command:
-#              - --app=build/rn0_66.apk
-#              - --app-activity=com.reactnative.MainActivity
-#              - --app-package=com.reactnative
-#              - --farm=bb
-#              - --device=ANDROID_10|ANDROID_11|ANDROID_12
-#              - --appium-version=1.22
-#              - --no-tunnel
-#              - --aws-public-ip
-#              - features/run-app-tests
-#          test-collector#v1.10.2:
-#            files: "reports/TEST-*.xml"
-#            format: "junit"
-#            branch: "^main|next$$"
-#            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
-#        concurrency: 25
-#        concurrency_group: 'bitbar'
-#        concurrency_method: eager
+
 #
 #      - label: ":bitbar: :android: RN CLI 0.67 Android end-to-end tests (Non-hermes)"
 #        depends_on: "rn-cli-0-67-apk"
