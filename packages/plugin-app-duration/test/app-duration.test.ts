@@ -1,6 +1,5 @@
 import plugin from '../src/app-duration'
-import { Client } from '@bugsnag/core'
-import Event from '@bugsnag/core/event'
+import { Client, Event } from '@bugsnag/core'
 
 describe('plugin-app-duration', () => {
   it('includes duration in event.app', done => {

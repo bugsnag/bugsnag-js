@@ -1,5 +1,5 @@
 import Tracker from '../tracker'
-import Session from '@bugsnag/core/session'
+import { Session } from '@bugsnag/core'
 import timekeeper from 'timekeeper'
 
 describe('session tracker', () => {

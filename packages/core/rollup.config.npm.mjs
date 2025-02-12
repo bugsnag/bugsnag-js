@@ -14,9 +14,7 @@ const plugins = [
   babel({ babelHelpers: 'bundled' }),
 ]
 
-const external = [
-  '@bugsnag/cuid',
-]
+const external = [/node_modules/]
 
 export default [
   createRollupConfig({

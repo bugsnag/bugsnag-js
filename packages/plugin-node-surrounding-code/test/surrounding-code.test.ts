@@ -2,8 +2,7 @@
 import fs from 'fs'
 import plugin from '../'
 import { join } from 'path'
-import Event from '@bugsnag/core/event'
-import { Client } from '@bugsnag/core'
+import { Client, Event } from '@bugsnag/core'
 import { schema as defaultSchema } from '@bugsnag/core/config'
 
 let createReadStreamCount = 0

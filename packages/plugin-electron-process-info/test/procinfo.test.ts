@@ -1,5 +1,5 @@
 import { Client } from '@bugsnag/core'
-import Event from '@bugsnag/core/event'
+import { Event } from '@bugsnag/core'
 import plugin from '../'
 import type { Delivery } from '@bugsnag/core/client'
 

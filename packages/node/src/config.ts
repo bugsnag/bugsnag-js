@@ -1,11 +1,11 @@
 import { schema } from '@bugsnag/core/config'
+import { Event } from '@bugsnag/core'
 import stringWithLength from '@bugsnag/core/lib/validators/string-with-length'
 import os from 'os'
 import { inspect } from 'util'
 
 import assign from '@bugsnag/core/lib/es-utils/assign'
 import getPrefixedConsole from './get-prefixed-console'
-import EventWithInternals from '@bugsnag/core/event'
 import { LoggerConfig } from '@bugsnag/core/client'
 
 const config = {
@@ -40,7 +40,7 @@ const config = {
     validate: (value: unknown) => value === undefined || isAgent(value)
   },
   onUncaughtException: {
-    defaultValue: () => (err: Error, event: EventWithInternals, logger: LoggerConfig) => {
+    defaultValue: () => (err: Error, event: Event, logger: LoggerConfig) => {
       logger.error(`Uncaught exception${getContext(event)}, the process will now terminate…\n${printError(err)}`)
       process.exit(1)
     },
@@ -48,7 +48,7 @@ const config = {
     validate: (value: unknown) => typeof value === 'function'
   },
   onUnhandledRejection: {
-    defaultValue: () => (err: Error, event: EventWithInternals, logger: LoggerConfig) => {
+    defaultValue: () => (err: Error, event: Event, logger: LoggerConfig) => {
       logger.error(`Unhandled rejection${getContext(event)}…\n${printError(err)}`)
     },
     message: 'should be a function',
@@ -58,7 +58,7 @@ const config = {
 
 const printError = (err: Error) => err && err.stack ? err.stack : inspect(err)
 
-const getContext = (event: EventWithInternals) =>
+const getContext = (event: Event) =>
   event.request && Object.keys(event.request).length
     ? ` at ${event.request.httpMethod} ${event.request.path || event.request.url}`
     : ''

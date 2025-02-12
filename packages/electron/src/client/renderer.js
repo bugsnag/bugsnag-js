@@ -1,6 +1,4 @@
-const Event = require('@bugsnag/core/event')
-const { Breadcrumb, Client } = require('@bugsnag/core')
-const Session = require('@bugsnag/core/session')
+const { Breadcrumb, Client, Event, Session } = require('@bugsnag/core')
 
 const createClient = require('./createClient')
 

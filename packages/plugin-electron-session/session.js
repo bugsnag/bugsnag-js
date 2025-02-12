@@ -1,5 +1,5 @@
 const sessionDelegate = require('@bugsnag/plugin-browser-session')
-const Session = require('@bugsnag/core/session')
+const { Session } = require('@bugsnag/core')
 
 const SESSION_TIMEOUT_MS = 60 * 1000
 

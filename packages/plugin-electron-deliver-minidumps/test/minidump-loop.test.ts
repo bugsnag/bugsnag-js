@@ -1,6 +1,5 @@
 import EventEmitter from 'events'
-import Session from '@bugsnag/core/session'
-import { Breadcrumb } from '@bugsnag/core'
+import { Breadcrumb, Session } from '@bugsnag/core'
 import NetworkStatus from '@bugsnag/electron-network-status'
 import MinidumpDeliveryLoop from '../minidump-loop'
 

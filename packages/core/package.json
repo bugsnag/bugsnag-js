@@ -32,13 +32,7 @@
     "./client": {
       "types": "./src/client.d.ts"
     },
-    "./config": "./src/config.js",
-    "./event": {
-      "import": "./src/event.js",
-      "default": "./src/event.js",
-      "types": "./src/event.d.ts"
-    },
-    "./session": "./src/session.js"
+    "./config": "./src/config.js"
   },
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",

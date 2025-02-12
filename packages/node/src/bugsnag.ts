@@ -21,7 +21,6 @@ import pluginContextualize from '@bugsnag/plugin-contextualize'
 import pluginStackframePathNormaliser from '@bugsnag/plugin-stackframe-path-normaliser'
 import pluginConsoleBreadcrumbs from '@bugsnag/plugin-console-breadcrumbs'
 import { BugsnagStatic, Client, Config, Event, Logger } from '@bugsnag/core'
-import EventWithInternals from '@bugsnag/core/event'
 
 type AfterErrorCb = (err: any, event: Event, logger: Logger) => void;
 
@@ -46,7 +45,7 @@ const version = '__BUGSNAG_NOTIFIER_VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 // @ts-ignore
-EventWithInternals.__type = 'nodejs'
+Event.__type = 'nodejs'
 
 // extend the base config schema with some node-specific options
 const internalPlugins = [
