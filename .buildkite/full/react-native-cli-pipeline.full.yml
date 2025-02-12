@@ -93,8 +93,8 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.75"
-          - "0.76"
+          - "0.71"
+          - "0.72"
 
 #        - label: ":bitbar: :android: RN CLI Android end-to-end tests"
 #          depends_on: "rn-cli-0-66-apk"
