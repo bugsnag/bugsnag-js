@@ -49,7 +49,7 @@ module.exports = {
 
     fs.writeFileSync(plistpath, plistContents.replace(searchPattern, replacement))
   },
-  buildIPA: function buildIPA (fixtureDir) {
+  buildIPA: function buildIPA(fixtureDir, exportArchive = true) {
     fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })
 
     // install pods
@@ -66,11 +66,13 @@ module.exports = {
       'reactnative',
       '-configuration',
       'Release',
-      '-archivePath',
-      `${fixtureDir}/reactnative.xcarchive`,
       '-allowProvisioningUpdates',
       'archive'
     ]
+
+    if (exportArchive) {
+      archiveArgs.splice(8, 0, '-archivePath', `${fixtureDir}/reactnative.xcarchive`)
+    }
 
     execFileSync('xcrun', archiveArgs, { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
 
@@ -78,14 +80,17 @@ module.exports = {
     const exportArgs = [
       'xcodebuild',
       '-exportArchive',
-      '-archivePath',
-      'reactnative.xcarchive',
       '-exportPath',
       'output/',
       '-exportOptionsPlist',
       'exportOptions.plist'
     ]
 
+    if (exportArchive) {
+      exportArgs.splice(3, 0, '-archivePath', `reactnative.xcarchive`)
+    }
+
     execFileSync('xcrun', exportArgs, { cwd: fixtureDir, stdio: 'inherit' })
   }
+
 }

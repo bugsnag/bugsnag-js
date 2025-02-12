@@ -30,6 +30,31 @@ steps:
           automatic:
             - exit_status: "*"
               limit: 1
+
+      - label: ':ios: Build RN {{matrix}} CLI test fixture'
+        key: "build-react-native-cli-ios-fixture"
+        timeout_in_minutes: 20
+        agents:
+          queue: "macos-14"
+        env:
+          NODE_VERSION: "18"
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
+          BUILD_IOS: "true"
+          XCODE_VERSION: "15.3.0"
+          INIT_RN_CLI: "true"
+          EXPORT_ARCHIVE: "0"
+        commands:
+          - "cd test/react-native-cli"
+          - "bundle install"
+          - "bundle exec maze-runner features/build-app-tests/build-android-app.feature"
+        matrix:
+          - "0.71"
+          - "0.72"
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
 #      #
 #      # CLI tests
 #      #

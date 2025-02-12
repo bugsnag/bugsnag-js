@@ -78,7 +78,12 @@ if (process.env.BUILD_ANDROID === 'true' || process.env.BUILD_ANDROID === '1') {
 
 // Build the iOS fixture
 if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
-  iosUtils.buildIPA(fixtureDir)
+  if (process.env.EXPORT_ARCHIVE !== 'true' || process.env.EXPORT_ARCHIVE !== '1') {
+    exportArchive = false
+  } else {
+    exportArchive = true
+  }
+  iosUtils.buildIPA(fixtureDir, exportArchive)
 }
 
 function enableSourceMaps () {
