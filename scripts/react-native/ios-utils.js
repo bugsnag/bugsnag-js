@@ -49,7 +49,7 @@ module.exports = {
 
     fs.writeFileSync(plistpath, plistContents.replace(searchPattern, replacement))
   },
-  buildIPA: function buildIPA( fixtureDir, exportArchive = true ) {
+  buildIPA: function buildIPA (fixtureDir, exportArchive = true) {
     fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })
 
     // install pods

@@ -47,7 +47,7 @@ steps:
         commands:
           - "cd test/react-native-cli"
           - "bundle install"
-          - "bundle exec maze-runner features/build-app-tests/build-android-app.feature"
+          - "bundle exec maze-runner features/build-app-tests/build-ios-app.feature"
         matrix:
           - "0.71"
           - "0.72"
