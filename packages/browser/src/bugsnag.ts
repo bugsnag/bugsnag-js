@@ -1,11 +1,10 @@
-import { BugsnagStatic, Config, Client } from '@bugsnag/core'
+import { BugsnagStatic, Config, Client, schema as baseConfig } from '@bugsnag/core'
 
 import map from '@bugsnag/core/lib/es-utils/map'
 import keys from '@bugsnag/core/lib/es-utils/keys'
 import assign from '@bugsnag/core/lib/es-utils/assign'
 
 // extend the base config schema with some browser-specific options
-import { schema as baseConfig } from '@bugsnag/core/config'
 import browserConfig from './config'
 
 import pluginWindowOnerror from '@bugsnag/plugin-window-onerror'

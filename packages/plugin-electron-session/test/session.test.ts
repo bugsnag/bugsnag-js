@@ -1,7 +1,4 @@
-import type { EventDeliveryPayload } from '@bugsnag/core/client'
-import { Client } from '@bugsnag/core'
-import { schema as defaultSchema } from '@bugsnag/core/config'
-import { SessionPayload } from '@bugsnag/core'
+import { Client, EventDeliveryPayload, SessionPayload, schema as defaultSchema } from '@bugsnag/core'
 import { makeApp, makeBrowserWindow } from '@bugsnag/electron-test-helpers'
 import plugin from '../'
 

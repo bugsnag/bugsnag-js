@@ -1,7 +1,6 @@
 import plugin from '../'
 
-import type { EventDeliveryPayload } from '@bugsnag/core/client'
-import { Client } from '@bugsnag/core'
+import { Client, EventDeliveryPayload } from '@bugsnag/core'
 
 describe('plugin: ip', () => {
   it('does nothing when collectUserIp=true', () => {

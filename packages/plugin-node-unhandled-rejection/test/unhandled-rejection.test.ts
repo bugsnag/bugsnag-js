@@ -1,5 +1,4 @@
-import { Client, Event } from '@bugsnag/core'
-import { schema } from '@bugsnag/core/config'
+import { Client, Event, schema } from '@bugsnag/core'
 import plugin from '../'
 
 describe('plugin: node unhandled rejection handler', () => {

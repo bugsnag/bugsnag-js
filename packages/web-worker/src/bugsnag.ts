@@ -6,12 +6,11 @@ import pluginWindowOnError from '@bugsnag/plugin-window-onerror'
 import pluginWindowUnhandledRejection from '@bugsnag/plugin-window-unhandled-rejection'
 
 // extend the base config schema with some browser-specific options
-import { schema as baseConfig } from '@bugsnag/core/config'
 import workerConfig from './config'
 import pluginBrowserDevice from '@bugsnag/plugin-browser-device'
 import pluginBrowserSession from '@bugsnag/plugin-browser-session'
 import pluginPreventDiscard from './prevent-discard'
-import { Client, Config, BugsnagStatic } from '@bugsnag/core'
+import { Client, Config, BugsnagStatic, schema as baseConfig } from '@bugsnag/core'
 import assign from '@bugsnag/core/lib/es-utils/assign'
 
 export interface WorkerConfig extends Config {

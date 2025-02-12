@@ -1,11 +1,6 @@
 import plugin from '../src/device'
 
-import type {
-  SessionDeliveryPayload,
-  EventDeliveryPayload
-} from '@bugsnag/core/client'
-import { Client, Device, Event, Session } from '@bugsnag/core'
-import { schema } from '@bugsnag/core/config'
+import { Client, Device, Event, Session, SessionDeliveryPayload, EventDeliveryPayload, schema } from '@bugsnag/core'
 
 interface SessionWithDevice extends Session { device: Device }
 

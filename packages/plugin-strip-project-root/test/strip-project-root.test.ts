@@ -1,7 +1,6 @@
 import plugin from '../'
 import { join } from 'path'
-import { Client, Event } from '@bugsnag/core'
-import { schema } from '@bugsnag/core/config'
+import { Client, Event, schema } from '@bugsnag/core'
 
 describe('plugin: strip project root', () => {
   it('should remove the project root if it matches the start of the stackframe’s file', done => {

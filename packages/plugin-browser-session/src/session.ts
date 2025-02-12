@@ -1,5 +1,4 @@
-import { Client, Plugin, Session } from '@bugsnag/core'
-import type { Notifier } from '@bugsnag/core/client'
+import { Client, Plugin, Session, Notifier } from '@bugsnag/core'
 import includes from '@bugsnag/core/lib/es-utils/includes'
 
 interface InternalClient {

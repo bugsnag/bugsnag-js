@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import plugin from '../src/session'
-import { Client } from '@bugsnag/core'
-import type { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Client, EventDeliveryPayload } from '@bugsnag/core'
 
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 

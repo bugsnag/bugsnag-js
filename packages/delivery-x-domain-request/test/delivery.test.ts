@@ -1,6 +1,5 @@
 import delivery from '../'
-import { Client } from '@bugsnag/core'
-import { SessionDeliveryPayload, EventDeliveryPayload } from '@bugsnag/core/client'
+import { Client, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 
 interface XDomainRequest {
   method: string | null

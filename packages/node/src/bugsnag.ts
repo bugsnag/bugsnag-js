@@ -3,7 +3,7 @@ import { AsyncLocalStorage } from 'async_hooks'
 import assign from '@bugsnag/core/lib/es-utils/assign'
 
 // extend the base config schema with some browser-specific options
-import { schema as baseConfig } from '@bugsnag/core/config'
+import { schema as baseConfig } from '@bugsnag/core'
 import browserConfig from './config'
 
 import delivery from '@bugsnag/delivery-node'

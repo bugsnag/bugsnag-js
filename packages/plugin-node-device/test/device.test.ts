@@ -2,7 +2,7 @@ import plugin from '../device'
 import { Client } from '@bugsnag/core'
 
 const schema = {
-  ...require('@bugsnag/core/config').schema,
+  ...require('@bugsnag/core').schema,
   hostname: {
     defaultValue: () => 'test-machine.local',
     validate: () => true,
