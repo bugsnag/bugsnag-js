@@ -270,6 +270,7 @@ describe('Client', () => {
       })
       client._setDelivery(client => ({
         sendEvent: (payload) => {
+          // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
           expect(payload.events[0].errors[0].errorMessage).toBe('oh no!')
           expect(onErrorSpy).toHaveBeenCalledTimes(1)
           done()
@@ -351,6 +352,7 @@ describe('Client', () => {
       client.notify({ name: 'some message' })
       // @ts-ignore
       client.notify(1)
+      // @ts-ignore
       client.notify('errrororor')
       // @ts-ignore
       client.notify('str1', 'str2')
@@ -437,6 +439,7 @@ describe('Client', () => {
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
+        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
 
         expect((event as Event)._session).toBe(session)
@@ -458,8 +461,9 @@ describe('Client', () => {
 
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBeTruthy()
-        expect(err.message).toBe('flerp')
+        expect(err?.message).toBe('flerp')
         expect(event).toBeTruthy()
+        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
 
         expect((event as Event)._session).toBe(session)
@@ -483,6 +487,7 @@ describe('Client', () => {
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
+        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
         expect((event as Event)._session).toBe(undefined)
         done()
@@ -504,6 +509,7 @@ describe('Client', () => {
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
+        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
         expect((event as Event)._session).toBe(undefined)
         done()
@@ -705,7 +711,8 @@ describe('Client', () => {
           done()
         }
       }))
-      const sessionClient = client.startSession()
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const sessionClient = client.startSession()!
       sessionClient.notify(new Error('broke'))
       sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
       sessionClient.notify(new Error('broke'))

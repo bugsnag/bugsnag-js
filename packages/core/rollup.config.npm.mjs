@@ -3,21 +3,29 @@ import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 
-import createRollupConfig, { sharedOutput } from "../../.rollup/index.mjs"
+import { sharedOutput } from "../../.rollup/index.mjs"
+
+const extensions = ['.js', '.ts']
 
 const plugins = [
   nodeResolve({
-    browser: true
+    extensions
   }),
   commonjs(),
-  typescript(),
-  babel({ babelHelpers: 'bundled' }),
+  babel({
+    babelHelpers: 'bundled',
+    exclude: 'node_modules/**',
+    extensions,
+  }),
+  typescript({
+    noForceEmit: true,
+  }),
 ]
 
 const external = [/node_modules/]
 
 export default [
-  createRollupConfig({
+  {
     input: "src/index.ts",
     external,
     output: [
@@ -29,8 +37,8 @@ export default [
       }
     ],
     plugins
-  }),
-  createRollupConfig({
+  },
+  {
     input: "src/index.ts",
     external,
     output: [
@@ -41,5 +49,5 @@ export default [
       },
     ],
     plugins
-  })
+  }
 ];

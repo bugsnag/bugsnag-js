@@ -1,28 +1,105 @@
-const config = require('./config')
-const Event = require('./event')
-const Breadcrumb = require('./breadcrumb')
-const Session = require('./session')
-const map = require('./lib/es-utils/map')
-const includes = require('./lib/es-utils/includes')
-const filter = require('./lib/es-utils/filter')
-const reduce = require('./lib/es-utils/reduce')
-const keys = require('./lib/es-utils/keys')
-const assign = require('./lib/es-utils/assign')
-const runCallbacks = require('./lib/callback-runner')
-const metadataDelegate = require('./lib/metadata-delegate')
-const runSyncCallbacks = require('./lib/sync-callback-runner')
-const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
-const { add, clear, merge } = require('./lib/feature-flag-delegate')
+import configSchema from './config'
+import Event from './event'
+import Breadcrumb from './breadcrumb'
+import Session from './session'
+import map from './lib/es-utils/map'
+import includes from './lib/es-utils/includes'
+import filter from './lib/es-utils/filter'
+import reduce from './lib/es-utils/reduce'
+import keys from './lib/es-utils/keys'
+import assign from './lib/es-utils/assign'
+import runCallbacks from './lib/callback-runner'
+import metadataDelegate from './lib/metadata-delegate'
+import runSyncCallbacks from './lib/sync-callback-runner'
+import BREADCRUMB_TYPES from './lib/breadcrumb-types'
+import { add, clear, merge } from './lib/feature-flag-delegate'
+import { App, BreadcrumbType, Config, Device, FeatureFlag, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, User } from './common'
 
 const noop = () => {}
 
-class Client {
-  constructor (configuration, schema = config.schema, internalPlugins = [], notifier) {
+interface LoggerConfig {
+  debug: (msg: any) => void
+  info: (msg: any) => void
+  warn: (msg: any) => void
+  error: (msg: any, err?: unknown) => void
+}
+
+interface Notifier {
+  name: string
+  version: string
+  url: string
+}
+
+interface EventDeliveryPayload {
+  apiKey: string
+  notifier: Notifier
+  events: Event[]
+}
+
+interface SessionDeliveryPayload {
+  notifier?: Notifier
+  device?: Device
+  app?: App
+  sessions?: Array<{
+    id: string
+    startedAt: Date
+    user?: User
+  }>
+}
+
+interface Delivery {
+  sendEvent(payload: EventDeliveryPayload, cb: (err?: Error | null) => void): void
+  sendSession(session: SessionDeliveryPayload, cb: (err?: Error | null) => void): void
+}
+
+export interface SessionDelegate<T extends Config = Config> {
+  startSession: (client: Client<T>, session: Session) => Client
+  pauseSession: (client: Client<T>) => void
+  resumeSession: (client: Client<T>) => Client
+}
+
+export default class Client<T extends Config = Config> {
+  private readonly _notifier?: Notifier
+  // This ought to be Required<T> but the current version of TypeScript doesn't seem to like it
+  public readonly _config: Required<Config>
+  private readonly _schema: any
+
+  public _delivery: Delivery
+
+  private readonly _plugins: { [key: string]: any }
+
+  public _breadcrumbs: Breadcrumb[]
+  public _session: Session | null
+  public _metadata: { [key: string]: any }
+  public _featuresIndex: { [key: string]: number }
+  public _features: Array<FeatureFlag | null>
+
+  private _context: string | undefined
+
+  public _user: User
+
+  public _logger: LoggerConfig
+
+  public readonly _cbs: {
+    e: OnErrorCallback[]
+    s: OnSessionCallback[]
+    sp: any[]
+    b: OnBreadcrumbCallback[]
+  }
+
+  private readonly Client: typeof Client
+  private readonly Event: typeof Event
+  private readonly Breadcrumb: typeof Breadcrumb
+  private readonly Session: typeof Session
+
+  private readonly _depth: number
+
+  public _sessionDelegate?: SessionDelegate
+
+  constructor (configuration: T, schema = configSchema, internalPlugins: Plugin<T>[] = [], notifier?: Notifier) {
     // notifier id
     this._notifier = notifier
 
-    // intialise opts and config
-    this._config = {}
     this._schema = schema
 
     // i/o
@@ -71,34 +148,37 @@ class Client {
     // bound to have the client as its `this` value – see below.
     this._depth = 1
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
     const notify = this.notify
     this.notify = function () {
+      // @ts-ignore
+      // eslint-disable-next-line prefer-rest-params
       return notify.apply(self, arguments)
     }
   }
 
-  addMetadata (section, keyOrObj, maybeVal) {
+  addMetadata (section: string, keyOrObj: any, maybeVal?: any) {
     return metadataDelegate.add(this._metadata, section, keyOrObj, maybeVal)
   }
 
-  getMetadata (section, key) {
+  getMetadata (section: string, key?: any) {
     return metadataDelegate.get(this._metadata, section, key)
   }
 
-  clearMetadata (section, key) {
+  clearMetadata (section: string, key?: any) {
     return metadataDelegate.clear(this._metadata, section, key)
   }
 
-  addFeatureFlag (name, variant = null) {
+  addFeatureFlag (name: string, variant: string | null = null) {
     add(this._features, this._featuresIndex, name, variant)
   }
 
-  addFeatureFlags (featureFlags) {
+  addFeatureFlags (featureFlags: FeatureFlag[]) {
     merge(this._features, featureFlags, this._featuresIndex)
   }
 
-  clearFeatureFlag (name) {
+  clearFeatureFlag (name: string) {
     clear(this._features, this._featuresIndex, name)
   }
 
@@ -111,11 +191,11 @@ class Client {
     return this._context
   }
 
-  setContext (c) {
+  setContext (c: string) {
     this._context = c
   }
 
-  _configure (opts, internalPlugins) {
+  _configure (opts: T, internalPlugins: Plugin[]) {
     const schema = reduce(internalPlugins, (schema, plugin) => {
       if (plugin && plugin.configSchema) return assign({}, schema, plugin.configSchema)
       return schema
@@ -127,7 +207,7 @@ class Client {
     }
 
     // accumulate configuration and error messages
-    const { errors, config } = reduce(keys(schema), (accum, key) => {
+    const { errors, config } = reduce(keys(schema), (accum, key: keyof typeof opts) => {
       const defaultValue = schema[key].defaultValue(opts[key])
 
       if (opts[key] !== undefined) {
@@ -180,11 +260,11 @@ class Client {
     return this._user
   }
 
-  setUser (id, email, name) {
+  setUser (id?: string | null, email?: string | null, name?: string | null) {
     this._user = { id, email, name }
   }
 
-  _loadPlugin (plugin) {
+  _loadPlugin (plugin: Plugin<T>) {
     const result = plugin.load(this)
     // JS objects are not the safest way to store arbitrarily keyed values,
     // so bookend the key with some characters that prevent tampering with
@@ -193,11 +273,11 @@ class Client {
     if (plugin.name) this._plugins[`~${plugin.name}~`] = result
   }
 
-  getPlugin (name) {
+  getPlugin (name: string) {
     return this._plugins[`~${name}~`]
   }
 
-  _setDelivery (d) {
+  _setDelivery (d: (client: Client<T>) => Delivery) {
     this._delivery = d(this)
   }
 
@@ -218,46 +298,46 @@ class Client {
       return this
     }
 
-    return this._sessionDelegate.startSession(this, session)
+    return this._sessionDelegate?.startSession(this, session)
   }
 
-  addOnError (fn, front = false) {
+  addOnError (fn: OnErrorCallback, front = false) {
     this._cbs.e[front ? 'unshift' : 'push'](fn)
   }
 
-  removeOnError (fn) {
+  removeOnError (fn: OnErrorCallback) {
     this._cbs.e = filter(this._cbs.e, f => f !== fn)
   }
 
-  _addOnSessionPayload (fn) {
+  _addOnSessionPayload (fn: OnSessionCallback) {
     this._cbs.sp.push(fn)
   }
 
-  addOnSession (fn) {
+  addOnSession (fn: OnSessionCallback) {
     this._cbs.s.push(fn)
   }
 
-  removeOnSession (fn) {
+  removeOnSession (fn: OnSessionCallback) {
     this._cbs.s = filter(this._cbs.s, f => f !== fn)
   }
 
-  addOnBreadcrumb (fn, front = false) {
+  addOnBreadcrumb (fn: OnBreadcrumbCallback, front = false) {
     this._cbs.b[front ? 'unshift' : 'push'](fn)
   }
 
-  removeOnBreadcrumb (fn) {
+  removeOnBreadcrumb (fn: OnBreadcrumbCallback) {
     this._cbs.b = filter(this._cbs.b, f => f !== fn)
   }
 
   pauseSession () {
-    return this._sessionDelegate.pauseSession(this)
+    return this._sessionDelegate?.pauseSession(this)
   }
 
   resumeSession () {
-    return this._sessionDelegate.resumeSession(this)
+    return this._sessionDelegate?.resumeSession(this)
   }
 
-  leaveBreadcrumb (message, metadata, type) {
+  leaveBreadcrumb (message: string, metadata?: any, type?: BreadcrumbType) {
     // coerce bad values so that the defaults get set
     message = typeof message === 'string' ? message : ''
     type = (typeof type === 'string' && includes(BREADCRUMB_TYPES, type)) ? type : 'manual'
@@ -283,18 +363,18 @@ class Client {
     }
   }
 
-  _isBreadcrumbTypeEnabled (type) {
+  _isBreadcrumbTypeEnabled (type: string) {
     const types = this._config.enabledBreadcrumbTypes
 
     return types === null || includes(types, type)
   }
 
-  notify (maybeError, onError, postReportCallback = noop) {
+  notify (maybeError: Error, onError?: OnErrorCallback, postReportCallback: (err: Error | null | undefined, event: Event) => void = noop) {
     const event = Event.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
     this._notify(event, onError, postReportCallback)
   }
 
-  _notify (event, onError, postReportCallback = noop) {
+  _notify (event: Event, onError?: OnErrorCallback, postReportCallback: (err: Error | null | undefined, event: Event) => void = noop) {
     event.app = assign({}, event.app, {
       releaseStage: this._config.releaseStage,
       version: this._config.appVersion,
@@ -314,13 +394,13 @@ class Client {
 
     const originalSeverity = event.severity
 
-    const onCallbackError = err => {
+    const onCallbackError = (err: Error) => {
       // errors in callbacks are tolerated but we want to log them out
       this._logger.error('Error occurred in onError callback, continuing anyway…')
       this._logger.error(err)
     }
 
-    const callbacks = [].concat(this._cbs.e).concat(onError)
+    const callbacks = ([] as (OnErrorCallback | undefined)[]).concat(this._cbs.e).concat(onError)
     runCallbacks(callbacks, event, onCallbackError, (err, shouldSend) => {
       if (err) onCallbackError(err)
 
@@ -331,8 +411,11 @@ class Client {
 
       if (this._isBreadcrumbTypeEnabled('error')) {
         // only leave a crumb for the error if actually got sent
+        // @ts-ignore
         Client.prototype.leaveBreadcrumb.call(this, event.errors[0].errorClass, {
+          // @ts-ignore
           errorClass: event.errors[0].errorClass,
+          // @ts-ignore
           errorMessage: event.errors[0].errorMessage,
           severity: event.severity
         }, 'error')
@@ -354,20 +437,21 @@ class Client {
 
       this._delivery.sendEvent({
         apiKey: event.apiKey || this._config.apiKey,
-        notifier: this._notifier,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        notifier: this._notifier!,
         events: [event]
       }, (err) => postReportCallback(err, event))
     })
   }
 }
 
-const generateConfigErrorMessage = (errors, rawInput) => {
+const generateConfigErrorMessage = (errors: Record<string, Error>, rawInput: Config) => {
   const er = new Error(
   `Invalid configuration\n${map(keys(errors), key => `  - ${key} ${errors[key]}, got ${stringify(rawInput[key])}`).join('\n\n')}`)
   return er
 }
 
-const stringify = val => {
+const stringify = (val: unknown) => {
   switch (typeof val) {
     case 'string':
     case 'number':
@@ -377,4 +461,3 @@ const stringify = val => {
   }
 }
 
-module.exports = Client

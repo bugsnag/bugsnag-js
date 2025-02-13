@@ -21,6 +21,7 @@ describe('Event', () => {
         { foo: 10 },
         { toJSON: () => { throw new Error('do not serialise me, srsly') } }
       ])
+      // @ts-expect-error Property 'stacktrace' does not exist on type 'Error'
       expect(r.errors[0].stacktrace.length).toBe(0)
     })
   })

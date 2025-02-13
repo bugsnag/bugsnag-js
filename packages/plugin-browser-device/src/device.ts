@@ -1,4 +1,4 @@
-import type { Device, Plugin } from '@bugsnag/core'
+import type { Config, Device, Plugin } from '@bugsnag/core'
 import assign from '@bugsnag/core/lib/es-utils/assign'
 import setDefaultUserId from './set-default-user-id'
 import getDeviceId from './get-device-id'
@@ -12,10 +12,15 @@ declare global {
   }
 }
 
+interface PluginConfig extends Config {
+  generateAnonymousId?: boolean
+  collectUserIp?: boolean
+}
+
 /*
  * Automatically detects browser device details
  */
-export default (nav = navigator, win: Window | null = window): Plugin => ({
+export default (nav = navigator, win: Window | null = window): Plugin<PluginConfig> => ({
   name: 'device',
   load: (client) => {
     const device: Device = {
@@ -32,7 +37,6 @@ export default (nav = navigator, win: Window | null = window): Plugin => ({
           : 'portrait'
     }
 
-    // @ts-expect-error _config is private API
     if (client._config.generateAnonymousId && win) {
       device.id = getDeviceId(win)
     }
@@ -40,7 +44,6 @@ export default (nav = navigator, win: Window | null = window): Plugin => ({
     client.addOnSession(session => {
       session.device = assign({}, session.device, device)
       // only set device id if collectUserIp is false
-      // @ts-expect-error _config is private API
       if (!client._config.collectUserIp) setDefaultUserId(session)
     })
 
@@ -51,11 +54,9 @@ export default (nav = navigator, win: Window | null = window): Plugin => ({
         device,
         { time: new Date() }
       )
-      // @ts-expect-error _config is private API
       if (!client._config.collectUserIp) setDefaultUserId(event)
     }, true)
   },
-  // @ts-expect-error _config is private API
   configSchema: {
     generateAnonymousId: {
       validate: (value: unknown): value is boolean => value === true || value === false,
