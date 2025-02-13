@@ -52,6 +52,11 @@ When('I build the iOS app') do
   end
 end
 
+When('I export the iOS archive') do
+  script_path = "#{__dir__}/../../../../scripts/react-native/ios-utils.js"
+  $logger.info `node -e 'require("#{script_path}").buildIPA("#{fixture_dir}")'`
+end
+
 def parse_package_json
   stdout_lines = Maze::Runner.interactive_session.stdout_lines
   length_before = stdout_lines.length
