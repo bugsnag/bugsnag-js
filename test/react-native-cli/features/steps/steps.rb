@@ -12,23 +12,8 @@ else
   fixture_dir += "old-arch/#{ENV['RN_VERSION']}"
 end
 
-
 When('I run the React Native service interactively') do
   step("I run the service '#{current_fixture}' interactively")
-end
-
-When('I notify a handled JavaScript error') do
-  steps %Q{
-    Given the element "js_notify" is present within 60 seconds
-    And I click the element "js_notify"
-  }
-end
-
-When('I notify a handled native error') do
-  steps %Q{
-    Given the element "native_notify" is present within 60 seconds
-    And I click the element "native_notify"
-  }
 end
 
 def find_cli_helper_script
