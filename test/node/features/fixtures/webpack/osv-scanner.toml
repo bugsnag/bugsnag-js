@@ -1,13 +1,5 @@
 [[IgnoredVulns]]
-id = "GHSA-qwcr-r2fm-qrc7"
-reason = "test fixture dependency does not affect end users"
-
-[[IgnoredVulns]]
 id = "GHSA-grv7-fg5c-xmjg"
-reason = "test fixture dependency does not affect end users"
-
-[[IgnoredVulns]]
-id = "GHSA-pxg6-pf52-xh8x"
 reason = "test fixture dependency does not affect end users"
 
 [[IgnoredVulns]]
@@ -15,15 +7,27 @@ id = "GHSA-3xgq-45jj-v275"
 reason = "test fixture dependency does not affect end users"
 
 [[IgnoredVulns]]
-id = "GHSA-qw6h-vgh9-j6wx"
+id = "GHSA-434g-2637-qmqr"
 reason = "test fixture dependency does not affect end users"
 
 [[IgnoredVulns]]
-id = "GHSA-c7qv-q95q-8v27"
+id = "GHSA-49q7-c7j4-3p7m"
 reason = "test fixture dependency does not affect end users"
 
 [[IgnoredVulns]]
-id = "GHSA-35jh-r3h4-6jhm"
+id = "GHSA-977x-g7h5-7qgw"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-f7q4-pwc6-w24p"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-fc9h-whq2-v747"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-vjh7-7g9h-fjfh"
 reason = "test fixture dependency does not affect end users"
 
 [[IgnoredVulns]]
@@ -31,25 +35,5 @@ id = "GHSA-952p-6rrq-rcjv"
 reason = "test fixture dependency does not affect end users"
 
 [[IgnoredVulns]]
-id = "GHSA-9wv6-86v2-598j"
-reason = "test fixture dependency does not affect end users"
-
-[[IgnoredVulns]]
-id = "GHSA-rhx6-c78j-4q9w"
-reason = "test fixture dependency does not affect end users"
-
-[[IgnoredVulns]]
-id = "GHSA-m6fv-jmcg-4jfg"
-reason = "test fixture dependency does not affect end users"
-
-[[IgnoredVulns]]
-id = "GHSA-cm22-4g7w-348p"
-reason = "test fixture dependency does not affect end users"
-
-[[IgnoredVulns]]
-id = "GHSA-4vvj-4cpr-p986"
-reason = "test fixture dependency does not affect end users"
-
-[[IgnoredVulns]]
-id = "GHSA-3h5v-q93c-6h6q"
+id = "GHSA-76p7-773f-r4q5"
 reason = "test fixture dependency does not affect end users"
