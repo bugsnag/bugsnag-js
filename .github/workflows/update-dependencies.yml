@@ -1,5 +1,9 @@
 name: update-dependencies
-permissions: read-all
+permissions:
+  checks: read
+  contents: read
+  pull-requests: write
+  repository-projects: read
 
 on:
   repository_dispatch:
