@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/core",
-  "main": "src/index.js",
+  "main": "./dist/index.cjs",
   "version": "8.2.0",
   "types": "types/index.d.ts",
   "exports": {
@@ -40,8 +40,7 @@
       "default": "./src/event.js",
       "types": "./src/event.d.ts"
     },
-    "./session": "./src/session.js",
-    "./breadcrumb": "./src/breadcrumb.js"
+    "./session": "./src/session.js"
   },
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
