@@ -1,7 +1,6 @@
 name: update-dependencies
 permissions:
-  checks: read
-  contents: read
+  contents: write
   pull-requests: write
   repository-projects: read
 
