@@ -1,1 +1,7 @@
-../../../../../config/osv-scanner.ignore.toml
+[[IgnoredVulns]]
+id = "GHSA-rrr8-f88r-h8q6"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-m6fv-jmcg-4jfg"
+reason = "test fixture dependency does not affect end users"
