@@ -2,66 +2,22 @@ import configSchema from './config'
 import Event from './event'
 import Breadcrumb from './breadcrumb'
 import Session from './session'
-import map from './lib/es-utils/map'
 import includes from './lib/es-utils/includes'
 import filter from './lib/es-utils/filter'
 import reduce from './lib/es-utils/reduce'
-import keys from './lib/es-utils/keys'
 import assign from './lib/es-utils/assign'
 import runCallbacks from './lib/callback-runner'
 import metadataDelegate from './lib/metadata-delegate'
 import runSyncCallbacks from './lib/sync-callback-runner'
 import BREADCRUMB_TYPES from './lib/breadcrumb-types'
 import { add, clear, merge } from './lib/feature-flag-delegate'
-import { App, BreadcrumbType, Config, Device, FeatureFlag, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, User } from './common'
+import { BreadcrumbType, Config, Delivery, FeatureFlag, LoggerConfig, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
 
 const noop = () => {}
-
-interface LoggerConfig {
-  debug: (msg: any) => void
-  info: (msg: any) => void
-  warn: (msg: any) => void
-  error: (msg: any, err?: unknown) => void
-}
-
-interface Notifier {
-  name: string
-  version: string
-  url: string
-}
-
-interface EventDeliveryPayload {
-  apiKey: string
-  notifier: Notifier
-  events: Event[]
-}
-
-interface SessionDeliveryPayload {
-  notifier?: Notifier
-  device?: Device
-  app?: App
-  sessions?: Array<{
-    id: string
-    startedAt: Date
-    user?: User
-  }>
-}
-
-interface Delivery {
-  sendEvent(payload: EventDeliveryPayload, cb: (err?: Error | null) => void): void
-  sendSession(session: SessionDeliveryPayload, cb: (err?: Error | null) => void): void
-}
-
-export interface SessionDelegate<T extends Config = Config> {
-  startSession: (client: Client<T>, session: Session) => Client
-  pauseSession: (client: Client<T>) => void
-  resumeSession: (client: Client<T>) => Client
-}
-
 export default class Client<T extends Config = Config> {
-  private readonly _notifier?: Notifier
+  public readonly _notifier?: Notifier
   // This ought to be Required<T> but the current version of TypeScript doesn't seem to like it
-  public readonly _config: Required<Config>
+  public readonly _config: T & Required<Config>
   private readonly _schema: any
 
   public _delivery: Delivery
@@ -87,13 +43,14 @@ export default class Client<T extends Config = Config> {
     b: OnBreadcrumbCallback[]
   }
 
-  private readonly Client: typeof Client
-  private readonly Event: typeof Event
-  private readonly Breadcrumb: typeof Breadcrumb
-  private readonly Session: typeof Session
+  public readonly Client: typeof Client
+  public readonly Event: typeof Event
+  public readonly Breadcrumb: typeof Breadcrumb
+  public readonly Session: typeof Session
 
-  private readonly _depth: number
+  public _depth: number
 
+  public _pausedSession?: Session | null
   public _sessionDelegate?: SessionDelegate
 
   constructor (configuration: T, schema = configSchema, internalPlugins: Plugin<T>[] = [], notifier?: Notifier) {
@@ -139,7 +96,7 @@ export default class Client<T extends Config = Config> {
     this.Session = Session
 
     this._config = this._configure(configuration, internalPlugins)
-    map(internalPlugins.concat(this._config.plugins), pl => {
+    internalPlugins.concat(this._config.plugins).map(pl => {
       if (pl) this._loadPlugin(pl)
     })
 
@@ -195,7 +152,7 @@ export default class Client<T extends Config = Config> {
     this._context = c
   }
 
-  _configure (opts: T, internalPlugins: Plugin[]) {
+  _configure (opts: T, internalPlugins: Plugin<T>[]) {
     const schema = reduce(internalPlugins, (schema, plugin) => {
       if (plugin && plugin.configSchema) return assign({}, schema, plugin.configSchema)
       return schema
@@ -207,7 +164,7 @@ export default class Client<T extends Config = Config> {
     }
 
     // accumulate configuration and error messages
-    const { errors, config } = reduce(keys(schema), (accum, key: keyof typeof opts) => {
+    const { errors, config } = reduce(Object.keys(schema) as unknown as (keyof T)[], (accum, key: keyof typeof opts) => {
       const defaultValue = schema[key].defaultValue(opts[key])
 
       if (opts[key] !== undefined) {
@@ -249,7 +206,7 @@ export default class Client<T extends Config = Config> {
     if (config.onSession) this._cbs.s = this._cbs.s.concat(config.onSession)
 
     // finally warn about any invalid config where we fell back to the default
-    if (keys(errors).length) {
+    if (Object.keys(errors).length) {
       this._logger.warn(generateConfigErrorMessage(errors, opts))
     }
 
@@ -369,7 +326,7 @@ export default class Client<T extends Config = Config> {
     return types === null || includes(types, type)
   }
 
-  notify (maybeError: Error, onError?: OnErrorCallback, postReportCallback: (err: Error | null | undefined, event: Event) => void = noop) {
+  notify (maybeError: Error | string, onError?: OnErrorCallback, postReportCallback: (err: Error | null | undefined, event: Event) => void = noop) {
     const event = Event.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
     this._notify(event, onError, postReportCallback)
   }
@@ -447,7 +404,7 @@ export default class Client<T extends Config = Config> {
 
 const generateConfigErrorMessage = (errors: Record<string, Error>, rawInput: Config) => {
   const er = new Error(
-  `Invalid configuration\n${map(keys(errors), key => `  - ${key} ${errors[key]}, got ${stringify(rawInput[key])}`).join('\n\n')}`)
+  `Invalid configuration\n${(Object.keys(errors) as unknown as (keyof Config)[]).map(key => `  - ${key} ${errors[key]}, got ${stringify(rawInput[key])}`).join('\n\n')}`)
   return er
 }
 

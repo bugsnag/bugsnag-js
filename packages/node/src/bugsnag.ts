@@ -91,8 +91,10 @@ const notifier: NodeClient = {
      */
     clientMethods.forEach((m) => {
       const original = bugsnag[m]
+      // @ts-ignore
       bugsnag[m] = function () {
         // if we are in an async context, use the client from that context
+        // @ts-ignore
         const contextClient = bugsnag._clientContext && typeof bugsnag._clientContext.getStore === 'function' ? bugsnag._clientContext.getStore() : null
         const client = contextClient || bugsnag
         const originalMethod = contextClient ? contextClient[m] : original
@@ -107,6 +109,7 @@ const notifier: NodeClient = {
     // Used to store and retrieve the request-scoped client which makes it easy to obtain the request-scoped client
     // from anywhere in the codebase e.g. when calling Bugsnag.leaveBreadcrumb() or even within the global unhandled
     // promise rejection handler.
+    // @ts-ignore
     bugsnag._clientContext = new AsyncLocalStorage()
 
     bugsnag._setDelivery(delivery)
@@ -130,9 +133,11 @@ const notifier: NodeClient = {
 
 clientMethods.forEach((m) => {
   if (/^_/.test(m)) return
+  // @ts-ignore
   notifier[m] = function () {
     // if we are in an async context, use the client from that context
     let client = notifier._client
+    // @ts-ignore
     const ctx = client && client._clientContext && client._clientContext.getStore()
     if (ctx) {
       client = ctx
@@ -140,13 +145,17 @@ clientMethods.forEach((m) => {
 
     if (!client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
 
+    // @ts-ignore
     client._depth += 1
+    // @ts-ignore
     const ret = client[m].apply(client, arguments)
+    // @ts-ignore
     client._depth -= 1
     return ret
   }
 })
 
+// @ts-ignore
 const Bugsnag = notifier as NodeBugsnagStatic
 
 export default Bugsnag

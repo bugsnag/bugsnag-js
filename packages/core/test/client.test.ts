@@ -2,7 +2,7 @@ import Client from '../src/client'
 import Event from '../src/event'
 import Session from '../src/session'
 import breadcrumbTypes from '../src/lib/breadcrumb-types'
-import { BreadcrumbType } from '../types/common'
+import { BreadcrumbType } from '../src/common'
 
 const noop = () => {}
 const id = <T>(a: T) => a
@@ -270,7 +270,6 @@ describe('Client', () => {
       })
       client._setDelivery(client => ({
         sendEvent: (payload) => {
-          // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
           expect(payload.events[0].errors[0].errorMessage).toBe('oh no!')
           expect(onErrorSpy).toHaveBeenCalledTimes(1)
           done()
@@ -439,7 +438,6 @@ describe('Client', () => {
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
-        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
 
         expect((event as Event)._session).toBe(session)
@@ -463,7 +461,6 @@ describe('Client', () => {
         expect(err).toBeTruthy()
         expect(err?.message).toBe('flerp')
         expect(event).toBeTruthy()
-        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
 
         expect((event as Event)._session).toBe(session)
@@ -487,7 +484,6 @@ describe('Client', () => {
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
-        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
         expect((event as Event)._session).toBe(undefined)
         done()
@@ -509,7 +505,6 @@ describe('Client', () => {
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
-        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
         expect((event as Event)._session).toBe(undefined)
         done()

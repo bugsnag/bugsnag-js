@@ -6,7 +6,7 @@ export default (Vue: VueConstructor, client: Client) => {
 
   const handler: VueErrorHandler = (err, vm, info) => {
     const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-    const event = client.Event.create(err, true, handledState, 'vue error handler', 1)
+    const event = client.Event.create(err as Error, true, handledState, 'vue error handler', 1)
 
     event.addMetadata('vue', {
       errorInfo: info,

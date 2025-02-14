@@ -83,6 +83,7 @@ const wrapHistoryFn = (client: Client, target: ExtendedHistory, fn: HistoryMetho
   target[fn] = (state, title, url) => {
     client.leaveBreadcrumb(`History ${fn}`, stateChangeToMetadata(win, state, title, url), 'navigation')
     // if throttle plugin is in use, reset the event sent count
+    // @ts-expect-error needs better typing to handle additional fields on the browser client
     if (resetEventCount && typeof client.resetEventCount === 'function') client.resetEventCount()
     // Internet Explorer will convert `undefined` to a string when passed, causing an unintended redirect
     // to '/undefined'. therefore we only pass the url if it's not undefined.

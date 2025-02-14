@@ -46,6 +46,7 @@ describe('plugin: node uncaught exception handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
+      // @ts-ignore
       onUncaughtException: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -74,6 +75,7 @@ describe('plugin: node uncaught exception handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
+      // @ts-ignore
       onUncaughtException: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',

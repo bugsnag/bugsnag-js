@@ -6,7 +6,6 @@ import type { Plugin, Stackframe } from '@bugsnag/core'
 
 export default (win = window, component = 'window onerror'): Plugin => ({
   load: (client) => {
-    // @ts-expect-error _config is private API
     if (!client._config.autoDetectErrors || !client._config.enabledErrorTypes.unhandledExceptions) return
 
     const prevOnError = win.onerror
@@ -59,7 +58,7 @@ export default (win = window, component = 'window onerror'): Plugin => ({
         } else {
           // Lastly, if there was no "error" parameter this event was probably from an old
           // browser that doesn't support that. Instead we need to generate a stacktrace.
-          event = client.Event.create(messageOrEvent, true, handledState, component, 1)
+          event = client.Event.create(messageOrEvent as string, true, handledState, component, 1)
           decorateStack(event.errors[0].stacktrace, url, lineNo, charNo)
         }
 

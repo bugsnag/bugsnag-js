@@ -46,6 +46,7 @@ describe('plugin: node unhandled rejection handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
+      // @ts-ignore
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -74,6 +75,7 @@ describe('plugin: node unhandled rejection handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
+      // @ts-ignore
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -102,6 +104,7 @@ describe('plugin: node unhandled rejection handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
+      // @ts-ignore
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',

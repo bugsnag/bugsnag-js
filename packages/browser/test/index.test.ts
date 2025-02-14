@@ -102,7 +102,7 @@ describe('browser notifier', () => {
         type: 'state',
         message: 'Bugsnag loaded'
       }))
-      expect(event.originalError.message).toBe('123')
+      expect((event.originalError as Error).message).toBe('123')
     })
   })
 
@@ -204,7 +204,7 @@ describe('browser notifier', () => {
         done(err)
       }
       expect(event.breadcrumbs.length).toBe(0)
-      expect(event.originalError.message).toBe('123')
+      expect((event.originalError as Error).message).toBe('123')
       expect(event.getMetadata('debug')).toEqual({ foo: 'bar' })
       done()
     })
@@ -235,6 +235,7 @@ describe('browser notifier', () => {
     it('resets events on pushState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
+      // @ts-ignore
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.pushState('', '', 'new-url')
@@ -247,6 +248,7 @@ describe('browser notifier', () => {
     it('does not reset events on replaceState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
+      // @ts-ignore
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.replaceState('', '', 'new-url')
