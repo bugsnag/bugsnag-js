@@ -13,4 +13,5 @@ Feature: Tests for building a React Native app (for iOS only) that was initializ
 
     # Re-archive and export an IPA that can be used for subsequent tests
     Then I export the iOS archive
+    And the IPA file exists
 

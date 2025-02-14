@@ -1,9 +1,9 @@
 require 'rexml/document'
 require 'securerandom'
 
-fixtures = Dir["#{__dir__}/../fixtures/rn0_*"].map { |dir| File.basename(dir) }.sort
 current_fixture = ENV['RN_VERSION']
 fixture_dir = "#{__dir__}/../../../react-native-cli/features/fixtures/generated/"
+generate_fixture_script = "#{__dir__}/../../../../scripts/generate-react-native-cli-fixture.js"
 
 # if RCT_NEW_ARCH_ENABLED is set add new-arch/ to the fixture_dir
 if ENV['RCT_NEW_ARCH_ENABLED'] == 'true' || ENV['RCT_NEW_ARCH_ENABLED'] == '1'
@@ -16,25 +16,8 @@ When('I run the React Native service interactively') do
   step("I run the service '#{current_fixture}' interactively")
 end
 
-def find_cli_helper_script
-  # Handle both Dockerized and local Maze Runner executions
-  script = 'generate-react-native-cli-fixture.js'
-  possible_locations = %W[
-    #{__dir__}/../../../../scripts/#{script}
-  ]
-  path = possible_locations.find { |path| File.exist?(path) }
-  if path.nil?
-    raise <<~ERROR
-      The React Native CLI helper script was not found in any of the expected locations:
-        - #{possible_locations.join("\n  -")}
-    ERROR
-  end
-  path
-end
-
 When('I build the Android app') do
-  script_path = find_cli_helper_script
-  $logger.info `node #{script_path}`
+  $logger.info `node #{generate_fixture_script}`
 
   # Change directory to fixture_dir
   Dir.chdir(fixture_dir) do
@@ -43,8 +26,7 @@ When('I build the Android app') do
 end
 
 When('I build the iOS app') do
-  script_path = find_cli_helper_script
-  $logger.info `node #{script_path}`
+  $logger.info `node #{generate_fixture_script}`
 
   # Change directory to fixture_dir
   Dir.chdir(fixture_dir) do
@@ -55,6 +37,16 @@ end
 When('I export the iOS archive') do
   script_path = "#{__dir__}/../../../../scripts/react-native/ios-utils.js"
   $logger.info `node -e 'require("#{script_path}").buildIPA("#{fixture_dir}")'`
+end
+
+When('the APK file exists') do
+  apk_path = "#{fixture_dir}/reactnative.apk"
+  Maze.check.true(File.exist?(apk_path))
+end
+
+When('the IPA file exists') do
+  ipa_path = "#{fixture_dir}/output/reactnative.ipa"
+  Maze.check.true(File.exist?(ipa_path))
 end
 
 def parse_package_json
