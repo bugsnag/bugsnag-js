@@ -10,9 +10,13 @@ const BUGSNAG_JS_IMPORT_INIT =
 `import Bugsnag from "@bugsnag/react-native";
 Bugsnag.start();`
 
-const BUGSNAG_COCOA_IMPORT = '#import <Bugsnag/Bugsnag.h>'
-const BUGSNAG_COCOA_INIT = '[Bugsnag start];'
-const COCOA_APP_LAUNCH_REGEX = /(-\s*\(BOOL\)\s*application:\s*\(UIApplication\s\*\)\s*application\s+didFinishLaunchingWithOptions:\s*\(NSDictionary\s*\*\)launchOptions\s*\{\s*)\S/
+const BUGSNAG_COCOA_OBJ_C_IMPORT = '#import <Bugsnag/Bugsnag.h>'
+const BUGSNAG_COCOA_OBJ_C_INIT = '[Bugsnag start];'
+const COCOA_OBJ_C_APP_LAUNCH_REGEX = /(-\s*\(BOOL\)\s*application:\s*\(UIApplication\s\*\)\s*application\s+didFinishLaunchingWithOptions:\s*\(NSDictionary\s*\*\)launchOptions\s*\{\s*)\S/
+
+const BUGSNAG_COCOA_SWIFT_IMPORT = 'import Bugsnag'
+const BUGSNAG_COCOA_SWIFT_INIT = 'Bugsnag.start()'
+const COCOA_SWIFT_APP_LAUNCH_REGEX = /(override func application\s*\(\s*_ application:\s*UIApplication,\s*didFinishLaunchingWithOptions launchOptions:\s*\[UIApplication\.LaunchOptionsKey\s*:\s*Any\]\?\s*=\s*nil\)\s*->\s*Bool\s*\{\s)/
 
 const BUGSNAG_JAVA_IMPORT = 'import com.bugsnag.android.Bugsnag;'
 const BUGSNAG_JAVA_INIT = 'Bugsnag.start(this);'
@@ -62,8 +66,8 @@ export async function insertIos (projectRoot: string, logger: Logger): Promise<v
 
     const appDelegateDirectory = path.join(iosDir, xcodeprojDir.replace(/\.xcodeproj$/, ''))
 
-    // handle both AppDelegate.m and AppDelegate.mm (RN 0.68+)
-    const appDelegateFile = (await fs.readdir(appDelegateDirectory)).find(p => p.startsWith('AppDelegate.m'))
+    // handle AppDelegate.m, AppDelegate.mm (RN 0.68+) and AppDelegate.swift (RN 0.77+)
+    const appDelegateFile = (await fs.readdir(appDelegateDirectory)).find(p => p.startsWith('AppDelegate.m') || p.startsWith('AppDelegate.swift'))
 
     if (!appDelegateFile) {
       logger.warn(FAIL_MSG('AppDelegate'))
@@ -77,15 +81,21 @@ export async function insertIos (projectRoot: string, logger: Logger): Promise<v
   }
 
   try {
+    const isSwift = path.extname(appDelegatePath) === '.swift'
+    const cocoaImport = isSwift ? BUGSNAG_COCOA_SWIFT_IMPORT : BUGSNAG_COCOA_OBJ_C_IMPORT
+    const cocoaInit = isSwift ? BUGSNAG_COCOA_SWIFT_INIT : BUGSNAG_COCOA_OBJ_C_INIT
+    const cocoaAppLaunchRegex = isSwift ? COCOA_SWIFT_APP_LAUNCH_REGEX : COCOA_OBJ_C_APP_LAUNCH_REGEX
+    const indent = isSwift ? '    ' : '  '
+
     const appDelegate = await fs.readFile(appDelegatePath, 'utf8')
 
-    if (appDelegate.includes(BUGSNAG_COCOA_IMPORT) || appDelegate.includes(BUGSNAG_COCOA_INIT)) {
+    if (appDelegate.includes(cocoaImport) || appDelegate.includes(cocoaInit)) {
       logger.warn('Bugsnag is already included, skipping')
       return
     }
 
-    const appDelegateWithImport = `${BUGSNAG_COCOA_IMPORT}\n${appDelegate}`
-    const appLaunchRes = COCOA_APP_LAUNCH_REGEX.exec(appDelegateWithImport)
+    const appDelegateWithImport = `${cocoaImport}\n${appDelegate}`
+    const appLaunchRes = cocoaAppLaunchRegex.exec(appDelegateWithImport)
 
     if (!appLaunchRes) {
       logger.warn(FAIL_MSG(path.basename(appDelegatePath)))
@@ -94,7 +104,7 @@ export async function insertIos (projectRoot: string, logger: Logger): Promise<v
 
     await fs.writeFile(
       appDelegatePath,
-      appDelegateWithImport.replace(appLaunchRes[1], `${appLaunchRes[1]}  ${BUGSNAG_COCOA_INIT}\n\n`),
+      appDelegateWithImport.replace(appLaunchRes[1], `${appLaunchRes[1]}${indent}${cocoaInit}\n\n`),
       'utf8'
     )
 

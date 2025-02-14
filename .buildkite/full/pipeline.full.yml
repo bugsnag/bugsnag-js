@@ -46,7 +46,6 @@ steps:
   - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE CLI STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
     depends_on:
       - "publish-js"
-      - "android-builder-base-java-11"
     agents:
       queue: "macos"
     timeout_in_minutes: 5
