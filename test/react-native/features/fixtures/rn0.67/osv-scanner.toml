@@ -1,1 +1,67 @@
-../../../../../config/osv-scanner.ignore.toml
+[[IgnoredVulns]]
+id = "GHSA-67hx-6x53-jw92"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-c2jc-4fpr-4vhg"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-grv7-fg5c-xmjg"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-3xgq-45jj-v275"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-w573-4hg7-7wgq"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-7mhc-prgv-r3q4"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-78xj-cgh5-2h22"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-2p57-rm9w-gvfp"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-9c47-m6qq-7p4h"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-952p-6rrq-rcjv"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-rxrc-rgv4-jpvx"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-c2qf-rxjj-qqgw"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-m6fv-jmcg-4jfg"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-cm22-4g7w-348p"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-72xf-g2v4-qvf3"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-j8xg-fqg3-53r7"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-3h5v-q93c-6h6q"
+reason = "test fixture dependency does not affect end users"
