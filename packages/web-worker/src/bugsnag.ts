@@ -6,13 +6,11 @@ import pluginWindowOnError from '@bugsnag/plugin-window-onerror'
 import pluginWindowUnhandledRejection from '@bugsnag/plugin-window-unhandled-rejection'
 
 // extend the base config schema with some browser-specific options
-import { schema as baseConfig } from '@bugsnag/core/config'
 import workerConfig from './config'
 import pluginBrowserDevice from '@bugsnag/plugin-browser-device'
 import pluginBrowserSession from '@bugsnag/plugin-browser-session'
 import pluginPreventDiscard from './prevent-discard'
-import ClientWithInternals from '@bugsnag/core/client'
-import type { Client, Config, BugsnagStatic } from '@bugsnag/core'
+import { Client, Config, BugsnagStatic, schema as baseConfig } from '@bugsnag/core'
 import assign from '@bugsnag/core/lib/es-utils/assign'
 
 export interface WorkerConfig extends Config {
@@ -32,10 +30,10 @@ const version = '__BUGSNAG_NOTIFIER_VERSION__'
 // extend the base config schema with some worker-specific options
 const schema = assign({}, baseConfig, workerConfig)
 
-type WorkerClient = Partial<ClientWithInternals> & {
-  _client: ClientWithInternals | null
-  createClient: (opts?: Config) => ClientWithInternals
-  start: (opts?: Config) => ClientWithInternals
+type WorkerClient = Partial<Client> & {
+  _client: Client | null
+  createClient: (opts?: Config) => Client
+  start: (opts?: Config) => Client
   isStarted: () => boolean
 }
 
@@ -56,7 +54,7 @@ const notifier: WorkerClient = {
     ]
 
     // configure a client with user supplied options
-    const bugsnag = new ClientWithInternals(opts, schema, internalPlugins, { name, version, url })
+    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
     bugsnag._setDelivery(client => delivery(client, self.fetch, self))
 
@@ -79,10 +77,10 @@ const notifier: WorkerClient = {
   }
 }
 
-type Method = keyof typeof ClientWithInternals.prototype
+type Method = keyof typeof Client.prototype
 
 // Add client functions to notifier
-(Object.getOwnPropertyNames(ClientWithInternals.prototype) as Method[]).forEach(method => {
+(Object.getOwnPropertyNames(Client.prototype) as Method[]).forEach(method => {
   // skip private methods
   // @ts-ignore
   if (/^_/.test(method) || method === 'constructor') return

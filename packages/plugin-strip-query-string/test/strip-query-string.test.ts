@@ -1,7 +1,8 @@
 import plugin from '../'
 
-import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import { Stackframe } from '@bugsnag/core'
+import { EventDeliveryPayload } from '@bugsnag/core/client'
 
 describe('plugin: strip query string', () => {
   it('should strip querystrings and fragments from urls', () => {

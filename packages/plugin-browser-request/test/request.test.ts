@@ -1,6 +1,6 @@
 import plugin from '../src/request'
 
-import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Client, EventDeliveryPayload } from '@bugsnag/core'
 
 const window = { location: { href: 'http://xyz.abc/foo/bar.html' } } as unknown as Window & typeof globalThis
 

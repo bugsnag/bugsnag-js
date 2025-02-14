@@ -1,12 +1,10 @@
-import ClientWithInternals from '@bugsnag/core/client'
-import type { BugsnagStatic, Config, Client } from '@bugsnag/core'
+import { BugsnagStatic, Config, Client, schema as baseConfig } from '@bugsnag/core'
 
 import map from '@bugsnag/core/lib/es-utils/map'
 import keys from '@bugsnag/core/lib/es-utils/keys'
 import assign from '@bugsnag/core/lib/es-utils/assign'
 
 // extend the base config schema with some browser-specific options
-import { schema as baseConfig } from '@bugsnag/core/config'
 import browserConfig from './config'
 
 import pluginWindowOnerror from '@bugsnag/plugin-window-onerror'
@@ -55,10 +53,10 @@ declare global {
   }
 }
 
-type BrowserClient = Partial<ClientWithInternals> & {
-  _client: ClientWithInternals | null
+type BrowserClient = Partial<Client> & {
+  _client: Client | null
   createClient: (opts?: Config) => Client
-  start: (opts?: Config) => ClientWithInternals
+  start: (opts?: Config) => Client
   isStarted: () => boolean
 }
 
@@ -91,7 +89,7 @@ const notifier: BrowserClient = {
     ]
 
     // configure a client with user supplied options
-    const bugsnag = new ClientWithInternals(opts, schema, internalPlugins, { name, version, url });
+    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url });
 
     // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
     (bugsnag as BrowserClient)._setDelivery?.(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
@@ -108,7 +106,7 @@ const notifier: BrowserClient = {
       notifier._client._logger.warn('Bugsnag.start() was called more than once. Ignoring.')
       return notifier._client
     }
-    notifier._client = notifier.createClient(opts) as ClientWithInternals
+    notifier._client = notifier.createClient(opts)
     return notifier._client
   },
   isStarted: () => {
@@ -116,9 +114,9 @@ const notifier: BrowserClient = {
   }
 }
 
-type Method = keyof typeof ClientWithInternals.prototype
+type Method = keyof typeof Client.prototype
 
-map(['resetEventCount'].concat(keys(ClientWithInternals.prototype)) as Method[], (m) => {
+map(['resetEventCount'].concat(keys(Client.prototype)) as Method[], (m) => {
   if (/^_/.test(m)) return
   notifier[m] = function () {
     if (!notifier._client) return console.log(`Bugsnag.${m}() was called before Bugsnag.start()`)

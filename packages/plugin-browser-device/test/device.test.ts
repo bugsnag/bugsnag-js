@@ -1,12 +1,6 @@
 import plugin from '../src/device'
 
-import Client, {
-  SessionDeliveryPayload,
-  EventDeliveryPayload
-} from '@bugsnag/core/client'
-import { Device, Session } from '@bugsnag/core'
-import EventWithInternals from '@bugsnag/core/event'
-import { schema } from '@bugsnag/core/config'
+import { Client, Device, Event, Session, SessionDeliveryPayload, EventDeliveryPayload, schema } from '@bugsnag/core'
 
 interface SessionWithDevice extends Session { device: Device }
 
@@ -116,7 +110,7 @@ describe('plugin: device', () => {
 
     const mockDelivery = (
       client: Client,
-      events: EventWithInternals[],
+      events: Event[],
       sessions: SessionWithDevice[]
     ) => {
       client._sessionDelegate = {
@@ -164,7 +158,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -188,7 +182,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -210,7 +204,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -241,7 +235,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -285,7 +279,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -312,7 +306,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -343,7 +337,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -374,7 +368,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -399,7 +393,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -425,7 +419,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -451,7 +445,7 @@ describe('plugin: device', () => {
         [plugin(navigator)]
       )
 
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       mockDelivery(client, events, sessions)
@@ -480,7 +474,7 @@ describe('plugin: device', () => {
         },
         [plugin(navigator)]
       )
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       expect(client._cbs.e).toHaveLength(1)
@@ -510,7 +504,7 @@ describe('plugin: device', () => {
         },
         [plugin(navigator)]
       )
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       expect(client._cbs.e).toHaveLength(1)
@@ -542,7 +536,7 @@ describe('plugin: device', () => {
         },
         [plugin(navigator)]
       )
-      const events: EventWithInternals[] = []
+      const events: Event[] = []
       const sessions: SessionWithDevice[] = []
 
       expect(client._cbs.e).toHaveLength(1)

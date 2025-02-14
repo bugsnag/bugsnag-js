@@ -1,4 +1,4 @@
-const Client = require('@bugsnag/core/client')
+const { Client } = require('@bugsnag/core')
 
 const createClient = (createProcessClient, process) => {
   const Bugsnag = {

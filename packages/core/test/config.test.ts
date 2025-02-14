@@ -1,12 +1,12 @@
 import config from '../src/config'
 
-describe('@bugsnag/core/config', () => {
+describe('config', () => {
   describe('schema', () => {
     it('has the required properties { validate(), defaultValue(), message }', () => {
       Object.keys(config.schema).forEach(k => {
         const key = k as unknown as keyof typeof config.schema
         config.schema[key].defaultValue(undefined)
-        // @ts-expect-error
+        // @ts-expect-error testing invalid arguments
         config.schema[key].validate()
         config.schema[key].validate(-1)
         config.schema[key].validate('stringy stringerson')

@@ -1,6 +1,6 @@
 import Session from '../src/session'
 
-describe('@bugsnag/core/session', () => {
+describe('Session', () => {
   describe('toJSON()', () => {
     it('returns the correct data structure', () => {
       const s = new Session().toJSON()

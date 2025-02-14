@@ -1,6 +1,5 @@
 import delivery from '../delivery'
-import type { Client } from '@bugsnag/core'
-import type { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
+import type { Client, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 
 const globalAny: any = global
 

@@ -1,4 +1,4 @@
-import { schema } from '@bugsnag/core/config'
+import { schema } from '@bugsnag/core'
 import assign from '@bugsnag/core/lib/es-utils/assign'
 import getPrefixedConsole from './get-prefixed-console'
 

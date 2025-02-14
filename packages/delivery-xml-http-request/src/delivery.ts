@@ -1,8 +1,7 @@
-import type { Client, Config } from '@bugsnag/core'
+import { Client, Config } from '@bugsnag/core'
 
 import payload from '@bugsnag/core/lib/json-payload'
-import { Event } from '@bugsnag/core'
-import ClientWithInternals, { Delivery } from '@bugsnag/core/client'
+import { Event, Delivery } from '@bugsnag/core'
 
 
 function getIntegrityHeaderValue (windowOrWorkerGlobalScope: Window, requestBody: string) {
@@ -22,8 +21,8 @@ function getIntegrityHeaderValue (windowOrWorkerGlobalScope: Window, requestBody
 
 const delivery = (client: Client, win = window): Delivery => ({
   sendEvent: (event, cb = () => {}) => {
-    const config = (client as ClientWithInternals<Required<Config>>)._config
-    const logger = (client as ClientWithInternals)._logger
+    const config = client._config as Required<Config>
+    const logger = client._logger
 
     try {
       const url = config.endpoints.notify
@@ -74,8 +73,8 @@ const delivery = (client: Client, win = window): Delivery => ({
     }
   },
   sendSession: (session, cb = () => {}) => {
-    const config = (client as ClientWithInternals<Required<Config>>)._config
-    const logger = (client as ClientWithInternals)._logger
+    const config = client._config as Required<Config>
+    const logger = client._logger
 
     try {
       const url = config.endpoints.sessions

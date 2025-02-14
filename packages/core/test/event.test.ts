@@ -5,7 +5,7 @@ jest.mock('stack-generator', () => ({
   backtrace: () => [{}, {}]
 }))
 
-describe('@bugsnag/core/event', () => {
+describe('Event', () => {
   describe('constructor', () => {
     it('sets default handledState', () => {
       const err = new Error('noooooo')

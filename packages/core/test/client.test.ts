@@ -7,12 +7,12 @@ import { BreadcrumbType } from '../types/common'
 const noop = () => {}
 const id = <T>(a: T) => a
 
-describe('@bugsnag/core/client', () => {
+describe('Client', () => {
   describe('constructor', () => {
     it('can handle bad input', () => {
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       expect(() => new Client()).toThrow()
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       expect(() => new Client('foo')).toThrow()
     })
   })
@@ -21,7 +21,7 @@ describe('@bugsnag/core/client', () => {
     it('handles bad/good input', () => {
       expect(() => {
         // no opts supplied
-        // @ts-ignore
+        // @ts-expect-error - testing with unexpected arguments
         const client = new Client({})
         expect(client).toBe(client)
       }).toThrow()

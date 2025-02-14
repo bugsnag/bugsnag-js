@@ -1,7 +1,6 @@
 /// <reference lib="webworker" />
 
-import type { Client } from '@bugsnag/core'
-import type { Delivery } from '@bugsnag/core/client'
+import type { Client, Delivery } from '@bugsnag/core'
 
 type Fetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
 

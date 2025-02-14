@@ -1,6 +1,6 @@
 import plugin from '../src/context'
 
-import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Client, EventDeliveryPayload } from '@bugsnag/core'
 
 const window = {
   location: {

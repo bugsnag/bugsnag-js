@@ -15,26 +15,26 @@ import {
 import Event from './event'
 import Session from './session'
 
-interface LoggerConfig {
+export interface LoggerConfig {
   debug: (msg: any) => void
   info: (msg: any) => void
   warn: (msg: any) => void
   error: (msg: any, err?: unknown) => void
 }
 
-interface Notifier {
+export interface Notifier {
   name: string
   version: string
   url: string
 }
 
-interface EventDeliveryPayload {
+export interface EventDeliveryPayload {
   apiKey: string
   notifier: Notifier
   events: Event[]
 }
 
-interface SessionDeliveryPayload {
+export interface SessionDeliveryPayload {
   notifier?: Notifier
   device?: Device
   app?: App
@@ -45,7 +45,7 @@ interface SessionDeliveryPayload {
   }>
 }
 
-interface Delivery {
+export interface Delivery {
   sendEvent(payload: EventDeliveryPayload, cb: (err?: Error | null) => void): void
   sendSession(session: SessionDeliveryPayload, cb: (err?: Error | null) => void): void
 }

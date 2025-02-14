@@ -28,19 +28,7 @@
     "./lib/validators/string-with-length": "./src/lib/validators/string-with-length.js",
     "./lib/validators/list-of-functions": "./src/lib/validators/list-of-functions.js",
     "./lib/extract-object": "./src/lib/extract-object.js",
-    "./lib/feature-flag-delegate": "./src/lib/feature-flag-delegate.js",
-    "./client": {
-      "import": "./src/client.js",
-      "default": "./src/client.js",
-      "types": "./src/client.d.ts"
-    },
-    "./config": "./src/config.js",
-    "./event": {
-      "import": "./src/event.js",
-      "default": "./src/event.js",
-      "types": "./src/event.d.ts"
-    },
-    "./session": "./src/session.js"
+    "./lib/feature-flag-delegate": "./src/lib/feature-flag-delegate.js"
   },
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
@@ -54,7 +42,6 @@
   "files": [
     "src",
     "types",
-    "*.js",
     "dist"
   ],
   "scripts": {

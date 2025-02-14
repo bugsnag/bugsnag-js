@@ -1,6 +1,6 @@
 import plugin from '../src/navigation-breadcrumbs'
 
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 const noop = () => {}
 const id = <T>(a: T) => a

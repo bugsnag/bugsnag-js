@@ -1,7 +1,5 @@
-import Client from '@bugsnag/core/client'
 import plugin from '../src/koa'
-import { EventPayload } from '@bugsnag/core'
-import Event from '@bugsnag/core/event'
+import { Client, Event, EventPayload } from '@bugsnag/core'
 
 const noop = () => {}
 const id = <T>(a: T) => a

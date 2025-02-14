@@ -1,6 +1,6 @@
 import plugin from '../src/console-breadcrumbs'
 
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 describe('plugin: console breadcrumbs', () => {
   beforeAll(() => {
