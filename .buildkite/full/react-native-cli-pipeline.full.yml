@@ -3,8 +3,9 @@ agents:
 
 steps:
   - group: "React Native CLI Build Tests"
+    # Skipped on Android 0.75+ pending PLAT-13442
     steps:
-      - label: ':android: RN {{matrix}} CLI build and sourcemap upload test'
+      - label: ':android: RN CLI - {{matrix}} Android build and sourcemap upload tests'
         key: "build-react-native-cli-android-fixture"
         timeout_in_minutes: 15
         agents:
@@ -23,14 +24,13 @@ steps:
           - "bundle install"
           - "bundle exec maze-runner features/build-app-tests/build-android-app.feature"
         matrix:
-          - "0.76"
-          - "0.75"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
               limit: 1
 
-      - label: ':ios: Build RN {{matrix}} build and sourcemap upload test'
+      - label: ':mac: RN CLI - {{matrix}} iOS build and sourcemap upload tests'
         key: "build-react-native-cli-ios-fixture"
         timeout_in_minutes: 20
         agents:
@@ -52,6 +52,7 @@ steps:
         matrix:
           - "0.76"
           - "0.75"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
@@ -59,7 +60,8 @@ steps:
 
   - group: "React Native CLI notify tests"
     steps:
-      - label: ":browserstack: :android: RN {{matrix}} CLI Android notify tests"
+      # Skipped on Android 0.75+ pending PLAT-13442
+      - label: ":browserstack: :android: RN CLI - {{matrix}} Android end-to-end tests"
         depends_on: "build-react-native-cli-android-fixture"
         timeout_in_minutes: 30
         plugins:
@@ -90,9 +92,9 @@ steps:
         concurrency_group: "browserstack"
         concurrency_method: eager
         matrix:
-          - "0.76"
+          - "0.74"
 
-      - label: ":browserstack: :ios: RN {{matrix}} CLI iOS notify tests"
+      - label: ":browserstack: :mac: RN CLI - {{matrix}} iOS end-to-end tests"
         depends_on: "build-react-native-cli-ios-fixture"
         timeout_in_minutes: 30
         plugins:
@@ -124,3 +126,5 @@ steps:
         concurrency_method: eager
         matrix:
           - "0.76"
+          - "0.75"
+          - "0.74"
