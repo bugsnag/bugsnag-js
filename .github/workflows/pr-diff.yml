@@ -43,6 +43,6 @@ jobs:
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-after-gzipped
 
       - name: Run danger
-        uses: danger/danger-js@92d2525fe338bff16ae7d42794d0a835e2d27473 # 12.3.3
+        uses: danger/danger-js@1cdf42842dd643b582192ccb73e9ad0ec30d3227 # 12.3.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
