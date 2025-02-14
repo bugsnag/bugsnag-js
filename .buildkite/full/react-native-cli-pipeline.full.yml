@@ -67,11 +67,10 @@ steps:
         plugins:
           artifacts#v1.9.0:
             download: "test/react-native-cli/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk"
-            upload: ./test/react-native/maze_output/**/*
+            upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            service-ports: true
             command:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk
               - --farm=bs
@@ -82,14 +81,11 @@ steps:
             format: "junit"
             branch: "^main|next$$"
             api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
-        retry:
-          manual:
-            permit_on_passed: true
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 5
-        concurrency_group: "browserstack"
+        concurrency_group: "browserstack-app"
         concurrency_method: eager
         matrix:
           - "0.74"
@@ -100,11 +96,10 @@ steps:
         plugins:
           artifacts#v1.9.0:
             download: "test/react-native-cli/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa"
-            upload: ./test/react-native/maze_output/**/*
+            upload: ./test/react-native-cli/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-cli-maze-runner
             run: react-native-cli-maze-runner
-            service-ports: true
             command:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bs
@@ -115,14 +110,11 @@ steps:
             format: "junit"
             branch: "^main|next$$"
             api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
-        retry:
-          manual:
-            permit_on_passed: true
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 5
-        concurrency_group: "browserstack"
+        concurrency_group: "browserstack-app"
         concurrency_method: eager
         matrix:
           - "0.76"
