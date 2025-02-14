@@ -78,27 +78,23 @@ const notifier: WorkerClient = {
   }
 }
 
-type Method = keyof typeof Client.prototype
-
+;
 // Add client functions to notifier
-(Object.getOwnPropertyNames(Client.prototype) as Method[]).forEach(method => {
+(Object.getOwnPropertyNames(Client.prototype)).forEach(method => {
   // skip private methods
-  // @ts-ignore
   if (/^_/.test(method) || method === 'constructor') return
-  // @ts-ignore
+  // @ts-expect-error
   notifier[method] = function () {
     if (!notifier._client) return console.log(`Bugsnag.${method}() was called before Bugsnag.start()`)
-    // @ts-ignore
     notifier._client._depth += 1
-    // @ts-ignore
+    // @ts-expect-error
     const ret = notifier._client[method].apply(notifier._client, arguments)
-    // @ts-ignore
     notifier._client._depth -= 1
     return ret
   }
 })
 
-// @ts-ignore
+// @ts-expect-error
 const Bugsnag = notifier as WorkerBugsnagStatic
 
 export default Bugsnag

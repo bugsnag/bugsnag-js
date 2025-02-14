@@ -112,26 +112,22 @@ const notifier: BrowserClient = {
   }
 }
 
-type Method = keyof typeof Client.prototype
-
-const clientMethods = Object.getOwnPropertyNames(Client.prototype).concat(['resetEventCount']) as Method[]
+const clientMethods = Object.getOwnPropertyNames(Client.prototype).concat(['resetEventCount'])
 
 clientMethods.map((m) => {
-  if (/^_/.test(m)) return
-  // @ts-ignore
+  if (/^_/.test(m) || m === 'constructor') return
+  // @ts-expect-error
   notifier[m] = function () {
     if (!notifier._client) return console.log(`Bugsnag.${m}() was called before Bugsnag.start()`)
-    // @ts-ignore
     notifier._client._depth += 1
-    // @ts-ignore
+    // @ts-expect-error
     const ret = notifier._client[m].apply(notifier._client, arguments)
-    // @ts-ignore
     notifier._client._depth -= 1
     return ret
   }
 })
 
-// @ts-ignore
+// @ts-expect-error
 const Bugsnag = notifier as BrowserBugsnagStatic
 
 export default Bugsnag

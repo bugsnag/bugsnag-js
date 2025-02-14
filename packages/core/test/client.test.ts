@@ -168,7 +168,6 @@ describe('Client', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
 
       const session = new Session()
-      // @ts-ignore
       client._session = session
 
       client._setDelivery(client => ({

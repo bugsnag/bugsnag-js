@@ -44,7 +44,6 @@ const name = 'Bugsnag Node'
 const version = '__BUGSNAG_NOTIFIER_VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
-// @ts-ignore
 Event.__type = 'nodejs'
 
 // extend the base config schema with some node-specific options
@@ -70,9 +69,7 @@ type NodeClient = Partial<Client> & {
   isStarted: () => boolean
 }
 
-type Method = keyof typeof Client.prototype
-
-const clientMethods = Object.getOwnPropertyNames(Client.prototype) as Method[]
+const clientMethods = Object.getOwnPropertyNames(Client.prototype)
 
 const notifier: NodeClient = {
   _client: null,
@@ -90,11 +87,12 @@ const notifier: NodeClient = {
      * plugin where we want to call `leaveBreadcrumb` on the request-scoped client, if it exists.
      */
     clientMethods.forEach((m) => {
+      // @ts-expect-error
       const original = bugsnag[m]
-      // @ts-ignore
+      // @ts-expect-error
       bugsnag[m] = function () {
         // if we are in an async context, use the client from that context
-        // @ts-ignore
+        // @ts-expect-error
         const contextClient = bugsnag._clientContext && typeof bugsnag._clientContext.getStore === 'function' ? bugsnag._clientContext.getStore() : null
         const client = contextClient || bugsnag
         const originalMethod = contextClient ? contextClient[m] : original
@@ -132,7 +130,7 @@ const notifier: NodeClient = {
 }
 
 clientMethods.forEach((m) => {
-  if (/^_/.test(m)) return
+  if (/^_/.test(m) || m === 'constructor') return
   // @ts-ignore
   notifier[m] = function () {
     // if we are in an async context, use the client from that context
@@ -145,11 +143,9 @@ clientMethods.forEach((m) => {
 
     if (!client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
 
-    // @ts-ignore
     client._depth += 1
     // @ts-ignore
     const ret = client[m].apply(client, arguments)
-    // @ts-ignore
     client._depth -= 1
     return ret
   }

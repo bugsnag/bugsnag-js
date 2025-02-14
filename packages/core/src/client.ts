@@ -368,11 +368,8 @@ export default class Client<T extends Config = Config> {
 
       if (this._isBreadcrumbTypeEnabled('error')) {
         // only leave a crumb for the error if actually got sent
-        // @ts-ignore
         Client.prototype.leaveBreadcrumb.call(this, event.errors[0].errorClass, {
-          // @ts-ignore
           errorClass: event.errors[0].errorClass,
-          // @ts-ignore
           errorMessage: event.errors[0].errorMessage,
           severity: event.severity
         }, 'error')
