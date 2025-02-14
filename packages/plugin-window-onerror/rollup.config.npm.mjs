@@ -1,5 +1,6 @@
 import createRollupConfig from '../../.rollup/index.mjs'
 
 export default createRollupConfig({
-    input: 'src/onerror.ts'
+    input: 'src/onerror.ts',
+    external: ['@bugsnag/core']
 })

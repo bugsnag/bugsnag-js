@@ -1,4 +1,4 @@
-import { Client, Logger, Plugin } from '@bugsnag/core'
+import { Config, Plugin } from '@bugsnag/core'
 import map from '@bugsnag/core/lib/es-utils/map'
 import isError from '@bugsnag/core/lib/iserror'
 import fixBluebirdStacktrace from './fix-bluebird-stacktrace'
@@ -6,17 +6,6 @@ import fixBluebirdStacktrace from './fix-bluebird-stacktrace'
 type Listener = (evt: PromiseRejectionEvent) => void
 
 let _listener: Listener | null
-
-interface InternalClient extends Client {
-  _config: {
-    autoDetectErrors: boolean
-    enabledErrorTypes: {
-      unhandledRejections: boolean
-    }
-    reportUnhandledPromiseRejectionsAsHandled: boolean
-  }
-  _logger: Logger
-}
 
 interface BluebirdPromiseRejectionEvent {
   detail?: {
@@ -31,9 +20,9 @@ interface BluebirdPromiseRejectionEvent {
 export default (win = window): Plugin => {
   const plugin: Plugin = {
     load: (client) => {
-      const internalClient = client as InternalClient
+      const config = client._config as Required<Config>
 
-      if (!internalClient._config.autoDetectErrors || !internalClient._config.enabledErrorTypes.unhandledRejections) return
+      if (!config.autoDetectErrors || !config.enabledErrorTypes.unhandledRejections) return
       const listener: Listener = (ev) => {
         const bluebirdEvent = ev as BluebirdPromiseRejectionEvent
 
@@ -48,18 +37,18 @@ export default (win = window): Plugin => {
           }
         } catch (e) {}
 
-        const event = internalClient.Event.create(error, false, {
+        const event = client.Event.create(error, false, {
           severity: 'error',
           // Report unhandled promise rejections as handled when set by config
-          unhandled: !internalClient._config.reportUnhandledPromiseRejectionsAsHandled,
+          unhandled: !config.reportUnhandledPromiseRejectionsAsHandled,
           severityReason: { type: 'unhandledPromiseRejection' }
-        }, 'unhandledrejection handler', 1, internalClient._logger)
+        }, 'unhandledrejection handler', 1, client._logger)
 
         if (isBluebird) {
           map(event.errors[0].stacktrace, fixBluebirdStacktrace(error))
         }
 
-        internalClient._notify(event, (event) => {
+        client._notify(event, (event) => {
           if (isError(event.originalError) && !event.originalError.stack) {
             event.addMetadata('unhandledRejection handler', {
               [Object.prototype.toString.call(event.originalError)]: {

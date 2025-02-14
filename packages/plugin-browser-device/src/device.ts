@@ -53,7 +53,6 @@ export default (nav = navigator, win: Window | null = window): Plugin => ({
       )
       // @ts-expect-error _config is private API
       if (!client._config.collectUserIp) setDefaultUserId(event)
-      // @ts-expect-error second parameter is private API
     }, true)
   },
   // @ts-expect-error _config is private API

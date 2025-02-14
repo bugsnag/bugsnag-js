@@ -39,7 +39,7 @@ function createRollupConfig (options = defaultOptions()) {
         format: 'esm'
       }
     ],
-    external: ['@bugsnag/core'].concat(options.external),
+    external: options.external,
     plugins: [
       replace({
         preventAssignment: true,

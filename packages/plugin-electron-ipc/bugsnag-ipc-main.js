@@ -1,5 +1,5 @@
 const Event = require('@bugsnag/core/event')
-const Breadcrumb = require('@bugsnag/core/breadcrumb')
+const { Breadcrumb } = require('@bugsnag/core')
 const runCallbacks = require('@bugsnag/core/lib/callback-runner')
 const featureFlagDelegate = require('@bugsnag/core/lib/feature-flag-delegate')
 

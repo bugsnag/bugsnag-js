@@ -1,6 +1,6 @@
 const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
-const Breadcrumb = require('@bugsnag/core/breadcrumb')
+const { Breadcrumb } = require('@bugsnag/core')
 
 const supportedProperties = [
   'app',

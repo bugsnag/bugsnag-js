@@ -22,7 +22,7 @@ const React = require('react')
 const Client = require('@bugsnag/core/client')
 const Event = require('@bugsnag/core/event')
 const Session = require('@bugsnag/core/session')
-const Breadcrumb = require('@bugsnag/core/breadcrumb')
+const { Breadcrumb } = require('@bugsnag/core')
 
 Event.__type = 'reactnativejs'
 

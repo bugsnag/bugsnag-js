@@ -1,10 +1,8 @@
-import { Client, Plugin } from '@bugsnag/core'
+import { Plugin } from '@bugsnag/core'
 import assign from '@bugsnag/core/lib/es-utils/assign'
 
-interface InternalClient extends Client {
-  _config: {
-    collectUserIp: boolean
-  }
+interface Config {
+  collectUserIp: boolean
 }
 
 interface ExtendedPlugin extends Plugin {
@@ -22,7 +20,7 @@ interface ValidationOption {
  */
 const plugin: ExtendedPlugin = {
   load: client => {
-    if ((client as InternalClient)._config.collectUserIp) return
+    if ((client._config as unknown as Config).collectUserIp) return
 
     client.addOnError(event => {
       // If user.id is explicitly undefined, it will be missing from the payload. It needs
