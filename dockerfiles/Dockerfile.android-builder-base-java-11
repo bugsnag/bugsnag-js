@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk-bullseye
+FROM openjdk:11-jdk-bullseye@sha256:cb20a91676b5643e5e67fcd937f717936bf2694f7669fc7fbd2aa4f0320e4dd2
 
 # OS setup
 RUN apt-get update && apt-get install -y gradle jq git-core build-essential openssl libssl-dev
