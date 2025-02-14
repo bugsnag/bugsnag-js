@@ -103,7 +103,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bs
-              - --device=IOS_15
+              - --device=IOS_16
               - features/run-app-tests
           test-collector#v1.10.2:
             files: "reports/TEST-*.xml"
