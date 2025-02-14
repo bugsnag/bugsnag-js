@@ -1,4 +1,4 @@
-FROM debian:stable
+FROM debian:stable@sha256:2231f455dfe63bb856d6d52c714f0ca602c8c69b1c26ac9f6ab3a5ebafa1c9cd
 
 WORKDIR /app
 

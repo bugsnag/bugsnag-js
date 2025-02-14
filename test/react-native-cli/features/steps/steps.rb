@@ -2,28 +2,16 @@ require 'rexml/document'
 require 'securerandom'
 
 fixtures = Dir["#{__dir__}/../fixtures/rn0_*"].map { |dir| File.basename(dir) }.sort
-current_fixture = ENV['REACT_NATIVE_VERSION']
+current_fixture = ENV['RN_VERSION']
+fixture_dir = "#{__dir__}/../../../react-native-cli/features/fixtures/generated/"
 
-# Ensure environment is set for the CLI tests (check not needed for device-based tests)
-if Maze.config.farm == :none && !fixtures.include?(current_fixture)
-  if current_fixture.nil?
-    message = <<~ERROR.chomp
-      \e[31;1mNo React Native fixture given!\e[0m
-
-      Set the 'REACT_NATIVE_VERSION' environment variable to one of the React Native fixtures
-    ERROR
-  else
-    message = "\e[31;1mInvalid fixture: #{current_fixture.inspect}!\e[0m"
-  end
-
-  raise <<~ERROR
-
-    #{message}
-
-    Valid fixtures are:
-      - #{fixtures.join("\n  - ")}
-  ERROR
+# if RCT_NEW_ARCH_ENABLED is set add new-arch/ to the fixture_dir
+if ENV['RCT_NEW_ARCH_ENABLED'] == 'true' || ENV['RCT_NEW_ARCH_ENABLED'] == '1'
+  fixture_dir += "new-arch/#{ENV['RN_VERSION']}"
+else
+  fixture_dir += "old-arch/#{ENV['RN_VERSION']}"
 end
+
 
 When('I run the React Native service interactively') do
   step("I run the service '#{current_fixture}' interactively")
@@ -45,9 +33,8 @@ end
 
 def find_cli_helper_script
   # Handle both Dockerized and local Maze Runner executions
-  script = 'react-native-cli-helper.js'
+  script = 'generate-react-native-cli-fixture.js'
   possible_locations = %W[
-    #{__dir__}/../../scripts/#{script}
     #{__dir__}/../../../../scripts/#{script}
   ]
   path = possible_locations.find { |path| File.exist?(path) }
@@ -62,12 +49,22 @@ end
 
 When('I build the Android app') do
   script_path = find_cli_helper_script
-  $logger.info `node -e 'require("#{script_path}").buildAndroid("./features/fixtures", "./local-build")'`
+  $logger.info `node #{script_path}`
+
+  # Change directory to fixture_dir
+  Dir.chdir(fixture_dir) do
+    $logger.info `npm run bugsnag:upload-rn-android -- --overwrite`
+  end
 end
 
 When('I build the iOS app') do
-  path = find_cli_helper_script
-  $logger.info `node -e 'require("#{path}").buildIOS()'`
+  script_path = find_cli_helper_script
+  $logger.info `node #{script_path}`
+
+  # Change directory to fixture_dir
+  Dir.chdir(fixture_dir) do
+    $logger.info `npm run bugsnag:upload-rn-ios -- --overwrite`
+  end
 end
 
 def parse_package_json

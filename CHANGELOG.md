@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- (react-native-cli) Add support for `AppDelegate.swift` files to insert command [#2319](https://github.com/bugsnag/bugsnag-js/pull/2319)
+
 ### Fixed
 
 - (plugin-angular) Added a null check so BugsnagErrorHandler fails silently when misconfigured [#2295](https://github.com/bugsnag/bugsnag-js/pull/2295)

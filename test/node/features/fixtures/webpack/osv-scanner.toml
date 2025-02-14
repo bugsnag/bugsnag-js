@@ -1,1 +1,39 @@
-../../../../../config/osv-scanner.ignore.toml
+[[IgnoredVulns]]
+id = "GHSA-grv7-fg5c-xmjg"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-3xgq-45jj-v275"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-434g-2637-qmqr"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-49q7-c7j4-3p7m"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-977x-g7h5-7qgw"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-f7q4-pwc6-w24p"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-fc9h-whq2-v747"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-vjh7-7g9h-fjfh"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-952p-6rrq-rcjv"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-76p7-773f-r4q5"
+reason = "test fixture dependency does not affect end users"
