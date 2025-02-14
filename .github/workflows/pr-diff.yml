@@ -1,6 +1,7 @@
 name: "PR diff bot"
 on: [pull_request]
-permissions: read-all
+permissions:
+  pull-requests: write
 
 jobs:
   build:
