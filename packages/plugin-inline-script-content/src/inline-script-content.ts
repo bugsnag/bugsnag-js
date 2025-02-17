@@ -1,14 +1,11 @@
-import map from '@bugsnag/core/lib/es-utils/map'
-import reduce from '@bugsnag/core/lib/es-utils/reduce'
-import filter from '@bugsnag/core/lib/es-utils/filter'
-import { Client } from '@bugsnag/core'
+const reduce = require('@bugsnag/core/lib/es-utils/reduce')
+const filter = require('@bugsnag/core/lib/es-utils/filter')
 
 const MAX_LINE_LENGTH = 200
 const MAX_SCRIPT_LENGTH = 500000
 
-export default (doc = document, win = window) => ({
-  load: (client: Client) => {
-    // @ts-expect-error trackInlineScripts is a valid config option
+module.exports = (doc = document, win = window) => ({
+  load: (client) => {
     if (!client._config.trackInlineScripts) return
 
     const originalLocation = win.location.href
@@ -16,7 +13,6 @@ export default (doc = document, win = window) => ({
 
     // in IE8-10 the 'interactive' state can fire too soon (before scripts have finished executing), so in those
     // we wait for the 'complete' state before assuming that synchronous scripts are no longer executing
-    // @ts-expect-error Property 'attachEvent' does not exist on type 'Document'
     const isOldIe = !!doc.attachEvent
     let DOMContentLoaded = isOldIe ? doc.readyState === 'complete' : doc.readyState !== 'loading'
     const getHtml = () => doc.documentElement.outerHTML
@@ -31,12 +27,11 @@ export default (doc = document, win = window) => ({
         html = getHtml()
         DOMContentLoaded = true
       }
-      // @ts-expect-error Argument of type 'IArguments' is not assignable to parameter of type '[ev: Event]'
-      try { prev?.apply(this, arguments) } catch (e) {}
+      try { prev.apply(this, arguments) } catch (e) {}
     }
 
-    let _lastScript: HTMLOrSVGScriptElement | null = null
-    const updateLastScript = (script: HTMLOrSVGScriptElement | null) => {
+    let _lastScript = null
+    const updateLastScript = script => {
       _lastScript = script
     }
 
@@ -49,7 +44,7 @@ export default (doc = document, win = window) => ({
       return script
     }
 
-    const addSurroundingCode = (lineNumber: number) => {
+    const addSurroundingCode = lineNumber => {
       // get whatever html has rendered at this point
       if (!DOMContentLoaded || !html) html = getHtml()
       // simulate the raw html
@@ -66,13 +61,12 @@ export default (doc = document, win = window) => ({
     client.addOnError(event => {
       // remove any of our own frames that may be part the stack this
       // happens before the inline script check as it happens for all errors
-      // @ts-expect-error Type 'undefined' is not assignable to type 'string'
       event.errors[0].stacktrace = filter(event.errors[0].stacktrace, f => !(/__trace__$/.test(f.method)))
 
       const frame = event.errors[0].stacktrace[0]
 
       // remove hash and query string from url
-      const cleanUrl = (url: string) => url.replace(/#.*$/, '').replace(/\?.*$/, '')
+      const cleanUrl = (url) => url.replace(/#.*$/, '').replace(/\?.*$/, '')
 
       // if frame.file exists and is not the original location of the page, this can't be an inline script
       if (frame && frame.file && cleanUrl(frame.file) !== cleanUrl(originalLocation)) return
@@ -96,43 +90,37 @@ export default (doc = document, win = window) => ({
 
     // Proxy all the timer functions whose callback is their 0th argument.
     // Keep a reference to the original setTimeout because we need it later
-    const [_setTimeout] = map([
+    const [_setTimeout] = [
       'setTimeout',
       'setInterval',
       'setImmediate',
       'requestAnimationFrame'
-    ], fn =>
+    ].map(fn =>
       __proxy(win, fn, original =>
-        __traceOriginalScript(original, (args: any) => ({
+        __traceOriginalScript(original, args => ({
           get: () => args[0],
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-          replace: (fn: Function) => { args[0] = fn }
+          replace: fn => { args[0] = fn }
         }))
       )
     )
-
+    ;
     // Proxy all the host objects whose prototypes have an addEventListener function
-    map([
-      'EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode',
+    [ 'EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode',
       'CryptoOperation', 'EventSource', 'FileReader', 'HTMLUnknownElement', 'IDBDatabase',
       'IDBRequest', 'IDBTransaction', 'KeyOperation', 'MediaController', 'MessagePort', 'ModalWindow',
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
       'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'
-    ], o => {
-      // @ts-expect-error Element implicitly has an 'any' type because index expression is not of type 'number'
+    ].map(o => {
       if (!win[o] || !win[o].prototype || !Object.prototype.hasOwnProperty.call(win[o].prototype, 'addEventListener')) return
-      // @ts-expect-error Element implicitly has an 'any' type because index expression is not of type 'number'
       __proxy(win[o].prototype, 'addEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor)
       )
-      // @ts-expect-error Element implicitly has an 'any' type because index expression is not of type 'number'
       __proxy(win[o].prototype, 'removeEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor, true)
       )
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-    function __traceOriginalScript (fn: Function, callbackAccessor: Function, alsoCallOriginal = false) {
+    function __traceOriginalScript (fn, callbackAccessor, alsoCallOriginal = false) {
       return function () {
         // this is required for removeEventListener to remove anything added with
         // addEventListener before the functions started being wrapped by Bugsnag
@@ -140,9 +128,7 @@ export default (doc = document, win = window) => ({
         try {
           const cba = callbackAccessor(args)
           const cb = cba.get()
-          // @ts-expect-error this' implicitly has type 'any' because it does not have a type annotation.
           if (alsoCallOriginal) fn.apply(this, args)
-          // @ts-expect-error this' implicitly has type 'any' because it does not have a type annotation.
           if (typeof cb !== 'function') return fn.apply(this, args)
           if (cb.__trace__) {
             cba.replace(cb.__trace__)
@@ -171,7 +157,6 @@ export default (doc = document, win = window) => ({
           // WebDriverException: Message: Permission denied to access property "handleEvent"
         }
         // IE8 doesn't let you call .apply() on setTimeout/setInterval
-        // @ts-expect-error 'this' implicitly has type 'any' because it does not have a type annotation.
         if (fn.apply) return fn.apply(this, args)
         switch (args.length) {
           case 1: return fn(args[0])
@@ -183,15 +168,14 @@ export default (doc = document, win = window) => ({
   },
   configSchema: {
     trackInlineScripts: {
-      validate: (value: unknown) => value === true || value === false,
+      validate: value => value === true || value === false,
       defaultValue: () => true,
       message: 'should be true|false'
     }
   }
 })
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-function __proxy (host: any, name: string, replacer: (fn: Function) => Function) {
+function __proxy (host, name, replacer) {
   const original = host[name]
   if (!original) return original
   const replacement = replacer(original)
@@ -199,13 +183,13 @@ function __proxy (host: any, name: string, replacer: (fn: Function) => Function)
   return original
 }
 
-function eventTargetCallbackAccessor (args: any) {
+function eventTargetCallbackAccessor (args) {
   const isEventHandlerObj = !!args[1] && typeof args[1].handleEvent === 'function'
   return {
     get: function () {
       return isEventHandlerObj ? args[1].handleEvent : args[1]
     },
-    replace: function (fn: any) {
+    replace: function (fn) {
       if (isEventHandlerObj) {
         args[1].handleEvent = fn
       } else {
