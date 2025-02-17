@@ -1,1 +1,1 @@
-export default function isArray(obj: any): boolean
+export default function isArray(obj: any): obj is any[];

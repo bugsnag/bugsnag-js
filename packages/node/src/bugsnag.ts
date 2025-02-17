@@ -72,6 +72,8 @@ type NodeClient = Partial<Client> & {
 
 type Method = keyof typeof Client.prototype
 
+const clientMethods = Object.getOwnPropertyNames(Client.prototype) as Method[]
+
 const notifier: NodeClient = {
   _client: null,
   createClient: (opts) => {
@@ -87,7 +89,7 @@ const notifier: NodeClient = {
      * This is useful for when client methods are called later, such as in the console breadcrumbs
      * plugin where we want to call `leaveBreadcrumb` on the request-scoped client, if it exists.
      */
-    (Object.keys(Client.prototype) as Method[]).forEach((m) => {
+    clientMethods.forEach((m) => {
       const original = bugsnag[m]
       bugsnag[m] = function () {
         // if we are in an async context, use the client from that context
@@ -126,7 +128,7 @@ const notifier: NodeClient = {
   }
 }
 
-;(Object.keys(Client.prototype) as Method[]).forEach((m) => {
+clientMethods.forEach((m) => {
   if (/^_/.test(m)) return
   notifier[m] = function () {
     // if we are in an async context, use the client from that context

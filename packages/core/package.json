@@ -60,6 +60,8 @@
     "stack-generator": "^2.0.3"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.26.8",
+    "@babel/preset-typescript": "^7.26.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",

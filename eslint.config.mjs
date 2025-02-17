@@ -58,6 +58,15 @@ const c = tseslint.config(
   {
     files: ['**/*.json', '**/*.[tj]s?(x)', '**/*.cjs', '**/*.mjs'],
   },
+  // Node environment
+  {
+    files: ['jest/**/*.[js|mjs]', '**/*/babel.config.js', '**/*/rollup.config.mjs', '.rollup/index.mjs'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
   // Linting config for TypeScript
   {
     files: [

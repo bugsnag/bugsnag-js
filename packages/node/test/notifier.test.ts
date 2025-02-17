@@ -28,6 +28,8 @@ describe('node notifier', () => {
       Bugsnag.leaveBreadcrumb('test')
 
       expect(spy).toHaveBeenCalledWith('Bugsnag.leaveBreadcrumb() was called before Bugsnag.start()')
+
+      spy.mockRestore()
     })
   })
 

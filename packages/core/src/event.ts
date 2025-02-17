@@ -1,22 +1,63 @@
-const ErrorStackParser = require('./lib/error-stack-parser')
-const StackGenerator = require('stack-generator')
-const hasStack = require('./lib/has-stack')
-const map = require('./lib/es-utils/map')
-const reduce = require('./lib/es-utils/reduce')
-const filter = require('./lib/es-utils/filter')
-const assign = require('./lib/es-utils/assign')
-const metadataDelegate = require('./lib/metadata-delegate')
-const featureFlagDelegate = require('./lib/feature-flag-delegate')
-const isError = require('./lib/iserror')
+import { App, Device, FeatureFlag, Logger, Request, Stackframe, Thread, User } from "./common"
 
-class Event {
-  constructor (errorClass, errorMessage, stacktrace = [], handledState = defaultHandledState(), originalError) {
+import ErrorStackParser from './lib/error-stack-parser'
+// @ts-expect-error no types
+import StackGenerator from 'stack-generator'
+import hasStack from './lib/has-stack'
+import map from './lib/es-utils/map'
+import reduce from './lib/es-utils/reduce'
+import filter from './lib/es-utils/filter'
+import assign from './lib/es-utils/assign'
+import metadataDelegate from './lib/metadata-delegate'
+import featureFlagDelegate from './lib/feature-flag-delegate'
+import isError from './lib/iserror'
+import Breadcrumb from "./breadcrumb"
+import Session from "./session"
+
+interface HandledState {
+  unhandled: boolean
+  severity: string
+  severityReason: { type: string; unhandledOverridden?: boolean }
+}
+
+export default class Event {
+  public apiKey: string | undefined
+  public context: string | undefined
+  private groupingHash: string | undefined
+  public severity: string
+  public unhandled: boolean
+
+  public app: App
+  private device: Device
+  private request: Request
+
+  public errors: Error[];
+  public breadcrumbs: Breadcrumb[]
+  public threads: Thread[]
+
+  public _metadata: { [key: string]: any }
+  public _features: FeatureFlag | null[]
+  public _featuresIndex: { [key: string]: number }
+
+  public _user: User
+  private _correlation?: { spanId?: string, traceId: string }
+  public _session?: Session
+
+  // default value for stacktrace.type
+  public static __type: string = 'browserjs'
+
+  constructor (
+    private readonly errorClass: string,
+    private readonly errorMessage: string,
+    private readonly stacktrace: any[] = [],
+    public readonly _handledState: HandledState = defaultHandledState(),
+    public readonly originalError?: Error
+  ) {
     this.apiKey = undefined
     this.context = undefined
     this.groupingHash = undefined
     this.originalError = originalError
 
-    this._handledState = handledState
     this.severity = this._handledState.severity
     this.unhandled = this._handledState.unhandled
 
@@ -45,7 +86,7 @@ class Event {
     /* this.attemptImmediateDelivery, default: true */
   }
 
-  addMetadata (section, keyOrObj, maybeVal) {
+  addMetadata (section: string, keyOrObj?: any, maybeVal?: any) {
     return metadataDelegate.add(this._metadata, section, keyOrObj, maybeVal)
   }
 
@@ -56,25 +97,25 @@ class Event {
      * @param traceId the ID of the trace the event occurred within
      * @param spanId the ID of the span that the event occurred within
      */
-  setTraceCorrelation (traceId, spanId) {
+  setTraceCorrelation (traceId?: string, spanId?: string) {
     if (typeof traceId === 'string') {
       this._correlation = { traceId, ...typeof spanId === 'string' ? { spanId } : { } }
     }
   }
 
-  getMetadata (section, key) {
+  getMetadata (section: string, key?: string) {
     return metadataDelegate.get(this._metadata, section, key)
   }
 
-  clearMetadata (section, key) {
+  clearMetadata (section: string, key?: string) {
     return metadataDelegate.clear(this._metadata, section, key)
   }
 
-  addFeatureFlag (name, variant = null) {
+  addFeatureFlag (name: string, variant: string | null = null) {
     featureFlagDelegate.add(this._features, this._featuresIndex, name, variant)
   }
 
-  addFeatureFlags (featureFlags) {
+  addFeatureFlags (featureFlags: FeatureFlag[]) {
     featureFlagDelegate.merge(this._features, featureFlags, this._featuresIndex)
   }
 
@@ -82,7 +123,7 @@ class Event {
     return featureFlagDelegate.toEventApi(this._features)
   }
 
-  clearFeatureFlag (name) {
+  clearFeatureFlag (name: string) {
     featureFlagDelegate.clear(this._features, this._featuresIndex, name)
   }
 
@@ -95,13 +136,14 @@ class Event {
     return this._user
   }
 
-  setUser (id, email, name) {
+  setUser (id?: string, email?: string, name?: string) {
     this._user = { id, email, name }
   }
 
   toJSON () {
     return {
       payloadVersion: '4',
+      // @ts-expect-error - TS doesn't know that the error object has an errorMessage property
       exceptions: map(this.errors, er => assign({}, er, { message: er.errorMessage })),
       severity: this.severity,
       unhandled: this._handledState.unhandled,
@@ -119,72 +161,13 @@ class Event {
       correlation: this._correlation
     }
   }
-}
 
-// takes a stacktrace.js style stackframe (https://github.com/stacktracejs/stackframe)
-// and returns a Bugsnag compatible stackframe (https://docs.bugsnag.com/api/error-reporting/#json-payload)
-const formatStackframe = frame => {
-  const f = {
-    file: frame.fileName,
-    method: normaliseFunctionName(frame.functionName),
-    lineNumber: frame.lineNumber,
-    columnNumber: frame.columnNumber,
-    code: undefined,
-    inProject: undefined
-  }
-  // Some instances result in no file:
-  // - calling notify() from chrome's terminal results in no file/method.
-  // - non-error exception thrown from global code in FF
-  // This adds one.
-  if (f.lineNumber > -1 && !f.file && !f.method) {
-    f.file = 'global code'
-  }
-  return f
-}
-
-const normaliseFunctionName = name => /^global code$/i.test(name) ? 'global code' : name
-
-const defaultHandledState = () => ({
-  unhandled: false,
-  severity: 'warning',
-  severityReason: { type: 'handledException' }
-})
-
-const ensureString = (str) => typeof str === 'string' ? str : ''
-
-function createBugsnagError (errorClass, errorMessage, type, stacktrace) {
-  return {
-    errorClass: ensureString(errorClass),
-    errorMessage: ensureString(errorMessage),
-    type,
-    stacktrace: reduce(stacktrace, (accum, frame) => {
-      const f = formatStackframe(frame)
-      // don't include a stackframe if none of its properties are defined
-      try {
-        if (JSON.stringify(f) === '{}') return accum
-        return accum.concat(f)
-      } catch (e) {
-        return accum
-      }
-    }, [])
-  }
-}
-
-function getCauseStack (error) {
-  if (error.cause) {
-    return [error, ...getCauseStack(error.cause)]
-  } else {
-    return [error]
-  }
-}
-
-// Helpers
-
-Event.getStacktrace = function (error, errorFramesToSkip, backtraceFramesToSkip) {
+  // Helpers
+static getStacktrace = function (error: Error, errorFramesToSkip: number, backtraceFramesToSkip: number) {
   if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
   // error wasn't provided or didn't have a stacktrace so try to walk the callstack
   try {
-    return filter(StackGenerator.backtrace(), frame =>
+    return filter(StackGenerator.backtrace(), (frame: StackTraceJsStyleStackframe) =>
       (frame.functionName || '').indexOf('StackGenerator$$') === -1
     ).slice(1 + backtraceFramesToSkip)
   } catch (e) {
@@ -192,7 +175,7 @@ Event.getStacktrace = function (error, errorFramesToSkip, backtraceFramesToSkip)
   }
 }
 
-Event.create = function (maybeError, tolerateNonErrors, handledState, component, errorFramesToSkip = 0, logger) {
+static create = function (maybeError: Error, tolerateNonErrors: boolean, handledState: HandledState | undefined, component: string, errorFramesToSkip = 0, logger: Logger) {
   const [error, internalFrames] = normaliseError(maybeError, tolerateNonErrors, component, logger)
   let event
   try {
@@ -229,18 +212,88 @@ Event.create = function (maybeError, tolerateNonErrors, handledState, component,
 
   return event
 }
+}
 
-const makeSerialisable = (err) => {
+interface StackTraceJsStyleStackframe {
+  functionName: string,
+  args: string[],
+  fileName: string,
+  lineNumber: number,
+  columnNumber: number, 
+  isEval: boolean,
+  isNative: boolean,
+  source: string,
+}
+
+// takes a stacktrace.js style stackframe (https://github.com/stacktracejs/stackframe)
+// and returns a Bugsnag compatible stackframe (https://docs.bugsnag.com/api/error-reporting/#json-payload)
+const formatStackframe = (frame: StackTraceJsStyleStackframe) => {
+  const f = {
+    file: frame.fileName,
+    method: normaliseFunctionName(frame.functionName),
+    lineNumber: frame.lineNumber,
+    columnNumber: frame.columnNumber,
+    code: undefined,
+    inProject: undefined
+  }
+  // Some instances result in no file:
+  // - calling notify() from chrome's terminal results in no file/method.
+  // - non-error exception thrown from global code in FF
+  // This adds one.
+  if (f.lineNumber > -1 && !f.file && !f.method) {
+    f.file = 'global code'
+  }
+  return f
+}
+
+const normaliseFunctionName = (name: string) => /^global code$/i.test(name) ? 'global code' : name
+
+const defaultHandledState = () => ({
+  unhandled: false,
+  severity: 'warning',
+  severityReason: { type: 'handledException' }
+})
+
+const ensureString = (str: unknown): string => typeof str === 'string' ? str : ''
+
+function createBugsnagError (errorClass: unknown, errorMessage: unknown, type: string, stacktrace: any[]): Error {
+  return {
+    // @ts-expect-error - TS doesn't know that the error object has an errorClass property
+    errorClass: ensureString(errorClass),
+    errorMessage: ensureString(errorMessage),
+    type,
+    stacktrace: reduce(stacktrace, (accum, frame) => {
+      const f = formatStackframe(frame)
+      // don't include a stackframe if none of its properties are defined
+      try {
+        if (JSON.stringify(f) === '{}') return accum
+        return accum.concat(f)
+      } catch (e) {
+        return accum
+      }
+    }, [])
+  }
+}
+
+function getCauseStack (error: Error): Error[] {
+  if (error.cause) {
+    return [error, ...getCauseStack(error.cause as Error)]
+  } else {
+    return [error]
+  }
+}
+
+const makeSerialisable = (err?: any) => {
   if (err === null) return 'null'
   if (err === undefined) return 'undefined'
   return err
 }
 
-const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
+const normaliseError = (maybeError: unknown, tolerateNonErrors: boolean, component: string, logger?: Logger): [Error, number] => {
   let error
   let internalFrames = 0
 
-  const createAndLogInputError = (reason) => {
+  const createAndLogInputError = (reason: string) => {
     const verb = (component === 'error cause' ? 'was' : 'received')
     if (logger) logger.warn(`${component} ${verb} a non-error: "${reason}"`)
     const err = new Error(`${component} ${verb} a non-error. See "${component}" tab for more detail.`)
@@ -280,7 +333,7 @@ const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
           error = maybeError
         } else if (maybeError !== null && hasNecessaryFields(maybeError)) {
           error = new Error(maybeError.message || maybeError.errorMessage)
-          error.name = maybeError.name || maybeError.errorClass
+          error.name = maybeError.name || maybeError.errorClass || ''
           internalFrames += 1
         } else {
           error = createAndLogInputError(maybeError === null ? 'null' : 'unsupported object')
@@ -308,14 +361,12 @@ const normaliseError = (maybeError, tolerateNonErrors, component, logger) => {
     }
   }
 
-  return [error, internalFrames]
+  return [error as Error, internalFrames]
 }
 
-// default value for stacktrace.type
-Event.__type = 'browserjs'
-
-const hasNecessaryFields = error =>
+const hasNecessaryFields = (error: unknown): error is { name?: string; errorClass?: string; message?: string; errorMessage?: string } =>
+  // @ts-expect-error - needs rewriting to be more type safe
   (typeof error.name === 'string' || typeof error.errorClass === 'string') &&
+  // @ts-expect-error - needs rewriting to be more type safe
   (typeof error.message === 'string' || typeof error.errorMessage === 'string')
 
-module.exports = Event

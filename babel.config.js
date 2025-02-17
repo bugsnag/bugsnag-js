@@ -6,10 +6,8 @@ module.exports = api => {
   const overrides = []
 
   if (api && api.env('test')) {
+    presets.push(['@babel/preset-env', {targets: {node: 'current'}}])
     presets.push('@babel/preset-typescript')
-    plugins.push(['@babel/plugin-proposal-class-properties', { loose: true }])
-    plugins.push('@babel/plugin-transform-modules-commonjs')
-    plugins.push('@babel/plugin-proposal-optional-chaining')
     overrides.push({
       test: 'node_modules/react-native/**/*',
       presets: ['module:metro-react-native-babel-preset']
@@ -22,23 +20,23 @@ module.exports = api => {
       test: './packages/plugin-react-navigation/**/*',
       presets: ['@babel/preset-react', 'module:metro-react-native-babel-preset']
     })
+  } else {
+    plugins.push(
+      ['@babel/plugin-transform-arrow-functions'],
+      ['@babel/plugin-transform-block-scoping'],
+      ['@babel/plugin-transform-classes', { loose: true }],
+      ['@babel/plugin-transform-computed-properties', { loose: true }],
+      ['@babel/plugin-transform-destructuring', { loose: true }],
+      ['@babel/plugin-transform-member-expression-literals'],
+      ['@babel/plugin-transform-property-literals'],
+      ['@babel/plugin-transform-parameters', { loose: true }],
+      ['@babel/plugin-transform-shorthand-properties'],
+      ['@babel/plugin-transform-spread', { loose: true }],
+      ['@babel/plugin-transform-template-literals', { loose: true }],
+      ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
+      ['@babel/syntax-object-rest-spread']
+    )
   }
-
-  plugins.push(
-    ['@babel/plugin-transform-arrow-functions'],
-    ['@babel/plugin-transform-block-scoping'],
-    ['@babel/plugin-transform-classes', { loose: true }],
-    ['@babel/plugin-transform-computed-properties', { loose: true }],
-    ['@babel/plugin-transform-destructuring', { loose: true }],
-    ['@babel/plugin-transform-member-expression-literals'],
-    ['@babel/plugin-transform-property-literals'],
-    ['@babel/plugin-transform-parameters', { loose: true }],
-    ['@babel/plugin-transform-shorthand-properties'],
-    ['@babel/plugin-transform-spread', { loose: true }],
-    ['@babel/plugin-transform-template-literals', { loose: true }],
-    ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
-    ['@babel/syntax-object-rest-spread']
-  )
 
   if (api && !api.env('test')) {
     api.cache(false)

@@ -1,1 +1,1 @@
-export default function keys(obj: {}): string[]
+export default function keys(obj: object): []

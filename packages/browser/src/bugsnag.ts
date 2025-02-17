@@ -116,7 +116,9 @@ const notifier: BrowserClient = {
 
 type Method = keyof typeof Client.prototype
 
-map(['resetEventCount'].concat(keys(Client.prototype)) as Method[], (m) => {
+const clientMethods = Object.getOwnPropertyNames(Client.prototype).concat(['resetEventCount']) as Method[]
+
+map(clientMethods, (m) => {
   if (/^_/.test(m)) return
   notifier[m] = function () {
     if (!notifier._client) return console.log(`Bugsnag.${m}() was called before Bugsnag.start()`)
