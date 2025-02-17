@@ -85,11 +85,11 @@ const notifier: BrowserClient = {
     ]
 
     // configure a client with user supplied options
-    // @ts-ignore
+    // @ts-expect-error
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url });
 
     // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
-    // @ts-ignore
+    // @ts-expect-error
     (bugsnag as BrowserClient)._setDelivery?.(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
 
     bugsnag._logger.debug('Loaded!')

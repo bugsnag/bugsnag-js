@@ -41,7 +41,7 @@ describe('plugin: koa', () => {
 
       client._sessionDelegate = { startSession, pauseSession, resumeSession }
       client._logger = logger()
-      // @ts-ignore
+      // @ts-expect-error
       client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('koa')
@@ -62,7 +62,7 @@ describe('plugin: koa', () => {
       expect(resumeSession).not.toHaveBeenCalled()
       expect(context.bugsnag).toStrictEqual(expect.any(Client))
       expect(context.bugsnag).not.toBe(client)
-      // @ts-ignore
+      // @ts-expect-error
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
     })
 
@@ -106,14 +106,14 @@ describe('plugin: koa', () => {
         },
         ip: '1.2.3.4'
       } as any
-      // @ts-ignore
+      // @ts-expect-error
       client._clientContext = { run: jest.fn() }
 
       const next = jest.fn()
 
       await middleware.requestHandler(context, next)
 
-      // @ts-ignore
+      // @ts-expect-error
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       const event: Event = await new Promise(resolve => {
@@ -165,7 +165,7 @@ describe('plugin: koa', () => {
         },
         sendSession: noop
       }))
-      // @ts-ignore
+      // @ts-expect-error
       client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('koa')
@@ -184,7 +184,7 @@ describe('plugin: koa', () => {
 
       await middleware.requestHandler(context, next)
 
-      // @ts-ignore
+      // @ts-expect-error
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       const event: Event = await new Promise(resolve => {
@@ -226,7 +226,7 @@ describe('plugin: koa', () => {
 
       client._sessionDelegate = { startSession, pauseSession, resumeSession }
       client._logger = logger()
-      // @ts-ignore
+      // @ts-expect-error
       client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('koa')
@@ -245,7 +245,7 @@ describe('plugin: koa', () => {
       expect(startSession).not.toHaveBeenCalled()
       expect(pauseSession).not.toHaveBeenCalled()
       expect(resumeSession).not.toHaveBeenCalled()
-      // @ts-ignore
+      // @ts-expect-error
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       // the Client should be cloned to ensure any manually started sessions

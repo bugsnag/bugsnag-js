@@ -31,12 +31,12 @@ function mockFetch (onSessionSend?: SendCallback, onNotifySend?: SendCallback) {
   const session = makeMockXHR(onSessionSend)
   const notify = makeMockXHR(onNotifySend)
 
-  // @ts-ignore
+  // @ts-expect-error
   window.XMLHttpRequest = jest.fn()
     .mockImplementationOnce(() => session)
     .mockImplementationOnce(() => notify)
     .mockImplementation(() => makeMockXHR(() => {}))
-  // @ts-ignore
+  // @ts-expect-error
   window.XMLHttpRequest.DONE = DONE
 
   return { session, notify }

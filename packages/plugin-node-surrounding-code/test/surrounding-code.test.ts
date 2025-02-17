@@ -60,7 +60,7 @@ describe('plugin: node surrounding code', () => {
       { apiKey: 'api_key', projectRoot: __dirname },
       {
         ...defaultSchema,
-        // @ts-ignore
+        // @ts-expect-error
         projectRoot: {
           defaultValue: () => null,
           validate: () => true,
