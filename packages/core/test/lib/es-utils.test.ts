@@ -1,3 +1,4 @@
+import map from '../../src/lib/es-utils/map'
 import reduce from '../../src/lib/es-utils/reduce'
 import filter from '../../src/lib/es-utils/filter'
 import keys from '../../src/lib/es-utils/keys'
@@ -9,6 +10,13 @@ describe('es-utils', () => {
     it('works with a variety of examples', () => {
       expect(reduce([1, 2, 3, 4, 5], (accum, x) => accum + x, 0)).toBe(15)
       expect(reduce([() => 100, () => 250, () => 25], (accum, x) => Math.max(x(), accum), -Infinity)).toBe(250)
+    })
+  })
+
+  describe('map(arr, fn)', () => {
+    it('works with a variety of examples', () => {
+      expect(map(['a', 'b', 'c'], x => x)).toEqual(['a', 'b', 'c'])
+      expect(map(['a', 'b', 'c'], (x) => x.toUpperCase())).toEqual(['A', 'B', 'C'])
     })
   })
 

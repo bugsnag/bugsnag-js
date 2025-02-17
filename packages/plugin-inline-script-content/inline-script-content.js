@@ -1,3 +1,4 @@
+const map = require('@bugsnag/core/lib/es-utils/map')
 const reduce = require('@bugsnag/core/lib/es-utils/reduce')
 const filter = require('@bugsnag/core/lib/es-utils/filter')
 
@@ -90,12 +91,12 @@ module.exports = (doc = document, win = window) => ({
 
     // Proxy all the timer functions whose callback is their 0th argument.
     // Keep a reference to the original setTimeout because we need it later
-    const [_setTimeout] = [
+    const [_setTimeout] = map([
       'setTimeout',
       'setInterval',
       'setImmediate',
       'requestAnimationFrame'
-    ].map(fn =>
+    ], fn =>
       __proxy(win, fn, original =>
         __traceOriginalScript(original, args => ({
           get: () => args[0],
@@ -103,14 +104,15 @@ module.exports = (doc = document, win = window) => ({
         }))
       )
     )
-    ;
+
     // Proxy all the host objects whose prototypes have an addEventListener function
-    [ 'EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode',
+    map([
+      'EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode',
       'CryptoOperation', 'EventSource', 'FileReader', 'HTMLUnknownElement', 'IDBDatabase',
       'IDBRequest', 'IDBTransaction', 'KeyOperation', 'MediaController', 'MessagePort', 'ModalWindow',
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
       'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'
-    ].map(o => {
+    ], o => {
       if (!win[o] || !win[o].prototype || !Object.prototype.hasOwnProperty.call(win[o].prototype, 'addEventListener')) return
       __proxy(win[o].prototype, 'addEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor)

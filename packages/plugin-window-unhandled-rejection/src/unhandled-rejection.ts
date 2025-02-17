@@ -1,4 +1,5 @@
 import { Config, Plugin } from '@bugsnag/core'
+import map from '@bugsnag/core/lib/es-utils/map'
 import isError from '@bugsnag/core/lib/iserror'
 import fixBluebirdStacktrace from './fix-bluebird-stacktrace'
 
@@ -44,7 +45,7 @@ export default (win = window): Plugin => {
         }, 'unhandledrejection handler', 1, client._logger)
 
         if (isBluebird) {
-          event.errors[0].stacktrace.map(fixBluebirdStacktrace(error))
+          map(event.errors[0].stacktrace, fixBluebirdStacktrace(error))
         }
 
         client._notify(event, (event) => {

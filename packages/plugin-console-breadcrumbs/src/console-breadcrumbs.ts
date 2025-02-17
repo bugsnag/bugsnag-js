@@ -1,5 +1,6 @@
 import { Client, Config, Plugin } from '@bugsnag/core'
 import filter from '@bugsnag/core/lib/es-utils/filter'
+import map from '@bugsnag/core/lib/es-utils/map'
 import reduce from '@bugsnag/core/lib/es-utils/reduce'
 
 type ConsoleMethod = 'log' | 'debug' | 'info' | 'warn' | 'error'
@@ -22,7 +23,7 @@ const plugin: Plugin = {
 
     if (isDev || !(client as ClientWithInternals)._isBreadcrumbTypeEnabled('log')) return
 
-    CONSOLE_LOG_METHODS.map(method => {
+    map(CONSOLE_LOG_METHODS, method => {
       const original = console[method]
       console[method] = (...args: any) => {
         client.leaveBreadcrumb(
