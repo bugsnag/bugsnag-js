@@ -56,7 +56,7 @@
     "ts-node": "^9.1.1",
     "typescript": "^5.6",
     "typescript-eslint": "^8.22.0",
-    "verdaccio": "^4.12.0",
+    "verdaccio": "^6.0.5",
     "xvfb-maybe": "^0.2.1"
   },
   "scripts": {
@@ -87,11 +87,16 @@
     "@types/prettier": "2.6.0",
     "@types/yargs": "17.0.10",
     "@types/node": "^18",
-    "node-fetch": "^2.6.7",
+    "braces": "^3.0.3",
     "hermes-engine": "^0.10.0",
     "json-schema": "^0.4.0",
+    "metro": {
+      "async": "^3.2.2"
+    },
+    "node-fetch": "^2.6.7",
     "shell-quote": "^1.7.3",
-    "thenify": "^3.3.1"
+    "thenify": "^3.3.1",
+    "tough-cookie": "5.1.1"
   },
   "workspaces": [
     "packages/*"

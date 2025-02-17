@@ -99,4 +99,14 @@ function replaceGeneratedFixtureFiles () {
     resolve(replacementFilesDir, 'ios/exportOptions.plist'),
     resolve(fixtureDir, 'exportOptions.plist')
   )
+
+  // replace the App.js/App.tsx file with our own App.js file
+  fs.readdirSync(resolve(fixtureDir))
+    .filter((file) => /App\.[tj]sx?$/.test(file))
+    .map((file) => fs.unlinkSync(resolve(fixtureDir, file)))
+
+  fs.copyFileSync(
+    resolve(replacementFilesDir, 'App.js'),
+    resolve(fixtureDir, 'App.js')
+  )
 }
