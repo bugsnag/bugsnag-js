@@ -1,7 +1,10 @@
 import intRange from '@bugsnag/core/lib/validators/int-range'
-import { Client, Config, Logger, Plugin } from '@bugsnag/core'
+import { Client, Config, Plugin } from '@bugsnag/core'
 
-interface ThrottlePlugin extends Plugin {
+interface PluginConfig extends Config {
+  maxEvents: number
+}
+interface ThrottlePlugin extends Plugin<PluginConfig> {
   configSchema: {
     [key: string]: {
       defaultValue: () => unknown
@@ -11,15 +14,13 @@ interface ThrottlePlugin extends Plugin {
   }
 }
 
-interface InternalClient extends Client {
-  _config: Config & { maxEvents: number }
-  _logger: Logger
+interface InternalClient extends Client<PluginConfig> {
+  resetEventCount: () => void
 }
 
 /*
  * Throttles and dedupes events
  */
-
 const plugin: ThrottlePlugin = {
   load: (client) => {
     // track sent events for each init of the plugin
@@ -34,8 +35,8 @@ const plugin: ThrottlePlugin = {
       }
       n++
     })
-
-    client.resetEventCount = () => { n = 0 }
+    ;
+    (client as InternalClient).resetEventCount = () => { n = 0 }
   },
   configSchema: {
     maxEvents: {

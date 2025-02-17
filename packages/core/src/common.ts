@@ -60,10 +60,6 @@ export interface Logger {
   error: (...args: any[]) => void
 }
 
-export interface SessionDelegate {
-  startSession: (client: Client) => Client
-}
-
 export interface EventPayload {
   apiKey: string
   notifier: {
@@ -130,9 +126,9 @@ export interface Request {
 }
 
 export interface User {
-  id?: string | null
-  email?: string | null
-  name?: string | null
+  id?: string | null | undefined
+  email?: string | null | undefined
+  name?: string | null | undefined
 }
 
 type ThreadType = 'cocoa' | 'android' | 'browserJs'
@@ -157,4 +153,50 @@ export interface Stackframe {
 export interface FeatureFlag {
   name: string
   variant?: string | null
+}
+
+export interface LoggerConfig {
+  debug: (msg: any) => void
+  info: (msg: any) => void
+  warn: (msg: any) => void
+  error: (msg: any, err?: unknown) => void
+}
+
+export interface Notifier {
+  name: string
+  version: string
+  url: string
+}
+
+export interface EventDeliveryPayload {
+  apiKey: string
+  notifier: Notifier
+  events: Event[]
+}
+
+export interface SessionDeliveryPayload {
+  notifier?: Notifier
+  device?: Device
+  app?: App
+  sessions?: Array<{
+    id: string
+    startedAt: Date
+    user?: User
+  }>
+}
+export interface Delivery {
+  sendEvent(payload: EventDeliveryPayload, cb: (err?: Error | null) => void): void
+  sendSession(session: SessionDeliveryPayload, cb: (err?: Error | null) => void): void
+}
+
+export interface SessionDelegate<T extends Config = Config> {
+  startSession: (client: Client<T>, session: Session) => Client
+  pauseSession: (client: Client<T>) => void
+  resumeSession: (client: Client<T>) => Client
+}
+
+export interface BugsnagStatic extends Client {
+  start(apiKeyOrOpts: string | Config): Client
+  createClient(apiKeyOrOpts: string | Config): Client
+  isStarted(): boolean
 }

@@ -95,11 +95,11 @@ const createClass = (react: typeof React, client: Client) => class BugsnagErrorB
   componentDidCatch (error: Error, info: ErrorInfo) {
     const { onError } = this.props
     const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-    // @ts-ignore internal API
     const event = client.Event.create(
       error,
       true,
       handledState,
+      'react plugin',
       1
     )
     if (info && info.componentStack) info.componentStack = formatComponentStack(info.componentStack)

@@ -1,10 +1,9 @@
-import { App, Device, FeatureFlag, Logger, Request, Stackframe, Thread, User } from "./common"
+import { App, Device, FeatureFlag, Logger, Request, Thread, User } from "./common"
 
 import ErrorStackParser from './lib/error-stack-parser'
 // @ts-expect-error no types
 import StackGenerator from 'stack-generator'
 import hasStack from './lib/has-stack'
-import map from './lib/es-utils/map'
 import reduce from './lib/es-utils/reduce'
 import filter from './lib/es-utils/filter'
 import assign from './lib/es-utils/assign'
@@ -23,15 +22,15 @@ interface HandledState {
 export default class Event {
   public apiKey: string | undefined
   public context: string | undefined
-  private groupingHash: string | undefined
+  public groupingHash: string | undefined
   public severity: string
   public unhandled: boolean
 
   public app: App
-  private device: Device
-  private request: Request
+  public device: Device
+  public request: Request
 
-  public errors: Error[];
+  public errors: BugsnagError[];
   public breadcrumbs: Breadcrumb[]
   public threads: Thread[]
 
@@ -47,11 +46,11 @@ export default class Event {
   public static __type: string = 'browserjs'
 
   constructor (
-    private readonly errorClass: string,
-    private readonly errorMessage: string,
-    private readonly stacktrace: any[] = [],
+    public readonly errorClass: string,
+    public readonly errorMessage: string,
+    public readonly stacktrace: any[] = [],
     public readonly _handledState: HandledState = defaultHandledState(),
-    public readonly originalError?: Error
+    public readonly originalError?: Error | Event | string
   ) {
     this.apiKey = undefined
     this.context = undefined
@@ -136,15 +135,14 @@ export default class Event {
     return this._user
   }
 
-  setUser (id?: string, email?: string, name?: string) {
+  setUser (id?: string | null, email?: string | null, name?: string | null) {
     this._user = { id, email, name }
   }
 
   toJSON () {
     return {
       payloadVersion: '4',
-      // @ts-expect-error - TS doesn't know that the error object has an errorMessage property
-      exceptions: map(this.errors, er => assign({}, er, { message: er.errorMessage })),
+      exceptions: this.errors.map(er => assign({}, er, { message: er.errorMessage })),
       severity: this.severity,
       unhandled: this._handledState.unhandled,
       severityReason: this._handledState.severityReason,
@@ -175,7 +173,7 @@ static getStacktrace = function (error: Error, errorFramesToSkip: number, backtr
   }
 }
 
-static create = function (maybeError: Error, tolerateNonErrors: boolean, handledState: HandledState | undefined, component: string, errorFramesToSkip = 0, logger: Logger) {
+static create = function (maybeError: Error | string, tolerateNonErrors: boolean, handledState: HandledState | undefined, component: string, errorFramesToSkip = 0, logger?: Logger) {
   const [error, internalFrames] = normaliseError(maybeError, tolerateNonErrors, component, logger)
   let event
   try {
@@ -199,7 +197,7 @@ static create = function (maybeError: Error, tolerateNonErrors: boolean, handled
   }
   if (error.cause) {
     const causes = getCauseStack(error).slice(1)
-    const normalisedCauses = map(causes, (cause) => {
+    const normalisedCauses = causes.map((cause) => {
       // Only get stacktrace for error causes that are a valid JS Error and already have a stack
       const stacktrace = (isError(cause) && hasStack(cause)) ? ErrorStackParser.parse(cause) : []
       const [error] = normaliseError(cause, true, 'error cause')
@@ -256,9 +254,15 @@ const defaultHandledState = () => ({
 
 const ensureString = (str: unknown): string => typeof str === 'string' ? str : ''
 
-function createBugsnagError (errorClass: unknown, errorMessage: unknown, type: string, stacktrace: any[]): Error {
+interface BugsnagError {
+  errorClass: string
+  errorMessage: string
+  type: string
+  stacktrace: any[]
+}
+
+function createBugsnagError (errorClass: unknown, errorMessage: unknown, type: string, stacktrace: any[]): BugsnagError {
   return {
-    // @ts-expect-error - TS doesn't know that the error object has an errorClass property
     errorClass: ensureString(errorClass),
     errorMessage: ensureString(errorMessage),
     type,
