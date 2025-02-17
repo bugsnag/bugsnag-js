@@ -1,8 +1,5 @@
 name: update-dependencies
-permissions:
-  contents: write
-  pull-requests: write
-  repository-projects: read
+permissions: read-all
 
 on:
   repository_dispatch:
@@ -21,6 +18,9 @@ on:
 jobs:
   update-dependencies:
     runs-on: macos-latest
+    permissions:
+      contents: write
+      pull-requests: write
     env:
       SUBMODULE: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.target_submodule || inputs.target_submodule }}
       VERSION: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.target_version || inputs.target_version }}
