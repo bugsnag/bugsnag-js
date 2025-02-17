@@ -13,7 +13,6 @@
     "./lib/json-payload": "./src/lib/json-payload.js",
     "./lib/es-utils/assign": "./src/lib/es-utils/assign.js",
     "./lib/validators/int-range": "./src/lib/validators/int-range.js",
-    "./lib/es-utils/map": "./src/lib/es-utils/map.js",
     "./lib/es-utils/includes": "./src/lib/es-utils/includes.js",
     "./lib/es-utils/filter": "./src/lib/es-utils/filter.js",
     "./lib/iserror": "./src/lib/iserror.js",
