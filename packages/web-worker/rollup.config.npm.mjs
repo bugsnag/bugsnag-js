@@ -10,7 +10,7 @@ import { sharedOutput } from '../../.rollup/index.mjs'
 
 const packageJson = JSON.parse(fs.readFileSync('./package.json'))
 
-const extensions = ['.js', '.ts']
+const extensions = ['.js', '.ts', '.cjs', '.mjs']
 
 const plugins = [
   nodeResolve({
