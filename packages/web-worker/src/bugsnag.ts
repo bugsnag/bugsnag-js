@@ -39,7 +39,7 @@ type WorkerClient = Partial<Client> & {
 
 const notifier: WorkerClient = {
   _client: null,
-  // @ts-ignore
+  // @ts-expect-error
   createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
     if (typeof opts === 'string') opts = { apiKey: opts }

@@ -235,7 +235,7 @@ describe('browser notifier', () => {
     it('resets events on pushState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
-      // @ts-ignore
+      // @ts-expect-error
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.pushState('', '', 'new-url')
@@ -248,7 +248,7 @@ describe('browser notifier', () => {
     it('does not reset events on replaceState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
-      // @ts-ignore
+      // @ts-expect-error
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.replaceState('', '', 'new-url')
@@ -276,12 +276,12 @@ describe('browser notifier', () => {
 
   describe('payload checksum behavior (Bugsnag-Integrity header)', () => {
     beforeEach(() => {
-      // @ts-ignore
+      // @ts-expect-error
       window.isSecureContext = true
     })
 
     afterEach(() => {
-      // @ts-ignore
+      // @ts-expect-error
       window.isSecureContext = false
     })
 

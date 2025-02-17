@@ -6,7 +6,7 @@ describe('plugin: strip project root', () => {
   it('should remove the project root if it matches the start of the stackframe’s file', done => {
     const client = new Client({ apiKey: 'api_key', projectRoot: '/app', plugins: [plugin] }, {
       ...schema,
-      // @ts-ignore
+      // @ts-expect-error
       projectRoot: {
         validate: () => true,
         defaultValue: () => '',
@@ -45,7 +45,7 @@ describe('plugin: strip project root', () => {
   it('should not remove a matching substring if it is not at the start', done => {
     const client = new Client({ apiKey: 'api_key', projectRoot: '/app', plugins: [plugin] }, {
       ...schema,
-      // @ts-ignore
+      // @ts-expect-error
       projectRoot: {
         validate: () => true,
         defaultValue: () => '',
@@ -84,7 +84,7 @@ describe('plugin: strip project root', () => {
   it('should work with node_modules and node internals', done => {
     const client = new Client({ apiKey: 'api_key', projectRoot: '/app', plugins: [plugin] }, {
       ...schema,
-      // @ts-ignore
+      // @ts-expect-error
       projectRoot: {
         validate: () => true,
         defaultValue: () => '',
@@ -118,7 +118,7 @@ describe('plugin: strip project root', () => {
   it('should tolerate stackframe.file not being a string', done => {
     const client = new Client({ apiKey: 'api_key', projectRoot: '/app', plugins: [plugin] }, {
       ...schema,
-      // @ts-ignore
+      // @ts-expect-error
       projectRoot: {
         validate: () => true,
         defaultValue: () => '',
