@@ -23,8 +23,8 @@ steps:
           - "bundle install"
           - "bundle exec maze-runner features/build-app-tests/build-android-app.feature"
         matrix:
-          - "0.71"
-          - "0.72"
+          - "0.74"
+          - "0.75"
         retry:
           automatic:
             - exit_status: "*"
@@ -48,8 +48,8 @@ steps:
           - "bundle install"
           - "bundle exec maze-runner features/build-app-tests/build-ios-app.feature"
         matrix:
-          - "0.71"
-          - "0.72"
+          - "0.74"
+          - "0.75"
         retry:
           automatic:
             - exit_status: "*"
