@@ -19,7 +19,7 @@ const plugins = [
   commonjs(),
   babel({
     babelHelpers: 'bundled',
-    include: ['src/**', 'node_modules/**'],
+    include: '**', // transpile node_modules as well
     extensions,
   }),
   typescript({
