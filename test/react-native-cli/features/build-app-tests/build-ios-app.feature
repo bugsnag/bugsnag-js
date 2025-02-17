@@ -11,3 +11,7 @@ Feature: Tests for building a React Native app (for iOS only) that was initializ
     And the sourcemap payload field "platform" equals "ios"
     And the sourcemap payload field "overwrite" equals "true"
 
+    # Re-archive and export an IPA that can be used for subsequent tests
+    Then I export the iOS archive
+    And the IPA file exists
+
