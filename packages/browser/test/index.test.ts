@@ -276,12 +276,10 @@ describe('browser notifier', () => {
 
   describe('payload checksum behavior (Bugsnag-Integrity header)', () => {
     beforeEach(() => {
-      // @ts-expect-error
       window.isSecureContext = true
     })
 
     afterEach(() => {
-      // @ts-expect-error
       window.isSecureContext = false
     })
 
