@@ -14,6 +14,7 @@ import pluginConsoleBreadcrumbs from '@bugsnag/plugin-console-breadcrumbs'
 import pluginNetworkBreadcrumbs from '@bugsnag/plugin-network-breadcrumbs'
 import pluginNavigationBreadcrumbs from '@bugsnag/plugin-navigation-breadcrumbs'
 import pluginInteractionBreadcrumbs from '@bugsnag/plugin-interaction-breadcrumbs'
+// @ts-ignore plugin not yet converted to TS
 import pluginInlineScriptContent from '@bugsnag/plugin-inline-script-content'
 import pluginSession from '@bugsnag/plugin-browser-session'
 import pluginIp from '@bugsnag/plugin-client-ip'

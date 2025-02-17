@@ -6,24 +6,26 @@ import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
 import fs from 'fs'
 
-import createRollupConfig, { sharedOutput } from '../../.rollup/index.mjs'
+import { sharedOutput } from '../../.rollup/index.mjs'
 
 const packageJson = JSON.parse(fs.readFileSync('./package.json'))
 
+const extensions = ['.js', '.ts']
+
 const plugins = [
   nodeResolve({
-    browser: true
+    browser: true,
+    extensions
   }),
   commonjs(),
-  typescript({
-    removeComments: true,
-    // don't output anything if there's a TS error
-    noEmitOnError: true,
-    compilerOptions: {
-      target: 'es2015'
-    }
+  babel({
+    babelHelpers: 'bundled',
+    include: ['src/**', 'node_modules/**'],
+    extensions,
   }),
-  babel({ babelHelpers: 'bundled' }),
+  typescript({
+    noForceEmit: true,
+  }),
   replace({
     preventAssignment: true,
     values: {
@@ -34,7 +36,7 @@ const plugins = [
 ]
 
 export default [
-  createRollupConfig({
+  {
     input: 'src/index.ts',
     output: [
       {
@@ -45,8 +47,8 @@ export default [
       }
     ],
     plugins
-  }),
-  createRollupConfig({
+  },
+  {
     input: 'src/index-umd.ts',
     output: [
       {
@@ -65,5 +67,5 @@ export default [
       }
     ],
     plugins
-  })
+  }
 ]
