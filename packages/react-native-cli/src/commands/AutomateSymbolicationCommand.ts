@@ -5,7 +5,6 @@ import logger from '../Logger'
 import { updateXcodeProject } from '../lib/Xcode'
 import { install, detectInstalledVersion, detectInstalled, guessPackageManager } from '../lib/Npm'
 import onCancel from '../lib/OnCancel'
-import { checkReactNativeMappings, addUploadEndpoint, addBuildEndpoint } from '../lib/Gradle'
 import { UrlType, OnPremiseUrls } from '../lib/OnPremise'
 import detectIndent from 'detect-indent'
 import semver from 'semver'
@@ -101,16 +100,6 @@ export default async function run (projectRoot: string, urls: OnPremiseUrls): Pr
 }
 
 async function installBugsnagCliPackage (projectRoot: string, urls: OnPremiseUrls): Promise<void> {
-  await checkReactNativeMappings(projectRoot, logger)
-
-  if (urls[UrlType.BUILD]) {
-    await addBuildEndpoint(projectRoot, urls[UrlType.BUILD] as string, logger)
-  }
-
-  if (urls[UrlType.UPLOAD]) {
-    await addUploadEndpoint(projectRoot, urls[UrlType.UPLOAD] as string, logger)
-  }
-
   const alreadyInstalled = await detectInstalled('@bugsnag/cli', projectRoot)
 
   if (alreadyInstalled) {

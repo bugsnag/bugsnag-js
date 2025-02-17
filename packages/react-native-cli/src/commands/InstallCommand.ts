@@ -3,7 +3,6 @@ import logger from '../Logger'
 import { install as npmInstall, detectInstalled, guessPackageManager } from '../lib/Npm'
 import { install as podInstall } from '../lib/Pod'
 import onCancel from '../lib/OnCancel'
-import { getSuggestedBugsnagGradleVersion, modifyRootBuildGradle, modifyAppBuildGradle } from '../lib/Gradle'
 
 export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<boolean> {
   try {
