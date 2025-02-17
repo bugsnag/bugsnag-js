@@ -3,8 +3,9 @@ agents:
 
 steps:
   - group: "React Native CLI Build Tests"
+    # Skipped on Android 0.75+ pending PLAT-13442
     steps:
-      - label: ':android: Build RN {{matrix}} CLI test fixture'
+      - label: ':android: RN CLI - {{matrix}} Android build and sourcemap upload tests'
         key: "build-react-native-cli-android-fixture"
         timeout_in_minutes: 15
         agents:
@@ -23,14 +24,13 @@ steps:
           - "bundle install"
           - "bundle exec maze-runner features/build-app-tests/build-android-app.feature"
         matrix:
-          - "0.71"
-          - "0.72"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
               limit: 1
 
-      - label: ':ios: Build RN {{matrix}} CLI test fixture'
+      - label: ':mac: RN CLI - {{matrix}} iOS build and sourcemap upload tests'
         key: "build-react-native-cli-ios-fixture"
         timeout_in_minutes: 20
         agents:
@@ -43,14 +43,80 @@ steps:
           XCODE_VERSION: "15.3.0"
           INIT_RN_CLI: "true"
           EXPORT_ARCHIVE: "0"
+        artifact_paths:
+          - "test/react-native-cli/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
           - "cd test/react-native-cli"
           - "bundle install"
           - "bundle exec maze-runner features/build-app-tests/build-ios-app.feature"
         matrix:
-          - "0.71"
-          - "0.72"
+          - "0.76"
+          - "0.75"
+          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
               limit: 1
+
+  - group: "React Native CLI notify tests"
+    steps:
+      # Skipped on Android 0.75+ pending PLAT-13442
+      - label: ":browserstack: :android: RN CLI - {{matrix}} Android end-to-end tests"
+        depends_on: "build-react-native-cli-android-fixture"
+        timeout_in_minutes: 30
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native-cli/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk"
+            upload: ./test/react-native-cli/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-cli-maze-runner
+            run: react-native-cli-maze-runner
+            command:
+              - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk
+              - --farm=bs
+              - --device=ANDROID_12
+              - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
+        env:
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+        matrix:
+          - "0.74"
+
+      - label: ":browserstack: :mac: RN CLI - {{matrix}} iOS end-to-end tests"
+        depends_on: "build-react-native-cli-ios-fixture"
+        timeout_in_minutes: 30
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native-cli/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa"
+            upload: ./test/react-native-cli/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-cli-maze-runner
+            run: react-native-cli-maze-runner
+            command:
+              - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa
+              - --farm=bs
+              - --device=IOS_16
+              - features/run-app-tests
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_CLI_BUILDKITE_ANALYTICS_TOKEN"
+        env:
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+        matrix:
+          - "0.76"
+          - "0.75"
+          - "0.74"

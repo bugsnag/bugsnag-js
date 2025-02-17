@@ -13,7 +13,7 @@ COPY .rollup ./.rollup
 COPY bin ./bin
 COPY packages ./packages
 
-RUN npm install
+RUN npm ci
 RUN npm run build
 
 RUN npm pack --verbose packages/js/
