@@ -1,4 +1,13 @@
 {
-  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "lib": [ "dom", "es2022" ],
+    "strict": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist/types",
+  },
   "include": ["src/**/*.ts"]
 }

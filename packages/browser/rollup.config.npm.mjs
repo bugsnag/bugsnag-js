@@ -6,7 +6,7 @@ import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
 import fs from 'fs'
 
-import createRollupConfig, { sharedOutput as commonSharedOutput } from "../../.rollup/index.mjs"
+import { sharedOutput as commonSharedOutput } from "../../.rollup/index.mjs"
 
 const packageJson = JSON.parse(fs.readFileSync('./package.json'))
 
@@ -15,20 +15,39 @@ const sharedOutput = {
   strict: false, // 'use strict' in WebKit enables Tail Call Optimization, which breaks stack trace handling
 }
 
+const extensions = ['.js', '.ts', '.cjs', '.mjs']
+
 const plugins = [
   nodeResolve({
-    browser: true
+    browser: true,
+    extensions
   }),
   commonjs(),
-  typescript({
-    removeComments: true,
-    // don't output anything if there's a TS error
-    noEmitOnError: true,
-    compilerOptions: {
-      target: 'es5',
-    }
+  babel({
+    babelHelpers: 'bundled',
+    include: '**', // transpile node_modules as well
+    // exclude: [],
+    extensions,
+    // presets: ['@babel/preset-env', '@babel/preset-typescript'],
+    // plugins: [
+    //   ['@babel/plugin-transform-arrow-functions'],
+    //   ['@babel/plugin-transform-block-scoping'],
+    //   ['@babel/plugin-transform-classes', { loose: true }],
+    //   ['@babel/plugin-transform-computed-properties', { loose: true }],
+    //   ['@babel/plugin-transform-destructuring', { loose: true }],
+    //   ['@babel/plugin-transform-member-expression-literals'],
+    //   ['@babel/plugin-transform-property-literals'],
+    //   ['@babel/plugin-transform-parameters', { loose: true }],
+    //   ['@babel/plugin-transform-shorthand-properties'],
+    //   ['@babel/plugin-transform-spread', { loose: true }],
+    //   ['@babel/plugin-transform-template-literals', { loose: true }],
+    //   ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
+    //   ['@babel/syntax-object-rest-spread']
+    // ]
   }),
-  babel({ babelHelpers: 'bundled' }),
+  typescript({
+    noForceEmit: true,
+  }),
   replace({
     preventAssignment: true,
     values: {
@@ -39,7 +58,7 @@ const plugins = [
 ]
 
 export default [
-  createRollupConfig({
+  {
     input: "src/index-es.ts",
     output: [
       {
@@ -50,8 +69,8 @@ export default [
       }
     ],
     plugins
-  }),
-  createRollupConfig({
+  },
+  {
     input: "src/index-cjs.ts",
     output: [
       {
@@ -61,8 +80,8 @@ export default [
       },
     ],
     plugins
-  }),
-  createRollupConfig({
+  },
+  {
     input: "src/index-umd.ts",
     output: [
       {
@@ -81,5 +100,5 @@ export default [
       }, 
     ],
     plugins
-  })
+  }
 ];

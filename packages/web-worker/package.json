@@ -42,6 +42,8 @@
     "author": "Bugsnag",
     "license": "MIT",
     "devDependencies": {
+        "@babel/preset-env": "^7.26.9",
+        "@babel/preset-typescript": "^7.26.0",
         "@bugsnag/core": "^8.2.0",
         "@bugsnag/delivery-fetch": "^8.2.0",
         "@bugsnag/plugin-browser-device": "^8.2.0",
