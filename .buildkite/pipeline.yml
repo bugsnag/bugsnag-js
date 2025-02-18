@@ -7,7 +7,7 @@ steps:
   - label: ":copyright: License Audit"
     timeout_in_minutes: 20
     agents:
-      queue: macos-14
+      queue: macos-14-5
     command: scripts/license_finder.sh
 
   #
@@ -25,7 +25,7 @@ steps:
     key: "publish-js"
     timeout_in_minutes: 10
     agents:
-      queue: "macos-14"
+      queue: "macos-14-5"
     env:
       NODE_VERSION: "18"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
@@ -40,7 +40,7 @@ steps:
   - label: ":aws-lambda: AWS Lambda tests"
     timeout_in_minutes: 35
     agents:
-      queue: "macos-14"
+      queue: "macos-14-5"
     env:
       NODE_VERSION: "18"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
