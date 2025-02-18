@@ -50,9 +50,9 @@ steps:
           - "bundle install"
           - "bundle exec maze-runner features/build-app-tests/build-ios-app.feature"
         matrix:
+          - "0.77"
           - "0.76"
           - "0.75"
-          - "0.74"
         retry:
           automatic:
             - exit_status: "*"
@@ -117,6 +117,6 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
         matrix:
+          - "0.77"
           - "0.76"
           - "0.75"
-          - "0.74"
