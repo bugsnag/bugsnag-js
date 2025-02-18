@@ -19,15 +19,15 @@ jobs:
 
     - run: sam --version
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
     - name: Install Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@32110d4e311bd8996b2a82bf2a43b714ccc91777
       with:
         ruby-version: '3.1'
 
     - name: Install Node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
       with:
         node-version: 18
 
