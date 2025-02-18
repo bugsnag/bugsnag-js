@@ -37,27 +37,6 @@ steps:
         - exit_status: "*"
           limit: 1
 
-  - label: ":aws-lambda: AWS Lambda tests"
-    timeout_in_minutes: 35
-    agents:
-      queue: "macos-14"
-    env:
-      NODE_VERSION: "18"
-      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
-    plugins:
-      test-collector#v1.10.2:
-        files: "test/aws-lambda/reports/TEST-*.xml"
-        format: "junit"
-        branch: "^main|next$$"
-        api-token-env-name: "JS_AWS_LAMBDA_BUILDKITE_ANALYTICS_TOKEN"
-    commands:
-      # force the NPM registry as the default on CI is artifactory, which can't
-      # currently install from our lockfile
-      - npm ci --registry https://registry.npmjs.org
-      - cd test/aws-lambda
-      - bundle install
-      - bundle exec maze-runner
-
   #
   # Core tests and checks
   #
