@@ -39,19 +39,3 @@ async function installJavaScriptPackage (projectRoot: string): Promise<void> {
 
   await npmInstall(packageManager, '@bugsnag/react-native', version, false, projectRoot)
 }
-
-// async function addGradlePluginDependency (projectRoot: string): Promise<void> {
-//   logger.info('Adding the Bugsnag Android Gradle Plugin')
-//
-//   const suggestedPluginVersion = await getSuggestedBugsnagGradleVersion(projectRoot, logger)
-//
-//   const { gradlePluginVersion } = await prompts({
-//     type: 'text',
-//     name: 'gradlePluginVersion',
-//     message: 'Enter version of the Bugsnag Android Gradle plugin you want to use',
-//     initial: suggestedPluginVersion
-//   }, { onCancel })
-//
-//   await modifyRootBuildGradle(projectRoot, gradlePluginVersion, logger)
-//   await modifyAppBuildGradle(projectRoot, logger)
-// }

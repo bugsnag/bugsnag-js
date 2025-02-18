@@ -130,30 +130,30 @@
 //
 //   logger.success('Finished modifying android/app/build.gradle')
 // }
-//
-// export async function checkReactNativeMappings (
-//   projectRoot: string,
-//   logger: Logger
-// ): Promise<void> {
-//   logger.debug('Enabling Bugsnag Android Gradle plugin React Native mappings')
-//   const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
-//
-//   try {
-//     const fileContents = await fs.readFile(appBuildGradlePath, 'utf8')
-//
-//     if (/^\s*uploadReactNativeMappings\s*=\s*true/m.test(fileContents)) {
-//       logger.warn(
-//         `The uploadReactNativeMappings option for the Bugsnag Gradle plugin is currently enabled in ${appBuildGradlePath}.
-//
-// This is no longer required as mappings will be uploaded by the BugSnag CLI.
-//
-// Please remove this line or disable it in your builds to prevent duplicate uploads.`
-//       )
-//     }
-//   } catch (e) {
-//     // No action required
-//   }
-// }
+
+export async function checkReactNativeMappings (
+  projectRoot: string,
+  logger: Logger
+): Promise<void> {
+  logger.debug('Enabling Bugsnag Android Gradle plugin React Native mappings')
+  const appBuildGradlePath = path.join(projectRoot, 'android', 'app', 'build.gradle')
+
+  try {
+    const fileContents = await fs.readFile(appBuildGradlePath, 'utf8')
+
+    if (/^\s*uploadReactNativeMappings\s*=\s*true/m.test(fileContents)) {
+      logger.warn(
+        `The uploadReactNativeMappings option for the Bugsnag Gradle plugin is currently enabled in ${appBuildGradlePath}.
+
+This is no longer required as mappings will be uploaded by the BugSnag CLI.
+
+Please remove this line or disable it in your builds to prevent duplicate uploads.`
+      )
+    }
+  } catch (e) {
+    // No action required
+  }
+}
 //
 // async function insertBugsnagConfigBlock (
 //   appBuildGradlePath: string,
