@@ -1,6 +1,6 @@
 const reactNative = require('react-native')
 
-const isTurboModuleEnabled = () => global.__turboModuleProxy != null
+const isTurboModuleEnabled = () => global.RN$Bridgeless || global.__turboModuleProxy != null
 
 export const NativeInterface = isTurboModuleEnabled()
   ? reactNative.TurboModuleRegistry.get('BugsnagTestInterface')
