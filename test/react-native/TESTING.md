@@ -26,7 +26,7 @@ From the root directory run `node ./scripts/generate-react-native-fixture.js`, s
 - `RN_VERSION`
 - `REGISTRY_URL`
 - `NOTIFIER_VERSION`
-- `RCT_NEW_ARCH_ENABLED` (optional - set to 1 to build a fixture with New Architecture enabled)
+- `RCT_NEW_ARCH_ENABLED` - 1 (new architecture) or 0 (old architecture)
 - `REACT_NATIVE_NAVIGATION` (optional) - set to 1 to build a react-native-navigation test fixture
 - `BUILD_ANDROID` (optional) - set to 1 to build an Android APK
 - `BUILD_IOS` (optional) - set to 1 to build an iOS ipa
@@ -108,3 +108,10 @@ particular, these commands need the `BrowserStackLocal` binary (available
     ```
 1. To run all features, omit the final argument.
 1. Maze Runner also supports all options that Cucumber does.  Run `bundle exec maze-runner --help` for full details.
+
+## CI test matrix
+
+End-to-end tests in CI run on both Android and iOS, for both old and new architecture (where supported), across a range of React Native versions. When a new version of React Native is released, the CI test matrix should be updated to test against the following React Native versions:
+
+- The latest 3 versions of React Native
+- Even versions of React Native going back to 0.72
