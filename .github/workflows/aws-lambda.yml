@@ -1,0 +1,38 @@
+name: AWS Lambda tests
+
+permissions: read-all
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install libcurl4-openssl-dev and net-tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install libcurl4-openssl-dev
+        sudo apt-get install net-tools
+
+    - run: sam --version
+
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+    - name: Install Ruby
+      uses: ruby/setup-ruby@32110d4e311bd8996b2a82bf2a43b714ccc91777
+      with:
+        ruby-version: '3.1'
+
+    - name: Install Node
+      uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
+      with:
+        node-version: 18
+
+    - name: Run tests
+      run: |
+        cd test/aws-lambda
+        bundle install
+        bundle exec maze-runner
