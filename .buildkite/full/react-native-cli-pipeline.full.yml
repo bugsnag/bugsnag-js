@@ -88,7 +88,9 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
         matrix:
-          - "0.74"
+          - "0.77"
+          - "0.76"
+          - "0.75"
 
       - label: ":browserstack: :mac: RN CLI - {{matrix}} iOS end-to-end tests"
         depends_on: "build-react-native-cli-ios-fixture"
