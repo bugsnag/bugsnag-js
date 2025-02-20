@@ -10,3 +10,5 @@ Feature: Tests for building a React Native app (for Android only) that was initi
     And the sourcemap payload field "apiKey" equals "1234567890ABCDEF1234567890ABCDEF"
     And the sourcemap payload field "platform" equals "android"
     And the sourcemap payload field "overwrite" equals "true"
+
+    And the APK file exists
