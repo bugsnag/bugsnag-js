@@ -14,5 +14,5 @@ COPY scripts ./scripts
 COPY test ./test
 COPY packages ./packages
 
-RUN npm install --unsafe-perm
+RUN npm ci --unsafe-perm
 RUN npm run build
