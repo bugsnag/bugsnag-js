@@ -65,8 +65,8 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
   iosUtils.configureIOSProject(fixtureDir)
 
   // install the peer dependencies
-  // execSync(`npm install --save ${PEER_DEPENDENCIES} --registry ${process.env.REGISTRY_URL} --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })
-  execSync(`npm install --save /Users/josh.edney/repos/bugsnag-js/packages/react-native-cli/bugsnag-react-native-cli-8.1.0.tgz --registry ${process.env.REGISTRY_URL} --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })
+  execSync(`npm install --save ${PEER_DEPENDENCIES} --registry ${process.env.REGISTRY_URL} --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })
+  // execSync(`npm install --save /Users/josh.edney/repos/bugsnag-js/packages/react-native-cli/bugsnag-react-native-cli-8.1.0.tgz --registry ${process.env.REGISTRY_URL} --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })
 
   if (process.env.INIT_RN_CLI === 'true' || process.env.INIT_RN_CLI === '1') {
     enableSourceMaps()
