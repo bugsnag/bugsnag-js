@@ -1,7 +1,11 @@
+#!/usr/bin/env node
+
 const { execFileSync, execSync } = require('child_process')
 const { resolve } = require('path')
 const fs = require('fs')
 const common = require('./common')
+const androidUtils = require('./react-native/android-utils')
+const iosUtils = require('./react-native/ios-utils')
 
 if (!process.env.RN_VERSION) {
   console.error('Please provide a React Native version')
@@ -48,10 +52,19 @@ const PEER_DEPENDENCIES = [
   `@bugsnag/plugin-react-native-navigation@${notifierVersion}`
 ]
 
-const reactNavigationVersion = '6.1.18'
-const reactNavigationNativeStackVersion = '6.11.0'
-const reactNativeScreensVersion = '3.35.0'
-const reactNativeSafeAreaContextVersion = '4.14.0'
+let reactNavigationVersion = '6.1.18'
+let reactNavigationNativeStackVersion = '6.11.0'
+let reactNativeScreensVersion = '3.35.0'
+let reactNativeSafeAreaContextVersion = '4.14.0'
+
+// RN 0.77 requires react-native-screens 4.6.0, which in turn requires react navigation v7
+if (parseFloat(reactNativeVersion) >= 0.77) {
+  reactNavigationVersion = '7.0.14'
+  reactNavigationNativeStackVersion = '7.2.0'
+  reactNativeScreensVersion = '4.6.0'
+  reactNativeSafeAreaContextVersion = '5.2.0'
+}
+
 const REACT_NAVIGATION_PEER_DEPENDENCIES = [
   `@react-navigation/native@${reactNavigationVersion}`,
   `@react-navigation/native-stack@${reactNavigationNativeStackVersion}`,
@@ -59,8 +72,9 @@ const REACT_NAVIGATION_PEER_DEPENDENCIES = [
   `react-native-safe-area-context@${reactNativeSafeAreaContextVersion}`
 ]
 
+const reactNativeNavigationVersion = '7.41.0' // Issue with 7.42.0
 const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
-  'react-native-navigation'
+  `react-native-navigation@${reactNativeNavigationVersion}`
 ]
 
 // Generate the fixture
@@ -76,9 +90,14 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 
   replaceGeneratedFixtureFiles()
 
-  configureAndroidProject()
+  androidUtils.configureAndroidProject(fixtureDir, isNewArchEnabled)
 
-  configureIOSProject()
+  if (!isNewArchEnabled) {
+    // react navigation setup
+    androidUtils.configureReactNavigationAndroid(fixtureDir, reactNativeVersion)
+  }
+
+  iosUtils.configureIOSProject(fixtureDir)
 
   installFixtureDependencies()
 
@@ -91,49 +110,12 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 // Build the android fixture
 if (process.env.BUILD_ANDROID === 'true' || process.env.BUILD_ANDROID === '1') {
   // build the android app
-  execFileSync('./gradlew', ['assembleRelease'], { cwd: `${fixtureDir}/android`, stdio: 'inherit' })
-  fs.copyFileSync(`${fixtureDir}/android/app/build/outputs/apk/release/app-release.apk`, `${fixtureDir}/reactnative.apk`)
+  androidUtils.buildAPK(fixtureDir)
 }
 
 // Build the iOS fixture
 if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
-  fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })
-
-  // install pods
-  execFileSync('bundle', ['install'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
-  execFileSync('bundle', ['exec', 'pod', 'install', '--repo-update'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
-
-  // build the ios app
-  const archiveArgs = [
-    'xcodebuild',
-    'DEVELOPMENT_TEAM=7W9PZ27Y5F',
-    '-workspace',
-    'reactnative.xcworkspace',
-    '-scheme',
-    'reactnative',
-    '-configuration',
-    'Release',
-    '-archivePath',
-    `${fixtureDir}/reactnative.xcarchive`,
-    '-allowProvisioningUpdates',
-    'archive'
-  ]
-
-  execFileSync('xcrun', archiveArgs, { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
-
-  // export the archive
-  const exportArgs = [
-    'xcodebuild',
-    '-exportArchive',
-    '-archivePath',
-    'reactnative.xcarchive',
-    '-exportPath',
-    'output/',
-    '-exportOptionsPlist',
-    'exportOptions.plist'
-  ]
-
-  execFileSync('xcrun', exportArgs, { cwd: fixtureDir, stdio: 'inherit' })
+  iosUtils.buildIPA(fixtureDir)
 }
 
 function installFixtureDependencies () {
@@ -148,12 +130,12 @@ function installFixtureDependencies () {
   const fixtureDependencyArgs = PEER_DEPENDENCIES.join(' ')
 
   // install test fixture dependencies
-  execSync(`npm install --save ${fixtureDependencyArgs} --registry ${process.env.REGISTRY_URL} --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })
+  execSync(`npm install --save --save-exact ${fixtureDependencyArgs} --registry ${process.env.REGISTRY_URL} --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })
 
   // install the scenario launcher package
   const scenarioLauncherPackage = `${ROOT_DIR}/test/react-native/features/fixtures/scenario-launcher`
   execSync(`npm pack ${scenarioLauncherPackage} --pack-destination ${fixtureDir}`, { cwd: ROOT_DIR, stdio: 'inherit' })
-  execSync('npm install --save bugsnag-react-native-scenarios-*.tgz', { cwd: fixtureDir, stdio: 'inherit' })
+  execSync(`npm install --save bugsnag-react-native-scenarios-*.tgz --registry ${process.env.REGISTRY_URL}`, { cwd: fixtureDir, stdio: 'inherit' })
 }
 
 /** Replace native files generated by react-native cli with pre-configured files */
@@ -180,110 +162,4 @@ function replaceGeneratedFixtureFiles () {
     resolve(replacementFilesDir, 'ios/exportOptions.plist'),
     resolve(fixtureDir, 'exportOptions.plist')
   )
-}
-
-function configureIOSProject () {
-  // update the bundle identifier in pbxproj
-  let pbxProjContents = fs.readFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, 'utf8')
-  pbxProjContents = pbxProjContents.replaceAll('org.reactjs.native.example', 'com.bugsnag.fixtures')
-  fs.writeFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, pbxProjContents)
-
-  // disable Flipper
-  let podfileContents = fs.readFileSync(`${fixtureDir}/ios/Podfile`, 'utf8')
-  if (podfileContents.includes('use_flipper!')) {
-    podfileContents = podfileContents.replace(/use_flipper!/, '# use_flipper!')
-  } else if (podfileContents.includes(':flipper_configuration')) {
-    podfileContents = podfileContents.replace(/:flipper_configuration/, '# :flipper_configuration')
-  }
-
-  fs.writeFileSync(`${fixtureDir}/ios/Podfile`, podfileContents)
-
-  // pin xcodeproj version to < 1.26.0
-  const gemfilePath = resolve(fixtureDir, 'Gemfile')
-  if (fs.existsSync(gemfilePath)) {
-    let gemfileContents = fs.readFileSync(gemfilePath, 'utf8')
-    gemfileContents += '\ngem \'xcodeproj\', \'< 1.26.0\''
-    gemfileContents += '\ngem \'concurrent-ruby\', \'<= 1.3.4\''
-    fs.writeFileSync(gemfilePath, gemfileContents)
-  }
-
-  // set NSAllowsArbitraryLoads to allow http traffic for all domains (bitbar public IP + bs-local.com)
-  const plistpath = `${fixtureDir}/ios/reactnative/Info.plist`
-  let plistContents = fs.readFileSync(plistpath, 'utf8')
-  const allowArbitraryLoads = '<key>NSAllowsArbitraryLoads</key>\n\t\t<true/>'
-  let searchPattern, replacement
-  if (plistContents.includes('<key>NSAllowsArbitraryLoads</key>')) {
-    searchPattern = '<key>NSAllowsArbitraryLoads</key>\n\t\t<false/>'
-    replacement = allowArbitraryLoads
-  } else {
-    searchPattern = '<key>NSAppTransportSecurity</key>\n\t<dict>'
-    replacement = `${searchPattern}\n\t\t${allowArbitraryLoads}`
-  }
-
-  // remove the NSAllowsLocalNetworking key if it exists as this causes NSAllowsArbitraryLoads to be ignored
-  const allowLocalNetworking = '<key>NSAllowsLocalNetworking</key>\n\t\t<true/>'
-  plistContents = plistContents.replace(allowLocalNetworking, '')
-
-  fs.writeFileSync(plistpath, plistContents.replace(searchPattern, replacement))
-}
-
-function configureAndroidProject () {
-  // set android:usesCleartextTraffic="true" in AndroidManifest.xml
-  const androidManifestPath = `${fixtureDir}/android/app/src/main/AndroidManifest.xml`
-  let androidManifestContents = fs.readFileSync(androidManifestPath, 'utf8')
-  androidManifestContents = androidManifestContents.replace('<application', '<application android:usesCleartextTraffic="true"')
-  fs.writeFileSync(androidManifestPath, androidManifestContents)
-
-  // enable/disable the new architecture in gradle.properties
-  const gradlePropertiesPath = `${fixtureDir}/android/gradle.properties`
-  let gradlePropertiesContents = fs.readFileSync(gradlePropertiesPath, 'utf8')
-  gradlePropertiesContents = gradlePropertiesContents.replace(/newArchEnabled\s*=\s*(true|false)/, `newArchEnabled=${isNewArchEnabled}`)
-  fs.writeFileSync(gradlePropertiesPath, gradlePropertiesContents)
-
-  if (!isNewArchEnabled) {
-    // react navigation setup
-    configureReactNavigationAndroid()
-  }
-}
-
-function configureReactNavigationAndroid () {
-  const fileExtension = parseFloat(reactNativeVersion) < 0.73 ? 'java' : 'kt'
-  let mainActivityPattern, mainActivityReplacement
-  if (fileExtension === 'java') {
-    mainActivityPattern = 'public class MainActivity extends ReactActivity {'
-    mainActivityReplacement = `
-import android.os.Bundle;
-
-public class MainActivity extends ReactActivity {
-
-  /**
-   * Required for react-navigation/native implementation
-   * https://reactnavigation.org/docs/getting-started/#installing-dependencies-into-a-bare-react-native-project
-   */
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(null);
-  }
-`
-  } else if (fileExtension === 'kt') {
-    mainActivityPattern = 'class MainActivity : ReactActivity() {'
-    mainActivityReplacement = `
-import android.os.Bundle
-
-class MainActivity : ReactActivity() {
-
-  /**
-   * Required for react-navigation/native implementation
-   * https://reactnavigation.org/docs/getting-started/#installing-dependencies-into-a-bare-react-native-project
-   */
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(null)
-  }
-`
-  }
-
-  const mainActivityPath = `${fixtureDir}/android/app/src/main/java/com/reactnative/MainActivity.${fileExtension}`
-  let mainActivityContents = fs.readFileSync(mainActivityPath, 'utf8')
-  mainActivityContents = mainActivityContents.replace(mainActivityPattern, mainActivityReplacement)
-  fs.writeFileSync(mainActivityPath, mainActivityContents)
 }

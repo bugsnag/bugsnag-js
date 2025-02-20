@@ -1,0 +1,7 @@
+[[IgnoredVulns]]
+id = "GHSA-593f-38f6-jp5m"
+reason = "test fixture dependency does not affect end users"
+
+[[IgnoredVulns]]
+id = "GHSA-hrpp-h998-j3pp"
+reason = "test fixture dependency does not affect end users"

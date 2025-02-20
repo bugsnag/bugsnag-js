@@ -10,7 +10,7 @@ end
 
 When('I open the URL {string} tolerating any error') do |url|
   begin
-    URI.open(url, &:read)
+    URI(url).open(&:read)
   rescue
     $logger.debug $!.inspect
   end

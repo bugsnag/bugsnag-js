@@ -1,5 +1,7 @@
 name: "PR diff bot"
 on: [pull_request]
+permissions:
+  pull-requests: write
 
 jobs:
   build:
@@ -7,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
           node-version: 18.x
 
       - name: Checkout base branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ github.base_ref }}
 
@@ -27,7 +29,7 @@ jobs:
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-before-gzipped
 
       - name: Checkout PR branch
-        uses: actions/checkout@v1
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           clean: false
 
@@ -41,6 +43,6 @@ jobs:
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-after-gzipped
 
       - name: Run danger
-        uses: danger/danger-js@9.1.6
+        uses: danger/danger-js@1cdf42842dd643b582192ccb73e9ad0ec30d3227 # 12.3.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

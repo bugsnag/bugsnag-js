@@ -2,9 +2,17 @@
 
 ## [Unreleased]
 
+This release adds support for React Native 0.77 to `@bugsnag/react-native`
+
+### Added
+
+- (react-native-cli) Add support for `AppDelegate.swift` files to insert command [#2319](https://github.com/bugsnag/bugsnag-js/pull/2319)
+- (plugin-react-navigation) Add support for React Navigation v7.x [#2335](https://github.com/bugsnag/bugsnag-js/pull/2335)
+
 ### Fixed
 
 - (plugin-angular) Added a null check so BugsnagErrorHandler fails silently when misconfigured [#2295](https://github.com/bugsnag/bugsnag-js/pull/2295)
+- (react-native) Fix no such module error when importing Bugsnag from Swift [#2335](https://github.com/bugsnag/bugsnag-js/pull/2335)
 
 ## [8.2.0] - 2025-01-27
 
