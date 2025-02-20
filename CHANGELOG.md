@@ -13,6 +13,7 @@ This release adds support for React Native 0.77 to `@bugsnag/react-native`
 
 - (plugin-angular) Added a null check so BugsnagErrorHandler fails silently when misconfigured [#2295](https://github.com/bugsnag/bugsnag-js/pull/2295)
 - (react-native) Fix no such module error when importing Bugsnag from Swift [#2335](https://github.com/bugsnag/bugsnag-js/pull/2335)
+- (react-native) Fix turbo module check in React Native 0.77 [#2341](https://github.com/bugsnag/bugsnag-js/pull/2341)
 
 ## [8.2.0] - 2025-01-27
 
