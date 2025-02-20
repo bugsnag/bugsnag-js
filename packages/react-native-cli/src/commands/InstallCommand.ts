@@ -7,7 +7,6 @@ import onCancel from '../lib/OnCancel'
 export default async function run (argv: string[], projectRoot: string, opts: Record<string, unknown>): Promise<boolean> {
   try {
     await installJavaScriptPackage(projectRoot)
-    // await addGradlePluginDependency(projectRoot)
 
     logger.info('Installing CocoaPods')
     await podInstall(projectRoot, logger)
