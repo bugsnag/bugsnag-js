@@ -36,10 +36,17 @@ export type OnErrorCallback = (event: Event, cb: (err: null | Error, shouldSend?
 export type OnSessionCallback = (session: Session) => void | boolean;
 export type OnBreadcrumbCallback = (breadcrumb: Breadcrumb) => void | boolean;
 
-export interface Plugin {
+export interface Plugin<T extends Config = Config> {
   name?: string
-  load: (client: Client) => any
+  load: (client: Client<T>) => any
   destroy?(): void
+  configSchema?: {
+    [key: string]: {
+      defaultValue: () => unknown
+      message: string
+      validate: (value: unknown) => boolean
+    }
+  }
 }
 
 export interface Logger {
@@ -49,8 +56,10 @@ export interface Logger {
   error: (...args: any[]) => void
 }
 
-export interface SessionDelegate {
-  startSession: (client: Client) => Client
+export interface SessionDelegate<T extends Config = Config> {
+  startSession: (client: Client<T>, session: Session) => Client
+  pauseSession: (client: Client<T>) => void
+  resumeSession: (client: Client<T>) => Client
 }
 
 export interface EventPayload {

@@ -1,11 +1,11 @@
 import ErrorStackParser from 'error-stack-parser'
-import Event from '../event'
+import Event from '../src/event'
 
 jest.mock('stack-generator', () => ({
   backtrace: () => [{}, {}]
 }))
 
-describe('@bugsnag/core/event', () => {
+describe('Event', () => {
   describe('constructor', () => {
     it('sets default handledState', () => {
       const err = new Error('noooooo')
@@ -21,6 +21,7 @@ describe('@bugsnag/core/event', () => {
         { foo: 10 },
         { toJSON: () => { throw new Error('do not serialise me, srsly') } }
       ])
+      // @ts-expect-error Property 'stacktrace' does not exist on type 'Error'
       expect(r.errors[0].stacktrace.length).toBe(0)
     })
   })

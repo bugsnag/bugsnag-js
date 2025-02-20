@@ -24,7 +24,7 @@ module.exports = {
           client._notify(event, onError)
           return
         }
-        cb(...data) // eslint-disable-line
+        cb(...data)  
       }
     }
 

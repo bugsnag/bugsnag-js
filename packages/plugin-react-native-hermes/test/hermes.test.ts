@@ -1,11 +1,11 @@
 import plugin from '../hermes'
 
-import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Client, EventPayload } from '@bugsnag/core'
 
 describe('plugin: react native hermes', () => {
   it('should add an onError callback which captures device information', () => {
     const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin()] })
-    const payloads: EventDeliveryPayload[] = []
+    const payloads: EventPayload[] = []
 
     expect(client._cbs.e.length).toBe(1)
 

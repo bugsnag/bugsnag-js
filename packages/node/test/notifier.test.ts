@@ -1,4 +1,4 @@
-import Bugsnag from '../src/notifier'
+import Bugsnag from '../src/bugsnag'
 
 describe('node notifier', () => {
   beforeAll(() => {
@@ -28,6 +28,8 @@ describe('node notifier', () => {
       Bugsnag.leaveBreadcrumb('test')
 
       expect(spy).toHaveBeenCalledWith('Bugsnag.leaveBreadcrumb() was called before Bugsnag.start()')
+
+      spy.mockRestore()
     })
   })
 

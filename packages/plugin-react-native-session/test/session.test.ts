@@ -1,5 +1,5 @@
 import plugin from '../'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 describe('plugin: react native session', () => {
   it('adds missing methods and forwards calls to native client', () => {

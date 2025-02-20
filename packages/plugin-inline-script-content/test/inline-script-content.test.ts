@@ -1,7 +1,6 @@
 import plugin from '../inline-script-content'
 
-import Client from '@bugsnag/core/client'
-import Event from '@bugsnag/core/event'
+import { Client, Event } from '@bugsnag/core'
 
 describe('plugin: inline script content', () => {
   it('should add an onError callback which captures the HTML content if file=current url', () => {

@@ -1,6 +1,7 @@
 const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s?(x)`
 
 const project = (displayName, packageNames, config = {}) => ({
+  resolver: '<rootDir>/jest/node-exports-resolver',
   roots: ['<rootDir>/packages'],
   displayName,
   testMatch: packageNames.map(testsForPackage),

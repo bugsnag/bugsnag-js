@@ -1,11 +1,11 @@
-import WorkerBugsnagStatic from '../src/notifier'
+import WorkerBugsnagStatic from '../src/bugsnag'
 
 const API_KEY = '030bab153e7c2349be364d23b5ae93b5'
 
 const typedGlobal: any = global
 
 function getBugsnag (): typeof WorkerBugsnagStatic {
-  const bugsnag = require('../src/notifier').default as typeof WorkerBugsnagStatic
+  const bugsnag = require('../src/bugsnag').default as typeof WorkerBugsnagStatic
   return bugsnag
 }
 
@@ -24,7 +24,6 @@ const testConfig = {
 
 beforeAll(() => {
   mockFetch()
-  typedGlobal.__VERSION__ = ''
   jest.spyOn(console, 'debug').mockImplementation(() => {})
   jest.spyOn(console, 'warn').mockImplementation(() => {})
 })

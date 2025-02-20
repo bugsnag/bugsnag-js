@@ -1,4 +1,4 @@
-const { schema } = require('@bugsnag/core/config')
+const { schema } = require('@bugsnag/core')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 
 const defaultErrorTypes = () => ({ unhandledExceptions: true, unhandledRejections: true, nativeCrashes: true })

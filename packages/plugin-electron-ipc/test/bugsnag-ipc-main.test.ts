@@ -1,7 +1,5 @@
 import BugsnagIpcMain from '../bugsnag-ipc-main'
-import Client from '@bugsnag/core/client'
-import InternalEvent from '@bugsnag/core/event'
-import { User, Plugin, Event, FeatureFlag } from '@bugsnag/core'
+import { Client, User, Plugin, Event, FeatureFlag } from '@bugsnag/core'
 
 const mockClientStateManagerPlugin = {
   name: 'clientStateManager',
@@ -367,7 +365,7 @@ describe('BugsnagIpcMain', () => {
       client._setDelivery(client => mockDelivery)
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
-      const event = new InternalEvent('Error', 'Something bad happened', [])
+      const event = new Event('Error', 'Something bad happened', [])
       bugsnagIpcMain.dispatch(Object.assign({}, event))
 
       expect(mockDelivery.sendEvent).toHaveBeenCalledWith(expect.objectContaining({

@@ -1,4 +1,4 @@
-import BugsnagBrowserStatic, { Breadcrumb, BrowserConfig, Session } from '../src/notifier'
+import BugsnagBrowserStatic, { Breadcrumb, BrowserConfig, Session } from '../'
 
 const DONE = window.XMLHttpRequest.DONE
 
@@ -56,7 +56,7 @@ describe('browser notifier', () => {
   })
 
   function getBugsnag (): typeof BugsnagBrowserStatic {
-    const Bugsnag = require('../src/notifier') as typeof BugsnagBrowserStatic
+    const Bugsnag = require('../src/bugsnag').default
     return Bugsnag
   }
 
@@ -155,7 +155,7 @@ describe('browser notifier', () => {
   it('accepts all config options', (done) => {
     const Bugsnag = getBugsnag()
 
-    const completeConfig: Required<BrowserConfig> = {
+    const completeConfig: BrowserConfig = {
       apiKey: API_KEY,
       appVersion: '1.2.3',
       appType: 'worker',
@@ -165,7 +165,7 @@ describe('browser notifier', () => {
         unhandledRejections: true
       },
       onError: [
-        event => true
+        () => true
       ],
       onBreadcrumb: (b: Breadcrumb) => {
         return false

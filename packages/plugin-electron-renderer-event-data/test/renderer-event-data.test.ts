@@ -1,5 +1,5 @@
 import { makeClientForPlugin } from '@bugsnag/electron-test-helpers'
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { Breadcrumb } from '@bugsnag/core'
 import plugin from '../'
 
 describe('plugin: electron renderer event data', () => {

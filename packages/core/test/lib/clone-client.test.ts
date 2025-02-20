@@ -1,5 +1,5 @@
-import Client from '../../client'
-import clone from '../../lib/clone-client'
+import Client from '../../src/client'
+import clone from '../../src/lib/clone-client'
 
 const apiKey = 'abcabcabcabcabcabcabc1234567890f'
 

@@ -9,7 +9,12 @@ import {
   Stackframe,
   FeatureFlag
 } from './common'
+import Session from './session'
 
+interface FeatureFlagPayload {
+  featureFlag: string
+  variant?: string
+}
 declare class Event {
   public static create(
     maybeError: any,
@@ -56,6 +61,37 @@ declare class Event {
 
   // trace correlation
   public setTraceCorrelation(traceId: string, spanId?: string): void
+
+  // "private" api
+  _metadata: { [key: string]: any }
+  constructor (errorClass: string, errorMessage: string, stacktrace: any[], handledState?: HandledState, originalError?: Error)
+  _features: FeatureFlag | null[]
+  _featuresIndex: { [key: string]: number }
+  _user: User
+  _handledState: HandledState
+  _correlation?: { spanId: string, traceId: string }
+  _session?: Session
+  toJSON(): {
+    payloadVersion: '4'
+    exceptions: Array<Error & { message: Error['errorMessage'] }>
+    severity: Event['severity']
+    unhandled: boolean
+    severityReason: {
+      type: string
+      [key: string]: any
+    }
+    app: App
+    device: Device
+    request: Request
+    breadcrumbs: Breadcrumb[]
+    context: string | undefined
+    correlation: { spanId: string, traceId: string } | undefined
+    groupingHash: string | undefined
+    metaData: { [key: string]: any }
+    user: User
+    session: Session
+    featureFlags: FeatureFlagPayload[]
+  };
 }
 
 interface HandledState {

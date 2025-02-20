@@ -1,18 +1,18 @@
-import Client from '../client'
-import Event from '../event'
-import Session from '../session'
-import breadcrumbTypes from '../lib/breadcrumb-types'
+import Client from '../src/client'
+import Event from '../src/event'
+import Session from '../src/session'
+import breadcrumbTypes from '../src/lib/breadcrumb-types'
 import { BreadcrumbType } from '../types/common'
 
 const noop = () => {}
 const id = <T>(a: T) => a
 
-describe('@bugsnag/core/client', () => {
+describe('Client', () => {
   describe('constructor', () => {
     it('can handle bad input', () => {
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       expect(() => new Client()).toThrow()
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       expect(() => new Client('foo')).toThrow()
     })
   })
@@ -21,7 +21,7 @@ describe('@bugsnag/core/client', () => {
     it('handles bad/good input', () => {
       expect(() => {
         // no opts supplied
-        // @ts-ignore
+        // @ts-expect-error - testing with unexpected arguments
         const client = new Client({})
         expect(client).toBe(client)
       }).toThrow()
@@ -270,6 +270,7 @@ describe('@bugsnag/core/client', () => {
       })
       client._setDelivery(client => ({
         sendEvent: (payload) => {
+          // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
           expect(payload.events[0].errors[0].errorMessage).toBe('oh no!')
           expect(onErrorSpy).toHaveBeenCalledTimes(1)
           done()
@@ -351,6 +352,7 @@ describe('@bugsnag/core/client', () => {
       client.notify({ name: 'some message' })
       // @ts-ignore
       client.notify(1)
+      // @ts-ignore
       client.notify('errrororor')
       // @ts-ignore
       client.notify('str1', 'str2')
@@ -437,6 +439,7 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
+        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
 
         expect((event as Event)._session).toBe(session)
@@ -458,8 +461,9 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBeTruthy()
-        expect(err.message).toBe('flerp')
+        expect(err?.message).toBe('flerp')
         expect(event).toBeTruthy()
+        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
 
         expect((event as Event)._session).toBe(session)
@@ -483,6 +487,7 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
+        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
         expect((event as Event)._session).toBe(undefined)
         done()
@@ -504,6 +509,7 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
+        // @ts-expect-error Property 'errorMessage' does not exist on type 'Error'
         expect(event.errors[0].errorMessage).toBe('111')
         expect((event as Event)._session).toBe(undefined)
         done()
@@ -705,7 +711,8 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       }))
-      const sessionClient = client.startSession()
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const sessionClient = client.startSession()!
       sessionClient.notify(new Error('broke'))
       sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
       sessionClient.notify(new Error('broke'))

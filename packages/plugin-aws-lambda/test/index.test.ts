@@ -1,11 +1,11 @@
 import util from 'util'
 import BugsnagPluginAwsLambda from '../src/'
-import Client, { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
+import { Client, EventPayload, SessionDeliveryPayload } from '@bugsnag/core'
 
-const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryPayload[], config = {}) => {
+const createClient = (events: EventPayload[], sessions: SessionDeliveryPayload[], config = {}) => {
   const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginAwsLambda], ...config })
 
-  // @ts-ignore the following property is not defined on the public Event interface
+  // @ts-expect-error the following property is not defined on the public Event interface
   client.Event.__type = 'nodejs'
 
   // a flush failure won't throw as we don't want to crash apps if delivery takes
@@ -55,7 +55,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('adds the context as metadata', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -117,7 +117,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('returns a wrapped handler that resolves to the original return value (async)', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -144,7 +144,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('notifies when an error is thrown (async)', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -176,7 +176,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('does not notify when "autoDetectErrors" is false (async)', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions, { autoDetectErrors: false })
@@ -206,7 +206,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('does not notify when "unhandledExceptions" are disabled (async)', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions, { enabledErrorTypes: { unhandledExceptions: false } })
@@ -236,7 +236,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('returns a wrapped handler that resolves to the value passed to the callback (callback)', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -265,7 +265,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('notifies when an error is passed (callback)', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -297,7 +297,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('does not notify when "autoDetectErrors" is false (callback)', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions, { autoDetectErrors: false })
@@ -327,7 +327,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('does not notify when "unhandledExceptions" are disabled (callback)', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions, { enabledErrorTypes: { unhandledExceptions: false } })
@@ -357,7 +357,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('works when an async handler has the callback parameter', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -386,7 +386,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('works when an async handler has the callback parameter and calls it', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -415,7 +415,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('works when an async handler has the callback parameter and throws', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -447,7 +447,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('works when an async handler has the callback parameter and calls it with an error', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -479,7 +479,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('will track sessions when "autoTrackSessions" is enabled', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
     const client = createClient(events, sessions, { autoTrackSessions: true })
 
@@ -504,7 +504,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('will not track sessions when "autoTrackSessions" is disabled', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
     const client = createClient(events, sessions, { autoTrackSessions: false })
 
@@ -529,7 +529,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('notifies when it is close to timing out (async)', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -573,7 +573,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('notifies when it is close to timing out (callback)', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -617,7 +617,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('uses the function name as the event context when present', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -665,7 +665,7 @@ describe('plugin: aws lambda', () => {
       .mockReturnValueOnce(superLongWaitMs - lambdaTimeoutNotifyMs)
       .mockImplementationOnce(() => { throw new Error('unexpected call to "getRemainingTimeInMillis"') })
 
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -709,7 +709,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('does not notify if "lambdaTimeoutNotifyMs" is 0', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
@@ -740,7 +740,7 @@ describe('plugin: aws lambda', () => {
   })
 
   it('supports a string as the error argument in a lambda callback', async () => {
-    const events: EventDeliveryPayload[] = []
+    const events: EventPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)

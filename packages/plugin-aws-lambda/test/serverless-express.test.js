@@ -4,7 +4,7 @@
 
 // require the raw source files to avoid getting the built files - otherwise
 // we'd need to rebuild these packages to see any changes reflected in this file
-const Bugsnag = require('../../node/src/notifier')
+const Bugsnag = require('../../node/src/index-cjs').default
 const BugsnagPluginAwsLambda = require('../../plugin-aws-lambda/src/index')
 const BugsnagPluginExpress = require('../../plugin-express/src/express')
 const serverlessExpress = require('@vendia/serverless-express')

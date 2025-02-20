@@ -1,5 +1,5 @@
 import Plugin from '../'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import TestRenderer from 'react-test-renderer'
 import * as React from 'react'
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native'

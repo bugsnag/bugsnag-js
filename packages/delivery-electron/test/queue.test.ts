@@ -35,7 +35,6 @@ describe('delivery: electron -> queue', () => {
       try {
         await queue.init()
       } catch (e) {
-        // eslint-disable-next-line jest/no-try-expect
         expect(e).toBeTruthy()
         didErr = true
       }
@@ -48,7 +47,7 @@ describe('delivery: electron -> queue', () => {
       const queue = new PayloadQueue(storagePath, 'stuff')
       const errs: any[] = []
 
-      // eslint-disable-next-line jest/valid-expect-in-promise
+       
       await Promise.all([
         queue.init().catch(err => errs.push(err)),
         queue.init().catch(err => errs.push(err)),

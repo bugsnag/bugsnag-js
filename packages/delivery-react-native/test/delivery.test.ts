@@ -1,6 +1,5 @@
-import Client from '@bugsnag/core/client'
+import { Client, Event } from '@bugsnag/core'
 import delivery from '../'
-import EventWithInternals from '@bugsnag/core/event'
 
 type NativeStackIOS = string[]
 interface AndroidStackFrame {
@@ -11,7 +10,7 @@ interface AndroidStackFrame {
 }
 type NativeStackAndroid = AndroidStackFrame[]
 
-type NativeClientEvent = Pick<EventWithInternals,
+type NativeClientEvent = Pick<Event,
 | 'errors'
 | 'severity'
 | 'unhandled'
@@ -23,10 +22,10 @@ type NativeClientEvent = Pick<EventWithInternals,
 | 'groupingHash'
 | 'apiKey'
 > & {
-  severityReason: EventWithInternals['_handledState']['severityReason']
-  user: EventWithInternals['_user']
-  metadata: EventWithInternals['_metadata']
-  correlation: EventWithInternals['_correlation']
+  severityReason: Event['_handledState']['severityReason']
+  user: Event['_user']
+  metadata: Event['_metadata']
+  correlation: Event['_correlation']
   nativeStack: NativeStackIOS | NativeStackAndroid
 }
 
