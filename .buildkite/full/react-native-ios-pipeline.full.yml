@@ -9,40 +9,6 @@ steps:
       #
       # Test fixtures
       #
-      - label: ":ios: Build RN 0.66 ipa"
-        key: "rn-0-66-ipa"
-        timeout_in_minutes: 20
-        agents:
-          queue: "macos-12-arm"
-        env:
-          REACT_NATIVE_VERSION: rn0.66
-          LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
-        artifact_paths: build/rn0.66.ipa
-        commands:
-          - npm run test:build-react-native-ios
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
-      - label: ":ios: Build RN 0.67 ipa"
-        key: "rn-0-67-ipa"
-        timeout_in_minutes: 20
-        agents:
-          queue: "macos-12-arm"
-        env:
-          REACT_NATIVE_VERSION: rn0.67
-          LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
-        artifact_paths: build/rn0.67.ipa
-        commands:
-          - npm run test:build-react-native-ios
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
       - label: ":ios: Build RN 0.68 Hermes ipa"
         key: "rn-0-68-hermes-ipa"
         timeout_in_minutes: 20
@@ -94,9 +60,7 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.71"
           - "0.72"
-          - "0.73"
           - "0.74"
           - "0.75"
           - "0.76"
@@ -122,9 +86,7 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.71"
           - "0.72"
-          - "0.73"
           - "0.74"
           - "0.75"
           - "0.76"
@@ -188,12 +150,12 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":bitbar: :ios: RN 0.66 iOS end-to-end tests"
-        depends_on: "rn-0-66-ipa"
+      - label: ":bitbar: :ios: RN 0.68 (hermes) iOS end-to-end tests"
+        depends_on: "rn-0-68-hermes-ipa"
         timeout_in_minutes: 40
         plugins:
           artifacts#v1.5.0:
-            download: "build/rn0.66.ipa"
+            download: "build/rn0.68-hermes.ipa"
             upload: ./test/react-native/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-maze-runner
@@ -201,37 +163,7 @@ steps:
             service-ports: true
             use-aliases: true
             command:
-              - --app=build/rn0.66.ipa
-              - --farm=bb
-              - --device=IOS_15|IOS_16
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-          test-collector#v1.10.2:
-            files: "reports/TEST-*.xml"
-            format: "junit"
-            branch: "^main|next$$"
-            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
-        env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
-        concurrency: 25
-        concurrency_group: "bitbar"
-        concurrency_method: eager
-
-      - label: ":bitbar: :ios: RN 0.67 iOS end-to-end tests"
-        depends_on: "rn-0-67-ipa"
-        timeout_in_minutes: 40
-        plugins:
-          artifacts#v1.5.0:
-            download: "build/rn0.67.ipa"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.12.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            use-aliases: true
-            command:
-              - --app=build/rn0.67.ipa
+              - --app=build/rn0.68-hermes.ipa
               - --farm=bb
               - --device=IOS_15|IOS_16
               - --fail-fast
@@ -279,38 +211,7 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
-      #
-      - label: ":bitbar: :ios: RN 0.68 (hermes) iOS end-to-end tests"
-        depends_on: "rn-0-68-hermes-ipa"
-        timeout_in_minutes: 40
-        plugins:
-          artifacts#v1.5.0:
-            download: "build/rn0.68-hermes.ipa"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.12.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            use-aliases: true
-            command:
-              - --app=build/rn0.68-hermes.ipa
-              - --farm=bb
-              - --device=IOS_15|IOS_16
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-          test-collector#v1.10.2:
-            files: "reports/TEST-*.xml"
-            format: "junit"
-            branch: "^main|next$$"
-            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
-        env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
-        concurrency: 5
-        concurrency_group: "browserstack-app"
-        concurrency_method: eager
-
+      
       - label: ":bitbar: :mac: RN {{matrix}} iOS (Old Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-old-arch-full"
         timeout_in_minutes: 40
@@ -344,9 +245,7 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.71"
           - "0.72"
-          - "0.73"
           - "0.74"
           - "0.75"
           - "0.76"
@@ -384,9 +283,7 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.71"
           - "0.72"
-          - "0.73"
           - "0.74"
           - "0.75"
           - "0.76"
