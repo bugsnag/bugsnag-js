@@ -6,7 +6,7 @@ steps:
   - label: "Electron {{matrix.electron_version}} tests - macOS - Node {{matrix.node_version}}"
     timeout_in_minutes: 40
     agents:
-      queue: macos-14
+      queue: macos-node-18
     env:
       NODE_VERSION: "{{matrix.node_version}}"
       ELECTRON_VERSION: "{{matrix.electron_version}}"
