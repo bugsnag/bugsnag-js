@@ -15,6 +15,10 @@ This release adds support for React Native 0.77 to `@bugsnag/react-native`
 - (react-native) Fix no such module error when importing Bugsnag from Swift [#2335](https://github.com/bugsnag/bugsnag-js/pull/2335)
 - (react-native) Fix turbo module check in React Native 0.77 [#2341](https://github.com/bugsnag/bugsnag-js/pull/2341)
 
+### Changed
+
+- (react-native-cli) Remove the installation of the BugSnag Android Gradle Plugin [#2346](https://github.com/bugsnag/bugsnag-js/pull/2346)
+
 ## [8.2.0] - 2025-01-27
 
 ### Added
