@@ -30,7 +30,7 @@ jobs:
       if: ${{ !env.ACT }}
       run: |
         echo "::set-output name=dir::$(npm config get cache)"
-    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
+    - uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
       id: npm-cache
       if: ${{ !env.ACT }}
       with:
