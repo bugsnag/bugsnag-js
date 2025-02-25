@@ -61,7 +61,7 @@ let reactNativeSafeAreaContextVersion = '4.14.0'
 if (parseFloat(reactNativeVersion) >= 0.77) {
   reactNavigationVersion = '7.0.14'
   reactNavigationNativeStackVersion = '7.2.0'
-  reactNativeScreensVersion = '4.6.0'
+  reactNativeScreensVersion = '4.9.0'
   reactNativeSafeAreaContextVersion = '5.2.0'
 }
 
