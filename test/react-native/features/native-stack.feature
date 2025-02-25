@@ -11,10 +11,12 @@ Scenario: Handled JS error with native stacktrace
   # On 0.75+ the Error name is set to the native exception class
   And the event "exceptions.0.errorClass" equals the version-dependent string:
     | arch | version | value                      |
+    | new  | 0.78    | java.lang.RuntimeException |
     | new  | 0.77    | java.lang.RuntimeException |
     | new  | 0.76    | java.lang.RuntimeException |
     | new  | 0.75    | java.lang.RuntimeException |
     | new  | default | Error                      |
+    | old  | 0.78    | java.lang.RuntimeException |
     | old  | 0.77    | java.lang.RuntimeException |
     | old  | 0.76    | java.lang.RuntimeException |
     | old  | 0.75    | java.lang.RuntimeException |
@@ -57,10 +59,12 @@ Scenario: Unhandled JS error with native stacktrace
   # On 0.75+ the Error name is set to the native exception class
   And the event "exceptions.0.errorClass" equals the version-dependent string:
     | arch | version | value                      |
+    | new  | 0.78    | java.lang.RuntimeException |
     | new  | 0.77    | java.lang.RuntimeException |
     | new  | 0.76    | java.lang.RuntimeException |
     | new  | 0.75    | java.lang.RuntimeException |
     | new  | default | Error                      |
+    | old  | 0.78    | java.lang.RuntimeException |
     | old  | 0.77    | java.lang.RuntimeException |
     | old  | 0.76    | java.lang.RuntimeException |
     | old  | 0.75    | java.lang.RuntimeException |
@@ -131,6 +135,7 @@ Scenario: Handled JS error with native stacktrace
   # On 0.74+ New Arch there is no JS stacktrace - see PLAT-12193
   And the event "exceptions.0.stacktrace.20.columnNumber" equals the version-dependent string:
   | arch | version | value                   |
+  | new  | 0.78    | @skip                   |
   | new  | 0.77    | @skip                   |
   | new  | 0.76    | @skip                   |
   | new  | 0.75    | @skip                   |
@@ -139,6 +144,7 @@ Scenario: Handled JS error with native stacktrace
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.file" equals the version-dependent string:
   | arch | version | value                   |
+  | new  | 0.78    | @skip                   |
   | new  | 0.77    | @skip                   |
   | new  | 0.76    | @skip                   |
   | new  | 0.75    | @skip                   |
@@ -147,6 +153,7 @@ Scenario: Handled JS error with native stacktrace
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.lineNumber" equals the version-dependent string:
   | arch | version | value                   |
+  | new  | 0.78    | @skip                   |
   | new  | 0.77    | @skip                   |
   | new  | 0.76    | @skip                   |
   | new  | 0.75    | @skip                   |
@@ -155,6 +162,7 @@ Scenario: Handled JS error with native stacktrace
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.type" equals the version-dependent string:
   | arch | version | value                   |
+  | new  | 0.78    | @skip                   |
   | new  | 0.77    | @skip                   |
   | new  | 0.76    | @skip                   |
   | new  | 0.75    | @skip                   |
@@ -187,6 +195,7 @@ Scenario: Unhandled JS error with native stacktrace
   # On 0.74+ New Arch there is no JS stacktrace - see PLAT-12193
   And the event "exceptions.0.stacktrace.20.columnNumber" equals the version-dependent string:
   | arch | version | value                   |
+  | new  | 0.78    | @skip                   |
   | new  | 0.77    | @skip                   |
   | new  | 0.76    | @skip                   |
   | new  | 0.75    | @skip                   |
@@ -195,6 +204,7 @@ Scenario: Unhandled JS error with native stacktrace
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.file" equals the version-dependent string:
   | arch | version | value                   |
+  | new  | 0.78    | @skip                   |
   | new  | 0.77    | @skip                   |
   | new  | 0.76    | @skip                   |
   | new  | 0.75    | @skip                   |
@@ -203,6 +213,7 @@ Scenario: Unhandled JS error with native stacktrace
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.lineNumber" equals the version-dependent string:
   | arch | version | value                   |
+  | new  | 0.78    | @skip                   |
   | new  | 0.77    | @skip                   |
   | new  | 0.76    | @skip                   |
   | new  | 0.75    | @skip                   |
@@ -211,6 +222,7 @@ Scenario: Unhandled JS error with native stacktrace
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.type" equals the version-dependent string:
   | arch | version | value                   |
+  | new  | 0.78    | @skip                   |
   | new  | 0.77    | @skip                   |
   | new  | 0.76    | @skip                   |
   | new  | 0.75    | @skip                   |
