@@ -9,7 +9,7 @@ steps:
         key: "build-react-native-cli-android-fixture"
         timeout_in_minutes: 15
         agents:
-          queue: macos-node-18
+          queue: macos-14
         env:
           JAVA_VERSION: "17"
           NODE_VERSION: "18"
