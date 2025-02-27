@@ -53,15 +53,15 @@ jobs:
       - name: Commit and push changes
         run: BUMPSNAG_TARGET_HEADING="[Unreleased]" bundle exec bumpsnag commit-update $SUBMODULE $VERSION
 
-      # - name: List current branch name
-      #   id: current-branch
-      #   run: echo "branch=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
+      - name: List current branch name
+        id: current-branch
+        run: echo "branch=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
 
-      # - name: Create pull request
-      #   if: ${{ steps.current-branch.outputs.branch != 'next'}}
-      #   run: >
-      #    gh pr create -B next
-      #    -H bumpsnag-$SUBMODULE-$VERSION
-      #    --title "Update $SUBMODULE to version $VERSION"
-      #    --body 'Created by bumpsnag'
-      #    --reviewer $REVIEWER
+      - name: Create pull request
+        if: ${{ steps.current-branch.outputs.branch != 'next'}}
+        run: >
+         gh pr create -B next
+         -H bumpsnag-$SUBMODULE-$VERSION
+         --title "Update $SUBMODULE to version $VERSION"
+         --body 'Created by bumpsnag'
+         --reviewer $REVIEWER
