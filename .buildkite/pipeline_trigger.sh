@@ -20,7 +20,7 @@ upload=()
 
 # Detect packages that have changed and upload relates pipeline file(s)
 # 1. Get list of changed files between this and target branch
-for file in $(git diff --name-only $BASE HEAD); do
+for file in $(git diff --name-only $BASE_REF HEAD); do
 
   # 2. Skip checking any files in the ignored_files list
   for ignored_file in ${ignored_files[@]}; do
