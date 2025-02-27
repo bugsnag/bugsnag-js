@@ -9,6 +9,9 @@ if [[ "$BUILDKITE_MESSAGE" == *"[full ci]"* ||
   echo "Running full build"
   buildkite-agent pipeline upload .buildkite/full/pipeline.full.yml
 else
+  echo "Detecting changes"
+  git diff --name-only $BASE_REF HEAD
+  exit 1
   ignored_files=("README.md" "LICENSE.txt" ".gitignore")
 
   for pipeline in $(jq --compact-output '.[]' .buildkite/package_manifest.json); do
