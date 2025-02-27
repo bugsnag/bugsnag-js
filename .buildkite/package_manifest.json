@@ -1,6 +1,7 @@
 [
     {
         "pipeline": ".buildkite/basic/browser-pipeline.yml",
+        "block": ".buildkite/block/browser-pipeline.block.yml",
         "paths": [
             "test/browser",
             "packages/core",
@@ -26,6 +27,7 @@
     },
     {
         "pipeline": ".buildkite/basic/electron-pipeline.yml",
+        "block": ".buildkite/block/electron-pipeline.block.yml",
         "paths": [
             "test/electron",
             "packages/core",
@@ -63,6 +65,7 @@
     },
     {
         "pipeline": ".buildkite/basic/node-pipeline.yml",
+        "block": ".buildkite/block/node-pipeline.block.yml",
         "paths": [
             "test/node",
             "packages/core",
@@ -84,6 +87,7 @@
     },
     {
         "pipeline": ".buildkite/basic/react-native-android-pipeline.yml",
+        "block": ".buildkite/block/react-native-android-pipeline.block.yml",
         "paths": [
             "test/react-native",
             "packages/core",
@@ -102,6 +106,7 @@
     },
     {
         "pipeline": ".buildkite/basic/react-native-ios-pipeline.yml",
+        "block": ".buildkite/block/react-native-ios-pipeline.block.yml",
         "paths": [
             "test/react-native",
             "packages/core",

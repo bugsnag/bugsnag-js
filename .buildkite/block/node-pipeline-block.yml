@@ -1,0 +1,10 @@
+steps:
+  - block: 'Trigger node pipeline'
+    key: 'trigger-node-pipeline'
+
+  - label: 'Upload node pipeline'
+    depends_on: 'trigger-node-pipeline'
+    agents:
+      queue: macos
+    timeout_in_minutes: 5
+    command: buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
