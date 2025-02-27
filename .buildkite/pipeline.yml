@@ -96,5 +96,3 @@ steps:
       queue: "macos"
     timeout_in_minutes: 5
     command: sh -c .buildkite/pipeline_trigger.sh
-    env:
-      BASE_REF: "${BUILDKITE_PULL_REQUEST_BASE_BRANCH}"
