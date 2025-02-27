@@ -1,0 +1,121 @@
+[
+    {
+        "pipeline": ".buildkite/basic/browser-pipeline.yml",
+        "paths": [
+            "test/browser",
+            "packages/core",
+            "packages/browser",
+            "packages/delivery-x-domain-request",
+            "packages/delivery-xml-http-request",
+            "packages/plugin-app-duration",
+            "packages/plugin-browser-context",
+            "packages/plugin-browser-device",
+            "packages/plugin-browser-request",
+            "packages/plugin-browser-session",
+            "packages/plugin-client-ip",
+            "packages/plugin-console-breadcrumbs",
+            "packages/plugin-inline-script-content",
+            "packages/plugin-interaction-breadcrumbs",
+            "packages/plugin-navigation-breadcrumbs",
+            "packages/plugin-network-breadcrumbs",
+            "packages/plugin-simple-throttle",
+            "packages/plugin-strip-query-string",
+            "packages/plugin-window-onerror",
+            "packages/plugin-window-unhandled-rejection"
+        ]
+    },
+    {
+        "pipeline": ".buildkite/basic/electron-pipeline.yml",
+        "paths": [
+            "test/electron",
+            "packages/core",
+            "packages/electron",
+            "packages/delivery-electron",
+            "packages/electron-filestore",
+            "packages/electron-network-status",
+            "packages/plugin-console-breadcrumbs",
+            "packages/plugin-electron-app",
+            "packages/plugin-electron-app-breadcrumbs",
+            "packages/plugin-electron-client-state-manager",
+            "packages/plugin-electron-client-state-persistence",
+            "packages/plugin-electron-deliver-minidumps",
+            "packages/plugin-electron-device",
+            "packages/plugin-electron-ipc",
+            "packages/plugin-electron-net-breadcrumbs",
+            "packages/plugin-electron-network-status",
+            "packages/plugin-electron-preload-error",
+            "packages/plugin-electron-process-info",
+            "packages/plugin-electron-renderer-client-state-updates",
+            "packages/plugin-electron-renderer-event-data",
+            "packages/plugin-electron-renderer-strip-project-root",
+            "packages/plugin-electron-session",
+            "packages/plugin-interaction-breadcrumbs",
+            "packages/plugin-internal-callback-marker",
+            "packages/plugin-network-breadcrumbs",
+            "packages/plugin-node-surrounding-code",
+            "packages/plugin-node-uncaught-exception",
+            "packages/plugin-node-unhandled-rejection",
+            "packages/plugin-stackframe-path-normaliser",
+            "packages/plugin-strip-project-root",
+            "packages/plugin-window-onerror",
+            "packages/plugin-window-unhandled-rejection"
+        ]
+    },
+    {
+        "pipeline": ".buildkite/basic/node-pipeline.yml",
+        "paths": [
+            "test/node",
+            "packages/core",
+            "packages/node",
+            "packages/delivery-node",
+            "packages/plugin-app-duration",
+            "packages/plugin-console-breadcrumbs",
+            "packages/plugin-contextualize",
+            "packages/plugin-intercept",
+            "packages/plugin-node-device",
+            "packages/plugin-node-in-project",
+            "packages/plugin-node-surrounding-code",
+            "packages/plugin-node-uncaught-exception",
+            "packages/plugin-node-unhandled-rejection",
+            "packages/plugin-server-session",
+            "packages/plugin-stackframe-path-normaliser",
+            "packages/plugin-strip-project-root"
+        ]
+    },
+    {
+        "pipeline": ".buildkite/basic/react-native-android-pipeline.yml",
+        "paths": [
+            "test/react-native",
+            "packages/core",
+            "packages/react-native",
+            "packages/delivery-react-native",
+            "packages/plugin-console-breadcrumbs",
+            "packages/plugin-network-breadcrumbs",
+            "packages/plugin-react",
+            "packages/plugin-react-native-client-sync",
+            "packages/plugin-react-native-event-sync",
+            "packages/plugin-react-native-global-error-handler",
+            "packages/plugin-react-native-hermes",
+            "packages/plugin-react-native-session",
+            "packages/plugin-react-native-unhandled-rejection"
+        ]
+    },
+    {
+        "pipeline": ".buildkite/basic/react-native-ios-pipeline.yml",
+        "paths": [
+            "test/react-native",
+            "packages/core",
+            "packages/react-native",
+            "packages/delivery-react-native",
+            "packages/plugin-console-breadcrumbs",
+            "packages/plugin-network-breadcrumbs",
+            "packages/plugin-react",
+            "packages/plugin-react-native-client-sync",
+            "packages/plugin-react-native-event-sync",
+            "packages/plugin-react-native-global-error-handler",
+            "packages/plugin-react-native-hermes",
+            "packages/plugin-react-native-session",
+            "packages/plugin-react-native-unhandled-rejection"
+        ]
+    }
+]
