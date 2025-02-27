@@ -1,50 +1,50 @@
 #!/usr/bin/env sh
 
-# if [[ "$BUILDKITE_MESSAGE" == *"[full ci]"* ||
-#   "$BUILDKITE_BRANCH" == "next" ||
-#   "$BUILDKITE_BRANCH" == "main" ||
-#   "$BUILDKITE_BRANCH" == "master" ||
-#   "$BUILDKITE_PULL_REQUEST_BASE_BRANCH" == "main" ||
-#   "$BUILDKITE_PULL_REQUEST_BASE_BRANCH" == "master" ]]; then
-#   echo "Running full build"
-#   buildkite-agent pipeline upload .buildkite/full/pipeline.full.yml
-# else
-#   # Basic build, but allow a full build to be triggered
-#   echo "Running basic build"
-#   buildkite-agent pipeline upload .buildkite/full/block.yml
-# fi
+if [[ "$BUILDKITE_MESSAGE" == *"[full ci]"* ||
+  "$BUILDKITE_BRANCH" == "next" ||
+  "$BUILDKITE_BRANCH" == "main" ||
+  "$BUILDKITE_BRANCH" == "master" ||
+  "$BUILDKITE_PULL_REQUEST_BASE_BRANCH" == "main" ||
+  "$BUILDKITE_PULL_REQUEST_BASE_BRANCH" == "master" ]]; then
+  echo "Running full build"
+  buildkite-agent pipeline upload .buildkite/full/pipeline.full.yml
+else
+  ignored_files=("README.md" "LICENSE.txt" ".gitignore")
 
-ignored_files=("README.md" "LICENSE.txt" ".gitignore")
-packages=$(cat .buildkite/package_manifest.json)
-upload=()
+  for pipeline in $(jq --compact-output '.[]' .buildkite/package_manifest.json); do
+    paths=$(echo $pipeline | jq -r '.paths[]')
+    blocker=$(echo $pipeline | jq -r '.block')
+    build=$(echo $pipeline | jq -r '.pipeline')
 
-# Detect packages that have changed and upload relates pipeline file(s)
-# 1. Get list of changed files between this and target branch
-for file in $(git diff --name-only $BASE_REF HEAD); do
+    upload=0
 
-  # 2. Skip checking any files in the ignored_files list
-  for ignored_file in ${ignored_files[@]}; do
-    if [[ $file =~ $ignored_file ]]; then
-      echo "Skipping $file based on ignored_files list"
-      continue 2
-    fi
-  done
+    for file in $(git diff --name-only $BASE_REF HEAD); do
 
-  # 3. Check if the changed file relates to a pipeline
-  for pipeline in $(echo $packages | jq -r '.[] | select(.paths[] | inside("'${file}'")) | .pipeline'); do
-    if [[ ! " ${upload[@]} " =~ $pipeline ]]; then
-      upload+=($pipeline)
-      echo "Adding $pipeline to upload list"
+      # 1. Skip checking any files in the ignored_files list
+      for ignored_file in $ignored_files; do
+        if [[ $file =~ $ignored_file ]]; then
+          echo "Skipping $file based on ignored_files list"
+          continue 2
+        fi
+      done
+
+      # 2. Check if the pipeline is triggered by a change
+      for path in $paths; do
+        if [[ $file =~ $path ]]; then
+          echo "file $file is in $path, mark pipeline for upload"
+          upload=1
+          continue
+        fi
+      done
+    done
+
+    if [[ $upload == 1 ]]; then
+      echo "Upload pipeline file: $build"
+      buildkite-agent pipeline upload $build
     else
-      echo "Pipeline already marked for upload"
+      echo "Upload blocker file: $blocker"
+      buildkite-agent pipeline upload $blocker
     fi
+
   done
-done
-
-# 4. Upload pipeline files
-for pipeline in ${upload[@]}; do
-  echo "Upload pipeline file: $pipeline"
-  buildkite-agent pipeline upload $pipeline
-done
-
-# 5. Upload manual overrides for pipeline files that are not triggered by changes
+fi
