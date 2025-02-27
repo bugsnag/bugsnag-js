@@ -43,7 +43,7 @@ done
 
 # 4. Upload pipeline files
 for pipeline in ${upload[@]}; do
-  # echo "Upload pipeline file: $pipeline"
+  echo "Upload pipeline file: $pipeline"
   buildkite-agent pipeline upload $pipeline
 done
 
