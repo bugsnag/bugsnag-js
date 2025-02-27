@@ -10,8 +10,6 @@ if [[ "$BUILDKITE_MESSAGE" == *"[full ci]"* ||
   buildkite-agent pipeline upload .buildkite/full/pipeline.full.yml
 else
   echo "Detecting changes"
-  git diff --name-only $BASE_REF HEAD
-  exit 1
   ignored_files=("README.md" "LICENSE.txt" ".gitignore")
 
   for pipeline in $(jq --compact-output '.[]' .buildkite/package_manifest.json); do
@@ -21,7 +19,7 @@ else
 
     upload=0
 
-    for file in $(git diff --name-only $BASE_REF HEAD); do
+    for file in $(git diff --name-only $BUILDKITE_PULL_REQUEST_BASE_BRANCH $BUILDKITE_COMMIT); do
 
       # 1. Skip checking any files in the ignored_files list
       for ignored_file in $ignored_files; do
