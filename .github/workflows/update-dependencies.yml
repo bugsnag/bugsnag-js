@@ -51,7 +51,7 @@ jobs:
         run: TARGET_SUBMODULE=$SUBMODULE TARGET_VERSION=$VERSION bundle exec scripts/update-dependencies.rb
 
       - name: Commit and push changes
-        run: bundle exec bumpsnag commit-update $SUBMODULE $VERSION
+        run: BUMPSNAG_TARGET_HEADING="[Unreleased]" bundle exec bumpsnag commit-update $SUBMODULE $VERSION
 
       - name: List current branch name
         id: current-branch
