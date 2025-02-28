@@ -1,10 +1,7 @@
 #!/usr/bin/env sh
 
 BASE=$BUILDKITE_PULL_REQUEST_BASE_BRANCH
-COMMIT=$BUILDKITE_COMMIT
-COMMIT_REF=$(git rev-parse $COMMIT)
-
-BRANCH_POINT_COMMIT=$(git merge-base $COMMIT_REF origin/$BASE)
+BASE_REF=$(git rev-parse $BASE)
 
 if [[ "$BUILDKITE_MESSAGE" == *"[full ci]"* ||
   "$BUILDKITE_BRANCH" == "next" ||
@@ -16,12 +13,11 @@ if [[ "$BUILDKITE_MESSAGE" == *"[full ci]"* ||
   buildkite-agent pipeline upload .buildkite/full/pipeline.full.yml
 else
   echo "Detecting changes"
-  echo "BUILDKITE_PULL_REQUEST_BASE_BRANCH: $BASE"
-  echo "BASE_BRANCH commit id: $(git rev-parse $BASE)"
+  echo "COMMIT SELECTED FOR BASE BRANCH $BASE: $BASE_REF"
   echo "BUILDKITE_COMMIT: $BUILDKITE_COMMIT"
 
-  echo "diff between $COMMIT_REF and $BRANCH_POINT_COMMIT"
-  git --no-pager diff --name-only $COMMIT_REF..$BRANCH_POINT_COMMIT
+  echo "diff between $BASE_REF and $BUILDKITE_COMMIT"
+  git --no-pager diff --name-only $BASE_REF..$BUILDKITE_COMMIT
 
   exit 1
   ignored_files=("README.md" "LICENSE.txt" ".gitignore")
