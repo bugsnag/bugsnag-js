@@ -2,8 +2,9 @@
 
 BASE=$BUILDKITE_PULL_REQUEST_BASE_BRANCH
 COMMIT=$BUILDKITE_COMMIT
+COMMIT_REF=$(git rev-parse $COMMIT)
 
-BRANCH_POINT_COMMIT=$(git merge-base origin/$BASE $COMMIT)
+BRANCH_POINT_COMMIT=$(git merge-base $COMMIT_REF origin/$BASE)
 
 if [[ "$BUILDKITE_MESSAGE" == *"[full ci]"* ||
   "$BUILDKITE_BRANCH" == "next" ||
@@ -19,8 +20,8 @@ else
   echo "BASE_BRANCH commit id: $(git rev-parse $BASE)"
   echo "BUILDKITE_COMMIT: $BUILDKITE_COMMIT"
 
-  echo "diff between $COMMIT and $BRANCH_POINT_COMMIT"
-  git --no-pager diff --name-only $COMMIT..$BRANCH_POINT_COMMIT
+  echo "diff between $COMMIT_REF and $BRANCH_POINT_COMMIT"
+  git --no-pager diff --name-only $COMMIT_REF..$BRANCH_POINT_COMMIT
 
   exit 1
   ignored_files=("README.md" "LICENSE.txt" ".gitignore")
