@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 BASE=$BUILDKITE_PULL_REQUEST_BASE_BRANCH
-BASE_REF=$(git rev-parse $BASE)
+BASE_REF=$(git rev-parse origin/$BASE)
 
 if [[ "$BUILDKITE_MESSAGE" == *"[full ci]"* ||
   "$BUILDKITE_BRANCH" == "next" ||
@@ -17,7 +17,7 @@ else
   echo "BUILDKITE_COMMIT: $BUILDKITE_COMMIT"
 
   echo "diff between $BASE_REF and $BUILDKITE_COMMIT"
-  git --no-pager diff --name-only $BASE_REF..$BUILDKITE_COMMIT
+  git --no-pager diff --name-only $BASE_REF...$BUILDKITE_COMMIT
 
   exit 1
   ignored_files=("README.md" "LICENSE.txt" ".gitignore")
