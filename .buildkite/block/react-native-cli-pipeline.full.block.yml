@@ -1,0 +1,10 @@
+steps:
+  - block: "Trigger react-native cli pipeline"
+    key: "trigger-react-native-cli-pipeline"
+
+  - label: ":pipeline: Upload react native cli pipeline"
+    depends_on: "trigger-react-native-cli-pipeline"
+    agents:
+      queue: macos
+    timeout_in_minutes: 5
+    command: buildkite-agent pipeline upload .buildkite/basic/react-native-cli-pipeline.full.yml

@@ -1,9 +1,9 @@
 steps:
-  - block: 'Trigger electron pipeline'
-    key: 'trigger-electron-pipeline'
+  - block: "Trigger electron pipeline"
+    key: "trigger-electron-pipeline"
 
-  - label: 'Upload electron pipeline'
-    depends_on: 'trigger-electron-pipeline'
+  - label: ":pipeline: Upload electron pipeline"
+    depends_on: "trigger-electron-pipeline"
     agents:
       queue: macos
     timeout_in_minutes: 5
