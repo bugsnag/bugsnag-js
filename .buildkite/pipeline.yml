@@ -91,7 +91,7 @@ steps:
   #
   # Detect changes and upload relevant pipelines
   #
-  - label: "Detect changes and upload pipelines"
+  - label: ":git: Detect changed packages"
     agents:
       queue: "macos"
     timeout_in_minutes: 5

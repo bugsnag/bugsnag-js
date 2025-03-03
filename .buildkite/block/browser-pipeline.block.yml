@@ -1,9 +1,11 @@
 steps:
-  - block: 'Trigger browser pipeline'
-    key: 'trigger-browser-pipeline'
+  - block: "Trigger browser pipeline"
+    key: "trigger-browser-pipeline"
 
-  - label: 'Upload browser pipeline'
-    depends_on: 'trigger-browser-pipeline'
+  - label: ":pipeline: Upload browser pipeline"
+    depends_on: 
+      - "trigger-browser-pipeline"
+      - "package-js"
     agents:
       queue: macos
     timeout_in_minutes: 5

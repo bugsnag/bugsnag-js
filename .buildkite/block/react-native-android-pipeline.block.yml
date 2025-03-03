@@ -1,9 +1,11 @@
 steps:
-  - block: 'Trigger react-native android pipeline'
-    key: 'trigger-react-native-android-pipeline'
+  - block: "Trigger react-native pipeline"
+    key: "trigger-react-native-android-pipeline"
 
-  - label: 'Upload react-native-android pipeline'
-    depends_on: 'trigger-react-native-android-pipeline'
+  - label: ":pipeline: Upload react native android pipeline"
+    depends_on: 
+      - "trigger-react-native-android-pipeline"
+      - "publish-js"
     agents:
       queue: macos
     timeout_in_minutes: 5
