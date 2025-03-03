@@ -17,7 +17,7 @@ else
   echo "BUILDKITE_COMMIT: $BUILDKITE_COMMIT"
 
   echo "diff between $BASE_REF and $BUILDKITE_COMMIT"
-  git --no-pager diff --name-only $BASE_REF...$BUILDKITE_COMMIT
+  git --no-pager diff --name-only origin/$BASE
 
   exit 1
   ignored_files=("README.md" "LICENSE.txt" ".gitignore")
