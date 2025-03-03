@@ -3,7 +3,6 @@
 ## [Unreleased]
 
 This release adds support for React Native 0.77 to `@bugsnag/react-native`
-
 ### Added
 
 - (react-native-cli) Add support for `AppDelegate.swift` files to insert command [#2319](https://github.com/bugsnag/bugsnag-js/pull/2319)
@@ -18,6 +17,10 @@ This release adds support for React Native 0.77 to `@bugsnag/react-native`
 ### Changed
 
 - (react-native-cli) Remove the installation of the BugSnag Android Gradle Plugin [#2346](https://github.com/bugsnag/bugsnag-js/pull/2346)
+
+### Dependencies
+
+Update bugsnag-android to [v6.12.1](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.12.1) [#2359](https://github.com/bugsnag/bugsnag-js/pull/2359)
 
 ## [8.2.0] - 2025-01-27
 
@@ -66,7 +69,6 @@ This release adds support for React Native 0.77 to `@bugsnag/react-native`
 ### Summary
 
 As well as some bug fixes and **breaking changes** described in the [Upgrade Guide](./UPGRADING.md), this major SDK release has the following key features:
-
 - Improved API for NodeJS: the `Bugsnag` client can now be used to call SDK methods in the context of the current request
 - Breadcrumb support for NodeJS: we now support manual breadcrumbs and capture console breadcrumbs automatically
 - Improved session reporting for single page apps: a session is now created only once per page load to more accurately reflect a user's session in your app
@@ -170,7 +172,6 @@ As well as some bug fixes and **breaking changes** described in the [Upgrade Gui
 ## v7.22.4 (2024-02-06)
 
 This release adds support for React Native 0.73 to `@bugsnag/react-native`
-
 ### Changed
 
 - (react-native) Update bugsnag-android from v5.31.3 to [v5.32.1](https://github.com/bugsnag/bugsnag-android/blob/v5.32.1/CHANGELOG.md#5321-2024-01-23)
@@ -217,7 +218,6 @@ This release adds support for React Native 0.73 to `@bugsnag/react-native`
 ## 7.21.0 (2023-08-15)
 
 This release adds support for apps using React Native New Architecture
-
 ### Added
 
 - (react-native) Support React Native New Architecture [#1973](https://github.com/bugsnag/bugsnag-js/pull/1973)
@@ -244,7 +244,6 @@ This release adds support for apps using React Native New Architecture
 ## 7.20.0 (2023-01-31)
 
 This release adds support for service workers and web workers [#1915](https://github.com/bugsnag/bugsnag-js/pull/1915)
-
 ### Enhancements
 
 - (delivery-fetch) Create fetch based delivery package [#1894](https://github.com/bugsnag/bugsnag-js/pull/1894)
@@ -381,9 +380,7 @@ This release adds support for service workers and web workers [#1915](https://gi
 ## v7.16.4 (2022-05-03)
 
 - (expo) This release marks a change in the version scheme used by `@bugsnag/expo` and a move to its own repo, [`bugsnag-expo`](https://github.com/bugsnag/bugsnag-expo)
-
     From this version onwards, `@bugsnag/expo` will match the Expo SDK version number. For example, `@bugsnag/expo` v44 supports Expo SDK 44. When updating to a new Expo SDK version, you should also update `@bugsnag/expo`
-
 ### Fixed
 
 - (plugin-react) Add 'children' prop to BugsnagErrorBoundary [#1723](https://github.com/bugsnag/bugsnag-js/pull/1723)
@@ -440,6 +437,7 @@ This release adds support for service workers and web workers [#1915](https://gi
 - (react-native) Handle circular references in metadata before it's sent to the native notifier layer [#1673](https://github.com/bugsnag/bugsnag-js/pull/1673)
 
 ### Changed
+
 - (react-native) Update bugsnag-android to v5.19.2
   - New APIs to support forthcoming feature flag and experiment functionality. For more information, please see https://docs.bugsnag.com/product/features-experiments.
   - Explicitly define Kotlin api/language versions
@@ -546,11 +544,8 @@ This release adds support for service workers and web workers [#1915](https://gi
 ## 7.14.0 (2021-11-17)
 
 This release adds support for reporting native crashes to `@bugsnag/electron`.
-
 If you are using modules with native extensions, you can [upload Breakpad symbol files](https://docs.bugsnag.com/platforms/electron/showing-full-stacktraces/#symbolicating-native-errors) to Bugsnag to symbolicate native errors.
-
 Note: Bugsnag On-premise does not currently support uploading minidump files. This will be supported in an upcoming release.
-
 - (electron): Add support for reporting native crashes [#1581](https://github.com/bugsnag/bugsnag-js/pull/1581)
 
 ## 7.13.3 (2021-11-08)
@@ -805,7 +800,6 @@ Note: Bugsnag On-premise does not currently support uploading minidump files. Th
 ## v7.10.0 (2021-05-18)
 
 This release adds [`@bugsnag/electron`](http://docs.bugsnag.com/platforms/electron), a notifier for use on apps that are built using Electron.
-
 ### Added
 
 - (electron): a new top-level notifier `@bugsnag/electron` and related plugins
@@ -996,6 +990,7 @@ This release adds [`@bugsnag/electron`](http://docs.bugsnag.com/platforms/electr
 
 ## v7.6.1 (2021-01-26)
 
+
 ## Changed
 
 - (react-native): Update bugsnag-cocoa to v6.6.0
@@ -1004,7 +999,6 @@ This release adds [`@bugsnag/electron`](http://docs.bugsnag.com/platforms/electr
   - Alter ANR SIGQUIT handler to stop interfering with Google's ANR reporting, and to avoid unsafe JNI calls from within a signal handler [bugsnag-android#1078](https://github.com/bugsnag/bugsnag-android/pull/1078)
   - Alter HTTP requests to stop using chunked transfer encoding [bugsnag-android#1077](https://github.com/bugsnag/bugsnag-android/pull/1077)
   - Allow null device IDs, preventing rare crash in Bugsnag initialization [bugsnag-android#1083](https://github.com/bugsnag/bugsnag-android/pull/1083)
-
 ### Fixed
 
 - (react-native):  Ensure plugin usage is compatible with running an app in a remote debugger [#1250](https://github.com/bugsnag/bugsnag-js/pull/1250)
@@ -1012,7 +1006,6 @@ This release adds [`@bugsnag/electron`](http://docs.bugsnag.com/platforms/electr
 ## v7.6.0 (2021-01-18)
 
 As of 7.6.0 the monorepo contains `@bugsnag/react-native-cli`, a new command line tool to help set up Bugsnag in React Native projects.
-
 ### Added
 
 - (react-native-cli): New `@bugsnag/react-native-cli` package. [#1214](https://github.com/bugsnag/bugsnag-js/pull/1214)
@@ -1043,7 +1036,6 @@ As of 7.6.0 the monorepo contains `@bugsnag/react-native-cli`, a new command lin
   - Add `[Bugsnag]` prefix to log messages. [bugsnag-cocoa#955](https://github.com/bugsnag/bugsnag-cocoa/pull/955)
   - Fix reliability of Swift fatal error message reporting. [bugsnag-cocoa#948](https://github.com/bugsnag/bugsnag-cocoa/pull/948)
 - (react-native): Update bugsnag-android to v5.5.0
-
   This release supports initializing Bugsnag in multi processes apps. If your app uses Bugsnag in multiple processes, you should initialize Bugsnag
   with a unique `persistenceDirectory` value for each process. Please see [the docs](https://docs.bugsnag.com/platforms/android/faq/#does-bugsnag-support-multi-process-apps) for further information.
   - Store user information in persistenceDirectory [bugsnag-android#1017](https://github.com/bugsnag/bugsnag-android/pull/1017)
@@ -1125,7 +1117,6 @@ As of 7.6.0 the monorepo contains `@bugsnag/react-native-cli`, a new command lin
 - (react-native): Update bugsnag-android to v5.2.2
   - Avoid crash when initializing bugsnag in attachBaseContext [bugsnag-android#953](https://github.com/bugsnag/bugsnag-android/pull/953)
   - Prevent ConcurrentModificationException when setting redactedKeys [bugsnag-android#947](https://github.com/bugsnag/bugsnag-android/pull/947)
-
 
 ## 7.5.0 (2020-10-08)
 
@@ -1209,7 +1200,6 @@ As of 7.6.0 the monorepo contains `@bugsnag/react-native-cli`, a new command lin
 ## 7.3.0 (2020-08-10)
 
 As of this version, this repo contains our brand new notifier for React Native `@bugsnag/react-native`. See the [docs](https://docs.bugsnag.com/platforms/react-native/react-native) and [upgrade guide](packages/react-native/UPGRADING.md) for more info.
-
 Some minor internal changes to shared code were made to support the new notifier, but no external changes are required for existing `@bugsnag/js` or `@bugsnag/expo` users to upgrade to this version.
 
 ## 7.2.1 (2020-07-22)
@@ -1236,6 +1226,7 @@ Some minor internal changes to shared code were made to support the new notifier
 - (expo): Add support for Expo SDK v38 [#781](https://github.com/bugsnag/bugsnag-js/pull/890)
 
 ### Fixed
+
 - (plugin-express): Ensure `req.body` is always present in metadata by collecting it at the last possible moment [#872](https://github.com/bugsnag/bugsnag-js/pull/872)
 
 ## 7.1.1 (2020-05-26)
@@ -1246,11 +1237,9 @@ Some minor internal changes to shared code were made to support the new notifier
 - (expo-cli): Ensure version detection logic for @bugsnag/expo works after v7.0.0 [#865](https://github.com/bugsnag/bugsnag-js/pull/865)
 - (core): Ensure callbacks supplied in config permit functions with no named arguments [#863](https://github.com/bugsnag/bugsnag-js/pull/863)
 
-
 ## 7.1.0 (2020-05-21)
 
 This update contains some substantial changes to plugin type definitions. If you are using TypeScript alongside a framework, you may need to make changes to your app. Please refer to the [upgrade guide](./UPGRADING.md).
-
 ### Changed
 
 - (plugin-react|plugin-vue): Support late passing of framework reference [#839](https://github.com/bugsnag/bugsnag-js/pull/839)
@@ -1271,6 +1260,7 @@ This update contains some substantial changes to plugin type definitions. If you
 ## 7.0.1 (2020-04-27)
 
 ### Fixed
+
 - (plugin-vue): Fix plugin type definitions [#809](https://github.com/bugsnag/bugsnag-js/pull/809)
 - (delivery-expo): Ensure Expo delivery logs event details correctly (instead of `undefined`) [#804](https://github.com/bugsnag/bugsnag-js/pull/804)
 - (expo-cli): Ensure Expo cli inserts correct code depending on the version of the notifier [#808](https://github.com/bugsnag/bugsnag-js/pull/808)
@@ -1279,12 +1269,14 @@ This update contains some substantial changes to plugin type definitions. If you
 ## 7.0.0 (2020-04-14)
 
 ### Added
+
 - Add `onBreadcrumb` and `onSession` callbacks. [#665](https://github.com/bugsnag/bugsnag-js/pull/665)
 - Add `pauseSession()` and `resumeSession()` methods to `Client` [#666](https://github.com/bugsnag/bugsnag-js/pull/666)
 - Add static `Bugsnag` client interface [#685](https://github.com/bugsnag/bugsnag-js/pull/685)
 - Add `getUser()` and `setUser()` methods to `Session` [#692](https://github.com/bugsnag/bugsnag-js/pull/692)
 
 ### Changed
+
 - Migrate lint tooling to ESLint for both .js and .ts source files [#644](https://github.com/bugsnag/bugsnag-js/pull/644)
 - Rename `autoNotify` -> `autoDetectErrors`, and add `enabledErrorTypes` option for granularity [#706](https://github.com/bugsnag/bugsnag-js/pull/706)
 - Rename `autoCaptureSessions` -> `autoTrackSessions` and simplify validation logic [#647](https://github.com/bugsnag/bugsnag-js/pull/647)
@@ -1314,6 +1306,7 @@ This update contains some substantial changes to plugin type definitions. If you
 - Invalid configuration (except for `apiKey`) now falls back to default values rather than throwing an error [#759](https://github.com/bugsnag/bugsnag-js/pull/759)
 
 ### Removed
+
 - Remove non-public methods from `Client` interface: `logger()`, `delivery()` and `sessionDelegate()` [#659](https://github.com/bugsnag/bugsnag-js/pull/659)
 - Remove `client.request` property [#672](https://github.com/bugsnag/bugsnag-js/pull/672)
 - Remove `client.device` property [#673](https://github.com/bugsnag/bugsnag-js/pull/673)
@@ -1326,7 +1319,6 @@ This update contains some substantial changes to plugin type definitions. If you
 
 - (expo): Ensure Expo packages that depend on `NetInfo` have their versions locked [#796](https://github.com/bugsnag/bugsnag-js/pull/796)
 - (expo-cli): Update Expo versions installed by the cli [#796](https://github.com/bugsnag/bugsnag-js/pull/796)
-
 Note, alongside this release, additional patches were made to previous minor versions of `@bugsnag/expo`: `6.5.3` and `6.4.4`. This is to ensure the correct version of `NetInfo` is depended on for SDK versions 36 and 34 respectively.
 
 ## 6.6.0 (2020-04-02)
@@ -1348,31 +1340,37 @@ Note, alongside this release, additional patches were made to previous minor ver
 ## 6.5.1 (2020-01-08)
 
 ### Fixed
+
 - (expo): Pin `@react-native-community/netinfo` dependency to exact version bundled by Expo [#691](https://github.com/bugsnag/bugsnag-js/pull/691)
 - (plugin-express), (plugin-restify): Send request metadata as the correct `notify()` parameter [#687](https://github.com/bugsnag/bugsnag-js/pull/687)
 
 ## 6.5.0 (2019-12-16)
 
 ### Added
+
 - (expo): Add support for breaking changes in Expo SDK v36 [#670](https://github.com/bugsnag/bugsnag-js/pull/670)
 - (expo-cli): Choose a compatible version of @bugnsnag/expo for SDK v33-35 [#670](https://github.com/bugsnag/bugsnag-js/pull/670)
 
 ### Fixed
+
 - (plugin-network-breadcrumbs): Fixes the `window.fetch` monkey-patch to also accept `Request`. [#662](https://github.com/bugsnag/bugsnag-js/pull/662)
 
 ## 6.4.3 (2019-10-21)
 
 ### Fixed
+
 - (browser): Add browser alias to `dist/types/bugsnag` to fix Angular build failure [#632](https://github.com/bugsnag/bugsnag-js/pull/632) ([GDreyV](https://github.com/GDreyV))
 
 ## 6.4.2 (2019-10-09)
 
 ### Fixed
+
 - (plugin-angular): Ensure Node notifier matches the type interface in the .d.ts file [#626](https://github.com/bugsnag/bugsnag-js/pull/626)
 
 ## 6.4.1 (2019-09-24)
 
 ### Fixed
+
 - (plugin-koa): Ensure unhandled Koa errors are logged out and that non-errors don't generate two reports [#614](https://github.com/bugsnag/bugsnag-js/pull/614)
 - (plugin-inline-script-content): Tolerate errors when trying to call existing installed handler [#613](https://github.com/bugsnag/bugsnag-js/issues/613) (fixes [#608](https://github.com/bugsnag/bugsnag-js/issues/608))
 - (plugin-inline-script-content): Ensure line numbers are correct when error is at line 1/2/3 [#616](https://github.com/bugsnag/bugsnag-js/issues/616)
@@ -1381,12 +1379,15 @@ Note, alongside this release, additional patches were made to previous minor ver
 ## 6.4.0 (2019-08-13)
 
 ### Changed
+
 - (expo): Support Expo SDK 34, dropping support for versions < 33 [#610](https://github.com/bugsnag/bugsnag-js/pull/610)
 
 ### Added
+
 - (expo-cli): Check for the current version of Expo and install an appropriate version of `@bugsnag/expo` [#610](https://github.com/bugsnag/bugsnag-js/pull/610)
 
 ### Fixed
+
 - (plugin-inline-script-content): Tolerate `WebDriverException: Message: Permission denied to access property "handleEvent"` errors when running in selenium [#605](https://github.com/bugsnag/bugsnag-js/pull/605)
 - (core): Tolerate being bundled in strict mode [#584](https://github.com/bugsnag/bugsnag-js/pull/584)
 - (plugin-inline-script-content): Ensure event handlers added before Bugsnag can be removed [#582](https://github.com/bugsnag/bugsnag-js/pull/582)
@@ -1428,9 +1429,7 @@ Note, alongside this release, additional patches were made to previous minor ver
 ## 6.2.0 (2019-04-23)
 
 This release adds [`@bugsnag/expo`](http://docs.bugsnag.com/platforms/react-native/expo), a notifier for use on React Native apps that are built using [Expo](https://expo.io/).
-
 A small internal change was made to facilitate this new notifier, but there are no changes required for existing users of documented APIs.
-
 ### Added
 
 - (expo): a new top-level notifier `@bugsnag/expo` including a whole bunch of packages:
@@ -1519,42 +1518,37 @@ A small internal change was made to facilitate this new notifier, but there are 
 ## 5.0.0 (2018-11-21)
 
 This is the first release of Bugsnag notifiers under the `@bugsnag` namespace.
-
 This "universal" repository combines Bugsnag's browser and Node.js notifiers and so for continuity with the browser version, which was at v4, **the starting point for this monorepo and all of its packages is `v5.0.0`**.
-
 See [UPGRADING.md](UPGRADING.md) for guidance on how to update your application.
 
 ## 4.7.3 (2018-08-01)
 
 ### Removed
+
 - Stop sending stacktrace with breadcrumb metadata
 
 ### Fixed
+
 - Added missing instance properties to `Breadcrumb` TypeScript definition
-
-
 
 ## 4.7.2 (2018-06-18)
 
 ### Fixed
-- Workaround for iOS9 Safari CSP issue which caused bugsnag-js to throw an error (#358, #357)
 
+- Workaround for iOS9 Safari CSP issue which caused bugsnag-js to throw an error (#358, #357)
 
 ## 4.7.1 (2018-06-04)
 
 This release fixes a couple of bugs with stacktrace parsing.
-
 ### Fixed
+
 - Incorrect parsing of stacktraces for errors in Chrome that have no stackframes (#355)
 - Incorrect parsing of stacktraces for errors in Firefox/Safari that have "@" in the URL path (#354)
-
 
 ## 4.7.0 (2018-05-31)
 
 **Note**: this release alters the behaviour of the notifier to track sessions automatically.
-
 As part of this change, the way in which URLs are configured has been updated:
-
 ```diff
 - endpoint: 'https://bugsnag-notify.example.com',
 - sessionEndpoint: 'https://bugsnag-sessions.example.com',
@@ -1563,189 +1557,194 @@ As part of this change, the way in which URLs are configured has been updated:
 +  sessions: 'https://bugsnag-sessions.example.com'
 + }
 ```
-
 `endpoints` and `sessionEndpoints` are now deprecated but still supported. Note that session tracking
 will be disabled if the notify endpoint is configured but the sessions endpoint is not – this is to
 avoid inadvertently sending session payloads to the wrong server.
-
 ### Added
+
 - A new end-to-end/black box test suite has been added (#351)
 
 ### Changed
+
 - `autoCaptureSessions` default value was `false` and is now true (#341)
 
 ### Deprecated
+
 - `endpoint` and `sessionEndpoints` have been deprecated and combined into a single new option: `endpoints` (#341)
 
 ### Removed
+
 - The old `e2e` test suite has been removed (#351)
-
-
 
 ## 4.6.3 (2018-05-10)
 
 ### Fixed
-- Use the correct network breadcrumb type (`network` -> `request`). Fixes network breadcrumbs not displaying in the dashboard. (#348)
 
+- Use the correct network breadcrumb type (`network` -> `request`). Fixes network breadcrumbs not displaying in the dashboard. (#348)
 
 ## 4.6.2 (2018-05-08)
 
 The previous version (v4.6.1) was removed from the npm registry and the CDN because of critical issue surrounding history state methods. This release resolves that issue. The release notes for v4.6.1 are included here too for completeness.
-
 ### Fixed
+
 - Fix history API url parameter logic (#347)
 - Only pass in `url` parameter to history methods when it is not `undefined`. Fixes a bug in IE11 where it converts `undefined` to a string, causing a redirect to `/undefined`. (#342)
 - Prevent a crash in IE10 when accessing `history.state`. (#345)
 
-
 ## 4.6.1 (2018-05-03)
 
 A couple of fixes for IE10/11 relating to quirks in their implementation of the history APIs.
-
 ### Fixed
+
 - Only pass in `url` parameter to history methods when it is not `undefined`. Fixes a bug in IE11 where it converts `undefined` to a string, causing a redirect to `/undefined`. (#342)
 - Prevent a crash in IE10 when accessing `history.state`. (#345)
-
 
 ## 4.6.0 (2018-04-20)
 
 ### Added
+
 - It is now possible to customize the logger by setting the `logger` option of the configuration object. A custom logger must have the methods `debug`, `info`, `warn` and `error`. To completely disable logging, set `logger: null`. (#340)
 
 ### Fixed
-- A custom version of [safe-json-stringify](https://github.com/bugsnag/safe-json-stringify) now fully protects against circular structures returned from toJSON() and arbitrarily wide/deep structures (#338)
 
+- A custom version of [safe-json-stringify](https://github.com/bugsnag/safe-json-stringify) now fully protects against circular structures returned from toJSON() and arbitrarily wide/deep structures (#338)
 
 ## 4.5.0 (2018-04-06)
 
 ### Added
+
 - New breadcrumbs! Breadcrumbs are now left when requests are made using XMLHttpRequest (ajax) or fetch(). This works with all request libraries out of the box: jQuery, axios, superagent etc. Metadata includes HTTP method, request url and the status code (if available). By default network breadcrumbs are collected all with other autoBreadcrumb types. If you don't want to collect network breadcrumbs, set `networkBreadcrumbsEnabled: false`. (#334)
 
 ### Changed
-- As part of #334 [envify](https://github.com/hughsk/envify) was added to compile out plugin "destroy" logic that was only required for tests.
 
+- As part of #334 [envify](https://github.com/hughsk/envify) was added to compile out plugin "destroy" logic that was only required for tests.
 
 ## 4.4.0 (2018-03-15)
 
 ### Changed
+
 - Switch from a protocol-relative default for endpoint and sessionEndpoint to "https://". IE8/9 will attempt to send via http if the protocol of the current page is http. Otherwise all requests will now go via https unless configured otherwise (#333).
 
 ### Fixed
-- Fix rollup bundling issue (switching to a forked version of cuid) (#331)
 
+- Fix rollup bundling issue (switching to a forked version of cuid) (#331)
 
 ## 4.3.1 (2018-03-07)
 
 ### Changed
-- Perf improvements for breadcrumbs, most notably console log methods with lots of data (#329)
 
+- Perf improvements for breadcrumbs, most notably console log methods with lots of data (#329)
 
 ## 4.3.0 (2018-02-23)
 
 <!-- optional: if this is a significant release, describe it in a sentence or two -->
-
 ### Added
+
 - Stub exported types to appease Angular's JIT compiler in dev mode (#323)
 - Make hasStack(err) check more strict, making the unhandled rejection handler more robust and useful (#322)
 
 ### Changed
+
 - Strip query strings and fragments from stackframe files (#328)
 - Switch to upstream version of `fast-safe-stringify`
-
 
 ## 4.2.0 (2018-01-24)
 
 This release fixes a few issues with the fetching of inline
 script content, particularly after the location has changed
 due to window.history methods.
-
 Unhandled promise rejection should also contain more actionable
 information (when the rejection reason is a DOMException, null,
 or undefined). Support for Bluebird promises was also added.
-
 ### Added
+
 - Support for unhandled bluebird promise rejections (#317)
 - Option to prevent IP collection (#313)
 
 ### Changed
+
 - Improved serialization of promise rejection reasons (#317)
 - If a string was thrown and not caught, use it as the error message (#319)
 
 ### Fixed
-- Collection of inline script content improved (#320, #318)
 
+- Collection of inline script content improved (#320, #318)
 
 ## 4.1.3 (2018-01-15)
 
 ### Fixed
-- Fix call to non-existent `logger.log()` (credit @alexstrat #304)
 
+- Fix call to non-existent `logger.log()` (credit @alexstrat #304)
 
 ## 4.1.2 (2018-01-09)
 
 ### Added
+
 - Session sending now respects `notifyReleaseStages` option
 
 ### Changed
-- Rename option `enableSessionTracking` -> `autoCaptureSessions` for consistency with other platforms
 
+- Rename option `enableSessionTracking` -> `autoCaptureSessions` for consistency with other platforms
 
 ## 4.1.1 (2018-01-06)
 
 ### Fixed
-- metaData and user were incorrectly attached to `report.app` (credit @tremlab #300)
 
+- metaData and user were incorrectly attached to `report.app` (credit @tremlab #300)
 
 ## 4.1.0 (2018-01-05)
 
 ### Added
+
 - Support for tracking sessions and overall crash rate by setting `sessionTrackingEnabled` to `true`.
 In addition, sessions can be indicated manually using `bugsnagClient.startSession()` (#296)
 - `user` and `metaData` can now be supplied in configuration object (#299)
 - Bower and jspm support has been added as a result of #297 and some additional configuration
 
 ### Changed
-- `dist` directory (built assets) are now stored in git (#297)
 
+- `dist` directory (built assets) are now stored in git (#297)
 
 ## 4.0.3 (2017-12-15)
 
 ### Changed
+
 - Handle inline script content per older notifiers for consistent grouping (#289)
 
 ### Fixed
-- Correctly capture the page contents when an inline script error happens (#289)
 
+- Correctly capture the page contents when an inline script error happens (#289)
 
 ## 4.0.2 (2017-12-14)
 
 ### Added
+
 - Add more type exports (#286)
 - Add frameworks section to README.md
 - Add READMEs to examples
 
 ### Changed
+
 - Add more detail to JS example (credit @tremlab, #284)
 - Ensure empty/useless stackframes are removed
 - Removed arbitrary timeouts from tests to alleviate CI flakiness
 
 ### Fixed
+
 - Expose `metaData` and `user` types on `Client` class (#287)
 - Give navigation details the correct type (some were marked as "manual")
-
 
 ## 4.0.1 (2017-12-07)
 
 ### Changed
+
 - Improve type definition for notify() error argument (credit @rokerkony)
 - Remove process.env.NODE_ENV inferred releaseStage
 - Sidestep uglify's drop_compat option to prevent it from breaking bugsnag
 
-
 ## 4.0.0 (2017-12-04)
 
 Version 4 is a milestone release. A complete re-write and modernization for Bugsnag's JS error reporting.
-
 See UPGRADING.md for migrating from v3 and see docs.bugsnag.com for full documentation.
-
 🚀
+
