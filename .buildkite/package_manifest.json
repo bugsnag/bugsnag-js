@@ -122,5 +122,9 @@
             "packages/plugin-react-native-session",
             "packages/plugin-react-native-unhandled-rejection"
         ]
+    },
+    {
+        "block": ".buildkite/block/expo.block.yml",
+        "paths": []
     }
 ]
