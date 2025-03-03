@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
 
 BASE=$BUILDKITE_PULL_REQUEST_BASE_BRANCH
-BASE_REF=$(git rev-parse origin/$BASE)
 
 if [[ "$BUILDKITE_MESSAGE" == *"[full ci]"* ||
   "$BUILDKITE_BRANCH" == "next" ||
@@ -12,14 +11,13 @@ if [[ "$BUILDKITE_MESSAGE" == *"[full ci]"* ||
   echo "Running full build"
   buildkite-agent pipeline upload .buildkite/full/pipeline.full.yml
 else
-  echo "Detecting changes"
-  echo "COMMIT SELECTED FOR BASE BRANCH $BASE: $BASE_REF"
-  echo "BUILDKITE_COMMIT: $BUILDKITE_COMMIT"
+  echo "Detecting changes..."
 
-  echo "diff between $BASE_REF and $BUILDKITE_COMMIT"
+  echo "Fetching latest changes from $BASE"
+  git fetch origin $BASE
+
   git --no-pager diff --name-only origin/$BASE
 
-  exit 1
   ignored_files=("README.md" "LICENSE.txt" ".gitignore")
 
   for pipeline in $(jq --compact-output '.[]' .buildkite/package_manifest.json); do
@@ -29,7 +27,7 @@ else
 
     upload=0
 
-    for file in $(git diff --name-only $BUILDKITE_PULL_REQUEST_BASE_BRANCH $BUILDKITE_COMMIT); do
+    for file in $(git diff --name-only origin/$BASE); do
 
       # 1. Skip checking any files in the ignored_files list
       for ignored_file in $ignored_files; do
