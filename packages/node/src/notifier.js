@@ -49,6 +49,7 @@ const Bugsnag = {
   createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
     if (typeof opts === 'string') opts = { apiKey: opts }
+
     if (!opts) opts = {}
 
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
