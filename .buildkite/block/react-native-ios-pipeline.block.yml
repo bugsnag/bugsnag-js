@@ -1,10 +1,12 @@
 steps:
-  - block: "Trigger react-native ios pipeline"
-    key: "trigger-react-native-ios-pipeline"
+  - group: "React Native (iOS) Tests"
+    steps:
+    - block: "Trigger react-native ios pipeline"
+      key: "trigger-react-native-ios-pipeline"
 
-  - label: ":pipeline: Upload react native ios pipeline"
-    depends_on: "trigger-react-native-ios-pipeline"
-    agents:
-      queue: macos
-    timeout_in_minutes: 5
-    command: buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
+    - label: ":pipeline: Upload react native ios pipeline"
+      depends_on: "trigger-react-native-ios-pipeline"
+      agents:
+        queue: macos
+      timeout_in_minutes: 5
+      command: buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
