@@ -1,4 +1,16 @@
-# Bugsnag error monitoring & reporting for JavaScript
+<div align="center">
+  <a href="https://www.bugsnag.com/platforms/javascript">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://assets.smartbear.com/m/3dab7e6cf880aa2b/original/BugSnag-Repository-Header-Dark.svg">
+      <img alt="SmartBear BugSnag logo" src="https://assets.smartbear.com/m/3945e02cdc983893/original/BugSnag-Repository-Header-Light.svg">
+    </picture>
+  </a>
+  <h1>Error monitoring & reporting for JavaScript</h1>
+</div>
+
+[![Documentation](https://img.shields.io/badge/documentation-latest-blue.svg)](https://docs.bugsnag.com/platforms/javascript/)
+[![Build status](https://badge.buildkite.com/3d7b170ff1190e95999586fb4e2c67edfbe70484a5c0ecfa70.svg)](https://buildkite.com/bugsnag/bugsnag-js)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/bugsnag/bugsnag-js/badge)](https://scorecard.dev/viewer/?uri=github.com/bugsnag/bugsnag-js)
 
 Automatically detect JavaScript errors in the browser, Node.js and React Native, with plugins for React, Vue, Angular, Express, Restify and Koa. Get cross-platform error detection for handled and unhandled errors with real-time error alerts and detailed diagnostic reports.
 
