@@ -7,4 +7,4 @@ steps:
     agents:
       queue: macos
     timeout_in_minutes: 5
-    command: buildkite-agent pipeline upload .buildkite/full/react-native-android-full-pipeline.yml
+    command: buildkite-agent pipeline upload .buildkite/basic/react-native-android-full-pipeline.yml
