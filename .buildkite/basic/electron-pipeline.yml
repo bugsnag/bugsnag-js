@@ -1,7 +1,7 @@
 steps:
 
-  group: ":electron: Electron Tests"
-  steps:
+  - group: ":electron: Electron Tests"
+    steps:
     - label: "Electron {{matrix.electron_version}} tests - macOS - Node {{matrix.node_version}}"
       timeout_in_minutes: 40
       agents:
