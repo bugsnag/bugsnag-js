@@ -3,7 +3,7 @@ agents:
 
 steps:
 
-  - group: "Node Tests"
+  - group: ":node: Node Tests"
     steps:
       - label:  ":docker: Build node maze runner image"
         key: "node-maze-runner-image"
