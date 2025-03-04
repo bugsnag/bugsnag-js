@@ -3,9 +3,7 @@ steps:
     key: "trigger-node-pipeline"
 
   - label: ":pipeline: Upload node pipeline"
-    depends_on: 
-      - "trigger-node-pipeline"
-      - "package-js"
+    depends_on: "trigger-node-pipeline"
     agents:
       queue: macos
     timeout_in_minutes: 5
