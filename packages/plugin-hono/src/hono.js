@@ -35,8 +35,10 @@ module.exports = {
       await client._clientContext.run(requestClient, next)
     }
 
-    const errorHandler = (err, c, next) => {
-      if (!client._config.autoDetectErrors) return next
+    const errorHandler = (c, next, err) => {
+      console.log('test', err)
+      // if (!err) return
+      if (!client._config.autoDetectErrors) return next(err)
 
       const event = client.Event.create(err, false, handledState, 'hono middleware', 1)
 
