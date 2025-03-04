@@ -2,8 +2,8 @@ agents:
   queue: "opensource"
 
 steps:
-  group: ":expo: Expo Tests"
-  steps:
+  - group: ":expo: Expo Tests"
+    steps:
     - label: "@bugsnag/expo latest"
       depends_on: "publish-js"
       trigger: "bugsnag-expo"
