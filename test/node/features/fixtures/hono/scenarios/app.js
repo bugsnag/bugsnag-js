@@ -17,6 +17,8 @@ const middleware = Bugsnag.getPlugin('hono')
 
 app.use(middleware.requestHandler)
 
+// app.use(middleware.errorHandler)
+
 app.get('/', (c) => {
     return c.text('Hello from Hono!')
 })
@@ -26,7 +28,7 @@ app.get('/handled', async (c, next) => {
     await next();
 });
 
-app.get('/sync', (c) => {
+app.get('/sync', (c, next) => {
     throw new Error('sync')
 })
   
