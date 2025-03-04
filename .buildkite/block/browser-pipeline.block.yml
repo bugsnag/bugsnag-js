@@ -3,9 +3,7 @@ steps:
     key: "trigger-browser-pipeline"
 
   - label: ":pipeline: Upload browser pipeline"
-    depends_on: 
-      - "trigger-browser-pipeline"
-      - "package-js"
+    depends_on: "trigger-browser-pipeline"
     agents:
       queue: macos
     timeout_in_minutes: 5
