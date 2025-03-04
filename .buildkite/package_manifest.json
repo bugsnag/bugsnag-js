@@ -107,6 +107,11 @@
         ]
     },
     {
+        "pipeline": ".buildkite/basic/react-native-android-full-pipeline.yml",
+        "block": ".buildkite/block/react-native-android-full-pipeline.block.yml",
+        "paths": []
+    },
+    {
         "pipeline": ".buildkite/basic/react-native-ios-pipeline.yml",
         "block": ".buildkite/block/react-native-ios-pipeline.block.yml",
         "paths": [
@@ -126,23 +131,18 @@
         ]
     },
     {
-        "pipeline": ".buildkite/full/expo-pipeline.full.yml",
+        "pipeline": ".buildkite/basic/react-native-ios-full-pipeline.yml",
+        "block": ".buildkite/block/react-native-ios-full-pipeline.block.yml",
+        "paths": []
+    },
+    {
+        "pipeline": ".buildkite/basic/react-native-cli-pipeline.yml",
+        "block": ".buildkite/block/react-native-cli-pipeline.block.yml",
+        "paths": []
+    },
+    {
+        "pipeline": ".buildkite/basic/expo-pipeline.yml",
         "block": ".buildkite/block/expo-pipeline.block.yml",
-        "paths": []
-    },
-    {
-        "pipeline": ".buildkite/full/react-native-android-pipeline.full.yml",
-        "block": ".buildkite/block/react-native-android-pipeline.full.block.yml",
-        "paths": []
-    },
-    {
-        "pipeline": ".buildkite/full/react-native-ios-pipeline.full.yml",
-        "block": ".buildkite/block/react-native-ios-pipeline.full.block.yml",
-        "paths": []
-    },
-    {
-        "pipeline": ".buildkite/full/react-native-cli-pipeline.full.yml",
-        "block": ".buildkite/block/react-native-cli-pipeline.full.block.yml",
         "paths": []
     }
 ]

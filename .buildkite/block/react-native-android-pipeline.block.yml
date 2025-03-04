@@ -1,5 +1,5 @@
 steps:
-  - block: "Trigger react-native pipeline"
+  - block: "Trigger react-native android pipeline"
     key: "trigger-react-native-android-pipeline"
 
   - label: ":pipeline: Upload react native android pipeline"
