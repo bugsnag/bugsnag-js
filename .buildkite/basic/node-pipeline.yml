@@ -6,6 +6,7 @@ steps:
   - group: "Node Tests"
     steps:
       - label:  ":docker: Build node maze runner image"
+        depends_on: "package-js"
         key: "node-maze-runner-image"
         timeout_in_minutes: 20
         plugins:

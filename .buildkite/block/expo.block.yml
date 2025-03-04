@@ -1,42 +1,10 @@
 steps:
-  - block: "Trigger expo pipeline"
+  - block: "Trigger expo pipeline (External)"
     key: "trigger-expo-pipeline"
  
-  - label: "@bugsnag/expo latest"
-    depends_on: 
-      - "trigger-expo-pipeline"
-      - "publish-js"
-    trigger: "bugsnag-expo"
-    build:
-      branch: "v52/next"
-      env:
-        BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
-        BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
-        # a branch name that's safe to use as a docker cache identifier
-        BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
-
-  - label: "@bugsnag/expo v51/next"
-    depends_on: 
-      - "trigger-expo-pipeline"
-      - "publish-js"
-    trigger: "bugsnag-expo"
-    build:
-      branch: "v51/next"
-      env:
-        BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
-        BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
-        # a branch name that's safe to use as a docker cache identifier
-        BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
-
-  - label: "@bugsnag/expo v50/next"
-    depends_on: 
-      - "trigger-expo-pipeline"
-      - "publish-js"
-    trigger: "bugsnag-expo"
-    build:
-      branch: "v50/next"
-      env:
-        BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
-        BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
-        # a branch name that's safe to use as a docker cache identifier
-        BUGSNAG_JS_CACHE_SAFE_BRANCH_NAME: "${BRANCH_NAME}"
+  - label: ":pipeline: Upload expo pipeline"
+    depends_on: "trigger-expo-pipeline"
+    agents:
+      queue: macos
+    timeout_in_minutes: 5
+    command: buildkite-agent pipeline upload .buildkite/full/expo-pipeline.full.yml
