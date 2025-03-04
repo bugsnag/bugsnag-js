@@ -124,6 +124,7 @@
         ]
     },
     {
+        "pipeline": ".buildkite/full/expo-pipeline.full.yml",
         "block": ".buildkite/block/expo.block.yml",
         "paths": []
     }
