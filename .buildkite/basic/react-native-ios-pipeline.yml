@@ -11,6 +11,7 @@ steps:
       #
       - label: ':mac: Build RN {{matrix}} test fixture ipa (Old Arch)'
         key: "build-react-native-ios-fixture-old-arch"
+        depends_on: "publish-js"
         timeout_in_minutes: 20
         agents:
           queue: "macos-14"

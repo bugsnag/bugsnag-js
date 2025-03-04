@@ -4,6 +4,7 @@
         "block": ".buildkite/block/browser-pipeline.block.yml",
         "paths": [
             "test/browser",
+            "dockerfiles/Dockerfile.browser",
             "packages/core",
             "packages/browser",
             "packages/delivery-x-domain-request",
@@ -68,6 +69,7 @@
         "block": ".buildkite/block/node-pipeline.block.yml",
         "paths": [
             "test/node",
+            "dockerfiles/Dockerfile.node",
             "packages/core",
             "packages/node",
             "packages/delivery-node",
@@ -125,7 +127,22 @@
     },
     {
         "pipeline": ".buildkite/full/expo-pipeline.full.yml",
-        "block": ".buildkite/block/expo.block.yml",
+        "block": ".buildkite/block/expo-pipeline.block.yml",
+        "paths": []
+    },
+    {
+        "pipeline": ".buildkite/full/react-native-android-pipeline.full.yml",
+        "block": ".buildkite/block/react-native-android-pipeline.full.block.yml",
+        "paths": []
+    },
+    {
+        "pipeline": ".buildkite/full/react-native-ios-pipeline.full.yml",
+        "block": ".buildkite/block/react-native-ios-pipeline.full.block.yml",
+        "paths": []
+    },
+    {
+        "pipeline": ".buildkite/full/react-native-cli-pipeline.full.yml",
+        "block": ".buildkite/block/react-native-cli-pipeline.full.block.yml",
         "paths": []
     }
 ]
