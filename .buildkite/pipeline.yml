@@ -41,52 +41,54 @@ steps:
   #
   # Core tests and checks
   #
-  - label: ":docker: Build CI image"
-    key: "ci-image"
-    depends_on: "package-js"
-    timeout_in_minutes: 20
-    plugins:
-      - artifacts#v1.5.0:
-          download: min_packages.tar
-      - docker-compose#v4.12.0:
-          build:
-            - ci
-          image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-          cache-from:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
-      - docker-compose#v4.12.0:
-          push:
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
-            - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
-    retry:
-      automatic:
-        - exit_status: "*"
-          limit: 1
+  - group: "Core tests"
+    steps:
+    - label: ":docker: Build CI image"
+      key: "ci-image"
+      depends_on: "package-js"
+      timeout_in_minutes: 20
+      plugins:
+        - artifacts#v1.5.0:
+            download: min_packages.tar
+        - docker-compose#v4.12.0:
+            build:
+              - ci
+            image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+            cache-from:
+              - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
+              - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
+        - docker-compose#v4.12.0:
+            push:
+              - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base-${BRANCH_NAME}
+              - ci:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-base
+      retry:
+        automatic:
+          - exit_status: "*"
+            limit: 1
 
-  - label: "Lint"
-    depends_on: "ci-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v4.12.0:
-        run: ci
-    command: "npm run test:lint"
+    - label: "Lint"
+      depends_on: "ci-image"
+      timeout_in_minutes: 10
+      plugins:
+        docker-compose#v4.12.0:
+          run: ci
+      command: "npm run test:lint"
 
-  - label: "Unit tests"
-    depends_on: "ci-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v4.12.0:
-        run: ci
-    command: "npm run test:unit"
+    - label: "Unit tests"
+      depends_on: "ci-image"
+      timeout_in_minutes: 10
+      plugins:
+        docker-compose#v4.12.0:
+          run: ci
+      command: "npm run test:unit"
 
-  - label: "Type checks/tests"
-    depends_on: "ci-image"
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v4.12.0:
-        run: ci
-    command: "npm run test:types"
+    - label: "Type checks/tests"
+      depends_on: "ci-image"
+      timeout_in_minutes: 10
+      plugins:
+        docker-compose#v4.12.0:
+          run: ci
+      command: "npm run test:types"
 
   #
   # Detect changes and upload relevant pipelines
