@@ -27,6 +27,29 @@
         ]
     },
     {
+        "pipeline": ".buildkite/basic/node-pipeline.yml",
+        "block": ".buildkite/block/node-pipeline.block.yml",
+        "paths": [
+            "test/node",
+            "dockerfiles/Dockerfile.node",
+            "packages/core",
+            "packages/node",
+            "packages/delivery-node",
+            "packages/plugin-app-duration",
+            "packages/plugin-console-breadcrumbs",
+            "packages/plugin-contextualize",
+            "packages/plugin-intercept",
+            "packages/plugin-node-device",
+            "packages/plugin-node-in-project",
+            "packages/plugin-node-surrounding-code",
+            "packages/plugin-node-uncaught-exception",
+            "packages/plugin-node-unhandled-rejection",
+            "packages/plugin-server-session",
+            "packages/plugin-stackframe-path-normaliser",
+            "packages/plugin-strip-project-root"
+        ]
+    },
+    {
         "pipeline": ".buildkite/basic/electron-pipeline.yml",
         "block": ".buildkite/block/electron-pipeline.block.yml",
         "paths": [
@@ -62,29 +85,6 @@
             "packages/plugin-strip-project-root",
             "packages/plugin-window-onerror",
             "packages/plugin-window-unhandled-rejection"
-        ]
-    },
-    {
-        "pipeline": ".buildkite/basic/node-pipeline.yml",
-        "block": ".buildkite/block/node-pipeline.block.yml",
-        "paths": [
-            "test/node",
-            "dockerfiles/Dockerfile.node",
-            "packages/core",
-            "packages/node",
-            "packages/delivery-node",
-            "packages/plugin-app-duration",
-            "packages/plugin-console-breadcrumbs",
-            "packages/plugin-contextualize",
-            "packages/plugin-intercept",
-            "packages/plugin-node-device",
-            "packages/plugin-node-in-project",
-            "packages/plugin-node-surrounding-code",
-            "packages/plugin-node-uncaught-exception",
-            "packages/plugin-node-unhandled-rejection",
-            "packages/plugin-server-session",
-            "packages/plugin-stackframe-path-normaliser",
-            "packages/plugin-strip-project-root"
         ]
     },
     {
