@@ -35,12 +35,12 @@ module.exports = {
       await client._clientContext.run(requestClient, next)
     }
 
-    const errorHandler = (c, next, err) => {
-      console.log('test', err)
-      // if (!err) return
-      if (!client._config.autoDetectErrors) return next(err)
+    const errorHandler = (c, next) => {
+      next()
 
-      const event = client.Event.create(err, false, handledState, 'hono middleware', 1)
+      if (!c.error || !client._config.autoDetectErrors) return
+
+      const event = client.Event.create(c.error, false, handledState, 'hono middleware', 1)
 
       if (c.bugsnag) {
         c.bugsnag._notify(event)
@@ -53,8 +53,6 @@ module.exports = {
         event.addMetadata('request', metadata)
         client._notify(event)
       }
-
-      next(err)
     }
 
     return { requestHandler, errorHandler }
