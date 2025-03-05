@@ -8,9 +8,8 @@ ignored_files=("README.md" "LICENSE.txt" ".gitignore")
 # so there is no need to check against the latest changes
 if [[ ! -z $BUILDKITE_PULL_REQUEST_BASE_BRANCH ]]; then
   echo "Fetching latest changes from $BUILDKITE_PULL_REQUEST_BASE_BRANCH"
-
   git fetch origin $BUILDKITE_PULL_REQUEST_BASE_BRANCH
-
+  
   echo "Files changed in $BUILDKITE_BRANCH compared to $BUILDKITE_PULL_REQUEST_BASE_BRANCH:"
   git --no-pager diff --name-only origin/$BUILDKITE_PULL_REQUEST_BASE_BRANCH
 fi
