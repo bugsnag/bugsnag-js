@@ -5,3 +5,4 @@ This package contains the browser implementation of the Bugsnag notifier for Jav
 ## License
 
 This package is free software released under the MIT License. See [LICENSE.txt](./LICENSE.txt) for details.
+
