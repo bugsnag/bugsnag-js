@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [8.3.0] - 2025-03-04
 
-This release adds support for React Native 0.77 to `@bugsnag/react-native`
+This release adds support for React Native 0.77 and 0.78 to `@bugsnag/react-native`
 
 ### Added
 
