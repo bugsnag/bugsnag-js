@@ -30,7 +30,7 @@ describe('plugin: hono', () => {
     expect(typeof middleware.requestHandler).toBe('function')
     expect(middleware.requestHandler.length).toBe(2)
     expect(typeof middleware.errorHandler).toBe('function')
-    expect(middleware.errorHandler.length).toBe(3)
+    expect(middleware.errorHandler.length).toBe(2)
   })
 
   describe('requestHandler', () => {
@@ -86,16 +86,18 @@ describe('plugin: hono', () => {
 
       const context = {
         req: {
-          headers: { referer: '/abc' },
-          parseBody: 'the request body',
           method: 'GET',
           url: 'http://localhost:8080/xyz?a=1&b=2',
-          query: { a: 1, b: 2 },
           path: '/xyz'
         },
-        res: {}
+        res: {},
+        env: { outgoing: { req: { httpVersion: '1.1' } } }
       } as any
       client._clientContext = { run: jest.fn() }
+      context.req.parseBody = jest.fn().mockReturnValue('the request body')
+      context.req.header = jest.fn().mockReturnValue({ referer: '/abc' })
+      context.req.query = jest.fn().mockReturnValue({ a: 1, b: 2 })
+      context.req.param = jest.fn()
 
       const next = jest.fn()
 
@@ -114,7 +116,8 @@ describe('plugin: hono', () => {
         body: 'the request body',
         headers: { referer: '/abc' },
         httpMethod: 'GET',
-        url: 'http://localhost:8080/xyz?a=1&b=2'
+        url: 'http://localhost:8080/xyz?a=1&b=2',
+        httpVersion: '1.1'
       })
 
       expect(event._metadata.request).toEqual({
@@ -122,7 +125,8 @@ describe('plugin: hono', () => {
         httpMethod: 'GET',
         path: '/xyz',
         query: { a: 1, b: 2 },
-        url: 'http://localhost:8080/xyz?a=1&b=2'
+        url: 'http://localhost:8080/xyz?a=1&b=2',
+        httpVersion: '1.1'
       })
     })
 
@@ -187,9 +191,10 @@ describe('plugin: hono', () => {
       }))
 
       const error = new Error('oh no!!')
-      const context = { req: { headers: {} }, request: {}, bugsnag: client2 } as any
+      const context = { req: { headers: {} }, request: {}, bugsnag: client2, error: error } as any
+      const next = jest.fn()
 
-      middleware.errorHandler(error, context)
+      middleware.errorHandler(context, next)
 
       expect(client._notify).not.toHaveBeenCalled()
       expect(client2._logger.warn).not.toHaveBeenCalled()
@@ -205,7 +210,7 @@ describe('plugin: hono', () => {
       // these values should come from the requestHandler's onError callback, so we
       // expect them to be undefined in this test as we never call the requestHandler
       expect(event.request).toEqual({})
-    //   expect(event._metadata.request).toBeUndefined()
+      expect(event._metadata.request).toBeUndefined()
     })
 
     it('should notify using the initial client when "c.bugsnag" is not defined', async () => {
@@ -233,9 +238,14 @@ describe('plugin: hono', () => {
       client2._notify = jest.fn()
 
       const error = new Error('oh no!!')
-      const context = { req: { headers: {} }, request: {} } as any // no bugsnag!
+      const context = { req: { headers: {} }, request: {}, env: { outgoing: { req: {} } }, error: error } as any // no bugsnag!
+      context.req.parseBody = jest.fn()
+      context.req.header = jest.fn()
+      context.req.param = jest.fn()
+      context.req.query = jest.fn()
+      const next = jest.fn()
 
-      middleware.errorHandler(error, context)
+      middleware.errorHandler(context, next)
 
       expect(client2._notify).not.toHaveBeenCalled()
       expect(client._logger.warn).toHaveBeenCalledTimes(1)
@@ -283,16 +293,17 @@ describe('plugin: hono', () => {
       client2._notify = jest.fn()
 
       const error = new Error('oh no!!')
-      const context = { req: { headers: {} }, request: {}, bugsnag: client2 } as any
+      const context = { req: { headers: {} }, request: {}, bugsnag: client2, error: error } as any
+      const next = jest.fn()
 
-      middleware.errorHandler(error, context)
+      middleware.errorHandler(context, next)
 
       expect(client._notify).not.toHaveBeenCalled()
       expect(client2._notify).not.toHaveBeenCalled()
 
       // ensure notify is not called when using the other client
       delete context.bugsnag
-      middleware.errorHandler(error, context)
+      middleware.errorHandler(context, next)
 
       expect(client._notify).not.toHaveBeenCalled()
       expect(client2._notify).not.toHaveBeenCalled()

@@ -1,4 +1,5 @@
-Feature: hono-disabled
+@skip_before_node_18
+Feature: hono-disabled autoDetectErrors=false
 
 Background:
   Given I store the api key in the environment variable "BUGSNAG_API_KEY"
@@ -21,20 +22,12 @@ Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://hono-disabled/async" tolerating any error
   And I should receive no errors
 
-Scenario: an error passed to next(err)
-  Then I open the URL "http://hono-disabled/next"
-  And I should receive no errors
-
 Scenario: a synchronous promise rejection in a route
   Then I open the URL "http://hono-disabled/rejection-sync"
   And I should receive no errors
 
 Scenario: an asynchronous promise rejection in a route
   Then I open the URL "http://hono-disabled/rejection-async"
-  And I should receive no errors
-
-Scenario: a string passed to next(err)
-  Then I open the URL "http://hono-disabled/string-as-error"
   And I should receive no errors
 
 Scenario: throwing non-Error error
