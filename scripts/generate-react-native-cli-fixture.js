@@ -55,7 +55,7 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
   }
 
   // create the test fixture
-  const RNInitArgs = ['@react-native-community/cli@latest', 'init', 'reactnative', '--directory', fixtureDir, '--version', reactNativeVersion, '--pm', 'npm', '--skip-install']
+  const RNInitArgs = ['@react-native-community/cli@16.0.2', 'init', 'reactnative', '--directory', fixtureDir, '--version', reactNativeVersion, '--pm', 'npm', '--skip-install']
   execFileSync('npx', RNInitArgs, { stdio: 'inherit' })
 
   replaceGeneratedFixtureFiles()
