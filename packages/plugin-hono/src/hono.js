@@ -67,6 +67,7 @@ const getRequestAndMetadataFromReq = c => {
       body,
       url: requestInfo.url,
       httpMethod: requestInfo.httpMethod,
+      httpVersion: requestInfo.httpVersion,
       headers: requestInfo.headers
     }
   }

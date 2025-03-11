@@ -19,6 +19,8 @@ const middleware = Bugsnag.getPlugin('hono')
 
 app.use(middleware.requestHandler)
 
+app.use(middleware.errorHandler)
+
 app.get('/handled', (c) => {
     Bugsnag.notify(new Error('unresolveable musical differences'));
 });
@@ -33,10 +35,6 @@ app.get('/sync', (c) => {
     }, 100)
   })
   
-  app.get('/next', (c, next) => {
-    next(new Error('next'))
-  })
-  
   app.get('/rejection-sync', (c) => {
     Promise.reject(new Error('reject sync'))
   })
@@ -45,10 +43,6 @@ app.get('/sync', (c) => {
     setTimeout(function () {
       Promise.reject(new Error('reject async'))
     }, 100)
-  })
-  
-  app.get('/string-as-error', (c, next) => {
-    next('errrr')
   })
   
   app.get('/throw-non-error', (c) => {

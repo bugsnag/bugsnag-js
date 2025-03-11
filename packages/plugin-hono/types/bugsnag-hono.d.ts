@@ -5,7 +5,7 @@ declare const bugsnagPluginHono: Plugin
 export default bugsnagPluginHono
 
 interface BugsnagPluginHonoResult {
-  errorHandler: (c: hono.Context, err: Error) => void
+  errorHandler: hono.MiddlewareHandler
   requestHandler: hono.MiddlewareHandler
 }
 

@@ -1,6 +1,5 @@
 {
   "name": "bugsnag-test",
-  "type": "module",
   "dependencies": {
     "@hono/node-server": "^1.13.2",
     "hono": "^4.6.3"
