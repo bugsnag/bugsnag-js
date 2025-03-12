@@ -40,7 +40,7 @@ jobs:
       - run: git submodule update --init --recursive
 
       - name: Install ruby
-        uses: ruby/setup-ruby@f2f42b7848feff522ffa488a5236ba0a73bccbdd # v1.219.0
+        uses: ruby/setup-ruby@bbda85882f33075a3727c01e3c8d0de0be6146ce # v1.224.0
         with:
           ruby-version: 2.7
 
