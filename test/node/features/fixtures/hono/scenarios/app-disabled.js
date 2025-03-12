@@ -1,7 +1,7 @@
-import { serve } from '@hono/node-server';
-import { Hono } from 'hono';
-import Bugsnag from '@bugsnag/node';
-import bugsnagHono from '@bugsnag/plugin-hono';
+const Bugsnag = require('@bugsnag/node')
+const bugsnagHono = require('@bugsnag/plugin-hono')
+const Hono = require('hono').Hono
+const serve = require('@hono/node-server').serve
 
 Bugsnag.start({
     apiKey: process.env.BUGSNAG_API_KEY,
