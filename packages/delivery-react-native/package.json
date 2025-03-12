@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-react-native",
-  "version": "8.2.0",
+  "version": "8.3.0",
   "main": "delivery.js",
   "description": "@bugsnag/js delivery mechanism for React Native",
   "homepage": "https://www.bugsnag.com/",
