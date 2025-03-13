@@ -4,7 +4,8 @@
 
 ### Changed
 
-Update bugsnag-android to [v6.12.1](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.12.1) [#2359](https://github.com/bugsnag/bugsnag-js/pull/2359)
+- Update bugsnag-android to [v6.12.1](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.12.1) [#2359](https://github.com/bugsnag/bugsnag-js/pull/2359)
+- Update bugsnag-cocoa to [v6.32.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.32.1) [#2355](https://github.com/bugsnag/bugsnag-js/pull/2355)
 
 ## [8.3.0] - 2025-03-04
 
