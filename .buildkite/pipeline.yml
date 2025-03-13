@@ -95,4 +95,4 @@ steps:
     agents:
       queue: "macos"
     timeout_in_minutes: 5
-    command: sh -c .buildkite/pipeline_trigger.sh
+    command: node .buildkite/pipeline_trigger.js
