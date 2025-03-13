@@ -135,11 +135,11 @@ Scenario: unhandled asynchronous exceptions are reported when using serverless-e
 Scenario Outline: unhandled exceptions are reported when using hono
     Given I setup the environment
     When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/unhandled.json" event
-#    Then the lambda response "body" equals "<message>"
-#    And the lambda response "body.type" equals "Error"
-#    And the lambda response "body.stacktrace" is an array with 11 elements
-#    And the lambda response "body.stacktrace.0" equals "Error: <message>"
-#    And the lambda response "statusCode" equals 500
+    Then the lambda response "body" equals "<message>"
+    And the lambda response "body.type" equals "Error"
+    And the lambda response "body.stacktrace" is an array with 11 elements
+    And the lambda response "body.stacktrace.0" equals "Error: <message>"
+    And the lambda response "statusCode" equals 500
     And the SAM exit code equals 0
     When I wait to receive an error
     Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
@@ -164,11 +164,11 @@ Scenario Outline: unhandled exceptions are reported when using hono
 Scenario Outline: unhandled asynchronous exceptions are reported when using hono
     Given I setup the environment
     When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/unhandled-async.json" event
-#    Then the lambda response "body" equals "<message>"
-#    And the lambda response "body.type" equals "Error"
-#    And the lambda response "body.stacktrace" is an array with 11 elements
-#    And the lambda response "body.stacktrace.0" equals "Error: <message>"
-#    And the lambda response "statusCode" equals 500
+    Then the lambda response "body" equals "<message>"
+    And the lambda response "body.type" equals "Error"
+    And the lambda response "body.stacktrace" is an array with 11 elements
+    And the lambda response "body.stacktrace.0" equals "Error: <message>"
+    And the lambda response "statusCode" equals 500
     And the SAM exit code equals 0
     When I wait to receive an error
     Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
