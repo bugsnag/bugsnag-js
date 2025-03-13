@@ -6,15 +6,20 @@ const app = new Hono()
 const middleware = Bugsnag.getPlugin('hono')
 app.use(middleware.requestHandler)
 
-// app.use((c, next) => {
-//   next()
-//   c.status(500)
-//   c.json({
-//     message: c.error.message,
-//     type: c.error.constructor.name,
-//     stacktrace: c.error.stack.split('\n')
-//   })
-// })
+// Replace the built-in error handler with one that returns JSON. This allows us
+// to assert against it much more easily than the default HTML response
+app.use((c, next) => {
+  next()
+  if (c.error) {
+    console.log('got an error:', c.error)
+    c.status(500)
+    c.json({
+      message: c.error.message,
+      type: c.error.constructor.name,
+      stacktrace: c.error.stack.split('\n')
+    })
+  }
+})
 
 app.use(middleware.errorHandler)
 
