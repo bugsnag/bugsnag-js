@@ -20,17 +20,17 @@ if (baseBranch) {
 packageManifest.forEach(({ paths, block, pipeline }) => {
   let upload = false;
 
-  if (!baseBranch) {
-    console.log(`No pull request raised, uploading blocker file: ${block}`);
-    execSync(`buildkite-agent pipeline upload ${block}`);
-    return;
-  }
-
   if (commitMessage.includes("[full ci]") ||
     ["next", "main"].includes(currentBranch) ||
     ["main"].includes(baseBranch)) {
     console.log(`Upload pipeline file: ${pipeline}`);
     execSync(`buildkite-agent pipeline upload ${pipeline}`);
+    return;
+  }
+
+  if (!baseBranch) {
+    console.log(`No pull request raised, uploading blocker file: ${block}`);
+    execSync(`buildkite-agent pipeline upload ${block}`);
     return;
   }
 
