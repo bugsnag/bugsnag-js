@@ -35,8 +35,8 @@ module.exports = {
       await client._clientContext.run(requestClient, next)
     }
 
-    const errorHandler = (c, next) => {
-      next()
+    const errorHandler = async (c, next) => {
+      await next()
 
       if (!c.error || !client._config.autoDetectErrors) return
 
