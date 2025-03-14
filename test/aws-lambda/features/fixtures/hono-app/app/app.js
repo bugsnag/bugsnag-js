@@ -5,13 +5,14 @@ const app = new Hono()
 
 const middleware = Bugsnag.getPlugin('hono')
 app.use(middleware.requestHandler)
+app.use(middleware.errorHandler)
 
 // Replace the built-in error handler with one that returns JSON. This allows us
 // to assert against it much more easily than the default HTML response
-app.use((c, next) => {
-  next()
+app.use(async (c, next) => {
+  await next()
+
   if (c.error) {
-    console.log('got an error:', c.error)
     c.status(500)
     c.json({
       message: c.error.message,
@@ -21,16 +22,14 @@ app.use((c, next) => {
   }
 })
 
-app.use(middleware.errorHandler)
-
 app.get('/', (c) => {
-  c.json({ message: 'hello world!' })
+  return c.json({ message: 'hello world!' })
 })
 
 app.get('/handled', (c, next) => {
   Bugsnag.notify(new Error('unresolveable musical differences'))
   c.status(200)
-  c.json({ message: 'did not crash :)' })
+  return c.json({ message: 'did not crash :)' })
 })
 
 app.get('/unhandled', (c) => {
