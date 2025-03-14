@@ -14,7 +14,7 @@ app.use(async (c, next) => {
 
   if (c.error) {
     c.status(500)
-    c.json({
+    return c.json({
       message: c.error.message,
       type: c.error.constructor.name,
       stacktrace: c.error.stack.split('\n')
@@ -36,10 +36,14 @@ app.get('/unhandled', (c) => {
   throw new Error('sync')
 })
 
-app.get('/unhandled-async', (c) => {
-  setTimeout(function () {
+app.get('/unhandled-async', async (c) => {
+  setTimeout(() => {
     throw new Error('async')
-  }, 100)
+  }, 50)
+
+  await new Promise((resolve) => setTimeout(resolve, 100))
+
+  return c.json({ message: 'threw an async error' })
 })
 
 app.get('/promise-rejection', (c) => {
