@@ -24,7 +24,7 @@ jobs:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
     - name: Install Ruby
-      uses: ruby/setup-ruby@bbda85882f33075a3727c01e3c8d0de0be6146ce
+      uses: ruby/setup-ruby@922ebc4c5262cd14e07bb0e1db020984b6c064fe
       with:
         ruby-version: '3.1'
 
