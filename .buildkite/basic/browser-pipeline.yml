@@ -6,6 +6,7 @@ steps:
   - group: "Browser Tests"
     steps:
       - label:  ":docker: Maze Runner image - BitBar browsers"
+        depends_on: "package-js"
         key: "browser-maze-runner-bb"
         timeout_in_minutes: 20
         plugins:
@@ -26,6 +27,7 @@ steps:
               limit: 1
 
       - label:  ":docker: Maze Runner image - BrowserStack browsers"
+        depends_on: "package-js"
         key: "browser-maze-runner-bs"
         timeout_in_minutes: 20
         plugins:

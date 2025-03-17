@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-event-sync",
-  "version": "8.2.0",
+  "version": "8.3.0",
   "main": "event-sync.js",
   "description": "@bugsnag/react-native plugin to sync native event information in an onError callbacks",
   "homepage": "https://www.bugsnag.com/",

@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/react-native",
-  "version": "8.2.0",
+  "version": "8.3.0",
   "main": "src/notifier.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for React Native applications",
@@ -53,12 +53,12 @@
   },
   "dependencies": {
     "@bugsnag/core": "^8.2.0",
-    "@bugsnag/delivery-react-native": "^8.2.0",
+    "@bugsnag/delivery-react-native": "^8.3.0",
     "@bugsnag/plugin-console-breadcrumbs": "^8.2.0",
     "@bugsnag/plugin-network-breadcrumbs": "^8.2.0",
     "@bugsnag/plugin-react": "^8.2.0",
     "@bugsnag/plugin-react-native-client-sync": "^8.2.0",
-    "@bugsnag/plugin-react-native-event-sync": "^8.2.0",
+    "@bugsnag/plugin-react-native-event-sync": "^8.3.0",
     "@bugsnag/plugin-react-native-global-error-handler": "^8.2.0",
     "@bugsnag/plugin-react-native-hermes": "^8.2.0",
     "@bugsnag/plugin-react-native-session": "^8.2.0",

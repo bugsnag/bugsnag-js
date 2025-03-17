@@ -2,6 +2,7 @@ agents:
   queue: "opensource"
 
 steps:
+  #
   # License audit
   #
   - label: ":copyright: License Audit"
@@ -87,52 +88,11 @@ steps:
         run: ci
     command: "npm run test:types"
 
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: BROWSER STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on: "package-js"
-    agents:
-      queue: "macos"
-    timeout_in_minutes: 5
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/browser-pipeline.yml
-
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: ELECTRON STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    agents:
-      queue: "macos"
-    timeout_in_minutes: 5
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/electron-pipeline.yml
-
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: NODE STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on: "package-js"
-    agents:
-      queue: "macos"
-    timeout_in_minutes: 5
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/node-pipeline.yml
-
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (ANDROID) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on:
-      - "publish-js"
-    agents:
-      queue: "macos"
-    timeout_in_minutes: 5
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/react-native-android-pipeline.yml
-
-  - label: ":large_blue_circle: :large_blue_circle: :large_blue_circle: REACT NATIVE (IOS) STEPS :large_blue_circle: :large_blue_circle: :large_blue_circle:"
-    depends_on:
-      - "publish-js"
-    agents:
-      queue: "macos"
-    timeout_in_minutes: 5
-    commands:
-      - buildkite-agent pipeline upload .buildkite/basic/react-native-ios-pipeline.yml
-
   #
-  # Conditionally trigger full pipeline
+  # Detect changes and upload relevant pipelines
   #
-  - label: 'Conditionally trigger full set of tests'
+  - label: ":git: Detect changed packages"
     agents:
-      queue: "macos"
+      queue: "macos-node-18"
     timeout_in_minutes: 5
-    command: sh -c .buildkite/pipeline_trigger.sh
+    command: node .buildkite/pipeline_trigger.js

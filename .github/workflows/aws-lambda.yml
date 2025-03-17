@@ -24,12 +24,12 @@ jobs:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
     - name: Install Ruby
-      uses: ruby/setup-ruby@32110d4e311bd8996b2a82bf2a43b714ccc91777
+      uses: ruby/setup-ruby@922ebc4c5262cd14e07bb0e1db020984b6c064fe
       with:
         ruby-version: '3.1'
 
     - name: Install Node
-      uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
+      uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e
       with:
         node-version: 18
 
