@@ -24,9 +24,16 @@ async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoin
   console.error('[Bugsnag ScenarioLauncher] clearing persistent data')
   NativeInterface.clearPersistentData()
 
+  console.error(`[Bugsnag ScenarioLauncher] with config: ${JSON.stringify(nativeConfig)} (native) and ${JSON.stringify(jsConfig)} (js)`)
+
   // start the native client
   console.error('[Bugsnag ScenarioLauncher] starting native Bugsnag')
   await NativeInterface.startBugsnag(nativeConfig)
+
+  // The calls between starting the native client and starting the js client
+  // Are typically longer than we see here, so we add a delay to ensure the
+  // native client is fully initialised before the js client is started
+  await new Promise(resolve => setTimeout(resolve, 50))
 
   // start the js client
   console.error('[Bugsnag ScenarioLauncher] starting js Bugsnag')
