@@ -53,7 +53,7 @@ RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_mo
 
 # once the fixtures are built we no longer need node_modules and
 # it makes the COPY later on much faster if we don't have them
-RUN rm -fr **/*/node_modules/
+# RUN rm -fr **/*/node_modules/
 
 # The maze-runner browser tests (W3C protocol)
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v9-cli AS browser-maze-runner
