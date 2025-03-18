@@ -16,6 +16,7 @@ COPY packages ./packages
 RUN npm ci
 RUN npm run build
 
+RUN npm pack --verbose packages/core/
 RUN npm pack --verbose packages/js/
 RUN npm pack --verbose packages/browser/
 RUN npm pack --verbose packages/node/
