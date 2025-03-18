@@ -21,6 +21,9 @@ Pod::Spec.new do |s|
   s.resource_bundles = {
     "Bugsnag" => ["ios/vendor/bugsnag-cocoa/Bugsnag/resources/PrivacyInfo.xcprivacy"],
   }
+  s.pod_target_xcconfig = {
+    "DEFINES_MODULE" => "YES"
+  }
 
   if ENV["RCT_NEW_ARCH_ENABLED"] == "1"
     install_modules_dependencies(s)

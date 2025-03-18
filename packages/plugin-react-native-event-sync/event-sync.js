@@ -1,6 +1,6 @@
 module.exports = (NativeClient) => ({
   load: (client) => {
-    const isTurboModuleEnabled = global.__turboModuleProxy != null
+    const isTurboModuleEnabled = global.RN$Bridgeless || global.__turboModuleProxy != null
 
     if (isTurboModuleEnabled) {
       client.addOnError(event => {

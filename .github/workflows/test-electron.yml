@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-    - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+    - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
       with:
         node-version: ${{ matrix.node-version }}
     - name: (Act) install build tools and dependencies
@@ -30,7 +30,7 @@ jobs:
       if: ${{ !env.ACT }}
       run: |
         echo "::set-output name=dir::$(npm config get cache)"
-    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
+    - uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
       id: npm-cache
       if: ${{ !env.ACT }}
       with:
@@ -66,7 +66,7 @@ jobs:
         START_LOCAL_NPM: 1
         VERBOSE: 1
         ELECTRON_VERSION: ${{ matrix.electron }}
-    - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+    - uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
       if: failure()
       with:
         name: cucumber-failures

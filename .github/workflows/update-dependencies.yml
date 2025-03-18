@@ -40,7 +40,7 @@ jobs:
       - run: git submodule update --init --recursive
 
       - name: Install ruby
-        uses: ruby/setup-ruby@f2f42b7848feff522ffa488a5236ba0a73bccbdd # v1.219.0
+        uses: ruby/setup-ruby@922ebc4c5262cd14e07bb0e1db020984b6c064fe # v1.226.0
         with:
           ruby-version: 2.7
 
@@ -51,7 +51,7 @@ jobs:
         run: TARGET_SUBMODULE=$SUBMODULE TARGET_VERSION=$VERSION bundle exec scripts/update-dependencies.rb
 
       - name: Commit and push changes
-        run: bundle exec bumpsnag commit-update $SUBMODULE $VERSION
+        run: BUMPSNAG_TARGET_HEADING="[Unreleased]" bundle exec bumpsnag commit-update $SUBMODULE $VERSION
 
       - name: List current branch name
         id: current-branch

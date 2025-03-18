@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-navigation",
-  "version": "8.2.0",
+  "version": "8.3.0",
   "main": "react-navigation.js",
   "description": "@bugsnag/react-native plugin to update context and leave breadcrumb when the screen changes",
   "homepage": "https://www.bugsnag.com/",
@@ -31,7 +31,7 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0",
-    "@react-navigation/native": "^5.0 || ^6.0"
+    "@react-navigation/native": "^5.0 || ^6.0 || ^7.0"
   },
   "peerDependenciesMeta": {
     "@bugsnag/core": {

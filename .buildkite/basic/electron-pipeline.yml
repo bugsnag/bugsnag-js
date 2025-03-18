@@ -1,33 +1,32 @@
 steps:
 
-  #
-  # Node 14
-  #
-  - label: "Electron {{matrix.electron_version}} tests - macOS - Node {{matrix.node_version}}"
-    timeout_in_minutes: 40
-    agents:
-      queue: macos-14
-    env:
-      NODE_VERSION: "{{matrix.node_version}}"
-      ELECTRON_VERSION: "{{matrix.electron_version}}"
-      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
-      START_LOCAL_NPM: "1"
-      VERBOSE: "1"
-    matrix:
-      setup:
-        electron_version:
-          - "^20.0.0"
-          - "^24.0.0"
-          - "^26.0.0"
-          - "^28.0.0"
-          - "^30.0.0"
-        node_version:
-          - "18"
-    commands:
-      - echo "Running on Node `node -v`"
-      - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
-      - npm ci --no-audit --progress=false
-      - npm run build
-      - defaults write com.apple.CrashReporter DialogType none
-      - npm run test:unit:electron-runner
-      - npm run test:electron
+  - group: ":electron: Electron Tests"
+    steps:
+    - label: "Electron {{matrix.electron_version}} tests - macOS - Node {{matrix.node_version}}"
+      timeout_in_minutes: 40
+      agents:
+        queue: macos-node-18
+      env:
+        NODE_VERSION: "{{matrix.node_version}}"
+        ELECTRON_VERSION: "{{matrix.electron_version}}"
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        START_LOCAL_NPM: "1"
+        VERBOSE: "1"
+      matrix:
+        setup:
+          electron_version:
+            - "^20.0.0"
+            - "^24.0.0"
+            - "^26.0.0"
+            - "^28.0.0"
+            - "^30.0.0"
+          node_version:
+            - "18"
+      commands:
+        - echo "Running on Node `node -v`"
+        - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
+        - npm ci --no-audit --progress=false
+        - npm run build:electron
+        - defaults write com.apple.CrashReporter DialogType none
+        - npm run test:unit:electron-runner
+        - npm run test:electron
