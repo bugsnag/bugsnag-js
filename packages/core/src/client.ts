@@ -16,7 +16,6 @@ import { BreadcrumbType, Config, Delivery, FeatureFlag, LoggerConfig, Notifiable
 const noop = () => {}
 export default class Client<T extends Config = Config> {
   public readonly _notifier?: Notifier
-  // This ought to be Required<T> but the current version of TypeScript doesn't seem to like it
   public readonly _config: T & Required<Config>
   private readonly _schema: any
 
