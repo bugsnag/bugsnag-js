@@ -126,9 +126,9 @@ export interface Request {
 }
 
 export interface User {
-  id?: string | null | undefined
-  email?: string | null | undefined
-  name?: string | null | undefined
+  id?: string | null
+  email?: string | null
+  name?: string | null
 }
 
 type ThreadType = 'cocoa' | 'android' | 'browserJs'
