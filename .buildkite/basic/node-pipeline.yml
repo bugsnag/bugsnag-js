@@ -3,10 +3,11 @@ agents:
 
 steps:
 
-  - group: "Node Tests"
+  - group: ":node: Node Tests"
     steps:
       - label:  ":docker: Build node maze runner image"
         key: "node-maze-runner-image"
+        depends_on: "package-js"
         timeout_in_minutes: 20
         plugins:
           - artifacts#v1.5.0:

@@ -22,8 +22,8 @@
   "peerDependencies": {
     "@bugsnag/plugin-react-navigation": "*",
     "@bugsnag/plugin-react-native-navigation": "*",
-    "@react-navigation/native": "^6.1.18",
-    "@react-navigation/native-stack": "^6.11.0",
+    "@react-navigation/native": "*",
+    "@react-navigation/native-stack": "*",
     "react": "*",
     "react-native": "*",
     "react-native-file-access": "*"
