@@ -200,3 +200,10 @@ export interface BugsnagStatic extends Client {
   createClient(apiKeyOrOpts: string | Config): Client
   isStarted(): boolean
 }
+
+export interface BugsnagError {
+  errorClass: string
+  errorMessage: string
+  type: string
+  stacktrace: Stackframe[]
+}
