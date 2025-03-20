@@ -1,4 +1,4 @@
-import { App, Device, FeatureFlag, Logger, Request, Stackframe, Thread, User, BugsnagError } from "./common"
+import { App, Device, FeatureFlag, Logger, Request, Stackframe, Thread, User, BugsnagError, NotifiableError } from "./common"
 
 import ErrorStackParser from './lib/error-stack-parser'
 // @ts-expect-error no types
@@ -50,7 +50,7 @@ export default class Event {
     public readonly errorMessage: string,
     public readonly stacktrace: any[] = [],
     public readonly _handledState: HandledState = defaultHandledState(),
-    public readonly originalError?: Error | Event | string
+    public readonly originalError?: NotifiableError
   ) {
     this.apiKey = undefined
     this.context = undefined
@@ -173,7 +173,7 @@ static getStacktrace = function (error: Error, errorFramesToSkip: number, backtr
   }
 }
 
-static create = function (maybeError: Error | string, tolerateNonErrors: boolean, handledState: HandledState | undefined, component: string, errorFramesToSkip = 0, logger?: Logger) {
+static create = function (maybeError: NotifiableError, tolerateNonErrors: boolean, handledState: HandledState | undefined, component: string, errorFramesToSkip = 0, logger?: Logger) {
   const [error, internalFrames] = normaliseError(maybeError, tolerateNonErrors, component, logger)
   let event
   try {
