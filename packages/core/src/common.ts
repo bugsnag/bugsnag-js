@@ -126,9 +126,9 @@ export interface Request {
 }
 
 export interface User {
-  id?: string | null | undefined
-  email?: string | null | undefined
-  name?: string | null | undefined
+  id?: string | null
+  email?: string | null
+  name?: string | null
 }
 
 type ThreadType = 'cocoa' | 'android' | 'browserJs'
@@ -199,4 +199,11 @@ export interface BugsnagStatic extends Client {
   start(apiKeyOrOpts: string | Config): Client
   createClient(apiKeyOrOpts: string | Config): Client
   isStarted(): boolean
+}
+
+export interface BugsnagError {
+  errorClass: string
+  errorMessage: string
+  type: string
+  stacktrace: Stackframe[]
 }

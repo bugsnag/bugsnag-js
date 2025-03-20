@@ -11,12 +11,11 @@ import metadataDelegate from './lib/metadata-delegate'
 import runSyncCallbacks from './lib/sync-callback-runner'
 import BREADCRUMB_TYPES from './lib/breadcrumb-types'
 import { add, clear, merge } from './lib/feature-flag-delegate'
-import { BreadcrumbType, Config, Delivery, FeatureFlag, LoggerConfig, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
+import { BreadcrumbType, Config, Delivery, FeatureFlag, LoggerConfig, NotifiableError, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
 
 const noop = () => {}
 export default class Client<T extends Config = Config> {
   public readonly _notifier?: Notifier
-  // This ought to be Required<T> but the current version of TypeScript doesn't seem to like it
   public readonly _config: T & Required<Config>
   private readonly _schema: any
 
@@ -326,7 +325,7 @@ export default class Client<T extends Config = Config> {
     return types === null || includes(types, type)
   }
 
-  notify (maybeError: Error | string, onError?: OnErrorCallback, postReportCallback: (err: Error | null | undefined, event: Event) => void = noop) {
+  notify (maybeError: NotifiableError, onError?: OnErrorCallback, postReportCallback: (err: Error | null | undefined, event: Event) => void = noop) {
     const event = Event.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
     this._notify(event, onError, postReportCallback)
   }

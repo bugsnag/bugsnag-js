@@ -33,6 +33,8 @@ Scenario: Reporting an Unhandled Native error
   And the event "unhandled" is true
   And the event "exceptions.0.errorClass" equals the version-dependent string:
   | arch | version | value                      |
+  | new  | 0.78    | Error                      |
+  | new  | 0.77    | Error                      |
   | new  | 0.76    | Error                      |
   | new  | 0.75    | Error                      |
   | new  | 0.74    | Error                      |
@@ -40,6 +42,8 @@ Scenario: Reporting an Unhandled Native error
   | old  | default | java.lang.RuntimeException |
   And the event "exceptions.0.type" equals the version-dependent string:
   | arch | version | value                      |
+  | new  | 0.78    | reactnativejs              |
+  | new  | 0.77    | reactnativejs              |
   | new  | 0.76    | reactnativejs              |
   | new  | 0.75    | reactnativejs              |
   | new  | 0.74    | reactnativejs              |
@@ -47,6 +51,8 @@ Scenario: Reporting an Unhandled Native error
   | old  | default | android                    |
   And the event "exceptions.0.message" equals the version-dependent string:
   | arch | version | value                                                   |
+  | new  | 0.78    | Exception in HostFunction: UnhandledNativeErrorScenario |
+  | new  | 0.77    | Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | 0.76    | Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | 0.75    | Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | 0.74    | Exception in HostFunction: UnhandledNativeErrorScenario |
