@@ -1,11 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "es2015",
+    "target": "es2022",
     "moduleResolution": "bundler",
     "lib": [ "dom", "esnext" ],
     "allowJs": true,
-    // "checkJs": true,
     "jsx": "preserve",
     "noEmit": true,
     "strict": true,

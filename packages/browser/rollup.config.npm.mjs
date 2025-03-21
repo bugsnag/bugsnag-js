@@ -20,15 +20,7 @@ const plugins = [
     browser: true
   }),
   commonjs(),
-  typescript({
-    removeComments: true,
-    // don't output anything if there's a TS error
-    noEmitOnError: true,
-    compilerOptions: {
-      target: 'es2020',
-    }
-  }),
-  // babel({ babelHelpers: 'bundled' }),
+  typescript(),
   replace({
     preventAssignment: true,
     values: {
@@ -37,6 +29,8 @@ const plugins = [
     },
   }),
 ]
+
+const babelOutputPlugin = getBabelOutputPlugin({ presets: [['@babel/preset-env', { targets: { ie: "11", chrome: '43' }, modules: 'umd' }]] })
 
 export default [
   createRollupConfig({
@@ -70,7 +64,7 @@ export default [
         entryFileNames: 'bugsnag.js',
         format: 'esm',
         name: 'Bugsnag',
-        plugins: [getBabelOutputPlugin({ presets: [['@babel/preset-env', { modules: 'umd' }]] })]
+        plugins: [babelOutputPlugin]
       },
       {
         ...sharedOutput,
@@ -78,7 +72,7 @@ export default [
         format: 'esm',
         compact: true,
         name: 'Bugsnag',
-        plugins: [getBabelOutputPlugin({ presets: [['@babel/preset-env', { modules: 'umd' }]] }), terser()],
+        plugins: [babelOutputPlugin, terser()],
       }, 
     ],
     plugins

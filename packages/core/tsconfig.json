@@ -1,13 +1,17 @@
 {
+  "removeComments": true,
+  "noEmitOnError": true,
   "compilerOptions": {
     "esModuleInterop": true,
     "lib": [ "dom", "es2022" ],
+    "target": "es2020",
+    "moduleResolution": "bundler",
     "strict": true,
     "allowJs": true,
     "outDir": "dist",
     "declaration": true,
-    "emitDeclarationOnly": true,
     "declarationDir": "dist/types",
+    "noEmit": true,
   },
   "include": ["src/**/*.ts", "src/**/*.js"]
 }
