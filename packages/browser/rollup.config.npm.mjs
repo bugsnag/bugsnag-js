@@ -1,4 +1,4 @@
-import babel from '@rollup/plugin-babel';
+import { getBabelOutputPlugin } from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
@@ -25,10 +25,10 @@ const plugins = [
     // don't output anything if there's a TS error
     noEmitOnError: true,
     compilerOptions: {
-      target: 'es5',
+      target: 'es2020',
     }
   }),
-  babel({ babelHelpers: 'bundled' }),
+  // babel({ babelHelpers: 'bundled' }),
   replace({
     preventAssignment: true,
     values: {
@@ -68,16 +68,17 @@ export default [
       {
         ...sharedOutput,
         entryFileNames: 'bugsnag.js',
-        format: 'umd',
-        name: 'Bugsnag'
+        format: 'esm',
+        name: 'Bugsnag',
+        plugins: [getBabelOutputPlugin({ presets: [['@babel/preset-env', { modules: 'umd' }]] })]
       },
       {
         ...sharedOutput,
         entryFileNames: 'bugsnag.min.js',
-        format: 'umd',
+        format: 'esm',
         compact: true,
         name: 'Bugsnag',
-        plugins: [terser()],
+        plugins: [getBabelOutputPlugin({ presets: [['@babel/preset-env', { modules: 'umd' }]] }), terser()],
       }, 
     ],
     plugins
