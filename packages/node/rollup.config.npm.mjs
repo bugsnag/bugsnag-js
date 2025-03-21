@@ -19,8 +19,19 @@ const plugins = [
   commonjs(),
   babel({
     babelHelpers: 'bundled',
-    include: '**', // transpile node_modules as well
     extensions,
+    presets: [
+      ['@babel/preset-env', {
+        useBuiltIns: 'entry',
+        corejs: "3.22",
+        targets: "ie 8",
+        loose: true,
+      }],
+      '@babel/preset-typescript'
+    ],
+    plugins: [
+      '@babel/plugin-proposal-class-properties'
+    ]
   }),
   typescript({
     noForceEmit: true,
