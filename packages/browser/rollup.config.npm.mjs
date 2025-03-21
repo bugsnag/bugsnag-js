@@ -30,7 +30,7 @@ const plugins = [
       ['@babel/preset-env', {
         useBuiltIns: 'entry',
         corejs: "3.22",
-        targets: "ie 8",
+        targets: { ie: '11', chrome: '43' },
         loose: true,
       }],
       '@babel/preset-typescript'
