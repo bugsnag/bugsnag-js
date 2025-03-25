@@ -6,6 +6,7 @@
 
 - Update bugsnag-android to [v6.12.1](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.12.1) [#2359](https://github.com/bugsnag/bugsnag-js/pull/2359)
 - Update bugsnag-cocoa to [v6.32.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.32.1) [#2355](https://github.com/bugsnag/bugsnag-js/pull/2355)
+- Update bugsnag-cocoa to [v6.32.2](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.32.2) [#2390](https://github.com/bugsnag/bugsnag-js/pull/2390)
 
 ### Fixed
 
@@ -14,7 +15,6 @@
 ## [8.3.0] - 2025-03-04
 
 This release adds support for React Native 0.77 and 0.78 to `@bugsnag/react-native`
-
 ### Added
 
 - (react-native-cli) Add support for `AppDelegate.swift` files to insert command [#2319](https://github.com/bugsnag/bugsnag-js/pull/2319)
