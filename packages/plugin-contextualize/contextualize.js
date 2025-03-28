@@ -1,5 +1,5 @@
 const { getStack } = require('@bugsnag/core/lib/node-fallback-stack')
-const clone = require('@bugsnag/core/lib/clone-client')
+import { cloneClient } from '@bugsnag/core'
 
 module.exports = {
   name: 'contextualize',
@@ -8,7 +8,7 @@ module.exports = {
       // capture a stacktrace in case a resulting error has nothing
       const fallbackStack = getStack()
 
-      const clonedClient = clone(client)
+      const clonedClient = cloneClient(client)
 
       // add the stacktrace to the cloned client so it can be used later
       // by the uncaught exception handler. Note the unhandled rejection

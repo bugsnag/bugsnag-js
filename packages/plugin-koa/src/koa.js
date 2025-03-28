@@ -1,4 +1,4 @@
-const clone = require('@bugsnag/core/lib/clone-client')
+import { cloneClient } from '@bugsnag/core'
 const extractRequestInfo = require('./request-info')
 
 const handledState = {
@@ -15,7 +15,7 @@ module.exports = {
   load: client => {
     const requestHandler = async (ctx, next) => {
       // clone the client to be scoped to this request. If sessions are enabled, start one
-      const requestClient = clone(client)
+      const requestClient = cloneClient(client)
       if (requestClient._config.autoTrackSessions) {
         requestClient.startSession()
       }
@@ -38,7 +38,7 @@ module.exports = {
 
     requestHandler.v1 = function * (next) {
       // clone the client to be scoped to this request. If sessions are enabled, start one
-      const requestClient = clone(client)
+      const requestClient = cloneClient(client)
       if (requestClient._config.autoTrackSessions) {
         requestClient.startSession()
       }
