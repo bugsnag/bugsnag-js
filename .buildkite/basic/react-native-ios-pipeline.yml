@@ -78,6 +78,7 @@ steps:
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/unhandled-ios.feature
           test-collector#v1.10.2:
             files: "reports/TEST-*.xml"
             format: "junit"
@@ -114,6 +115,7 @@ steps:
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
+              - features/unhandled-ios.feature
           test-collector#v1.10.2:
             files: "reports/TEST-*.xml"
             format: "junit"
