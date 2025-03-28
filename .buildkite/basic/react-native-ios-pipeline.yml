@@ -112,7 +112,6 @@ steps:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
               - --device=IOS_15
-              - --fail-fast
               - --no-tunnel
               - --aws-public-ip
               - features/unhandled-ios.feature
