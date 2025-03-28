@@ -1,5 +1,5 @@
 import Client from "../client";
-import { Config, Logger } from "../common";
+import { Config } from "../common"
 import assign from "./es-utils/assign";
 
 interface Notifier {
@@ -8,19 +8,26 @@ interface Notifier {
   url: string;
 }
 
-interface InternalClient extends Client {
-  getNotifier: Notifier;
-  _logger: Logger;
-  _config: Required<Config>;
-  getContext: string | undefined;
-  Client: typeof Client;
+interface InternalClient {
+  _config: Client["_config"];
+  _context: Client["_context"];
+  _breadcrumbs: Client["_breadcrumbs"];
+  _metadata: Client["_metadata"];
+  _features: Client["_features"];
+  _featuresIndex: Client["_featuresIndex"];
+  _user: Client["_user"];
+  _logger: Client["_logger"];
+  _delivery: Client["_delivery"];
+  _sessionDelegate: Client["_sessionDelegate"];
+  _cbs: Client["_cbs"];
 }
 
-const onCloneCallbacks: Array<any> = [];
+type OnCloneCallback = (client: Client) => void
+const onCloneCallbacks: Array<OnCloneCallback> = [];
 
-export default (client: InternalClient) => {
-  // const clone = new client.Client({}, {}, [], client._notifier);
-  const clone = Object.assign(Object.create(Object.getPrototypeOf(client.Client)), client.Client);
+const cloneClient = <T extends Config>(client: Client<T>): Client<T> => {
+  // @ts-expect-error overwriting properties manually so do not need to match constructor signature
+  const clone: InternalClient = new client.Client({}, {}, [], client.getNotifier());
 
   clone._config = client._config;
 
@@ -31,7 +38,7 @@ export default (client: InternalClient) => {
   clone._features = [...client._features];
   clone._featuresIndex = assign({}, client._featuresIndex);
   clone._user = assign({}, client._user);
-  clone._context = client.getContext;
+  clone._context = client.getContext();
 
   clone._cbs = {
     e: client._cbs.e.slice(),
@@ -45,12 +52,14 @@ export default (client: InternalClient) => {
   clone._sessionDelegate = client._sessionDelegate;
 
   onCloneCallbacks.forEach(callback => {
-    callback(clone);
+    callback(clone as unknown as Client<T>);
   });
 
-  return clone;
+  return clone as unknown as Client<T>;
 };
 
-export const registerCallback = (callback: () => void) => {
+cloneClient.registerCallback = (callback: OnCloneCallback) => {
   onCloneCallbacks.push(callback);
 };
+
+export default cloneClient;
