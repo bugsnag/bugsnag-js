@@ -1,4 +1,4 @@
-import { cloneClient } from '@bugsnag/core'
+const { cloneClient } = require('@bugsnag/core')
 const extractRequestInfo = require('./request-info')
 
 const handledState = {

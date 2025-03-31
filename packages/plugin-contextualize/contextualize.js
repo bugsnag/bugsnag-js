@@ -1,5 +1,5 @@
 const { getStack } = require('@bugsnag/core/lib/node-fallback-stack')
-import { cloneClient } from '@bugsnag/core'
+const { cloneClient } = require('@bugsnag/core')
 
 module.exports = {
   name: 'contextualize',

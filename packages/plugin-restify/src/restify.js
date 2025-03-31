@@ -1,5 +1,5 @@
 const extractRequestInfo = require('./request-info')
-import { cloneClient } from '@bugsnag/core'
+const { cloneClient } = require('@bugsnag/core')
 const handledState = {
   severity: 'error',
   unhandled: true,

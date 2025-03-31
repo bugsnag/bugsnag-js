@@ -19,7 +19,7 @@ interface InternalClient {
 type OnCloneCallback = (client: Client) => void
 const onCloneCallbacks: Array<OnCloneCallback> = []
 
-const cloneClient = <T extends Config = Config>(client: Client<T>): Client<T> => {
+const cloneClient = <T extends Config>(client: Client<T>): Client<T> => {
   // @ts-expect-error overwriting properties manually so do not need to match constructor signature
   const clone: InternalClient = new client.Client({}, {}, [], client.getNotifier())
 
