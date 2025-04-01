@@ -14,8 +14,10 @@ COPY bin ./bin
 COPY packages ./packages
 
 RUN npm ci
-RUN npm run build
 
+RUN npm run build:node
+
+RUN npm pack --verbose packages/core/
 RUN npm pack --verbose packages/node/
 RUN npm pack --verbose packages/plugin-express/
 RUN npm pack --verbose packages/plugin-koa/
