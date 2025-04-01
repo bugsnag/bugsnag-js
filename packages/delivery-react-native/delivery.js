@@ -12,7 +12,7 @@ module.exports = (client, NativeClient) => ({
       }
     }
 
-    const isTurboModuleEnabled = global.__turboModuleProxy != null
+    const isTurboModuleEnabled = global.RN$Bridgeless || global.__turboModuleProxy != null
 
     const eventPayload = {
       errors: event.errors,
