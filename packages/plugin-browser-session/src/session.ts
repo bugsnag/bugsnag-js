@@ -1,9 +1,5 @@
-import { Client, Plugin, Session, Notifier } from '@bugsnag/core'
+import { Client, Plugin, Session, SessionDelegate } from '@bugsnag/core'
 import includes from '@bugsnag/core/lib/es-utils/includes'
-
-interface InternalClient {
-  _notifier?: Notifier
-}
 
 const plugin: Plugin = {
   load: client => {
@@ -11,7 +7,7 @@ const plugin: Plugin = {
   }
 }
 
-const sessionDelegate = {
+const sessionDelegate: SessionDelegate = {
   startSession: (client: Client, session: Session) => {
     const sessionClient = client
     sessionClient._session = session
@@ -24,7 +20,7 @@ const sessionDelegate = {
     }
 
     sessionClient._delivery.sendSession({
-      notifier: (sessionClient as unknown as InternalClient)._notifier,
+      notifier: sessionClient._notifier,
       device: session.device,
       app: session.app,
       sessions: [
@@ -52,7 +48,8 @@ const sessionDelegate = {
     }
 
     // Otherwise start a new session
-    return client.startSession()
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return client.startSession()!
   },
   pauseSession: (client: Client) => {
     client._pausedSession = client._session

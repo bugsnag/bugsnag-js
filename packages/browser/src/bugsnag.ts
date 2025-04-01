@@ -1,9 +1,5 @@
 import { BugsnagStatic, Config, Client, schema as baseConfig } from '@bugsnag/core'
 
-import map from '@bugsnag/core/lib/es-utils/map'
-import keys from '@bugsnag/core/lib/es-utils/keys'
-import assign from '@bugsnag/core/lib/es-utils/assign'
-
 // extend the base config schema with some browser-specific options
 import browserConfig from './config'
 
@@ -18,7 +14,6 @@ import pluginConsoleBreadcrumbs from '@bugsnag/plugin-console-breadcrumbs'
 import pluginNetworkBreadcrumbs from '@bugsnag/plugin-network-breadcrumbs'
 import pluginNavigationBreadcrumbs from '@bugsnag/plugin-navigation-breadcrumbs'
 import pluginInteractionBreadcrumbs from '@bugsnag/plugin-interaction-breadcrumbs'
-// @ts-ignore
 import pluginInlineScriptContent from '@bugsnag/plugin-inline-script-content'
 import pluginSession from '@bugsnag/plugin-browser-session'
 import pluginIp from '@bugsnag/plugin-client-ip'
@@ -32,7 +27,7 @@ const name = 'Bugsnag JavaScript'
 const version = '__BUGSNAG_NOTIFIER_VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
-const schema = assign({}, baseConfig, browserConfig)
+const schema = { ...baseConfig, ...browserConfig }
 
 export interface BrowserConfig extends Config {
   maxEvents?: number
@@ -62,6 +57,7 @@ type BrowserClient = Partial<Client> & {
 
 const notifier: BrowserClient = {
   _client: null,
+  // @ts-expect-error
   createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
     if (typeof opts === 'string') opts = { apiKey: opts }
@@ -89,9 +85,11 @@ const notifier: BrowserClient = {
     ]
 
     // configure a client with user supplied options
+    // @ts-expect-error
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url });
 
     // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
+    // @ts-expect-error
     (bugsnag as BrowserClient)._setDelivery?.(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
 
     bugsnag._logger.debug('Loaded!')
@@ -114,21 +112,22 @@ const notifier: BrowserClient = {
   }
 }
 
-type Method = keyof typeof Client.prototype
+const clientMethods = Object.getOwnPropertyNames(Client.prototype).concat(['resetEventCount'])
 
-const clientMethods = Object.getOwnPropertyNames(Client.prototype).concat(['resetEventCount']) as Method[]
-
-map(clientMethods, (m) => {
-  if (/^_/.test(m)) return
+clientMethods.map((m) => {
+  if (/^_/.test(m) || m === 'constructor') return
+  // @ts-expect-error
   notifier[m] = function () {
     if (!notifier._client) return console.log(`Bugsnag.${m}() was called before Bugsnag.start()`)
     notifier._client._depth += 1
+    // @ts-expect-error
     const ret = notifier._client[m].apply(notifier._client, arguments)
     notifier._client._depth -= 1
     return ret
   }
 })
 
+// @ts-expect-error
 const Bugsnag = notifier as BrowserBugsnagStatic
 
 export default Bugsnag

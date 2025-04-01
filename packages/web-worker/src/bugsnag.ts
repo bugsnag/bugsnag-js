@@ -39,6 +39,7 @@ type WorkerClient = Partial<Client> & {
 
 const notifier: WorkerClient = {
   _client: null,
+  // @ts-expect-error
   createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
     if (typeof opts === 'string') opts = { apiKey: opts }
@@ -77,22 +78,23 @@ const notifier: WorkerClient = {
   }
 }
 
-type Method = keyof typeof Client.prototype
-
+;
 // Add client functions to notifier
-(Object.getOwnPropertyNames(Client.prototype) as Method[]).forEach(method => {
+(Object.getOwnPropertyNames(Client.prototype)).forEach(method => {
   // skip private methods
-  // @ts-ignore
   if (/^_/.test(method) || method === 'constructor') return
+  // @ts-expect-error
   notifier[method] = function () {
     if (!notifier._client) return console.log(`Bugsnag.${method}() was called before Bugsnag.start()`)
     notifier._client._depth += 1
+    // @ts-expect-error
     const ret = notifier._client[method].apply(notifier._client, arguments)
     notifier._client._depth -= 1
     return ret
   }
 })
 
+// @ts-expect-error
 const Bugsnag = notifier as WorkerBugsnagStatic
 
 export default Bugsnag
