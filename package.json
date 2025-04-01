@@ -61,7 +61,6 @@
   },
   "scripts": {
     "build": "lerna run build",
-    "build:node": "lerna run build --scope @bugsnag/core --scope @bugsnag/node --scope @bugsnag/plugin-express --scope @bugsnag/plugin-koa --scope @bugsnag/plugin-restify",
     "build:electron": "lerna run build --scope '@bugsnag/plugin-electron-ipc' --scope '@bugsnag/plugin-electron-app' --scope '@bugsnag/plugin-electron-client-state-persistence'",
     "test:lint": "eslint --report-unused-disable-directives .",
     "test:lint-native": "bash scripts/cppcheck.sh",
