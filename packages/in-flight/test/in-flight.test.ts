@@ -160,9 +160,9 @@ describe('@bugsnag/in-flight', () => {
 
     expect(payloads.length).toBe(1)
     expect(callback).toHaveBeenCalledTimes(1)
-    expect(cloned._sessionDelegate.startSession).toHaveBeenCalledTimes(1)
-    expect(cloned._sessionDelegate.pauseSession).not.toHaveBeenCalled()
-    expect(cloned._sessionDelegate.resumeSession).not.toHaveBeenCalled()
+    expect(cloned._sessionDelegate?.startSession).toHaveBeenCalledTimes(1)
+    expect(cloned._sessionDelegate?.pauseSession).not.toHaveBeenCalled()
+    expect(cloned._sessionDelegate?.resumeSession).not.toHaveBeenCalled()
   })
 
   it('tracks all in-flight requests', () => {
