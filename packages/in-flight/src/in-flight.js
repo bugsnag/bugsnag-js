@@ -1,5 +1,5 @@
 const cuid = require('@bugsnag/cuid')
-import { cloneClient } from '@bugsnag/core'
+const { cloneClient } = require('@bugsnag/core')
 
 const FLUSH_POLL_INTERVAL_MS = 50
 const inFlightRequests = new Map()
