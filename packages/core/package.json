@@ -2,10 +2,10 @@
   "name": "@bugsnag/core",
   "main": "./dist/index.cjs",
   "version": "8.2.0",
-  "types": "types/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/index.mjs",
       "default": "./dist/index.cjs"
     },

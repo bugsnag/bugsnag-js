@@ -9,13 +9,13 @@ interface MinimalEvent {
 
 export default class Session {
   constructor (
-    private readonly id: string = cuid(),
-    private readonly startedAt: Date = new Date(),
+    public readonly id: string = cuid(),
+    public readonly startedAt: Date = new Date(),
     public _handled = 0,
     public _unhandled = 0,
     public _user: User = {},
     public app: App = {},
-    private readonly device: Device = {}
+    public device: Device = {}
   ) { }
 
   getUser () {

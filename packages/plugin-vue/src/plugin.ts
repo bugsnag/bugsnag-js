@@ -31,18 +31,15 @@ export default class BugsnagPluginVue {
     if (this.Vue && this.Vue.config) {
       installVue2(this.Vue, client)
       return {
-        // @ts-ignore internal API
         installVueErrorHandler: () => client._logger.warn('installVueErrorHandler() was called unnecessarily')
       }
     }
     return {
       install: (app: VueApp) => {
-        // @ts-ignore internal API
         if (!app) client._logger.error(new Error('@bugsnag/plugin-vue reference to Vue `app` was undefined'))
         installVue(app, client)
       },
       installVueErrorHandler: (Vue: VueApp) => {
-        // @ts-ignore internal API
         if (!Vue) client._logger.error(new Error('@bugsnag/plugin-vue reference to `Vue` was undefined'))
         installVue2(Vue, client)
       }
