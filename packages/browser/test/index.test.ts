@@ -31,12 +31,12 @@ function mockFetch (onSessionSend?: SendCallback, onNotifySend?: SendCallback) {
   const session = makeMockXHR(onSessionSend)
   const notify = makeMockXHR(onNotifySend)
 
-  // @ts-ignore
+  // @ts-expect-error
   window.XMLHttpRequest = jest.fn()
     .mockImplementationOnce(() => session)
     .mockImplementationOnce(() => notify)
     .mockImplementation(() => makeMockXHR(() => {}))
-  // @ts-ignore
+  // @ts-expect-error
   window.XMLHttpRequest.DONE = DONE
 
   return { session, notify }
@@ -102,7 +102,7 @@ describe('browser notifier', () => {
         type: 'state',
         message: 'Bugsnag loaded'
       }))
-      expect(event.originalError.message).toBe('123')
+      expect((event.originalError as Error).message).toBe('123')
     })
   })
 
@@ -204,7 +204,7 @@ describe('browser notifier', () => {
         done(err)
       }
       expect(event.breadcrumbs.length).toBe(0)
-      expect(event.originalError.message).toBe('123')
+      expect((event.originalError as Error).message).toBe('123')
       expect(event.getMetadata('debug')).toEqual({ foo: 'bar' })
       done()
     })
@@ -235,6 +235,7 @@ describe('browser notifier', () => {
     it('resets events on pushState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
+      // @ts-expect-error
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.pushState('', '', 'new-url')
@@ -247,6 +248,7 @@ describe('browser notifier', () => {
     it('does not reset events on replaceState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
+      // @ts-expect-error
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.replaceState('', '', 'new-url')
@@ -274,12 +276,10 @@ describe('browser notifier', () => {
 
   describe('payload checksum behavior (Bugsnag-Integrity header)', () => {
     beforeEach(() => {
-      // @ts-ignore
       window.isSecureContext = true
     })
 
     afterEach(() => {
-      // @ts-ignore
       window.isSecureContext = false
     })
 

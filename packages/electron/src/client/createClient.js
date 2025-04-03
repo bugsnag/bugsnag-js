@@ -37,7 +37,7 @@ const createClient = (createProcessClient, process) => {
   const methods = Object.getOwnPropertyNames(Client.prototype).concat(['markLaunchComplete'])
 
   methods.forEach((m) => {
-    if (/^_/.test(m)) return
+    if (/^_/.test(m) || m === 'constructor') return
     Bugsnag[m] = function () {
       if (!Bugsnag._client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
       Bugsnag._client._depth += 1
