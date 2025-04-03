@@ -1,5 +1,5 @@
 const { createHash } = require('crypto')
-const jsonPayload = require('@bugsnag/core')
+const { jsonPayload } = require('@bugsnag/core')
 const PayloadQueue = require('./queue')
 const PayloadDeliveryLoop = require('./payload-loop')
 const NetworkStatus = require('@bugsnag/electron-network-status')
