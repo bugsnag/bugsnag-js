@@ -1,7 +1,7 @@
 const { createReadStream } = require('fs')
 const { createGzip } = require('zlib')
 const { basename } = require('path')
-const payload = require('@bugsnag/core')
+const { jsonPayload } = require('@bugsnag/core')
 const FormData = require('form-data')
 
 module.exports = (net, client) => {
@@ -56,7 +56,7 @@ module.exports = (net, client) => {
         payloadVersion: '5',
         events: [event]
       }
-      const eventBody = payload.event(eventPayload, client._config.redactedKeys)
+      const eventBody = jsonPayload.event(eventPayload, client._config.redactedKeys)
       formData.append('event', eventBody)
     }
 
