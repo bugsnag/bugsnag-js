@@ -9,10 +9,15 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const HomeScreen = (props) => {
   useEffect(() => {
+    console.log('HomeScreen mounted')
+
     (async () => {
       await delay(1000)
+      console.log('HomeScreen notifying error')
       Bugsnag.notify(new Error('HomeNavigationError'))
       await delay(250)
+      console.log('HomeScreen navigating to Details')
+
       Navigation.push(props.componentId, {
         component: {
           name: 'Details'
@@ -30,10 +35,14 @@ const HomeScreen = (props) => {
 
 const DetailsScreen = (props) => {
   useEffect(() => {
+    console.log('DetailsScreen mounted')
+
     (async () => {
       await delay(1000)
+      console.log('DetailsScreen notifying error')
       Bugsnag.notify(new Error('DetailsNavigationError'))
       await delay(250)
+      console.log('DetailsScreen throwing error')
       throw new Error('DetailsNavigationUnhandledError')
     })()
   }, [])
@@ -47,9 +56,15 @@ const DetailsScreen = (props) => {
 
 export class ReactNativeNavigationBreadcrumbsEnabledScenario extends Scenario {
   constructor (configuration, jsConfig) {
+    console.log('ReactNativeNavigationBreadcrumbsEnabledScenario constructor called')
     super()
     jsConfig.plugins = [new BugsnagReactNativeNavigation(Navigation)]
+    console.log('ReactNativeNavigationBreadcrumbsEnabledScenario constructed')
   }
+
+  componentDidMount () {
+    console.log('ReactNativeNavigationBreadcrumbsEnabledScenario mounted')
+  } 
 
   run () {
     Navigation.registerComponent('Home', () => HomeScreen)
