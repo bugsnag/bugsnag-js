@@ -28,6 +28,8 @@ Scenario: Reporting an Unhandled promise rejection as handled
   And the event "unhandled" is false
   And the exception "message" equals "UnhandledJsPromiseRejectionAsHandledScenario"
 
+# Skipped pending PLAT-14039
+@skip_new_arch
 Scenario: Reporting an Unhandled Native error
   When I run "UnhandledNativeErrorScenario" and relaunch the crashed app
   And I configure Bugsnag for "UnhandledNativeErrorScenario"
@@ -56,6 +58,8 @@ Scenario: Reporting an Unhandled Native error
   | new  | default | UnhandledNativeErrorScenario                                                                                              |
   | old  | default | UnhandledNativeErrorScenario                                                                                              |
 
+# Skipped pending PLAT-14039
+@skip_new_arch
 Scenario: Updating severity on an unhandled JS error
   When I run "UnhandledJsErrorSeverityScenario" and relaunch the crashed app
   And I configure Bugsnag for "UnhandledJsErrorSeverityScenario"
