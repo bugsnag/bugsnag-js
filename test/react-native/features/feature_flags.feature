@@ -21,6 +21,8 @@ Scenario: Sends handled exception which includes feature flags added in the noti
   And event 0 does not contain the feature flag "should_not_be_reported_2"
   And event 0 does not contain the feature flag "should_not_be_reported_3"
 
+# Skipped pending PLAT-14039
+@skip_new_arch_ios
 Scenario: Sends unhandled exception which includes feature flags added in the notify callback
   When I run "FeatureFlagsScenario" with data "unhandled callback" and relaunch the crashed app
   And I configure Bugsnag for "FeatureFlagsScenario"

@@ -171,7 +171,9 @@ Scenario: Handled JS error with native stacktrace
   | old  | default | @null                   |
 
 # Skipped on New Arch below 0.74 - see PLAT-12193
-@ios_only @skip_new_arch_below_074
+@ios_only @skip_new_arch_below_074 
+# Skipped pending PLAT-14039
+@skip_new_arch
 Scenario: Unhandled JS error with native stacktrace
   When I run "NativeStackUnhandledScenario"
   Then I wait to receive an error

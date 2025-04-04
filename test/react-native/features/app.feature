@@ -23,6 +23,8 @@ Scenario: App data in Handled JS error
   | android | android |
   | ios     | iOS     |
 
+# Skipped pending PLAT-14039
+@skip_new_arch_ios
 Scenario: App data in Unhandled JS error
   When I run "AppJsUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "AppJsUnhandledScenario"

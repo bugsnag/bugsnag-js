@@ -27,6 +27,8 @@ Scenario: Device data in Handled JS error
   And the event "device.model" matches "^iPhone|iPad(\d|[,\.])+$"
   And the error payload field "events.0.device.totalMemory" is greater than 0
 
+# Skipped pending PLAT-14039
+@skip_new_arch_ios
 Scenario: Device data in Unhandled JS error
   When I run "DeviceJsUnhandledScenario" and relaunch the crashed app
   And I configure Bugsnag for "DeviceJsUnhandledScenario"

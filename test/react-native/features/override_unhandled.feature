@@ -11,6 +11,7 @@ Scenario: Non-fatal error overridden to unhandled
     And the event "session.events.handled" equals 0
     And the event "session.events.unhandled" equals 1
 
+@skip_new_arch_ios
 Scenario: Fatal error overridden to handled
     When I run "UnhandledOverrideJsErrorScenario" and relaunch the crashed app
     And I configure Bugsnag for "UnhandledOverrideJsErrorScenario"

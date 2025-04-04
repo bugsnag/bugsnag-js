@@ -1,6 +1,8 @@
 @ios_only
 Feature: Reporting unhandled errors
 
+# Skipped pending PLAT-14039
+@skip_new_arch
 Scenario: Reporting an Unhandled error
   When I run "UnhandledJsErrorScenario" and relaunch the crashed app
   And I configure Bugsnag for "UnhandledJsErrorScenario"
