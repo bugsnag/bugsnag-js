@@ -9,7 +9,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const HomeScreen = (props) => {
   useEffect(() => {
-    console.error('[BugsnagRNN] HomeScreen mounted')
+    console.error('[BugsnagRNN] HomeScreen mounted');
 
     (async () => {
       await delay(1000)
@@ -35,7 +35,7 @@ const HomeScreen = (props) => {
 
 const DetailsScreen = (props) => {
   useEffect(() => {
-    console.error('[BugsnagRNN] DetailsScreen mounted')
+    console.error('[BugsnagRNN] DetailsScreen mounted');
 
     (async () => {
       await delay(1000)
@@ -64,7 +64,7 @@ export class ReactNativeNavigationBreadcrumbsEnabledScenario extends Scenario {
 
   componentDidMount () {
     console.error('[BugsnagRNN] ReactNativeNavigationBreadcrumbsEnabledScenario mounted')
-  } 
+  }
 
   run () {
     Navigation.registerComponent('Home', () => HomeScreen)
