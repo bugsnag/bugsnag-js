@@ -9,14 +9,14 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const HomeScreen = (props) => {
   useEffect(() => {
-    console.log('HomeScreen mounted')
+    console.error('[BugsnagRNN] HomeScreen mounted')
 
     (async () => {
       await delay(1000)
-      console.log('HomeScreen notifying error')
+      console.error('[BugsnagRNN] HomeScreen notifying error')
       Bugsnag.notify(new Error('HomeNavigationError'))
       await delay(250)
-      console.log('HomeScreen navigating to Details')
+      console.error('[BugsnagRNN] HomeScreen navigating to Details')
 
       Navigation.push(props.componentId, {
         component: {
@@ -35,14 +35,14 @@ const HomeScreen = (props) => {
 
 const DetailsScreen = (props) => {
   useEffect(() => {
-    console.log('DetailsScreen mounted')
+    console.error('[BugsnagRNN] DetailsScreen mounted')
 
     (async () => {
       await delay(1000)
-      console.log('DetailsScreen notifying error')
+      console.error('[BugsnagRNN] DetailsScreen notifying error')
       Bugsnag.notify(new Error('DetailsNavigationError'))
       await delay(250)
-      console.log('DetailsScreen throwing error')
+      console.error('[BugsnagRNN] DetailsScreen throwing error')
       throw new Error('DetailsNavigationUnhandledError')
     })()
   }, [])
@@ -56,14 +56,14 @@ const DetailsScreen = (props) => {
 
 export class ReactNativeNavigationBreadcrumbsEnabledScenario extends Scenario {
   constructor (configuration, jsConfig) {
-    console.log('ReactNativeNavigationBreadcrumbsEnabledScenario constructor called')
+    console.error('[BugsnagRNN] ReactNativeNavigationBreadcrumbsEnabledScenario constructor called')
     super()
     jsConfig.plugins = [new BugsnagReactNativeNavigation(Navigation)]
-    console.log('ReactNativeNavigationBreadcrumbsEnabledScenario constructed')
+    console.error('[BugsnagRNN] ReactNativeNavigationBreadcrumbsEnabledScenario constructed')
   }
 
   componentDidMount () {
-    console.log('ReactNativeNavigationBreadcrumbsEnabledScenario mounted')
+    console.error('[BugsnagRNN] ReactNativeNavigationBreadcrumbsEnabledScenario mounted')
   } 
 
   run () {
