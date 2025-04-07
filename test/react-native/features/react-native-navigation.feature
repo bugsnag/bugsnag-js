@@ -3,9 +3,10 @@ Feature: Navigation plugin features
 
 Scenario: Navigating screens causes breadcrumbs and context to be updated
   When I run "ReactNativeNavigationBreadcrumbsEnabledScenario"
-  And I relaunch the app after a crash
+  And I wait to receive 2 errors
+  Then I relaunch the app after a crash
   And I configure Bugsnag for "ReactNativeNavigationBreadcrumbsEnabledScenario"
-  And I wait to receive 3 errors
+  And I wait to receive 1 error
 
   # Handled error on Home screen
   Then the exception "message" equals "HomeNavigationError"
