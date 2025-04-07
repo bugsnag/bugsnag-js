@@ -72,7 +72,7 @@ const REACT_NAVIGATION_PEER_DEPENDENCIES = [
   `react-native-safe-area-context@${reactNativeSafeAreaContextVersion}`
 ]
 
-const reactNativeNavigationVersion = '7.41.0' // Issue with 7.42.0
+const reactNativeNavigationVersion = '7.45.0'
 const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
   `react-native-navigation@${reactNativeNavigationVersion}`
 ]
