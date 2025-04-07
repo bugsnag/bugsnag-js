@@ -66,8 +66,7 @@ steps:
           - "0.72"
           - "0.74"
           - "0.76"
-          # TODO: 0.77 moved to the basic pipeline (where 0.78 has been skipped) pending PLAT-14005
-          #- "0.77"
+          - "0.77"
         retry:
           automatic:
             - exit_status: "*"
@@ -254,8 +253,7 @@ steps:
           - "0.72"
           - "0.74"
           - "0.76"
-          # TODO: 0.77 moved to the basic pipeline (where 0.78 has been skipped) pending PLAT-14005
-          #- "0.77"
+          - "0.77"
 
       - label: ":bitbar: :mac: RN {{matrix}} iOS (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch-full"
