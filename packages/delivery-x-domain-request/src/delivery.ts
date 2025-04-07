@@ -1,11 +1,10 @@
  
-import { jsonPayload } from '@bugsnag/core'
+import { Client, Config, Session, jsonPayload } from '@bugsnag/core'
 
-import { Client, Config, Event, Session } from '@bugsnag/core'
 import getApiUrl from './get-api-url'
 import matchPageProtocol from './match-page-protocol'
 
-import { Delivery } from '@bugsnag/core'
+import { Delivery, JsonPayloadEvent } from "@bugsnag/core";
 
 const delivery = (client: Client, win = window): Delivery => ({
   sendEvent: (event, cb = () => {}) => {
@@ -15,7 +14,7 @@ const delivery = (client: Client, win = window): Delivery => ({
     }
 
     const url = getApiUrl(client._config as Required<Config>, 'notify', '4', win)
-    const body = jsonPayload.event(event as unknown as Event, client._config.redactedKeys)
+    const body = jsonPayload.event(event as unknown as JsonPayloadEvent, client._config.redactedKeys)
 
     // @ts-expect-error XDomainRequest is not defined in the Window interface
     const req = new win.XDomainRequest()

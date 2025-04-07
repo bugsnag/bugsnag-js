@@ -207,3 +207,18 @@ export interface BugsnagError {
   type: string
   stacktrace: Stackframe[]
 }
+
+interface InternalEvent {
+  apiKey?: Event['apiKey']
+  errorMessage?: Event['errorMessage']
+  errorClass?: Event['errorClass']
+  user?: Event['_user']
+  _metadata?: Event['_metadata']
+  _featuresIndex?: Event['_featuresIndex']
+  request?: Event['request']
+}
+
+export interface JsonPayloadEvent {
+  api_key?: string;
+  events: InternalEvent[];
+}
