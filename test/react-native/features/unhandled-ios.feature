@@ -45,9 +45,9 @@ Scenario: Reporting an Unhandled Native error
   And the event "unhandled" is true
   And the event "exceptions.0.message" equals the version-dependent string:
   | arch | version | value                                                                                                                     |
-  | new  | 0.78    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
-  | new  | 0.77    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
-  | new  | 0.76    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
+  | new  | 0.78    | UnhandledNativeErrorScenario                                                                                              |
+  | new  | 0.77    | UnhandledNativeErrorScenario                                                                                              |
+  | new  | 0.76    | UnhandledNativeErrorScenario                                                                                              |
   | new  | 0.75    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | 0.74    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
   | new  | 0.73    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
