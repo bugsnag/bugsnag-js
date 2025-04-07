@@ -39,8 +39,7 @@
     // so we need to use an onSendError block and discard based on the error message instead.
     #ifdef RCT_NEW_ARCH_ENABLED
     [client.configuration addOnSendErrorBlock:^BOOL (BugsnagEvent *event) {
-        return !([event.errors[0].errorMessage hasPrefix:@"Exception in HostFunction: Unhandled JS Exception"] 
-            || [event.errors[0].errorMessage hasPrefix:@"ExceptionsManager.reportException raised an exception: Unhandled JS Exception"]);
+        return ![event.errors[0].errorMessage containsString:@"Unhandled JS Exception:"];
     }];
     #endif
 }

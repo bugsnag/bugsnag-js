@@ -32,9 +32,9 @@ Scenario: Reporting an Unhandled Native error
   Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the version-dependent string:
   | arch | version | value                   |
-  | new  | 0.78    | N8facebook3jsi7JSErrorE |
-  | new  | 0.77    | N8facebook3jsi7JSErrorE |
-  | new  | 0.76    | N8facebook3jsi7JSErrorE |
+  | new  | 0.78    | NSException             |
+  | new  | 0.77    | NSException             |
+  | new  | 0.76    | NSException             |
   | new  | 0.75    | N8facebook3jsi7JSErrorE |
   | new  | 0.74    | N8facebook3jsi7JSErrorE |
   | new  | 0.73    | N8facebook3jsi7JSErrorE |
