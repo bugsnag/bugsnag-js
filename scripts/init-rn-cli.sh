@@ -29,7 +29,7 @@ expect "What is your Bugsnag build endpoint?" { send -- "http://localhost:9339/b
 expect "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want" { send -- "$notifier_version\r" }
 expect "What is your Bugsnag project API key?" { send -- "1234567890ABCDEF1234567890ABCDEF\r" }
 expect "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps?" { send -- "Y\r" }
-expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want" { send -- "3.0.0-beta.2\r" }
+expect "If you want the latest version of @bugsnag/cli hit enter, otherwise type the version you want" { send -- "\r" }
 expect "See https://docs.bugsnag.com/platforms/react-native/react-native/showing-full-stacktraces for details." { send -- "\r" }
 expect "Do you want to update your Xcode build phase to output JavaScript source maps?" { send -- "Y\r" }
 expect "This will enable you to see full native stacktraces. It can't be done automatically." { send -- "\r" }
