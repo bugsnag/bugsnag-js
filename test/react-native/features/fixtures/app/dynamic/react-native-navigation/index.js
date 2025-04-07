@@ -7,7 +7,8 @@ console.reportErrorsAsExceptions = false
 
 export const AppScreen = () => {
   useEffect(() => {
-    launchScenario()
+    const clearPersistentData = false
+    launchScenario(() => {}, clearPersistentData)
   }, [])
 
   return (

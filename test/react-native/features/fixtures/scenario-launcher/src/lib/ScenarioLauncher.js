@@ -3,7 +3,7 @@ import { getCurrentCommand } from './CommandRunner'
 import { NativeInterface } from './native'
 import Bugsnag from '@bugsnag/react-native'
 
-async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoint, scenarioData, setScenario) {
+async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoint, scenarioData, setScenario, clearPersistentData) {
   console.error(`[Bugsnag ScenarioLauncher] running scenario: ${scenarioName}`)
 
   const nativeConfig = {
@@ -21,8 +21,10 @@ async function runScenario (scenarioName, apiKey, notifyEndpoint, sessionEndpoin
   const scenario = new Scenarios[scenarioName](nativeConfig, jsConfig, scenarioData)
 
   // clear persistent data
-  console.error('[Bugsnag ScenarioLauncher] clearing persistent data')
-  NativeInterface.clearPersistentData()
+  if (clearPersistentData) {
+    console.error('[Bugsnag ScenarioLauncher] clearing persistent data')
+    NativeInterface.clearPersistentData()
+  }
 
   console.error(`[Bugsnag ScenarioLauncher] with config: ${JSON.stringify(nativeConfig)} (native) and ${JSON.stringify(jsConfig)} (js)`)
 
@@ -75,7 +77,7 @@ async function startBugsnag (scenarioName, apiKey, notifyEndpoint, sessionEndpoi
   Bugsnag.start(jsConfig)
 }
 
-export async function launchScenario (setScenario) {
+export async function launchScenario (setScenario, clearPersistentData = true) {
   const command = await getCurrentCommand()
 
   switch (command.action) {
@@ -86,7 +88,8 @@ export async function launchScenario (setScenario) {
         command.notify,
         command.sessions,
         command.scenario_data,
-        setScenario
+        setScenario,
+        clearPersistentData
       )
 
     case 'start-bugsnag':
