@@ -4,5 +4,6 @@ export { default as Event } from './event'
 export { default as Session } from './session'
 export { default as schema } from './config'
 export { default as cloneClient } from './lib/clone-client'
+export { default as intRange } from './lib/validators/int-range'
 
 export * from './common'
