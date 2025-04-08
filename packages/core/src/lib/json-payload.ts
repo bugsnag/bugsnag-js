@@ -19,9 +19,9 @@ const jsonPayload: JsonPayload = {
     if (payload.length > 10e5) {
       event.events[0]._metadata = {
         notifier:
-  `WARNING!
-  Serialized payload was ${payload.length / 10e5}MB (limit = 1MB)
-  metadata was removed`
+`WARNING!
+Serialized payload was ${payload.length / 10e5}MB (limit = 1MB)
+metadata was removed`
       }
       payload = jsonStringify(event, null, null, { redactedPaths: EVENT_REDACTION_PATHS, redactedKeys })
     }
