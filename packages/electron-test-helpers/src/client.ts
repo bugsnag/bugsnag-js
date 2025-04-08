@@ -1,4 +1,4 @@
-import { Client, schema as defaultSchema, Event, Session, SessionPayload, EventPayload, Plugin, SessionDelegate } from '@bugsnag/core'
+import { Client, schema as defaultSchema, Event, Session, SessionPayload, Plugin, SessionDelegate } from '@bugsnag/core'
 
 interface ClientTestHelpers {
   client: Client
@@ -24,7 +24,7 @@ export function makeClientForPlugin ({
   let lastSession: SessionPayload
 
   client._setDelivery(() => ({
-    sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+    sendEvent (payload, cb: (err: Error|null, obj: unknown) => void) {
       expect(payload.events).toHaveLength(1)
       cb(null, payload.events[0])
     },

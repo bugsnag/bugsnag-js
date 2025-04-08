@@ -60,16 +60,6 @@ export interface Logger {
   error: (...args: any[]) => void
 }
 
-export interface EventPayload {
-  apiKey: string
-  notifier: {
-    name: string
-    version: string
-    url: string
-  }
-  events: Event[]
-}
-
 export interface SessionPayload {
   notifier: {
     name: string
