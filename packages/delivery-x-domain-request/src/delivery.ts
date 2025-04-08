@@ -4,7 +4,7 @@ import { Client, Config, Session, jsonPayload } from '@bugsnag/core'
 import getApiUrl from './get-api-url'
 import matchPageProtocol from './match-page-protocol'
 
-import { Delivery, JsonPayloadEvent } from "@bugsnag/core";
+import type { Delivery, JsonPayloadEvent } from '@bugsnag/core'
 
 const delivery = (client: Client, win = window): Delivery => ({
   sendEvent: (event, cb = () => {}) => {

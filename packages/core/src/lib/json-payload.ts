@@ -1,5 +1,5 @@
 import jsonStringify from '@bugsnag/safe-json-stringify'
-import { JsonPayloadEvent } from "@bugsnag/core";
+import { JsonPayloadEvent } from '../common'
 type RedactedKey = string | RegExp
 
 interface JsonPayload {
