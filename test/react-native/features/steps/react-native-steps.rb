@@ -50,23 +50,15 @@ end
 def wait_for_app_state(expected_state)
   max_attempts = 20
   attempts = 0
-  state = get_app_state
+  manager = Maze::Api::Appium::AppManager.new
+  state = manager.state
   until (attempts >= max_attempts) || state == expected_state
     attempts += 1
-    state = get_app_state
+    state = manager.state
     sleep 0.5
   end
   $logger.warn "App state #{state} instead of #{expected_state} after 10s" unless state == expected_state
   state
-end
-
-def get_app_state
-  case Maze::Helper.get_current_platform
-  when 'ios'
-    Maze.driver.app_state('com.bugsnag.fixtures.reactnative')
-  when 'android'
-    Maze.driver.app_state('com.reactnative')
-  end
 end
 
 When('I relaunch the app after a crash') do
@@ -74,22 +66,23 @@ When('I relaunch the app after a crash') do
   # TODO: Really we should be using terminate_app/activate_app with the newer Appium client,
   #       but for some reason they seem to make some scenarios flaky (presumably due to the
   #       nature of how/when they close the app).
+  manager = Maze::Api::Appium::AppManager.new
   if state != :not_running
-    Maze.driver.close_app
-    # Maze.driver.terminate_app Maze.driver.app_id
+    manager.close
+    # manager.terminate
   end
-  Maze.driver.launch_app
-  # Maze.driver.activate_app Maze.driver.app_id
+  manager.launch
+  # manager.activate
 end
 
 When('I clear any error dialogue') do
   # Error dialogue is auto-cleared on IOS
-  next unless Maze.driver.capabilities['os'] == 'android'
+  next unless Maze::Helper.get_current_platform == 'android'
 
-  driver = Maze.driver
-  driver.click_element('android:id/button1') if driver.wait_for_element('android:id/button1', 3)
-  driver.click_element('android:id/aerr_close') if driver.wait_for_element('android:id/aerr_close', 3)
-  driver.click_element('android:id/aerr_restart') if driver.wait_for_element('android:id/aerr_restart', 3)
+  manager = Maze::Api::Appium::UiManager.new
+  manager.click_element('android:id/button1') if manager.wait_for_element('android:id/button1', 3)
+  manager.click_element('android:id/aerr_close') if manager.wait_for_element('android:id/aerr_close', 3)
+  manager.click_element('android:id/aerr_restart') if manager.wait_for_element('android:id/aerr_restart', 3)
 end
 
 When('I configure Bugsnag for {string}') do |scenario_name|
@@ -170,7 +163,7 @@ Then('the event {string} equals the version-dependent string:') do |field_path, 
   payload_value = Maze::Helper.read_key_path(payload, "events.0.#{field_path}")
 
   expected_value = get_value_for_arch_and_version(table)
-  
+
   unless expected_value.eql?('@skip')
     assert_equal_with_nullability(expected_value, payload_value)
   end

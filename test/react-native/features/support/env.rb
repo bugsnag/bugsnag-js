@@ -10,7 +10,7 @@ end
 
 Before do
   # See https://www.browserstack.com/docs/app-automate/appium/troubleshooting/app-orientation-issues
-  Maze.driver.set_rotation(:portrait)
+  Maze::Api::Appium::DeviceManager.new.set_rotation(:portrait)
 end
 
 Before('@android_only') do |_scenario|
