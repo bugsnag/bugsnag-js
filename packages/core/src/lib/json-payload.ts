@@ -1,10 +1,11 @@
 import jsonStringify from '@bugsnag/safe-json-stringify'
-import { JsonPayloadEvent } from '../common'
+import type { EventDeliveryPayload, SessionDeliveryPayload } from "../common";
+
 type RedactedKey = string | RegExp
 
 interface JsonPayload {
-  event: (event: JsonPayloadEvent, redactedKeys?: RedactedKey[]) => string
-  session: (session: object, redactedKeys?: RedactedKey[]) => string
+  event: (event: EventDeliveryPayload, redactedKeys?: RedactedKey[]) => string
+  session: (session: SessionDeliveryPayload, redactedKeys?: RedactedKey[]) => string
 }
 
 const EVENT_REDACTION_PATHS = [
@@ -27,7 +28,7 @@ metadata was removed`
     }
     return payload
   },
-  session: (session, redactedKeys): string => {
+  session: (session): string => {
     const payload = jsonStringify(session, null, null)
     return payload
   }

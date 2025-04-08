@@ -169,7 +169,8 @@ export interface Notifier {
 }
 
 export interface EventDeliveryPayload {
-  apiKey: string
+  apiKey?: string
+  payloadVersion?: string
   notifier: Notifier
   events: Event[]
 }
@@ -184,6 +185,7 @@ export interface SessionDeliveryPayload {
     user?: User
   }>
 }
+
 export interface Delivery {
   sendEvent(payload: EventDeliveryPayload, cb: (err?: Error | null) => void): void
   sendSession(session: SessionDeliveryPayload, cb: (err?: Error | null) => void): void
@@ -206,19 +208,4 @@ export interface BugsnagError {
   errorMessage: string
   type: string
   stacktrace: Stackframe[]
-}
-
-interface InternalEvent {
-  apiKey?: Event['apiKey']
-  errorMessage?: Event['errorMessage']
-  errorClass?: Event['errorClass']
-  user?: Event['_user']
-  _metadata?: Event['_metadata']
-  _featuresIndex?: Event['_featuresIndex']
-  request?: Event['request']
-}
-
-export interface JsonPayloadEvent {
-  api_key?: string;
-  events: InternalEvent[];
 }
