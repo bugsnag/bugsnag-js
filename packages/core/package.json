@@ -9,7 +9,6 @@
       "import": "./dist/index.mjs",
       "default": "./dist/index.cjs"
     },
-    "./lib/clone-client": "./src/lib/clone-client.js",
     "./lib/es-utils/assign": "./src/lib/es-utils/assign.js",
     "./lib/validators/int-range": "./src/lib/validators/int-range.js",
     "./lib/es-utils/map": "./src/lib/es-utils/map.js",
