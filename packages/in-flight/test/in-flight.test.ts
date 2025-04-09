@@ -1,4 +1,4 @@
-import { Client, cloneClient, EventPayload, SessionDeliveryPayload } from '@bugsnag/core'
+import { Client, cloneClient, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 
 // The in-flight package has module level state which can leak between tests
 // We can avoid this using jest's 'isolateModules' but need to type the
