@@ -6,6 +6,7 @@
 
 - Update bugsnag-android to [v6.12.1](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.12.1) [#2359](https://github.com/bugsnag/bugsnag-js/pull/2359)
 - Update bugsnag-cocoa to [v6.32.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.32.1) [#2355](https://github.com/bugsnag/bugsnag-js/pull/2355)
+- Update bugsnag-cocoa to [v6.32.2](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.32.2) [#2390](https://github.com/bugsnag/bugsnag-js/pull/2390)
 
 ### Fixed
 
