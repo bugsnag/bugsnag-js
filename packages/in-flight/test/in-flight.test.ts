@@ -1,5 +1,4 @@
-import clone from '@bugsnag/core/lib/clone-client'
-import { Client, EventPayload, SessionDeliveryPayload } from '@bugsnag/core'
+import { Client, cloneClient, EventPayload, SessionDeliveryPayload } from '@bugsnag/core'
 
 // The in-flight package has module level state which can leak between tests
 // We can avoid this using jest's 'isolateModules' but need to type the
@@ -69,7 +68,7 @@ describe('@bugsnag/in-flight', () => {
     const onError = jest.fn()
     const callback = jest.fn()
 
-    cloned = clone(client)
+    cloned = cloneClient(client)
 
     expect(cloned._depth).toBe(1)
 
@@ -155,15 +154,15 @@ describe('@bugsnag/in-flight', () => {
     expect(client._sessionDelegate.pauseSession).not.toHaveBeenCalled()
     expect(client._sessionDelegate.resumeSession).not.toHaveBeenCalled()
 
-    const cloned = clone(client)
+    const cloned = cloneClient(client)
 
     cloned.startSession()
 
     expect(payloads.length).toBe(1)
     expect(callback).toHaveBeenCalledTimes(1)
-    expect(cloned._sessionDelegate.startSession).toHaveBeenCalledTimes(1)
-    expect(cloned._sessionDelegate.pauseSession).not.toHaveBeenCalled()
-    expect(cloned._sessionDelegate.resumeSession).not.toHaveBeenCalled()
+    expect(cloned._sessionDelegate?.startSession).toHaveBeenCalledTimes(1)
+    expect(cloned._sessionDelegate?.pauseSession).not.toHaveBeenCalled()
+    expect(cloned._sessionDelegate?.resumeSession).not.toHaveBeenCalled()
   })
 
   it('tracks all in-flight requests', () => {
