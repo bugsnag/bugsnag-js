@@ -3,5 +3,6 @@ export { default as Client } from './client'
 export { default as Event } from './event'
 export { default as Session } from './session'
 export { default as schema } from './config'
+export { default as isError } from './lib/iserror'
 
 export * from './common'

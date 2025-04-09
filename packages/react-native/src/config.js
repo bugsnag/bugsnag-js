@@ -1,7 +1,6 @@
-const { schema } = require('@bugsnag/core')
+const { iserror, schema } = require('@bugsnag/core')
 const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
 const rnPackage = require('react-native/package.json')
-const iserror = require('iserror')
 
 const ALLOWED_IN_JS = [
   'onError',
