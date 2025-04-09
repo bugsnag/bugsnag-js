@@ -7,6 +7,7 @@ steps:
     steps:
       - label: ':android: Build RN {{matrix}} test fixture APK (Old Arch)'
         key: "build-react-native-android-fixture-old-arch"
+        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: macos-node-18
@@ -30,6 +31,7 @@ steps:
 
       - label: ':android: Build RN {{matrix}} test fixture APK (New Arch)'
         key: "build-react-native-android-fixture-new-arch"
+        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: macos-node-18

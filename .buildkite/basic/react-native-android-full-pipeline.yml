@@ -8,8 +8,24 @@ steps:
       #
       # Android builder
       #
+      - label: ":docker: Build Java 11 Android Builder base image"
+        key: "android-builder-base-java-11"
+        timeout_in_minutes: 30
+        plugins:
+          - docker-compose#v4.12.0:
+              build: android-builder-base-java-11
+              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+              cache-from:  android-builder-base-java-11:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-11
+          - docker-compose#v4.12.0:
+              push: android-builder-base-java-11:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-11
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
+
       - label: ":docker: Build RN Android Builder image (Java 11, Node 16)"
         key: "android-builder-image-java-11-node-16"
+        depends_on: "android-builder-base-java-11"
         timeout_in_minutes: 20
         plugins:
           - docker-compose#v4.12.0:
@@ -24,12 +40,13 @@ steps:
               limit: 1
 
       #
-      # Test fixtures
+      # Test fixture builds
       #
       - label: ":android: Build RN 0.68 Hermes apk"
         key: "rn-0-68-hermes-apk"
-        depends_on:
+        depends_on: 
           - "android-builder-image-java-11-node-16"
+          - "publish-js"
         timeout_in_minutes: 20
         env:
           REACT_NATIVE_VERSION: "rn0.68-hermes"
@@ -46,8 +63,9 @@ steps:
 
       - label: ":android: Build RN 0.69 apk"
         key: "rn-0-69-apk"
-        depends_on:
+        depends_on: 
           - "android-builder-image-java-11-node-16"
+          - "publish-js"
         timeout_in_minutes: 20
         env:
           REACT_NATIVE_VERSION: "rn0.69"
@@ -64,6 +82,7 @@ steps:
 
       - label: ':android: Build RN {{matrix}} test fixture APK (Old Arch)'
         key: "build-react-native-android-fixture-old-arch-full"
+        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: macos-node-18
@@ -90,6 +109,7 @@ steps:
 
       - label: ':android: Build RN {{matrix}} test fixture APK (New Arch)'
         key: "build-react-native-android-fixture-new-arch-full"
+        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: macos-node-18
@@ -116,6 +136,7 @@ steps:
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (Old Arch)'
         key: "build-react-native-navigation-android-fixture-old-arch"
+        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: macos-node-18
@@ -141,6 +162,7 @@ steps:
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (New Arch)'
         key: "build-react-native-navigation-android-fixture-new-arch"
+        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: macos-node-18
