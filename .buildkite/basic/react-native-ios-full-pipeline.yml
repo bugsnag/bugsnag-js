@@ -216,7 +216,7 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
-      
+
       - label: ":bitbar: :mac: RN {{matrix}} iOS (Old Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-old-arch-full"
         timeout_in_minutes: 40

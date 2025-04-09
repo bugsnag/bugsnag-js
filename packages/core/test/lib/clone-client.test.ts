@@ -1,5 +1,5 @@
 import Client from '../../src/client'
-import clone from '../../src/lib/clone-client'
+import cloneClient from '../../src/lib/clone-client'
 
 const apiKey = 'abcabcabcabcabcabcabc1234567890f'
 
@@ -7,7 +7,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
   describe('clone', () => {
     it('clones a client', () => {
       const original = new Client({ apiKey })
-      const cloned = clone(original)
+      const cloned = cloneClient(original);
 
       expect(cloned._config.apiKey).toEqual(apiKey)
       expect(cloned).not.toBe(original)
@@ -17,7 +17,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const original = new Client({ apiKey })
       original.leaveBreadcrumb('abc', { a: 1 }, 'navigation')
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original);
 
       expect(cloned._breadcrumbs).not.toBe(original._breadcrumbs)
       expect(cloned._breadcrumbs).toHaveLength(1)
@@ -41,7 +41,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       original.addMetadata('abc', { a: 1, b: 2, c: 3 })
       original.addMetadata('xyz', { x: 9, y: 8, z: 7 })
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original);
       expect(cloned._metadata).not.toBe(original._metadata)
       expect(cloned._metadata).toEqual({
         abc: { a: 1, b: 2, c: 3 },
@@ -69,7 +69,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
         { name: 'c' }
       ])
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
       expect(cloned._features).not.toBe(original._features)
       expect(cloned._features).toEqual([
         { name: 'a', variant: '1' },
@@ -95,7 +95,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const original = new Client({ apiKey })
       original.setUser('123', 'user@bugsnag.com', 'bug snag')
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
       expect(cloned.getUser()).toEqual({
         id: '123',
         email: 'user@bugsnag.com',
@@ -118,7 +118,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const original = new Client({ apiKey })
       original.setContext('contextual')
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
       expect(cloned.getContext()).toEqual('contextual')
 
       // changing the original's context should not affect the clone
@@ -135,7 +135,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const original = new Client({ apiKey })
       original.addOnError(onError1)
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
       expect(cloned._cbs.e).not.toBe(original._cbs.e)
 
       // @ts-ignore
@@ -164,7 +164,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const original = new Client({ apiKey })
       original.addOnSession(onSession1)
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
       expect(cloned._cbs.s).not.toBe(original._cbs.s)
 
       // @ts-ignore
@@ -193,7 +193,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const original = new Client({ apiKey })
       original._addOnSessionPayload(onSessionPayload1)
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
       expect(cloned._cbs.sp).not.toBe(original._cbs.sp)
 
       // @ts-ignore
@@ -222,7 +222,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const original = new Client({ apiKey })
       original.addOnBreadcrumb(onBreadcrumb1)
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
       expect(cloned._cbs.b).not.toBe(original._cbs.b)
 
       // @ts-ignore
@@ -253,7 +253,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       }
 
       const original = new Client({ apiKey, logger })
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
 
       expect(cloned._logger).toBe(original._logger)
     })
@@ -267,7 +267,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const original = new Client({ apiKey })
       original._setDelivery(delivery)
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
 
       expect(cloned._delivery).toBe(original._delivery)
     })
@@ -282,7 +282,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const original = new Client({ apiKey })
       original._sessionDelegate = sessionDelegate
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
 
       expect(cloned._sessionDelegate).toBe(original._sessionDelegate)
     })
@@ -294,9 +294,9 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const callback2 = jest.fn()
       const callback3 = jest.fn()
 
-      clone.registerCallback(callback1)
-      clone.registerCallback(callback2)
-      clone.registerCallback(callback3)
+      cloneClient.registerCallback(callback1)
+      cloneClient.registerCallback(callback2)
+      cloneClient.registerCallback(callback3)
 
       const original = new Client({ apiKey })
 
@@ -304,13 +304,13 @@ describe('@bugsnag/core/lib/clone-client', () => {
       expect(callback2).not.toHaveBeenCalled()
       expect(callback3).not.toHaveBeenCalled()
 
-      clone(original)
+      cloneClient(original)
 
       expect(callback1).toHaveBeenCalledTimes(1)
       expect(callback2).toHaveBeenCalledTimes(1)
       expect(callback3).toHaveBeenCalledTimes(1)
 
-      clone(original)
+      cloneClient(original)
 
       expect(callback1).toHaveBeenCalledTimes(2)
       expect(callback2).toHaveBeenCalledTimes(2)
@@ -322,9 +322,9 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const callback2 = jest.fn()
       const callback3 = jest.fn()
 
-      clone.registerCallback(callback1)
-      clone.registerCallback(callback2)
-      clone.registerCallback(callback3)
+      cloneClient.registerCallback(callback1)
+      cloneClient.registerCallback(callback2)
+      cloneClient.registerCallback(callback3)
 
       const original = new Client({ apiKey })
 
@@ -332,13 +332,13 @@ describe('@bugsnag/core/lib/clone-client', () => {
       expect(callback2).not.toHaveBeenCalled()
       expect(callback3).not.toHaveBeenCalled()
 
-      const cloned = clone(original)
+      const cloned = cloneClient(original)
 
       expect(callback1).toHaveBeenCalledWith(cloned)
       expect(callback2).toHaveBeenCalledWith(cloned)
       expect(callback3).toHaveBeenCalledWith(cloned)
 
-      const cloned2 = clone(original)
+      const cloned2 = cloneClient(original)
 
       expect(callback1).toHaveBeenCalledWith(cloned2)
       expect(callback2).toHaveBeenCalledWith(cloned2)
@@ -357,19 +357,19 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const callback2 = () => { order.push('callback2') }
       const callback3 = () => { order.push('callback3') }
 
-      clone.registerCallback(callback1)
-      clone.registerCallback(callback2)
-      clone.registerCallback(callback3)
+      cloneClient.registerCallback(callback1)
+      cloneClient.registerCallback(callback2)
+      cloneClient.registerCallback(callback3)
 
       const original = new Client({ apiKey })
 
       expect(order).toEqual([])
 
-      clone(original)
+      cloneClient(original)
 
       expect(order).toEqual(['callback1', 'callback2', 'callback3'])
 
-      clone(original)
+      cloneClient(original)
 
       expect(order).toEqual(['callback1', 'callback2', 'callback3', 'callback1', 'callback2', 'callback3'])
     })

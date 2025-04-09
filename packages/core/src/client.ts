@@ -147,6 +147,10 @@ export default class Client<T extends Config = Config> {
     return this._context
   }
 
+  getNotifier () {
+    return this._notifier
+  }
+
   setContext (c: string) {
     this._context = c
   }
