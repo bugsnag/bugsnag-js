@@ -1,4 +1,3 @@
-import map from '@bugsnag/core/lib/es-utils/map'
 import reduce from '@bugsnag/core/lib/es-utils/reduce'
 import filter from '@bugsnag/core/lib/es-utils/filter'
 import { Client } from '@bugsnag/core'
@@ -96,12 +95,12 @@ export default (doc = document, win = window) => ({
 
     // Proxy all the timer functions whose callback is their 0th argument.
     // Keep a reference to the original setTimeout because we need it later
-    const [_setTimeout] = map([
+    const [_setTimeout] = [
       'setTimeout',
       'setInterval',
       'setImmediate',
       'requestAnimationFrame'
-    ], fn =>
+    ].map(fn =>
       __proxy(win, fn, original =>
         __traceOriginalScript(original, (args: any) => ({
           get: () => args[0],
@@ -112,13 +111,13 @@ export default (doc = document, win = window) => ({
     )
 
     // Proxy all the host objects whose prototypes have an addEventListener function
-    map([
-      'EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode',
-      'CryptoOperation', 'EventSource', 'FileReader', 'HTMLUnknownElement', 'IDBDatabase',
+    const eventListeners = ['EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode', 'CryptoOperation', 'EventSource', 'FileReader', 'HTMLUnknownElement', 'IDBDatabase',
       'IDBRequest', 'IDBTransaction', 'KeyOperation', 'MediaController', 'MessagePort', 'ModalWindow',
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
       'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'
-    ], o => {
+    ]
+    
+    eventListeners.map(o => {
       // @ts-expect-error Element implicitly has an 'any' type because index expression is not of type 'number'
       if (!win[o] || !win[o].prototype || !Object.prototype.hasOwnProperty.call(win[o].prototype, 'addEventListener')) return
       // @ts-expect-error Element implicitly has an 'any' type because index expression is not of type 'number'
