@@ -102,6 +102,7 @@ steps:
           - "0.74"
           - "0.76"
           - "0.77"
+          - "0.78"
         retry:
           automatic:
             - exit_status: "*"
@@ -133,6 +134,7 @@ steps:
           - "0.74"
           - "0.76"
           - "0.77"
+          - "0.78"
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (Old Arch)'
         key: "build-react-native-navigation-android-fixture-old-arch"
@@ -293,6 +295,7 @@ steps:
           - "0.74"
           - "0.76"
           - "0.77"
+          - "0.78"
 
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
@@ -335,6 +338,7 @@ steps:
           - "0.74"
           - "0.76"
           - "0.77"
+          - "0.78"
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (Old Arch) end-to-end tests"
         depends_on: "build-react-native-navigation-android-fixture-old-arch"
