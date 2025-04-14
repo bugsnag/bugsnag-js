@@ -24,8 +24,8 @@ expect "Do you want to continue anyway?" { send -- "Y\r" }
 expect "Are you using Bugsnag on-premise?" { send -- "Y\r" }
 expect "What is your Bugsnag notify endpoint?" { send -- "http://bs-local.com:9339/notify\r" }
 expect "What is your Bugsnag sessions endpoint?" { send -- "http://bs-local.com:9339/sessions\r" }
-expect "What is your Bugsnag upload endpoint?" { send -- "http://localhost:9339\r" }
-expect "What is your Bugsnag build endpoint?" { send -- "http://localhost:9339/builds\r" }
+expect "What is your Bugsnag upload endpoint?" { send -- "http://localhost:$((MAZE_RUNNER_PORT))\r" }
+expect "What is your Bugsnag build endpoint?" { send -- "http://localhost:$((MAZE_RUNNER_PORT))/builds\r" }
 expect "If you want the latest version of @bugsnag/react-native hit enter, otherwise type the version you want" { send -- "$notifier_version\r" }
 expect "What is your Bugsnag project API key?" { send -- "1234567890ABCDEF1234567890ABCDEF\r" }
 expect "Do you want to install the BugSnag CLI to allow you to upload JavaScript source maps?" { send -- "Y\r" }
