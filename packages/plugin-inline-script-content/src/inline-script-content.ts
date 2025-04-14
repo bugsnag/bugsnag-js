@@ -109,7 +109,7 @@ export default (doc = document, win = window) => ({
         }))
       )
     )
-    ;
+
     // Proxy all the host objects whose prototypes have an addEventListener function
     const eventListeners = ['EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode', 'CryptoOperation', 'EventSource', 'FileReader', 'HTMLUnknownElement', 'IDBDatabase',
       'IDBRequest', 'IDBTransaction', 'KeyOperation', 'MediaController', 'MessagePort', 'ModalWindow',
