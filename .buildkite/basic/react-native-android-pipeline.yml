@@ -10,7 +10,7 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
-          queue: macos-node-18
+          queue: macos-14-multi-agent
         env:
           JAVA_VERSION: "17"
           NODE_VERSION: "18"
@@ -34,7 +34,7 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
-          queue: macos-node-18
+          queue: macos-14-multi-agent
         env:
           JAVA_VERSION: "17"
           NODE_VERSION: "18"

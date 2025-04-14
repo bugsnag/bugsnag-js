@@ -44,7 +44,7 @@ steps:
       #
       - label: ":android: Build RN 0.68 Hermes apk"
         key: "rn-0-68-hermes-apk"
-        depends_on: 
+        depends_on:
           - "android-builder-image-java-11-node-16"
           - "publish-js"
         timeout_in_minutes: 20
@@ -63,7 +63,7 @@ steps:
 
       - label: ":android: Build RN 0.69 apk"
         key: "rn-0-69-apk"
-        depends_on: 
+        depends_on:
           - "android-builder-image-java-11-node-16"
           - "publish-js"
         timeout_in_minutes: 20
@@ -85,7 +85,7 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
-          queue: macos-node-18
+          queue: macos-14-multi-agent
         env:
           JAVA_VERSION: "17"
           NODE_VERSION: "18"
@@ -112,7 +112,7 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
-          queue: macos-node-18
+          queue: macos-14-multi-agent
         env:
           JAVA_VERSION: "17"
           NODE_VERSION: "18"
@@ -139,7 +139,7 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
-          queue: macos-node-18
+          queue: macos-14-multi-agent
         env:
           JAVA_VERSION: "17"
           NODE_VERSION: "18"
@@ -165,7 +165,7 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
-          queue: macos-node-18
+          queue: macos-14-multi-agent
         env:
           JAVA_VERSION: "17"
           NODE_VERSION: "18"

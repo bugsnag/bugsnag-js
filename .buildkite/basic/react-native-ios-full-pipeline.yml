@@ -50,7 +50,7 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
-          queue: "macos-14"
+          queue: "macos-14-multiagent"
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
@@ -77,7 +77,7 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
-          queue: "macos-14"
+          queue: "macos-14-multiagent"
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
@@ -104,7 +104,7 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
-          queue: "macos-14"
+          queue: "macos-14-multiagent"
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
@@ -131,7 +131,7 @@ steps:
       #   key: "build-react-native-navigation-ios-fixture-new-arch"
       #   timeout_in_minutes: 30
       #   agents:
-      #     queue: "macos-14"
+      #     queue: "macos-14-multiagent"
       #   env:
       #     NODE_VERSION: "18"
       #     RN_VERSION: "{{matrix}}"
