@@ -9,6 +9,8 @@ set notifier_version [lindex $argv 0]
 set rn_version [lindex $argv 1]
 set fixture_path [lindex $argv 2]
 
+set MAZE_RUNNER_PORT $env(MAZE_RUNNER_PORT)
+
 # Process React Native version string
 set rn_version_cleaned [string map {".expo.ejected" "" "_" "."} [string range $rn_version 2 end]]
 
