@@ -1,8 +1,11 @@
+import type { EventDeliveryPayload, SessionDeliveryPayload } from '../../src/common'
+import Event from '../../src/event'
 import jsonPayload from '../../src/lib/json-payload'
+import Session from '../../src/session'
 
 function makeBigObject () {
-  var big: Record<string, string> = {}
-  var i = 0
+  const big: Record<string, string> = {}
+  let i = 0
   while (JSON.stringify(big).length < 2 * 10e5) {
     big['entry' + i] = 'long repetitive string'.repeat(1000)
     i++
@@ -12,69 +15,46 @@ function makeBigObject () {
 
 describe('jsonPayload.event', () => {
   it('safe stringifies the payload and redacts values from certain paths of the supplied keys', () => {
+    const event = new Event('CheckoutError', 'Failed load tickets')
+    event.setUser('123', 'jim@bugsnag.com', 'Jim Bug')
+    event.request = { apiKey: '245b39ebd3cd3992e85bffc81c045924' }
+
     expect(jsonPayload.event({
-      api_key: 'd145b8e5afb56516423bc4d605e45442',
-      events: [
-        {
-          errorMessage: 'Failed load tickets',
-          errorClass: 'CheckoutError',
-          user: {
-            name: 'Jim Bug',
-            email: 'jim@bugsnag.com'
-          },
-          request: {
-            api_key: '245b39ebd3cd3992e85bffc81c045924'
-          }
-        }
-      ]
-    }, ['api_key'])).toBe('{"api_key":"d145b8e5afb56516423bc4d605e45442","events":[{"errorMessage":"Failed load tickets","errorClass":"CheckoutError","user":{"name":"Jim Bug","email":"jim@bugsnag.com"},"request":{"api_key":"[REDACTED]"}}]}')
+      apiKey: 'd145b8e5afb56516423bc4d605e45442',
+      notifier: { name: 'Bugsnag', version: '1.0.0', url: 'https://bugsnag.com' },
+      events: [event]
+    }, ['apiKey'])).toBe('{"apiKey":"d145b8e5afb56516423bc4d605e45442","notifier":{"name":"Bugsnag","version":"1.0.0","url":"https://bugsnag.com"},"events":[{"payloadVersion":"4","exceptions":[{"errorClass":"CheckoutError","errorMessage":"Failed load tickets","type":"browserjs","stacktrace":[],"message":"Failed load tickets"}],"severity":"warning","unhandled":false,"severityReason":{"type":"handledException"},"app":{},"device":{},"request":{"apiKey":"[REDACTED]"},"breadcrumbs":[],"metaData":{},"user":{"id":"123","email":"jim@bugsnag.com","name":"Jim Bug"},"featureFlags":[]}]}')
   })
 
   it('strips the metaData of the first event if the payload is too large', () => {
-    const payload = {
-      api_key: 'd145b8e5afb56516423bc4d605e45442',
-      events: [
-        {
-          errorMessage: 'Failed load tickets',
-          errorClass: 'CheckoutError',
-          user: {
-            name: 'Jim Bug',
-            email: 'jim@bugsnag.com'
-          },
-          request: {
-            api_key: '245b39ebd3cd3992e85bffc81c045924'
-          },
-          _metadata: {}
-        }
-      ]
+    const event = new Event('CheckoutError', 'Failed load tickets')
+    event.setUser('123', 'jim@bugsnag.com', 'Jim Bug')
+    event.request = { apiKey: '245b39ebd3cd3992e85bffc81c045924' }
+    event._metadata = { 'big thing': makeBigObject() }
+
+    const payload: EventDeliveryPayload = {
+      apiKey: 'd145b8e5afb56516423bc4d605e45442',
+      notifier: { name: 'Bugsnag', version: '1.0.0', url: 'https://bugsnag.com' },
+      events: [event]
     }
 
-    payload.events[0]._metadata = { 'big thing': makeBigObject() }
-
-    expect(jsonPayload.event(payload)).toBe('{"api_key":"d145b8e5afb56516423bc4d605e45442","events":[{"errorMessage":"Failed load tickets","errorClass":"CheckoutError","user":{"name":"Jim Bug","email":"jim@bugsnag.com"},"request":{"api_key":"245b39ebd3cd3992e85bffc81c045924"},"_metadata":{"notifier":"WARNING!\\nSerialized payload was 2.003435MB (limit = 1MB)\\nmetadata was removed"}}]}')
+    expect(jsonPayload.event(payload)).toBe('{"apiKey":"d145b8e5afb56516423bc4d605e45442","notifier":{"name":"Bugsnag","version":"1.0.0","url":"https://bugsnag.com"},"events":[{"payloadVersion":"4","exceptions":[{"errorClass":"CheckoutError","errorMessage":"Failed load tickets","type":"browserjs","stacktrace":[],"message":"Failed load tickets"}],"severity":"warning","unhandled":false,"severityReason":{"type":"handledException"},"app":{},"device":{},"request":{"apiKey":"245b39ebd3cd3992e85bffc81c045924"},"breadcrumbs":[],"metaData":{"notifier":"WARNING!\\nSerialized payload was 2.003764MB (limit = 1MB)\\nmetadata was removed"},"user":{"id":"123","email":"jim@bugsnag.com","name":"Jim Bug"},"featureFlags":[]}]}')
   })
 
   it('does not attempt to strip any other data paths from the payload to reduce the size', () => {
+    const event1 = new Event('CheckoutError', 'Failed load tickets')
+    event1.setUser('123', 'jim@bugsnag.com', 'Jim Bug')
+    event1.request = { apiKey: '245b39ebd3cd3992e85bffc81c045924' }
+    
+    // Second event metadata should not be stripped, only the first
+    const event2 = new Event('APIError', 'Request failed')
+    event2._metadata = { 'big thing': makeBigObject() }
+    
     const payload = {
-      api_key: 'd145b8e5afb56516423bc4d605e45442',
-      events: [
-        {
-          errorMessage: 'Failed load tickets',
-          errorClass: 'CheckoutError',
-          user: {
-            name: 'Jim Bug',
-            email: 'jim@bugsnag.com'
-          },
-          _metadata: {}
-        },
-        {
-          errorMessage: 'Request failed',
-          errorClass: 'APIError',
-          _metadata: {}
-        }
-      ]
+      apiKey: 'd145b8e5afb56516423bc4d605e45442',
+      notifier: { name: 'Bugsnag', version: '1.0.0', url: 'https://bugsnag.com' },
+      events: [event1, event2]
     }
-    payload.events[1]._metadata = { 'big thing': makeBigObject() }
 
     expect(jsonPayload.event(payload).length).toBeGreaterThan(10e5)
   })
@@ -82,21 +62,14 @@ describe('jsonPayload.event', () => {
 
 describe('jsonPayload.session', () => {
   it('safe stringifies the payload', () => {
-    expect(jsonPayload.session({
-      api_key: 'd145b8e5afb56516423bc4d605e45442',
-      events: [
-        {
-          errorMessage: 'Failed load tickets',
-          errorClass: 'CheckoutError',
-          user: {
-            name: 'Jim Bug',
-            email: 'jim@bugsnag.com'
-          },
-          request: {
-            api_key: '245b39ebd3cd3992e85bffc81c045924'
-          }
-        }
-      ]
-    }, ['api_key'])).toBe('{"api_key":"d145b8e5afb56516423bc4d605e45442","events":[{"errorMessage":"Failed load tickets","errorClass":"CheckoutError","user":{"name":"Jim Bug","email":"jim@bugsnag.com"},"request":{"api_key":"245b39ebd3cd3992e85bffc81c045924"}}]}')
+    const session = new Session('123', new Date('2012-12-21T00:00:00.0000Z'))
+    const sessionPayload: SessionDeliveryPayload = {
+      app: { version: '1.0.0' },
+      device: { id: '123' },
+      notifier: { name: 'Bugsnag', version: '1.0.0', url: 'https://bugsnag.com' },
+      sessions: [session]
+    }
+
+    expect(jsonPayload.session(sessionPayload)).toBe('{"app":{"version":"1.0.0"},"device":{"id":"123"},"notifier":{"name":"Bugsnag","version":"1.0.0","url":"https://bugsnag.com"},"sessions":[{"id":"123","startedAt":"2012-12-21T00:00:00.000Z","events":{"handled":0,"unhandled":0}}]}')
   })
 })

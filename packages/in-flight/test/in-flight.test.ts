@@ -1,4 +1,4 @@
-import { Client, cloneClient, EventPayload, SessionDeliveryPayload } from '@bugsnag/core'
+import { Client, cloneClient, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 
 // The in-flight package has module level state which can leak between tests
 // We can avoid this using jest's 'isolateModules' but need to type the
@@ -13,7 +13,7 @@ const id = <T>(a: T) => a
 describe('@bugsnag/in-flight', () => {
   it('tracks in-flight events', () => {
     const client = new Client({ apiKey: 'AN_API_KEY' })
-    const payloads: EventPayload[] = []
+    const payloads: EventDeliveryPayload[] = []
     const sendSession = jest.fn()
 
     client._setDelivery(() => ({
@@ -49,7 +49,7 @@ describe('@bugsnag/in-flight', () => {
     // eslint thinks this is never reassigned, but it clearly is
     let cloned: Client // eslint-disable-line prefer-const
 
-    const payloads: EventPayload[] = []
+    const payloads: EventDeliveryPayload[] = []
     const sendSession = jest.fn()
 
     client._setDelivery(() => ({
@@ -167,7 +167,7 @@ describe('@bugsnag/in-flight', () => {
 
   it('tracks all in-flight requests', () => {
     const client = new Client({ apiKey: 'AN_API_KEY' })
-    const eventPayloads: EventPayload[] = []
+    const eventPayloads: EventDeliveryPayload[] = []
     const sessionPayloads: SessionDeliveryPayload[] = []
     const sessionCallback = jest.fn()
 
@@ -216,7 +216,7 @@ describe('@bugsnag/in-flight', () => {
 
   it('can flush successfully', async () => {
     const client = new Client({ apiKey: 'AN_API_KEY' })
-    const eventPayloads: EventPayload[] = []
+    const eventPayloads: EventDeliveryPayload[] = []
     const sessionPayloads: SessionDeliveryPayload[] = []
 
     client._sessionDelegate = {
@@ -260,7 +260,7 @@ describe('@bugsnag/in-flight', () => {
 
   it('will timeout if flush takes too long', async () => {
     const client = new Client({ apiKey: 'AN_API_KEY' })
-    const eventPayloads: EventPayload[] = []
+    const eventPayloads: EventDeliveryPayload[] = []
     const sessionPayloads: SessionDeliveryPayload[] = []
 
     client._sessionDelegate = {
@@ -310,7 +310,7 @@ describe('@bugsnag/in-flight', () => {
 
   it('can track requests when delivery is changed', async () => {
     const client = new Client({ apiKey: 'AN_API_KEY' })
-    const originalEventPayloads: EventPayload[] = []
+    const originalEventPayloads: EventDeliveryPayload[] = []
     const originalSessionPayloads: SessionDeliveryPayload[] = []
 
     client._sessionDelegate = {
@@ -351,7 +351,7 @@ describe('@bugsnag/in-flight', () => {
     expect(originalEventPayloads.length).toBe(1)
     expect(originalSessionPayloads.length).toBe(1)
 
-    const newEventPayloads: EventPayload[] = []
+    const newEventPayloads: EventDeliveryPayload[] = []
     const newSessionPayloads: SessionDeliveryPayload[] = []
 
     client._setDelivery(() => ({

@@ -1,8 +1,4 @@
-import { Client, Config } from '@bugsnag/core'
-
-import payload from '@bugsnag/core/lib/json-payload'
-import { Event, Delivery } from '@bugsnag/core'
-
+import { jsonPayload, Delivery, Client, Config } from '@bugsnag/core'
 
 function getIntegrityHeaderValue (windowOrWorkerGlobalScope: Window, requestBody: string) {
   if (windowOrWorkerGlobalScope.isSecureContext && windowOrWorkerGlobalScope.crypto && windowOrWorkerGlobalScope.crypto.subtle && windowOrWorkerGlobalScope.crypto.subtle.digest && typeof TextEncoder === 'function') {
@@ -31,7 +27,7 @@ const delivery = (client: Client, win = window): Delivery => ({
         return cb(err)
       }
       const req = new win.XMLHttpRequest()
-      const body = payload.event(event as unknown as Event, config.redactedKeys)
+      const body = jsonPayload.event(event, config.redactedKeys)
 
       req.onreadystatechange = function () {
         if (req.readyState === win.XMLHttpRequest.DONE) {
@@ -83,7 +79,7 @@ const delivery = (client: Client, win = window): Delivery => ({
         return cb(err)
       }
       const req = new win.XMLHttpRequest()
-      const body = payload.session(session, config.redactedKeys)
+      const body = jsonPayload.session(session, config.redactedKeys)
 
       req.onreadystatechange = function () {
         if (req.readyState === win.XMLHttpRequest.DONE) {
