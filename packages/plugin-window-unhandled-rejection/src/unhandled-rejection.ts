@@ -44,7 +44,7 @@ export default (win = window): Plugin => {
         }, 'unhandledrejection handler', 1, client._logger)
 
         if (isBluebird) {
-          map(event.errors[0].stacktrace, fixBluebirdStacktrace(error))
+          event.errors[0].stacktrace.map(fixBluebirdStacktrace(error))
         }
 
         client._notify(event, (event) => {
