@@ -143,9 +143,7 @@ module.exports = (request, options) => {
 
             if (typeof exportValue === 'string') {
               targetFilePath = exportKey.endsWith('*')
-                ? exportValue.replace(
-                  /\*/, submoduleName.slice(exportKey.length - 1)
-                )
+                ? exportValue.replace(/.$/, submoduleName.slice(exportKey.length - 1))
                 : exportValue
             } else if (
               conditions && exportValue != null && typeof exportValue === 'object'
