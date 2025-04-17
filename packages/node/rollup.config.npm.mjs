@@ -5,24 +5,37 @@ import replace from '@rollup/plugin-replace'
 import typescript from '@rollup/plugin-typescript'
 import fs from 'fs'
 
-import createRollupConfig, { sharedOutput } from '../../.rollup/index.mjs'
+import { sharedOutput } from '../../.rollup/index.mjs'
 
 const packageJson = JSON.parse(fs.readFileSync('./package.json'))
 
+const extensions = ['.js', '.ts', '.cjs', '.mjs']
+
 const plugins = [
   nodeResolve({
-    preferBuiltins: true
+    preferBuiltins: true,
+    extensions
   }),
   commonjs(),
-  typescript({
-    removeComments: true,
-    // don't output anything if there's a TS error
-    noEmitOnError: true,
-    compilerOptions: {
-      target: 'es2015'
-    }
+  babel({
+    babelHelpers: 'bundled',
+    extensions,
+    presets: [
+      ['@babel/preset-env', {
+        useBuiltIns: 'entry',
+        corejs: "3.22",
+        targets: { node: '12' },
+        loose: true,
+      }],
+      '@babel/preset-typescript'
+    ],
+    plugins: [
+      '@babel/plugin-proposal-class-properties'
+    ]
   }),
-  babel({ babelHelpers: 'bundled' }),
+  typescript({
+    noForceEmit: true,
+  }),
   replace({
     preventAssignment: true,
     values: {
@@ -33,7 +46,7 @@ const plugins = [
 ]
 
 export default [
-  createRollupConfig({
+  {
     input: 'src/index-es.ts',
     output: [
       {
@@ -44,8 +57,8 @@ export default [
       }
     ],
     plugins
-  }),
-  createRollupConfig({
+  },
+  {
     input: 'src/index-cjs.ts',
     output: [
       {
@@ -55,5 +68,5 @@ export default [
       }
     ],
     plugins
-  })
+  }
 ]

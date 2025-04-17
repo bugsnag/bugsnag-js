@@ -5,7 +5,7 @@ import typescript from '@rollup/plugin-typescript'
 
 import { sharedOutput } from "../../.rollup/index.mjs"
 
-const extensions = ['.js', '.ts']
+const extensions = ['.js', '.ts', '.cjs', '.mjs']
 
 const plugins = [
   nodeResolve({
