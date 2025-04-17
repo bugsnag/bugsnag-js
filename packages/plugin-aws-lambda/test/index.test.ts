@@ -1,5 +1,5 @@
 import util from 'util'
-import BugsnagPluginAwsLambda from '../src/'
+import BugsnagPluginAwsLambda from '../'
 import { Client, EventPayload, SessionDeliveryPayload } from '@bugsnag/core'
 
 const createClient = (events: EventPayload[], sessions: SessionDeliveryPayload[], config = {}) => {

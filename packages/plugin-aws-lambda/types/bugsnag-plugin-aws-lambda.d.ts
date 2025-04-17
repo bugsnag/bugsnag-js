@@ -1,4 +1,4 @@
-import { Plugin, Client } from '@bugsnag/core'
+import { Plugin } from '@bugsnag/core'
 
 declare const BugsnagPluginAwsLambda: Plugin
 export default BugsnagPluginAwsLambda
