@@ -1,5 +1,5 @@
 const native = require('bindings')('bugsnag_plugin_electron_app_bindings')
-const { schema } = require('@bugsnag/core/config')
+const { schema } = require('@bugsnag/core')
 const intRange = require('@bugsnag/core/lib/validators/int-range')
 
 const isNativeClientEnabled = client => client._config.autoDetectErrors && client._config.enabledErrorTypes.nativeCrashes

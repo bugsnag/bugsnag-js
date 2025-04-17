@@ -1,4 +1,4 @@
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { Breadcrumb } from '@bugsnag/core'
 import { net } from 'electron'
 import { AddressInfo } from 'net'
 import { createServer, STATUS_CODES, Server, IncomingMessage, ServerResponse } from 'http'
