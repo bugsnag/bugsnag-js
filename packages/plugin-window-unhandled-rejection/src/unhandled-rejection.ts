@@ -1,5 +1,4 @@
 import { isError, Config, Plugin } from '@bugsnag/core'
-import map from '@bugsnag/core/lib/es-utils/map'
 import fixBluebirdStacktrace from './fix-bluebird-stacktrace'
 
 type Listener = (evt: PromiseRejectionEvent) => void
@@ -48,11 +47,11 @@ export default (win = window): Plugin => {
         }
 
         client._notify(event, (event) => {
-          if (isError(event.originalError) && !event.originalError?.stack) {
+          if (isError(event.originalError) && !event.originalError.stack) {
             event.addMetadata('unhandledRejection handler', {
               [Object.prototype.toString.call(event.originalError)]: {
-                name: event.originalError?.name,
-                message: event.originalError?.message,
+                name: event.originalError.name,
+                message: event.originalError.message,
                 // @ts-expect-error optional error.code property
                 code: event.originalError.code
               }
