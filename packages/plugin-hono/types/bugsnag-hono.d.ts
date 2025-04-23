@@ -1,12 +1,12 @@
 import { Plugin, Client } from '@bugsnag/core'
-import * as hono from 'hono'
+import type { MiddlewareHandler } from 'hono'
 
 declare const bugsnagPluginHono: Plugin
 export default bugsnagPluginHono
 
 interface BugsnagPluginHonoResult {
-  errorHandler: hono.MiddlewareHandler
-  requestHandler: hono.MiddlewareHandler
+  errorHandler: MiddlewareHandler
+  requestHandler: MiddlewareHandler
 }
 
 declare module '@bugsnag/core' {
