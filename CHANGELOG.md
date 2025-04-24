@@ -1,5 +1,11 @@
 # Changelog
 
+## [8.3.2] - 2025-04-24
+
+### Fixed
+
+- (react-native-cli) Update insert command for 0.79 projects [#2410](https://github.com/bugsnag/bugsnag-js/pull/2410)
+
 ## [8.3.1] - 2025-04-09
 
 ### Changed
