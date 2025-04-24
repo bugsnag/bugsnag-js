@@ -1,4 +1,5 @@
-import { isError, Config, Plugin } from '@bugsnag/core'
+import { isError } from '@bugsnag/core'
+import type { Config, Plugin } from '@bugsnag/core'
 import fixBluebirdStacktrace from './fix-bluebird-stacktrace'
 
 type Listener = (evt: PromiseRejectionEvent) => void
