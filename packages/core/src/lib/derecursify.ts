@@ -27,10 +27,10 @@ const safelyGetProp = (obj: Object, propName: keyof Object) => {
  * @param data the value to be made safe for the ReactNative bridge
  * @returns a safe version of the given `data`
  */
-const derecursify = (data: any) => {
+const derecursify = (data: unknown): {} => {
   const seen: object[] | [][] = []
 
-  const visit: any = (obj: any) => {
+  const visit = (obj: any): any => {
     if (obj === null || obj === undefined) return obj
 
     if (isSafeLiteral(obj)) {
