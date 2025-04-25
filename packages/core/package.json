@@ -17,7 +17,6 @@
     "./lib/iserror": "./src/lib/iserror.js",
     "./lib/es-utils/reduce": "./src/lib/es-utils/reduce.js",
     "./lib/es-utils/keys": "./src/lib/es-utils/keys.js",
-    "./lib/derecursify": "./src/lib/derecursify.js",
     "./lib/metadata-delegate": "./src/lib/metadata-delegate.js",
     "./lib/callback-runner": "./src/lib/callback-runner.js",
     "./lib/node-fallback-stack": "./src/lib/node-fallback-stack.js",
