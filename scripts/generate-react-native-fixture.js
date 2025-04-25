@@ -134,7 +134,7 @@ function installFixtureDependencies () {
 
   // install the scenario launcher package
   const scenarioLauncherPackage = `${ROOT_DIR}/test/react-native/features/fixtures/scenario-launcher`
-  execSync(`npm pack ${scenarioLauncherPackage} --pack-destination ${fixtureDir}`, { cwd: ROOT_DIR, stdio: 'inherit' })
+  execFileSync('npm', ['pack', scenarioLauncherPackage, '--pack-destination', fixtureDir], { cwd: ROOT_DIR, stdio: 'inherit' })
   execSync(`npm install --save bugsnag-react-native-scenarios-*.tgz --registry ${process.env.REGISTRY_URL}`, { cwd: fixtureDir, stdio: 'inherit' })
 }
 
