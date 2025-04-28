@@ -1,5 +1,4 @@
-import intRange from '@bugsnag/core/lib/validators/int-range'
-import { Client, Config, Plugin } from '@bugsnag/core'
+import { intRange, Client, Config, Plugin } from '@bugsnag/core'
 
 interface PluginConfig extends Config {
   maxEvents: number
