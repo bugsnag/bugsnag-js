@@ -1,4 +1,4 @@
-import payload from '@bugsnag/core/lib/json-payload'
+import { jsonPayload } from '@bugsnag/core'
 
 function getIntegrityHeaderValue (sendPayloadChecksums, windowOrWorkerGlobalScope, requestBody, headers) {
   if (sendPayloadChecksums && windowOrWorkerGlobalScope.isSecureContext && windowOrWorkerGlobalScope.crypto && windowOrWorkerGlobalScope.crypto.subtle && windowOrWorkerGlobalScope.crypto.subtle.digest && typeof TextEncoder === 'function') {
@@ -20,7 +20,7 @@ const delivery = (client, fetch = global.fetch, windowOrWorkerGlobalScope = wind
   sendEvent: (event, cb = () => {}) => {
     const url = client._config.endpoints.notify
 
-    const body = payload.event(event, client._config.redactedKeys)
+    const body = jsonPayload.event(event, client._config.redactedKeys)
 
     getIntegrityHeaderValue(client._config.sendPayloadChecksums, windowOrWorkerGlobalScope, body).then(integrityHeaderValue => {
       const headers = {
@@ -49,7 +49,7 @@ const delivery = (client, fetch = global.fetch, windowOrWorkerGlobalScope = wind
   sendSession: (session, cb = () => { }) => {
     const url = client._config.endpoints.sessions
 
-    const body = payload.session(session, client._config.redactedKeys)
+    const body = jsonPayload.session(session, client._config.redactedKeys)
 
     getIntegrityHeaderValue(client._config.sendPayloadChecksums, windowOrWorkerGlobalScope, body).then((integrityHeaderValue) => {
       const headers = {

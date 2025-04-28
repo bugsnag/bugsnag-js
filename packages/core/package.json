@@ -9,7 +9,6 @@
       "import": "./dist/index.mjs",
       "default": "./dist/index.cjs"
     },
-    "./lib/json-payload": "./src/lib/json-payload.js",
     "./lib/es-utils/assign": "./src/lib/es-utils/assign.js",
     "./lib/es-utils/includes": "./src/lib/es-utils/includes.js",
     "./lib/es-utils/filter": "./src/lib/es-utils/filter.js",
