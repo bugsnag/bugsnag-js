@@ -37,8 +37,8 @@ jest.mock('react-native', () => {
 })
 
 // @ts-ignore
-import rnPromise from 'promise/setimmediate' // eslint-disable-line
-// eslint-disable-next-line
+import rnPromise from 'promise/setimmediate'  
+ 
 import Bugsnag from '../../..'
 
 declare global {

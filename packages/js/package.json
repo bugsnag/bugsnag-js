@@ -32,6 +32,9 @@
   ],
   "author": "Bugsnag",
   "license": "MIT",
+  "scripts": {
+    "build": "echo 'No build step required for @bugsnag/js'"
+  },
   "dependencies": {
     "@bugsnag/browser": "^8.2.0",
     "@bugsnag/node": "^8.2.0"
