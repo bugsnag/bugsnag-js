@@ -1,11 +1,11 @@
 import isArray from './es-utils/is-array'
 
-const isSafeLiteral = (obj: unknown): boolean =>
+const isSafeLiteral = (obj: unknown): obj is string | number | boolean =>
   typeof obj === 'string' || obj instanceof String ||
   typeof obj === 'number' || obj instanceof Number ||
   typeof obj === 'boolean' || obj instanceof Boolean
 
-const isError = (o: unknown) =>
+const isError = (o: unknown): o is Error =>
   o instanceof Error || /^\[object (Error|(Dom)?Exception)]$/.test(Object.prototype.toString.call(o))
 
 const throwsMessage = (err: Error) => '[Throws: ' + (err ? err.message : '?') + ']'
@@ -28,9 +28,9 @@ const safelyGetProp = (obj: Object, propName: keyof Object) => {
  * @returns a safe version of the given `data`
  */
 const derecursify = (data: unknown): {} => {
-  const seen: object[] | [][] = []
+  const seen: Array<Object | []> = []
 
-  const visit = (obj: any): any => {
+  const visit = (obj: unknown): any => {
     if (obj === null || obj === undefined) return obj
 
     if (isSafeLiteral(obj)) {
@@ -51,11 +51,12 @@ const derecursify = (data: unknown): {} => {
     }
 
     // handle arrays, and all iterable non-array types (such as Set)
-    if (isArray(obj) || obj[Symbol.iterator]) {
+    const symbol = Symbol.iterator as keyof object
+    if (isArray(obj) || obj[symbol]) {
       seen.push(obj)
       const safeArray = []
       try {
-        for (const value of obj) {
+        for (const value of Object.keys(obj)) {
           safeArray.push(visit(value))
         }
       } catch (err: any) {
