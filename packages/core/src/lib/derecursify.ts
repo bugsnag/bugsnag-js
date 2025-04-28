@@ -1,14 +1,14 @@
-import isArray from "./es-utils/is-array"
+import isArray from './es-utils/is-array'
 
 const isSafeLiteral = (obj: unknown): boolean =>
-  typeof obj === "string" || obj instanceof String ||
-  typeof obj === "number" || obj instanceof Number ||
-  typeof obj === "boolean" || obj instanceof Boolean
+  typeof obj === 'string' || obj instanceof String ||
+  typeof obj === 'number' || obj instanceof Number ||
+  typeof obj === 'boolean' || obj instanceof Boolean
 
 const isError = (o: unknown) =>
   o instanceof Error || /^\[object (Error|(Dom)?Exception)]$/.test(Object.prototype.toString.call(o))
 
-const throwsMessage = (err: Error) => "[Throws: " + (err ? err.message : "?") + "]"
+const throwsMessage = (err: Error) => '[Throws: ' + (err ? err.message : '?') + ']'
 
 const safelyGetProp = (obj: Object, propName: keyof Object) => {
   try {
@@ -47,7 +47,7 @@ const derecursify = (data: unknown): {} => {
 
     if (seen.includes(obj)) {
       // circular references are replaced and marked
-      return "[Circular]"
+      return '[Circular]'
     }
 
     // handle arrays, and all iterable non-array types (such as Set)
