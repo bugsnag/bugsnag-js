@@ -1,21 +1,19 @@
-const isArray = require('./es-utils/is-array')
+import isArray from './es-utils/is-array'
 
-const isSafeLiteral = (obj) => (
+const isSafeLiteral = (obj: unknown): obj is string | number | boolean =>
   typeof obj === 'string' || obj instanceof String ||
   typeof obj === 'number' || obj instanceof Number ||
   typeof obj === 'boolean' || obj instanceof Boolean
-)
 
-const isError = o => (
+const isError = (o: unknown): o is Error =>
   o instanceof Error || /^\[object (Error|(Dom)?Exception)]$/.test(Object.prototype.toString.call(o))
-)
 
-const throwsMessage = err => '[Throws: ' + (err ? err.message : '?') + ']'
+const throwsMessage = (err: Error) => '[Throws: ' + (err ? err.message : '?') + ']'
 
-const safelyGetProp = (obj, propName) => {
+const safelyGetProp = (obj: Object, propName: keyof Object) => {
   try {
     return obj[propName]
-  } catch (err) {
+  } catch (err: any) {
     return throwsMessage(err)
   }
 }
@@ -29,10 +27,10 @@ const safelyGetProp = (obj, propName) => {
  * @param data the value to be made safe for the ReactNative bridge
  * @returns a safe version of the given `data`
  */
-module.exports = function (data) {
-  const seen = []
+const derecursify = (data: unknown): {} => {
+  const seen: Array<Object | []> = []
 
-  const visit = (obj) => {
+  const visit = (obj: unknown): any => {
     if (obj === null || obj === undefined) return obj
 
     if (isSafeLiteral(obj)) {
@@ -53,14 +51,15 @@ module.exports = function (data) {
     }
 
     // handle arrays, and all iterable non-array types (such as Set)
-    if (isArray(obj) || obj[Symbol.iterator]) {
+    const symbol = Symbol.iterator as keyof object
+    if (isArray(obj) || obj[symbol]) {
       seen.push(obj)
       const safeArray = []
       try {
-        for (const value of obj) {
+        for (const value of Object.keys(obj)) {
           safeArray.push(visit(value))
         }
-      } catch (err) {
+      } catch (err: any) {
         // if retrieving the Iterator fails
         return throwsMessage(err)
       }
@@ -71,7 +70,8 @@ module.exports = function (data) {
     seen.push(obj)
     const safeObj = {}
     for (const propName in obj) {
-      safeObj[propName] = visit(safelyGetProp(obj, propName))
+      const typedPropName = propName as keyof Object
+      safeObj[typedPropName] = visit(safelyGetProp(obj, typedPropName))
     }
     seen.pop()
 
@@ -80,3 +80,5 @@ module.exports = function (data) {
 
   return visit(data)
 }
+
+export default derecursify
