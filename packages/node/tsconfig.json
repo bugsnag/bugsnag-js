@@ -1,7 +1,14 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["jest", "node"],
+    "esModuleInterop": true,
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "lib": [ "dom", "es2022" ],
+    "strict": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist/types",
+    "allowJs": true,
   },
   "include": ["src/**/*.ts"]
 }
