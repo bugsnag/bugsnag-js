@@ -1,5 +1,5 @@
 import plugin from '../src/koa'
-import { Client, Event, EventPayload } from '@bugsnag/core'
+import { Client, Event } from '@bugsnag/core'
 
 const noop = () => {}
 const id = <T>(a: T) => a
@@ -71,7 +71,7 @@ describe('plugin: koa', () => {
       client._sessionDelegate = { startSession: id, pauseSession: noop, resumeSession: id }
       client._logger = logger()
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload, cb: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           cb(null, payload.events[0])
         },
@@ -159,7 +159,7 @@ describe('plugin: koa', () => {
       client._sessionDelegate = { startSession: id, pauseSession: noop, resumeSession: id }
       client._logger = logger()
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload, cb: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           cb(null, payload.events[0])
         },
@@ -273,7 +273,7 @@ describe('plugin: koa', () => {
       const events: Event[] = []
 
       client2._setDelivery(() => ({
-        sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload, cb: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           events.push(payload.events[0] as Event)
         },
@@ -309,7 +309,7 @@ describe('plugin: koa', () => {
       const events: Event[] = []
 
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload, cb: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           events.push(payload.events[0] as Event)
         },

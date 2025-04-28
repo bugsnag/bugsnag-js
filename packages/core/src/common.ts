@@ -60,16 +60,6 @@ export interface Logger {
   error: (...args: any[]) => void
 }
 
-export interface EventPayload {
-  apiKey: string
-  notifier: {
-    name: string
-    version: string
-    url: string
-  }
-  events: Event[]
-}
-
 export interface SessionPayload {
   notifier: {
     name: string
@@ -169,7 +159,8 @@ export interface Notifier {
 }
 
 export interface EventDeliveryPayload {
-  apiKey: string
+  apiKey?: string
+  payloadVersion?: string
   notifier: Notifier
   events: Event[]
 }
@@ -184,6 +175,7 @@ export interface SessionDeliveryPayload {
     user?: User
   }>
 }
+
 export interface Delivery {
   sendEvent(payload: EventDeliveryPayload, cb: (err?: Error | null) => void): void
   sendSession(session: SessionDeliveryPayload, cb: (err?: Error | null) => void): void
