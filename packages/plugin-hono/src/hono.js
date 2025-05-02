@@ -22,8 +22,8 @@ module.exports = {
       c.bugsnag = requestClient
 
       // extract request info and pass it to the relevant bugsnag properties
-      requestClient.addOnError((event) => {
-        const { metadata, request } = getRequestAndMetadataFromReq(c)
+      requestClient.addOnError(async (event) => {
+        const { metadata, request } = await getRequestAndMetadataFromReq(c)
         event.request = { ...event.request, ...request }
         event.addMetadata('request', metadata)
         if (event._handledState.severityReason.type === 'unhandledException') {
@@ -35,7 +35,7 @@ module.exports = {
       await client._clientContext.run(requestClient, next)
     }
 
-    const errorHandler = (c, next) => {
+    const errorHandler = async (c, next) => {
       next()
 
       if (!c.error || !client._config.autoDetectErrors) return
@@ -48,7 +48,7 @@ module.exports = {
         client._logger.warn(
           'c.bugsnag is not defined. Make sure the @bugsnag/plugin-hono requestHandler middleware is added first.'
         )
-        const { metadata, request } = getRequestAndMetadataFromReq(c)
+        const { metadata, request } = await getRequestAndMetadataFromReq(c)
         event.request = { ...event.request, ...request }
         event.addMetadata('request', metadata)
         client._notify(event)
@@ -59,8 +59,8 @@ module.exports = {
   }
 }
 
-const getRequestAndMetadataFromReq = c => {
-  const { body, ...requestInfo } = extractRequestInfo(c)
+const getRequestAndMetadataFromReq = async c => {
+  const { body, ...requestInfo } = await extractRequestInfo(c)
   return {
     metadata: requestInfo,
     request: {

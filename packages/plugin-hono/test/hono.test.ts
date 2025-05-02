@@ -194,7 +194,7 @@ describe('plugin: hono', () => {
       const context = { req: { headers: {} }, request: {}, bugsnag: client2, error: error } as any
       const next = jest.fn()
 
-      middleware.errorHandler(context, next)
+      await middleware.errorHandler(context, next)
 
       expect(client._notify).not.toHaveBeenCalled()
       expect(client2._logger.warn).not.toHaveBeenCalled()
@@ -245,7 +245,7 @@ describe('plugin: hono', () => {
       context.req.query = jest.fn()
       const next = jest.fn()
 
-      middleware.errorHandler(context, next)
+      await middleware.errorHandler(context, next)
 
       expect(client2._notify).not.toHaveBeenCalled()
       expect(client._logger.warn).toHaveBeenCalledTimes(1)
