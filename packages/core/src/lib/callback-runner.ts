@@ -1,6 +1,5 @@
 import every from './async-every'
-
-type NodeCallbackType<T = any> = (error?: Error | null, result?: T) => void;
+import type { NodeCallbackType } from './async-every'
 
 const runCallbacks = <T>(
   callbacks: any[],
