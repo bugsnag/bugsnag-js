@@ -1,6 +1,6 @@
-import some from'./async-every'
+import some from './async-every'
 
-import { NodeCallbackType } from './async-every'
+import type { NodeCallbackType } from './async-every'
 
 const runCallbacks = <T>(
   callbacks: any,
