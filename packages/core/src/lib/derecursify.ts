@@ -51,12 +51,11 @@ const derecursify = (data: unknown): {} => {
     }
 
     // handle arrays, and all iterable non-array types (such as Set)
-    const symbol = Symbol.iterator as keyof object
-    if (isArray(obj) || obj[symbol]) {
+    if (isArray(obj) || obj instanceof Set || obj instanceof Map) {
       seen.push(obj)
       const safeArray = []
       try {
-        for (const value of Object.keys(obj)) {
+        for (const value of obj) {
           safeArray.push(visit(value))
         }
       } catch (err: any) {
