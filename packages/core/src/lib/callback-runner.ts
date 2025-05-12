@@ -20,7 +20,7 @@ const runCallbacks = <T>(
       if (fn.length !== 2) {
         const ret = fn(event)
         // check if it returned a "thenable" (promise)
-        if (ret && typeof ret.then === 'function') {
+        if (ret && typeof ret.then === "function") {
           return ret.then(
             // resolve
             (val: boolean | undefined ) => setTimeout(() => cb(null, val)),
