@@ -64,8 +64,7 @@
     "@bugsnag/plugin-react-native-global-error-handler": "^8.2.0",
     "@bugsnag/plugin-react-native-hermes": "^8.2.0",
     "@bugsnag/plugin-react-native-session": "^8.2.0",
-    "@bugsnag/plugin-react-native-unhandled-rejection": "^8.2.0",
-    "iserror": "^0.0.2"
+    "@bugsnag/plugin-react-native-unhandled-rejection": "^8.2.0"
   },
   "scripts": {
     "prepare": "bash prepare-android-vendor.sh",
