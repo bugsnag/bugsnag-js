@@ -1,5 +1,4 @@
-const { Breadcrumb, Event } = require('@bugsnag/core')
-const runCallbacks = require('@bugsnag/core/lib/callback-runner')
+const { Breadcrumb, Event, runCallbacks } = require('@bugsnag/core')
 const featureFlagDelegate = require('@bugsnag/core/lib/feature-flag-delegate')
 
 module.exports = class BugsnagIpcMain {

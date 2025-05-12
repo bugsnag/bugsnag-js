@@ -16,7 +16,6 @@
     "./lib/es-utils/keys": "./src/lib/es-utils/keys.js",
     "./lib/derecursify": "./src/lib/derecursify.js",
     "./lib/metadata-delegate": "./src/lib/metadata-delegate.js",
-    "./lib/callback-runner": "./src/lib/callback-runner.js",
     "./lib/node-fallback-stack": "./src/lib/node-fallback-stack.js",
     "./lib/sync-callback-runner": "./src/lib/sync-callback-runner.js",
     "./lib/path-normalizer": "./src/lib/path-normalizer.js",
