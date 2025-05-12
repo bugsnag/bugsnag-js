@@ -1,5 +1,5 @@
 const { createHash } = require('crypto')
-const payload = require('@bugsnag/core/lib/json-payload')
+const { jsonPayload } = require('@bugsnag/core')
 const PayloadQueue = require('./queue')
 const PayloadDeliveryLoop = require('./payload-loop')
 const NetworkStatus = require('@bugsnag/electron-network-status')
@@ -74,9 +74,9 @@ const delivery = (client, filestore, net, app) => {
   const statusUpdater = new NetworkStatus(stateManagerPlugin, net, app)
   const { queues } = initRedelivery(filestore.getPaths(), statusUpdater, client._logger, send)
 
-  const hash = payload => {
+  const hash = jsonPayload => {
     const h = createHash('sha1')
-    h.update(payload)
+    h.update(jsonPayload)
     return h.digest('hex')
   }
 
@@ -91,7 +91,7 @@ const delivery = (client, filestore, net, app) => {
 
       let body, opts
       try {
-        body = payload.event(event, client._config.redactedKeys)
+        body = jsonPayload.event(event, client._config.redactedKeys)
         opts = {
           url,
           method: 'POST',
@@ -131,7 +131,7 @@ const delivery = (client, filestore, net, app) => {
 
       let body, opts
       try {
-        body = payload.session(session, client._config.redactedKeys)
+        body = jsonPayload.session(session, client._config.redactedKeys)
         opts = {
           url,
           method: 'POST',

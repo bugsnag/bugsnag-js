@@ -1,4 +1,4 @@
-const intRange = require('@bugsnag/core/lib/validators/int-range')
+const { intRange } = require('@bugsnag/core')
 const SessionTracker = require('./tracker')
 const Backoff = require('backo')
 const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')

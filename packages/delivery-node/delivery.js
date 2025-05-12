@@ -1,9 +1,9 @@
-const payload = require('@bugsnag/core/lib/json-payload')
+const { jsonPayload } = require('@bugsnag/core')
 const request = require('./request')
 
 module.exports = (client) => ({
   sendEvent: (event, cb = () => {}) => {
-    const body = payload.event(event, client._config.redactedKeys)
+    const body = jsonPayload.event(event, client._config.redactedKeys)
 
     const _cb = err => {
       if (err) client._logger.error(`Event failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
@@ -54,7 +54,7 @@ module.exports = (client) => ({
           'Bugsnag-Payload-Version': '1',
           'Bugsnag-Sent-At': (new Date()).toISOString()
         },
-        body: payload.session(session, client._config.redactedKeys),
+        body: jsonPayload.session(session, client._config.redactedKeys),
         agent: client._config.agent
       }, err => _cb(err))
     } catch (e) {
