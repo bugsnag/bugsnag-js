@@ -3,6 +3,12 @@ import plugin from '../src/hono'
 import { EventPayload } from '@bugsnag/core'
 import Event from '@bugsnag/core/event'
 
+jest.mock('../src/load-connection-info', () => {
+  return jest.fn().mockResolvedValueOnce({
+    remote: { address: '1.2.3.4', addressType: 'v4', port: '1234' }
+  }).mockResolvedValueOnce(null)
+})
+
 const noop = () => {}
 const id = <T>(a: T) => a
 const logger = () => ({
@@ -66,7 +72,74 @@ describe('plugin: hono', () => {
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
     })
 
-    it('should record metadata from the request', async () => {
+    it('should record metadata from the request with connection information if available', async () => {
+      const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
+      client._sessionDelegate = { startSession: id, pauseSession: noop, resumeSession: id }
+      client._logger = logger()
+      client._setDelivery(() => ({
+        sendEvent (payload: EventPayload, c: (err: Error|null, obj: unknown) => void) {
+          expect(payload.events).toHaveLength(1)
+          c(null, payload.events[0])
+        },
+        sendSession: noop
+      }))
+
+      const middleware = client.getPlugin('hono')
+
+      if (!middleware) {
+        throw new Error('getPlugin("hono") failed')
+      }
+
+      const context = {
+        req: {
+          method: 'GET',
+          url: 'http://localhost:8080/xyz?a=1&b=2',
+          path: '/xyz'
+        },
+        res: {},
+        env: { outgoing: { req: { httpVersion: '1.1' } } }
+      } as any
+      client._clientContext = { run: jest.fn() }
+      context.req.parseBody = jest.fn().mockReturnValue('the request body')
+      context.req.header = jest.fn().mockReturnValue({ referer: '/abc' })
+      context.req.query = jest.fn().mockReturnValue({ a: 1, b: 2 })
+      context.req.param = jest.fn()
+
+      const next = jest.fn()
+
+      await middleware.requestHandler(context, next)
+
+      expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
+
+      const event: Event = await new Promise(resolve => {
+        (context.bugsnag as Client).notify(new Error('abc'), noop, (_, event) => resolve(event as Event))
+      })
+
+      expect(client._logger.warn).not.toHaveBeenCalled()
+      expect(client._logger.error).not.toHaveBeenCalled()
+
+      expect(event.request).toEqual({
+        body: 'the request body',
+        headers: { referer: '/abc' },
+        httpMethod: 'GET',
+        url: 'http://localhost:8080/xyz?a=1&b=2',
+        httpVersion: '1.1'
+      })
+
+      expect(event._metadata.request).toEqual({
+        headers: { referer: '/abc' },
+        httpMethod: 'GET',
+        path: '/xyz',
+        query: { a: 1, b: 2 },
+        url: 'http://localhost:8080/xyz?a=1&b=2',
+        httpVersion: '1.1',
+        remoteAddress: '1.2.3.4',
+        remoteAddressType: 'v4',
+        remotePort: '1234'
+      })
+    })
+
+    it('should record metadata from the request when there is no connection information available', async () => {
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
       client._sessionDelegate = { startSession: id, pauseSession: noop, resumeSession: id }
       client._logger = logger()
