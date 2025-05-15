@@ -14,9 +14,12 @@ module.exports = async c => {
   }
   const connection = await extractConnectionInfo(c)
   if (connection) {
-    request.remoteAddress = connection.remote.address
-    request.remoteAddressType = connection.remote.addressType
-    request.remotePort = connection.remote.port
+    request.connection = {
+      remoteAddress: connection.remote.address,
+      IPVersion: connection.remote.addressType,
+      remotePort: connection.remote.port
+    }
+    request.clientIp = connection.remote.address
   }
   return request
 }
