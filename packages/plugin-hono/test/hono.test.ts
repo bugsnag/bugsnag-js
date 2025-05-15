@@ -133,9 +133,12 @@ describe('plugin: hono', () => {
         query: { a: 1, b: 2 },
         url: 'http://localhost:8080/xyz?a=1&b=2',
         httpVersion: '1.1',
-        remoteAddress: '1.2.3.4',
-        remoteAddressType: 'v4',
-        remotePort: '1234'
+        connection: {
+          remoteAddress: '1.2.3.4',
+          IPVersion: 'v4',
+          remotePort: '1234'
+        },
+        clientIp: '1.2.3.4'
       })
     })
 
