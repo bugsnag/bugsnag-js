@@ -1,5 +1,4 @@
 import Client from '@bugsnag/core/client'
-import { createMiddleware } from 'hono/factory'
 import plugin from '../src/hono'
 import { EventPayload } from '@bugsnag/core'
 import Event from '@bugsnag/core/event'
@@ -9,10 +8,6 @@ jest.mock('../src/load-connection-info', () => {
     remote: { address: '1.2.3.4', addressType: 'v4', port: '1234' }
   }).mockResolvedValueOnce(null)
 })
-
-jest.mock('hono/factory', () => ({
-  createMiddleware: jest.fn((fn) => fn)
-}))
 
 const noop = () => {}
 const id = <T>(a: T) => a
