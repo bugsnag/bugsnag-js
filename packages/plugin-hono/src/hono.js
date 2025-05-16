@@ -1,3 +1,4 @@
+const { createMiddleware } = require('hono/factory')
 const extractRequestInfo = require('./request-info')
 const clone = require('@bugsnag/core/lib/clone-client')
 const handledState = {
@@ -12,7 +13,7 @@ const handledState = {
 module.exports = {
   name: 'hono',
   load: client => {
-    const requestHandler = async (c, next) => {
+    const requestHandler = createMiddleware(async (c, next) => {
       // clone the client to be scoped to this request. If sessions are enabled, start one
       const requestClient = clone(client)
       if (requestClient._config.autoTrackSessions) {
@@ -33,9 +34,9 @@ module.exports = {
       }, true)
 
       await client._clientContext.run(requestClient, next)
-    }
+    })
 
-    const errorHandler = async (c, next) => {
+    const errorHandler = createMiddleware(async (c, next) => {
       next()
 
       if (!c.error || !client._config.autoDetectErrors) return
@@ -53,7 +54,7 @@ module.exports = {
         event.addMetadata('request', metadata)
         client._notify(event)
       }
-    }
+    })
 
     return { requestHandler, errorHandler }
   }
