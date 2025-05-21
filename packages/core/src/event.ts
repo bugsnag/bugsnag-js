@@ -85,7 +85,7 @@ export default class Event {
     /* this.attemptImmediateDelivery, default: true */
   }
 
-  addMetadata (section: string, keyOrObj?: any, maybeVal?: any) {
+  addMetadata (section: string, keyOrObj?: object | string, maybeVal?: any) {
     return metadataDelegate.add(this._metadata, section, keyOrObj, maybeVal)
   }
 
@@ -102,11 +102,11 @@ export default class Event {
     }
   }
 
-  getMetadata (section: string, key?: string) {
+  getMetadata (section: string, key?: string | undefined) {
     return metadataDelegate.get(this._metadata, section, key)
   }
 
-  clearMetadata (section: string, key?: string) {
+  clearMetadata (section: string, key?: string | undefined) {
     return metadataDelegate.clear(this._metadata, section, key)
   }
 
