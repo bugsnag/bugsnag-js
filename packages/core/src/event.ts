@@ -102,11 +102,11 @@ export default class Event {
     }
   }
 
-  getMetadata (section: string, key?: string | undefined) {
+  getMetadata (section: string, key?: string) {
     return metadataDelegate.get(this._metadata, section, key)
   }
 
-  clearMetadata (section: string, key?: string | undefined) {
+  clearMetadata (section: string, key?: string) {
     return metadataDelegate.clear(this._metadata, section, key)
   }
 
