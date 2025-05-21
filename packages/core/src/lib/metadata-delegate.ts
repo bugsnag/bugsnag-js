@@ -2,8 +2,8 @@ import assign from './es-utils/assign'
 
 interface MetadataDelegate {
   add: (state: { [key: string]: any }, section: string, keyOrObj?: object | string, maybeVal?: any) => any
-  get: (state: { [key: string]: any }, section: string, key?: string | undefined) => any
-  clear: (state: { [key: string]: any }, section: string, key?: string | undefined) => any
+  get: (state: { [key: string]: any }, section: string, key?: string) => any
+  clear: (state: { [key: string]: any }, section: string, key?: string) => any
 }
 
 const metadataDelegate: MetadataDelegate = {
