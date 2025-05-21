@@ -85,7 +85,7 @@ export default class Event {
     /* this.attemptImmediateDelivery, default: true */
   }
 
-  addMetadata (section: string, keyOrObj?: any, maybeVal?: any) {
+  addMetadata (section: string, keyOrObj?: object | string, maybeVal?: any) {
     return metadataDelegate.add(this._metadata, section, keyOrObj, maybeVal)
   }
 
