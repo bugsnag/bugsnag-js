@@ -116,15 +116,15 @@ export default class Client<T extends Config = Config> {
     }
   }
 
-  addMetadata (section: string, keyOrObj: any, maybeVal?: any) {
+  addMetadata (section: string, keyOrObj: object | string, maybeVal?: any) {
     return metadataDelegate.add(this._metadata, section, keyOrObj, maybeVal)
   }
 
-  getMetadata (section: string, key?: any) {
+  getMetadata (section: string, key?: string | undefined) {
     return metadataDelegate.get(this._metadata, section, key)
   }
 
-  clearMetadata (section: string, key?: any) {
+  clearMetadata (section: string, key?: string | undefined) {
     return metadataDelegate.clear(this._metadata, section, key)
   }
 
