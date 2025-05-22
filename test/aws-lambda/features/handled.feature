@@ -89,8 +89,8 @@ Scenario: handled exceptions are reported when using serverless-express
 Scenario: handled exceptions are reported when using hono
     Given I setup the environment
     When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/handled.json" event
-#    Then the lambda response "body.message" equals "did not crash :)"
-#    And the lambda response "statusCode" equals 200
+    Then the lambda response "body.message" equals "did not crash :)"
+    And the lambda response "statusCode" equals 200
     And the SAM exit code equals 0
     When I wait to receive an error
     Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
