@@ -1,9 +1,10 @@
+import { OnErrorCallback } from '../common';
 import some from './async-every'
 
 type NodeCallbackType<T = any> = (error?: Error | null, result?: T) => void;
 
 const runCallbacks = <T>(
-  callbacks: any,
+  callbacks: (OnErrorCallback | undefined)[],
   event: T,
   onCallbackError: (err: Error) => void,
   cb: NodeCallbackType<boolean>
@@ -14,13 +15,13 @@ const runCallbacks = <T>(
   //  - promise/thenable - resolve(value)
   // It normalises each of these into the lowest common denominator – a node-style callback
   const runMaybeAsyncCallback = (fn: any, cb: NodeCallbackType<boolean>) => {
-    if (typeof fn !== "function") return cb(null)
+    if (typeof fn !== 'function') return cb(null)
     try {
       // if function appears sync…
       if (fn.length !== 2) {
         const ret = fn(event)
         // check if it returned a "thenable" (promise)
-        if (ret && typeof ret.then === "function") {
+        if (ret && typeof ret.then === 'function') {
           return ret.then(
             // resolve
             (val: boolean | undefined ) => setTimeout(() => cb(null, val)),
