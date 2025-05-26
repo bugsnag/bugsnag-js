@@ -7,5 +7,6 @@ export { default as cloneClient } from './lib/clone-client'
 export { default as jsonPayload } from './lib/json-payload'
 export { default as intRange } from './lib/validators/int-range'
 export { default as isError } from './lib/iserror'
+export { default as nodeFallbackStack } from './lib/node-fallback-stack'
 
 export * from './common'
