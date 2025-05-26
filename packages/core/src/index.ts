@@ -12,7 +12,7 @@ export { default as extractObject } from './lib/extract-object'
 export { default as intRange } from './lib/validators/int-range'
 export { default as isError } from './lib/iserror'
 export { default as listOfFunctions } from './lib/validators/list-of-functions'
-export { default as runCallbacks } from "./lib/callback-runner";
+export { default as runCallbacks } from "./lib/callback-runner"
 export { default as runSyncCallbacks } from './lib/sync-callback-runner'
 export { default as stringWithLength } from './lib/validators/string-with-length'
 
