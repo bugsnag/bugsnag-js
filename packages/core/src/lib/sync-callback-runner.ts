@@ -1,9 +1,11 @@
+import type Breadcrumb from '../breadcrumb'
 import { LoggerConfig, OnBreadcrumbCallback, OnSessionCallback } from '../common'
+import type Session from '../session'
 type Callbacks = (...args: any[]) => any
 
 const runSyncCallbacks = (
-  callbacks: OnSessionCallback[] | OnBreadcrumbCallback[] | Callbacks[],
-  callbackArg: any,
+  callbacks: OnSessionCallback[] | OnBreadcrumbCallback[] | Callbacks[] | any[],
+  callbackArg: Session | Breadcrumb | Event,
   callbackType: string,
   logger: LoggerConfig
 ): boolean => {
