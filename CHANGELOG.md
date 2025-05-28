@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- (plugin-hono) Added support for capturing errors in Hono applications [#2375](https://github.com/bugsnag/bugsnag-js/pull/2375)
+
 ## [8.3.2] - 2025-04-24
 
 ### Fixed
