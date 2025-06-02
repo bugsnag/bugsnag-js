@@ -8,7 +8,7 @@ steps:
   - label: ":copyright: License Audit"
     timeout_in_minutes: 20
     agents:
-      queue: "macos-node-18"
+      queue: "macos-node-22"
     command: scripts/license_finder.sh
 
   #
@@ -26,7 +26,7 @@ steps:
     key: "publish-js"
     timeout_in_minutes: 10
     agents:
-      queue: "macos-node-18"
+      queue: "macos-node-22"
     env:
       NODE_VERSION: "18"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
@@ -93,6 +93,6 @@ steps:
   #
   - label: ":git: Detect changed packages"
     agents:
-      queue: "macos-node-18"
+      queue: "macos-node-22"
     timeout_in_minutes: 5
     command: node .buildkite/pipeline_trigger.js
