@@ -28,7 +28,7 @@ steps:
     agents:
       queue: "macos-node-22"
     env:
-      NODE_VERSION: "18"
+      NODE_VERSION: "22"
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
     command:
       - "bundle install"
