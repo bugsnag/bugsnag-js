@@ -1,7 +1,11 @@
-import filter from './es-utils/filter'
 import isArray from './es-utils/is-array'
 import jsonStringify from '@bugsnag/safe-json-stringify'
 import {FeatureFlag} from "../common";
+
+type FeatureFlagEventApi = {
+  featureFlag: string
+  variant?: string
+}
 
 interface FeatureFlagDelegate{
   add: (existingFeatures: Array<FeatureFlag | null>, existingFeatureKeys: { [key: string]: unknown }, name?: unknown, variant?: any ) => void
@@ -10,8 +14,8 @@ interface FeatureFlagDelegate{
     newFeatures: any,
     existingFeatureKeys: { [key: string]: any }
   ) => Array<{ name: string; variant: any }> | undefined
-  toEventApi: (featureFlags: Array<FeatureFlag | null>) => unknown[]
-  clear: (features: any, featuresIndex: any, name: any) => any
+  toEventApi: (featureFlags: Array<FeatureFlag | null>) => FeatureFlagEventApi[]
+  clear: (features: any, featuresIndex: any, name: any) => void
 }
 
 const featureFlagDelegate: FeatureFlagDelegate = {
@@ -44,15 +48,16 @@ const featureFlagDelegate: FeatureFlagDelegate = {
     for (let i = 0; i < newFeatures.length; ++i) {
       const feature = newFeatures[i]
 
-      if (!feature || typeof feature !== 'object' || typeof feature.name !== 'string') {
+      if (feature === null || typeof feature !== 'object') {
         continue
       }
 
+      // 'add' will handle if 'name' doesn't exist & 'variant' is optional
       featureFlagDelegate.add(existingFeatures, existingFeatureKeys, feature.name, feature.variant)
     }
 
     // Remove any nulls from the array to match the return type
-    return existingFeatures.filter(f => f && typeof f.name === 'string') as Array<{ name: string; variant: any }>
+    return existingFeatures.filter(f => f) as Array<{ name: string; variant: any }>
   },
 
 // convert feature flags from a map of 'name -> variant' into the format required
@@ -60,7 +65,7 @@ const featureFlagDelegate: FeatureFlagDelegate = {
 //   [{ featureFlag: 'name', variant: 'variant' }, { featureFlag: 'name 2' }]
   toEventApi: (featureFlags) => {
     return (featureFlags || [])
-      .filter((flag): flag is FeatureFlag => flag !== null && typeof flag === 'object' && typeof (flag as FeatureFlag).name === 'string')
+      .filter((flag): flag is FeatureFlag => flag !== null && typeof flag === 'object')
       .map((flag) => {
         const result: { featureFlag: string; variant?: string } = { featureFlag: flag.name };
         if (typeof flag.variant === 'string') {
