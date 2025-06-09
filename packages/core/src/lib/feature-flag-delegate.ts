@@ -74,6 +74,7 @@ const featureFlagDelegate: FeatureFlagDelegate = {
         return result;
       });
   },
+  
   clear: (features, featuresIndex, name) => {
     const existingIndex = featuresIndex[name]
     if (typeof existingIndex === 'number') {
