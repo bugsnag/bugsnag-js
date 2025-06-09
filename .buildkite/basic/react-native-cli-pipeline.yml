@@ -10,7 +10,7 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
-          queue: "macos-14-isolated"
+          queue: "macos-15-isolated"
         env:
           JAVA_VERSION: "17"
           NODE_VERSION: "18"
@@ -38,13 +38,13 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 20
         agents:
-          queue: "macos-14-isolated"
+          queue: "macos-15-isolated"
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_IOS: "true"
-          XCODE_VERSION: "15.3.0"
+          XCODE_VERSION: "16.2.0"
           INIT_RN_CLI: "true"
           EXPORT_ARCHIVE: "0"
         artifact_paths:
