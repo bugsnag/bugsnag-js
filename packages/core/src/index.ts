@@ -12,6 +12,7 @@ export { default as listOfFunctions } from './lib/validators/list-of-functions'
 export { default as stringWithLength } from './lib/validators/string-with-length'
 export { default as metadataDelegate } from './lib/metadata-delegate'
 export { default as nodeFallbackStack } from './lib/node-fallback-stack'
+export { default as featureFlagDelegate } from './lib/feature-flag-delegate'
 export { default as runSyncCallbacks } from './lib/sync-callback-runner'
 
 export * from './common'
