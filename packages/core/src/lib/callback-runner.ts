@@ -1,10 +1,9 @@
-import { OnErrorCallback } from '../common';
 import some from './async-every'
 
 type NodeCallbackType<T = any> = (error?: Error | null, result?: T) => void;
 
 const runCallbacks = <T>(
-  callbacks: (OnErrorCallback | undefined)[],
+  callbacks: any[],
   event: T,
   onCallbackError: (err: Error) => void,
   cb: NodeCallbackType<boolean>
