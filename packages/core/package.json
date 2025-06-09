@@ -19,8 +19,7 @@
     "./lib/path-normalizer": "./src/lib/path-normalizer.js",
     "./lib/validators/string-with-length": "./src/lib/validators/string-with-length.js",
     "./lib/validators/list-of-functions": "./src/lib/validators/list-of-functions.js",
-    "./lib/extract-object": "./src/lib/extract-object.js",
-    "./lib/feature-flag-delegate": "./src/lib/feature-flag-delegate.js"
+    "./lib/extract-object": "./src/lib/extract-object.js"
   },
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
