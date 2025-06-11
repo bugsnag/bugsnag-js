@@ -8,7 +8,7 @@ import LambdaTimeoutApproaching from './lambda-timeout-approaching'
 // warnings. See https://github.com/aws/aws-sam-cli/issues/2519
 const MAX_TIMER_VALUE = Math.pow(2, 31) - 1
 
-const SERVER_PLUGIN_NAMES = ['express', 'koa', 'restify']
+const SERVER_PLUGIN_NAMES = ['express', 'koa', 'restify', 'hono']
 const isServerPluginLoaded = (client: Client<Config>) => SERVER_PLUGIN_NAMES.some(name => client.getPlugin(name))
 
 type AsyncHandler = (event: any, context: any) => Promise<any>

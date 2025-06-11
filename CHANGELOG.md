@@ -2,10 +2,23 @@
 
 ## [Unreleased]
 
+### Added
+
+- (plugin-hono) Added support for capturing errors in Hono applications [#2375](https://github.com/bugsnag/bugsnag-js/pull/2375)
+
+## [8.3.2] - 2025-04-24
+
+### Fixed
+
+- (react-native-cli) Update insert command for 0.79 projects [#2410](https://github.com/bugsnag/bugsnag-js/pull/2410)
+
+## [8.3.1] - 2025-04-09
+
 ### Changed
 
 - Update bugsnag-android to [v6.12.1](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.12.1) [#2359](https://github.com/bugsnag/bugsnag-js/pull/2359)
 - Update bugsnag-cocoa to [v6.32.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.32.1) [#2355](https://github.com/bugsnag/bugsnag-js/pull/2355)
+- Update bugsnag-cocoa to [v6.32.2](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.32.2) [#2390](https://github.com/bugsnag/bugsnag-js/pull/2390)
 
 ### Fixed
 

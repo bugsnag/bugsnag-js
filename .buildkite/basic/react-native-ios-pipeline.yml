@@ -14,20 +14,20 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 20
         agents:
-          queue: "macos-14"
+          queue: "macos-15"
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_IOS: "true"
-          XCODE_VERSION: "15.3.0"
+          XCODE_VERSION: "16.2.0"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.78"
+          - "0.79"
         retry:
           automatic:
             - exit_status: "*"
@@ -38,20 +38,20 @@ steps:
         depends_on: "publish-js"
         timeout_in_minutes: 20
         agents:
-          queue: "macos-14"
+          queue: "macos-15"
         env:
           NODE_VERSION: "18"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"
-          XCODE_VERSION: "15.3.0"
+          XCODE_VERSION: "16.2.0"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.78"
+          - "0.79"
         retry:
           automatic:
             - exit_status: "*"
@@ -92,7 +92,7 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.78"
+          - "0.79"
 
       - label: ":bitbar: :mac: RN {{matrix}} iOS (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch"
@@ -127,5 +127,5 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.78"
+          - "0.79"
 
