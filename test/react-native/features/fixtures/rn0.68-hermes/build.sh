@@ -2,7 +2,12 @@ rm -rf reactnative.xcarchive
 
 cd ios
 bundle install
+rm -rf Pods Podfile.lock
+bundle exec pod deintegrate
+bundle exec pod install --repo-update
 bundle exec pod install
+
+xcodebuild clean
 
 xcrun xcodebuild \
   -scheme reactnative \
