@@ -48,6 +48,7 @@ describe('plugin: hono', () => {
 
       client._sessionDelegate = { startSession, pauseSession, resumeSession }
       client._logger = logger()
+      // @ts-expect-error _clientContext is not public
       client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('hono')
@@ -68,6 +69,7 @@ describe('plugin: hono', () => {
       expect(resumeSession).not.toHaveBeenCalled()
       expect(context.bugsnag).toStrictEqual(expect.any(Client))
       expect(context.bugsnag).not.toBe(client)
+      // @ts-expect-error _clientContext is not public
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
     })
 
@@ -98,6 +100,7 @@ describe('plugin: hono', () => {
         res: {},
         env: { outgoing: { req: { httpVersion: '1.1' } } }
       } as any
+      // @ts-expect-error _clientContext is not public
       client._clientContext = { run: jest.fn() }
       context.req.parseBody = jest.fn().mockReturnValue('the request body')
       context.req.header = jest.fn().mockReturnValue({ referer: '/abc' })
@@ -108,6 +111,7 @@ describe('plugin: hono', () => {
 
       await middleware.requestHandler(context, next)
 
+      // @ts-expect-error _clientContext is not public
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       const event: Event = await new Promise(resolve => {
@@ -168,6 +172,7 @@ describe('plugin: hono', () => {
         res: {},
         env: { outgoing: { req: { httpVersion: '1.1' } } }
       } as any
+      // @ts-expect-error _clientContext is not public
       client._clientContext = { run: jest.fn() }
       context.req.parseBody = jest.fn().mockReturnValue('the request body')
       context.req.header = jest.fn().mockReturnValue({ referer: '/abc' })
@@ -178,6 +183,7 @@ describe('plugin: hono', () => {
 
       await middleware.requestHandler(context, next)
 
+      // @ts-expect-error _clientContext is not public
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       const event: Event = await new Promise(resolve => {
@@ -214,6 +220,7 @@ describe('plugin: hono', () => {
 
       client._sessionDelegate = { startSession, pauseSession, resumeSession }
       client._logger = logger()
+      // @ts-expect-error _clientContext is not public
       client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('hono')
@@ -232,6 +239,7 @@ describe('plugin: hono', () => {
       expect(startSession).not.toHaveBeenCalled()
       expect(pauseSession).not.toHaveBeenCalled()
       expect(resumeSession).not.toHaveBeenCalled()
+      // @ts-expect-error _clientContext is not public
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       // the Client should be cloned to ensure any manually started sessions
