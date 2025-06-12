@@ -9,7 +9,7 @@ import runCallbacks from './lib/callback-runner'
 import metadataDelegate from './lib/metadata-delegate'
 import runSyncCallbacks from './lib/sync-callback-runner'
 import BREADCRUMB_TYPES from './lib/breadcrumb-types'
-import featureFlagDelegate from './lib/feature-flag-delegate'
+import { add, clear, merge } from './lib/feature-flag-delegate'
 import { BreadcrumbType, Config, Delivery, FeatureFlag, LoggerConfig, NotifiableError, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
 
 const HUB_PREFIX = '00000'
@@ -128,15 +128,15 @@ export default class Client<T extends Config = Config> {
   }
 
   addFeatureFlag (name: string, variant: string | null = null) {
-    featureFlagDelegate.add(this._features, this._featuresIndex, name, variant)
+    add(this._features, this._featuresIndex, name, variant)
   }
 
   addFeatureFlags (featureFlags: FeatureFlag[]) {
-    featureFlagDelegate.merge(this._features, featureFlags, this._featuresIndex)
+    merge(this._features, featureFlags, this._featuresIndex)
   }
 
   clearFeatureFlag (name: string) {
-    featureFlagDelegate.clear(this._features, this._featuresIndex, name)
+    clear(this._features, this._featuresIndex, name)
   }
 
   clearFeatureFlags () {
@@ -206,7 +206,7 @@ export default class Client<T extends Config = Config> {
 
     // update and elevate some options
     this._metadata = {...config.metadata}
-    featureFlagDelegate.merge(this._features, config.featureFlags, this._featuresIndex)
+    merge(this._features, config.featureFlags, this._featuresIndex)
     this._user = {...config.user}
     this._context = config.context
     if (config.logger) this._logger = config.logger
@@ -352,7 +352,7 @@ export default class Client<T extends Config = Config> {
     event._metadata = Object.assign({}, event._metadata, this._metadata)
     event._user = Object.assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
-    featureFlagDelegate.merge(event._features, this._features, event._featuresIndex)
+    merge(event._features, this._features, event._featuresIndex)
 
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {

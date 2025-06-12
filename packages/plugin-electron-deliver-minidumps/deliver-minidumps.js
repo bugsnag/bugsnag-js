@@ -5,7 +5,7 @@ const MinidumpDeliveryLoop = require('./minidump-loop')
 const MinidumpQueue = require('./minidump-queue')
 const sendMinidumpFactory = require('./send-minidump')
 const NetworkStatus = require('@bugsnag/electron-network-status')
-const { featureFlagDelegate } = require('@bugsnag/core')
+const featureFlagDelegate = require('@bugsnag/core/lib/feature-flag-delegate')
 
 const isEnabledFor = client => client._config.autoDetectErrors && client._config.enabledErrorTypes.nativeCrashes
 
