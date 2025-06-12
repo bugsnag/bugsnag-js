@@ -130,3 +130,52 @@ Scenario: unhandled asynchronous exceptions are reported when using serverless-e
     And the session "startedAt" is a timestamp
     And the event "session.events.handled" equals 0
     And the event "session.events.unhandled" equals 1
+
+@hono-app
+Scenario Outline: unhandled exceptions are reported when using hono
+    Given I setup the environment
+    When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/unhandled.json" event
+    And the SAM exit code equals 0
+    When I wait to receive an error
+    Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+    And the event "unhandled" is true
+    And the event "severity" equals "error"
+    And the event "severityReason.type" equals "unhandledErrorMiddleware"
+    And the exception "errorClass" equals "Error"
+    And the exception "message" equals "sync"
+    And the exception "type" equals "nodejs"
+    And the "file" of stack frame 0 equals "app.js"
+    And the event "metaData.AWS Lambda context.functionName" equals "HonoFunction"
+    And the event "metaData.AWS Lambda context.awsRequestId" is not null
+    And the event "device.runtimeVersions.node" matches "^18\.\d+\.\d+$"
+    When I wait to receive a session
+    Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
+    And the session "id" is not null
+    And the session "startedAt" is a timestamp
+    And the event "session.events.handled" equals 0
+    And the event "session.events.unhandled" equals 1
+
+@hono-app
+Scenario Outline: unhandled asynchronous exceptions are reported when using hono
+    Given I setup the environment
+    When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/unhandled-async.json" event
+    And the SAM exit code equals 0
+    When I wait to receive an error
+    Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+    And the event "unhandled" is true
+    And the event "severity" equals "error"
+    And the event "severityReason.type" equals "unhandledErrorMiddleware"
+    And the exception "errorClass" equals "Error"
+    And the exception "message" equals "async"
+    And the exception "type" equals "nodejs"
+    And the "file" of stack frame 0 equals "app.js"
+    And the event "metaData.AWS Lambda context.functionName" equals "HonoFunction"
+    And the event "metaData.AWS Lambda context.awsRequestId" is not null
+    And the event "device.runtimeVersions.node" matches "^18\.\d+\.\d+$"
+    When I wait to receive a session
+    Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
+    And the session "id" is not null
+    And the session "startedAt" is a timestamp
+    And the event "session.events.handled" equals 0
+    And the event "session.events.unhandled" equals 1
+

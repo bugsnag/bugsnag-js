@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup node
-        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 18.x
 
@@ -43,6 +43,6 @@ jobs:
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-after-gzipped
 
       - name: Run danger
-        uses: danger/danger-js@1cdf42842dd643b582192ccb73e9ad0ec30d3227 # 12.3.4
+        uses: danger/danger-js@bdccecb77e0144055fbaea9224f10cf8b1229b68 # 13.0.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

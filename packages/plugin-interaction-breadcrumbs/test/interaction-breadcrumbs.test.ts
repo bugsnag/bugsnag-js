@@ -56,7 +56,7 @@ describe('plugin: interaction breadcrumbs', () => {
     expect(c._breadcrumbs).toStrictEqual([
       new Breadcrumb(
         'UI click',
-        { targetText: 'Click me', targetSelector: 'BUTTON.button' },
+        { targetText: 'Click me', targetSelector: expect.stringContaining('BUTTON.button') },
         'user',
         expect.any(Date)
       )

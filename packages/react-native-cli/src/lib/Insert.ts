@@ -16,7 +16,7 @@ const COCOA_OBJ_C_APP_LAUNCH_REGEX = /(-\s*\(BOOL\)\s*application:\s*\(UIApplica
 
 const BUGSNAG_COCOA_SWIFT_IMPORT = 'import Bugsnag'
 const BUGSNAG_COCOA_SWIFT_INIT = 'Bugsnag.start()'
-const COCOA_SWIFT_APP_LAUNCH_REGEX = /(override func application\s*\(\s*_ application:\s*UIApplication,\s*didFinishLaunchingWithOptions launchOptions:\s*\[UIApplication\.LaunchOptionsKey\s*:\s*Any\]\?\s*=\s*nil\)\s*->\s*Bool\s*\{\s)/
+const COCOA_SWIFT_APP_LAUNCH_REGEX = /((?:override )?func application\s*\(\s*_\s+application:\s*UIApplication,\s*didFinishLaunchingWithOptions\s+launchOptions:\s*\[UIApplication\.LaunchOptionsKey\s*:?\s*Any\]\?\s*(?:=\s*nil)?\s*\)\s*->\s*Bool\s*\{\s)/
 
 const BUGSNAG_JAVA_IMPORT = 'import com.bugsnag.android.Bugsnag;'
 const BUGSNAG_JAVA_INIT = 'Bugsnag.start(this);'
