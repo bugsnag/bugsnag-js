@@ -3,7 +3,6 @@ import stringWithLength from '@bugsnag/core/lib/validators/string-with-length'
 import os from 'os'
 import { inspect } from 'util'
 
-import assign from '@bugsnag/core/lib/es-utils/assign'
 import getPrefixedConsole from './get-prefixed-console'
 
 const config = {
@@ -21,7 +20,7 @@ const config = {
     message: 'should be a string',
     validate: (value: unknown) => value === null || stringWithLength(value)
   },
-  logger: assign({}, schema.logger, {
+  logger: Object.assign({}, schema.logger, {
     defaultValue: () =>
       // set logger based on browser capability
       (typeof console !== 'undefined' && typeof console.debug === 'function')

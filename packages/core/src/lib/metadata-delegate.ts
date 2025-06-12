@@ -1,5 +1,3 @@
-import assign from './es-utils/assign'
-
 interface MetadataDelegate {
   add: (state: { [key: string]: any }, section: string, keyOrObj?: object | string, maybeVal?: any) => any
   get: (state: { [key: string]: any }, section: string, key?: string) => any
@@ -30,7 +28,7 @@ const metadataDelegate: MetadataDelegate = {
     if (!state[section]) state[section] = {}
 
     // merge the updates with the existing section
-    state[section] = assign({}, state[section], updates)
+    state[section] = Object.assign({}, state[section], updates)
   },
 
   get: (state, section, key) => {

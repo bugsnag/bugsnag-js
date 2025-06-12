@@ -1,6 +1,5 @@
 import Client from '../client'
 import { Config } from '../common'
-import assign from './es-utils/assign'
 
 interface InternalClient {
   _config: Client['_config']
@@ -28,10 +27,10 @@ const cloneClient = <T extends Config>(client: Client<T>): Client<T> => {
   // changes to these properties should not be reflected in the original client,
   // so ensure they are are (shallow) cloned
   clone._breadcrumbs = client._breadcrumbs.slice()
-  clone._metadata = assign({}, client._metadata)
+  clone._metadata = {...client._metadata}
   clone._features = [...client._features]
-  clone._featuresIndex = assign({}, client._featuresIndex)
-  clone._user = assign({}, client._user)
+  clone._featuresIndex = {...client._featuresIndex}
+  clone._user = {...client._user}
   clone._context = client.getContext()
 
   clone._cbs = {

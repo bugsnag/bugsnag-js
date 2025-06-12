@@ -1,5 +1,4 @@
 import type { Config, Device, Plugin } from '@bugsnag/core'
-import assign from '@bugsnag/core/lib/es-utils/assign'
 import setDefaultUserId from './set-default-user-id'
 import getDeviceId from './get-device-id'
 
@@ -42,14 +41,14 @@ export default (nav = navigator, win: Window | null = window): Plugin<PluginConf
     }
 
     client.addOnSession(session => {
-      session.device = assign({}, session.device, device)
+      session.device = Object.assign({}, session.device, device)
       // only set device id if collectUserIp is false
       if (!client._config.collectUserIp) setDefaultUserId(session)
     })
 
     // add time just as the event is sent
     client.addOnError((event) => {
-      event.device = assign({},
+      event.device = Object.assign({},
         event.device,
         device,
         { time: new Date() }

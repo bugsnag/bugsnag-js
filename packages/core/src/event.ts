@@ -6,7 +6,6 @@ import StackGenerator from 'stack-generator'
 import hasStack from './lib/has-stack'
 import reduce from './lib/es-utils/reduce'
 import filter from './lib/es-utils/filter'
-import assign from './lib/es-utils/assign'
 import metadataDelegate from './lib/metadata-delegate'
 import featureFlagDelegate from './lib/feature-flag-delegate'
 import isError from './lib/iserror'
@@ -142,7 +141,7 @@ export default class Event {
   toJSON () {
     return {
       payloadVersion: '4',
-      exceptions: this.errors.map(er => assign({}, er, { message: er.errorMessage })),
+      exceptions: this.errors.map(er => Object.assign({}, er, { message: er.errorMessage })),
       severity: this.severity,
       unhandled: this._handledState.unhandled,
       severityReason: this._handledState.severityReason,

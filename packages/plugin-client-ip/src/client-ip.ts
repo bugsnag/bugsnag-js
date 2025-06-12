@@ -1,5 +1,4 @@
 import { Plugin } from '@bugsnag/core'
-import assign from '@bugsnag/core/lib/es-utils/assign'
 
 interface Config {
   collectUserIp: boolean
@@ -29,7 +28,7 @@ const plugin: ExtendedPlugin = {
         const _user = event.getUser()
         event.setUser('[REDACTED]', _user.email, _user.name)
       }
-      event.request = assign({ clientIp: '[REDACTED]' }, event.request)
+      event.request = Object.assign({ clientIp: '[REDACTED]' }, event.request)
     })
   },
   configSchema: {
