@@ -20,7 +20,7 @@ const HUB_SESSION = 'https://sessions.insighthub.smartbear.com'
 const noop = () => { }
 
 class Client {
-  constructor(configuration, schema = config.schema, internalPlugins = [], notifier) {
+  constructor (configuration, schema = config.schema, internalPlugins = [], notifier) {
     // notifier id
     this._notifier = notifier
 
@@ -81,44 +81,44 @@ class Client {
     }
   }
 
-  addMetadata(section, keyOrObj, maybeVal) {
+  addMetadata (section, keyOrObj, maybeVal) {
     return metadataDelegate.add(this._metadata, section, keyOrObj, maybeVal)
   }
 
-  getMetadata(section, key) {
+  getMetadata (section, key) {
     return metadataDelegate.get(this._metadata, section, key)
   }
 
-  clearMetadata(section, key) {
+  clearMetadata (section, key) {
     return metadataDelegate.clear(this._metadata, section, key)
   }
 
-  addFeatureFlag(name, variant = null) {
+  addFeatureFlag (name, variant = null) {
     add(this._features, this._featuresIndex, name, variant)
   }
 
-  addFeatureFlags(featureFlags) {
+  addFeatureFlags (featureFlags) {
     merge(this._features, featureFlags, this._featuresIndex)
   }
 
-  clearFeatureFlag(name) {
+  clearFeatureFlag (name) {
     clear(this._features, this._featuresIndex, name)
   }
 
-  clearFeatureFlags() {
+  clearFeatureFlags () {
     this._features = []
     this._featuresIndex = {}
   }
 
-  getContext() {
+  getContext () {
     return this._context
   }
 
-  setContext(c) {
+  setContext (c) {
     this._context = c
   }
 
-  _configure(opts, internalPlugins) {
+  _configure (opts, internalPlugins) {
     const schema = reduce(internalPlugins, (schema, plugin) => {
       if (plugin && plugin.configSchema) return assign({}, schema, plugin.configSchema)
       return schema
@@ -186,15 +186,15 @@ class Client {
     return config
   }
 
-  getUser() {
+  getUser () {
     return this._user
   }
 
-  setUser(id, email, name) {
+  setUser (id, email, name) {
     this._user = { id, email, name }
   }
 
-  _loadPlugin(plugin) {
+  _loadPlugin (plugin) {
     const result = plugin.load(this)
     // JS objects are not the safest way to store arbitrarily keyed values,
     // so bookend the key with some characters that prevent tampering with
@@ -203,15 +203,15 @@ class Client {
     if (plugin.name) this._plugins[`~${plugin.name}~`] = result
   }
 
-  getPlugin(name) {
+  getPlugin (name) {
     return this._plugins[`~${name}~`]
   }
 
-  _setDelivery(d) {
+  _setDelivery (d) {
     this._delivery = d(this)
   }
 
-  startSession() {
+  startSession () {
     const session = new Session()
 
     session.app.releaseStage = this._config.releaseStage
@@ -231,43 +231,43 @@ class Client {
     return this._sessionDelegate.startSession(this, session)
   }
 
-  addOnError(fn, front = false) {
+  addOnError (fn, front = false) {
     this._cbs.e[front ? 'unshift' : 'push'](fn)
   }
 
-  removeOnError(fn) {
+  removeOnError (fn) {
     this._cbs.e = filter(this._cbs.e, f => f !== fn)
   }
 
-  _addOnSessionPayload(fn) {
+  _addOnSessionPayload (fn) {
     this._cbs.sp.push(fn)
   }
 
-  addOnSession(fn) {
+  addOnSession (fn) {
     this._cbs.s.push(fn)
   }
 
-  removeOnSession(fn) {
+  removeOnSession (fn) {
     this._cbs.s = filter(this._cbs.s, f => f !== fn)
   }
 
-  addOnBreadcrumb(fn, front = false) {
+  addOnBreadcrumb (fn, front = false) {
     this._cbs.b[front ? 'unshift' : 'push'](fn)
   }
 
-  removeOnBreadcrumb(fn) {
+  removeOnBreadcrumb (fn) {
     this._cbs.b = filter(this._cbs.b, f => f !== fn)
   }
 
-  pauseSession() {
+  pauseSession () {
     return this._sessionDelegate.pauseSession(this)
   }
 
-  resumeSession() {
+  resumeSession () {
     return this._sessionDelegate.resumeSession(this)
   }
 
-  leaveBreadcrumb(message, metadata, type) {
+  leaveBreadcrumb (message, metadata, type) {
     // coerce bad values so that the defaults get set
     message = typeof message === 'string' ? message : ''
     type = (typeof type === 'string' && includes(BREADCRUMB_TYPES, type)) ? type : 'manual'
@@ -293,18 +293,18 @@ class Client {
     }
   }
 
-  _isBreadcrumbTypeEnabled(type) {
+  _isBreadcrumbTypeEnabled (type) {
     const types = this._config.enabledBreadcrumbTypes
 
     return types === null || includes(types, type)
   }
 
-  notify(maybeError, onError, postReportCallback = noop) {
+  notify (maybeError, onError, postReportCallback = noop) {
     const event = Event.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
     this._notify(event, onError, postReportCallback)
   }
 
-  _notify(event, onError, postReportCallback = noop) {
+  _notify (event, onError, postReportCallback = noop) {
     event.app = assign({}, event.app, {
       releaseStage: this._config.releaseStage,
       version: this._config.appVersion,
