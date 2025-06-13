@@ -1,4 +1,3 @@
-import includes from './lib/es-utils/includes'
 import intRange from './lib/validators/int-range'
 import stringWithLength from './lib/validators/string-with-length'
 import listOfFunctions from './lib/validators/list-of-functions'
@@ -157,7 +156,7 @@ const schema: Schema = {
       const providedKeys = Object.keys(value)
       const defaultKeys = Object.keys(defaultErrorTypes())
       // ensure it only has a subset of the allowed keys
-      if (providedKeys.filter( k => includes(defaultKeys, k)).length < providedKeys.length) return false
+      if (providedKeys.filter( k => defaultKeys.includes(k)).length < providedKeys.length) return false
       // ensure all of the values are boolean
       if (providedKeys.filter(k => typeof value[k as keyof typeof value] !== 'boolean').length > 0) return false
       return true
@@ -199,7 +198,7 @@ const schema: Schema = {
         'notify' in val && stringWithLength(val.notify) && 'sessions' in val && stringWithLength(val.sessions)
       ) &&
       // ensure no keys other than notify/session are set on endpoints object
-      Object.keys(val).filter(k => !includes(['notify', 'sessions'], k)).length === 0
+      Object.keys(val).filter(k => !['notify', 'sessions'].includes(k)).length === 0
   },
   autoTrackSessions: {
     defaultValue: ()  => true,
@@ -227,7 +226,7 @@ const schema: Schema = {
     validate: (value: unknown) => value === null || (Array.isArray(value) && value.reduce((accum, maybeType) => {
       if (accum === false) return accum
       // TS doesn't like passing a readonly to a function that might mutate an array
-      return includes(BREADCRUMB_TYPES as unknown as any[], maybeType)
+      return BREADCRUMB_TYPES.includes(maybeType)
     }, true))
   },
   context: {
@@ -241,7 +240,7 @@ const schema: Schema = {
     validate: (value: unknown) =>
       (value === null) ||
       !!(value && Object.keys(value).reduce(
-        (accum, key) => accum && includes(['id', 'email', 'name'], key),
+        (accum, key) => accum && ['id', 'email', 'name'].includes(key),
         true
       ))
   },

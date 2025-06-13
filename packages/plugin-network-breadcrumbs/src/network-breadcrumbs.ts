@@ -1,5 +1,4 @@
 import { Client, Config, Logger, Plugin } from '@bugsnag/core'
-import includes from '@bugsnag/core/lib/es-utils/includes'
 
 const BREADCRUMB_TYPE = 'request'
 
@@ -95,7 +94,7 @@ export default (_ignoredUrls = [], win: GlobalWithFetchAndXHR = window): Plugin 
 
         // an XMLHttpRequest's URL can be an object as long as its 'toString'
         // returns a URL, e.g. a HTMLAnchorElement
-        if (typeof url === 'string' && includes(ignoredUrls, url.replace(/\?.*$/, ''))) {
+        if (typeof url === 'string' && ignoredUrls.includes(url.replace(/\?.*$/, ''))) {
           // don't leave a network breadcrumb from bugsnag notify calls
           return
         }
@@ -119,7 +118,7 @@ export default (_ignoredUrls = [], win: GlobalWithFetchAndXHR = window): Plugin 
           return
         }
 
-        if (typeof url === 'string' && includes(ignoredUrls, url.replace(/\?.*$/, ''))) {
+        if (typeof url === 'string' && ignoredUrls.includes(url.replace(/\?.*$/, ''))) {
           // don't leave a network breadcrumb from bugsnag notify calls
           return
         }
