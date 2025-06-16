@@ -1,4 +1,3 @@
-import reduce from '@bugsnag/core/lib/es-utils/reduce'
 import { Client } from '@bugsnag/core'
 
 const MAX_LINE_LENGTH = 200
@@ -55,7 +54,7 @@ export default (doc = document, win = window) => ({
       const zeroBasedLine = lineNumber - 1
       const start = Math.max(zeroBasedLine - 3, 0)
       const end = Math.min(zeroBasedLine + 3, htmlLines.length)
-      return reduce(htmlLines.slice(start, end), (accum, line, i) => {
+      return htmlLines.slice(start, end).reduce((accum: Record<string, any>, line, i) => {
         accum[start + 1 + i] = line.length <= MAX_LINE_LENGTH ? line : line.substr(0, MAX_LINE_LENGTH)
         return accum
       }, {})

@@ -1,5 +1,4 @@
 import { Client, Config, Plugin } from '@bugsnag/core'
-import reduce from '@bugsnag/core/lib/es-utils/reduce'
 
 type ConsoleMethod = 'log' | 'debug' | 'info' | 'warn' | 'error'
 
@@ -26,9 +25,8 @@ const plugin: Plugin = {
       console[method] = (...args: any) => {
         client.leaveBreadcrumb(
           'Console output',
-          reduce(
-            args,
-            (accum, arg, i) => {
+          args.reduce(
+            (accum: Record<string, any>, arg: any, i: number) => {
               // do the best/simplest stringification of each argument
               let stringified = '[Unknown value]'
               // this may fail if the input is:

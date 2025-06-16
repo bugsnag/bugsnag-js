@@ -4,7 +4,6 @@ import ErrorStackParser from 'error-stack-parser'
 // @ts-expect-error no types
 import StackGenerator from 'stack-generator'
 import hasStack from './lib/has-stack'
-import reduce from './lib/es-utils/reduce'
 import assign from './lib/es-utils/assign'
 import metadataDelegate from './lib/metadata-delegate'
 import featureFlagDelegate from './lib/feature-flag-delegate'
@@ -258,7 +257,7 @@ function createBugsnagError (errorClass: unknown, errorMessage: unknown, type: s
     errorClass: ensureString(errorClass),
     errorMessage: ensureString(errorMessage),
     type,
-    stacktrace: reduce(stacktrace, (accum, frame) => {
+    stacktrace: stacktrace.reduce((accum, frame) => {
       const f = formatStackframe(frame)
       // don't include a stackframe if none of its properties are defined
       try {
