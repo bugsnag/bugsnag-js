@@ -8,8 +8,7 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/index.mjs",
       "default": "./dist/index.cjs"
-    },
-    "./lib/es-utils/includes": "./src/lib/es-utils/includes.js"
+    }
   },
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
