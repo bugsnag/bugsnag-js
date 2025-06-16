@@ -423,4 +423,3 @@ const stringify = (val: unknown) => {
     default: return String(val)
   }
 }
-
