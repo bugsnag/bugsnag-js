@@ -5,7 +5,6 @@ import ErrorStackParser from './lib/error-stack-parser'
 import StackGenerator from 'stack-generator'
 import hasStack from './lib/has-stack'
 import reduce from './lib/es-utils/reduce'
-import filter from './lib/es-utils/filter'
 import assign from './lib/es-utils/assign'
 import metadataDelegate from './lib/metadata-delegate'
 import featureFlagDelegate from './lib/feature-flag-delegate'
@@ -165,7 +164,7 @@ static getStacktrace = function (error: Error, errorFramesToSkip: number, backtr
   if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
   // error wasn't provided or didn't have a stacktrace so try to walk the callstack
   try {
-    return filter(StackGenerator.backtrace(), (frame: StackTraceJsStyleStackframe) =>
+    return StackGenerator.backtrace().filter((frame: StackTraceJsStyleStackframe) =>
       (frame.functionName || '').indexOf('StackGenerator$$') === -1
     ).slice(1 + backtraceFramesToSkip)
   } catch (e) {
@@ -217,7 +216,7 @@ interface StackTraceJsStyleStackframe {
   args: string[],
   fileName: string,
   lineNumber: number,
-  columnNumber: number, 
+  columnNumber: number,
   isEval: boolean,
   isNative: boolean,
   source: string,
