@@ -4,6 +4,8 @@
 
 ### Added
 
+- Set default endpoints based on API key [#2464](https://github.com/bugsnag/bugsnag-js/pull/2464)
+
 - (plugin-hono) Added support for capturing errors in Hono applications [#2375](https://github.com/bugsnag/bugsnag-js/pull/2375)
 
 ## [8.3.2] - 2025-04-24
