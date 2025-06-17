@@ -1,6 +1,6 @@
 import { App, Device, FeatureFlag, Logger, Request, Stackframe, Thread, User, BugsnagError, NotifiableError } from "./common"
 
-import ErrorStackParser from './lib/error-stack-parser'
+import ErrorStackParser from 'error-stack-parser'
 // @ts-expect-error no types
 import StackGenerator from 'stack-generator'
 import hasStack from './lib/has-stack'
