@@ -10,7 +10,7 @@
     "noEmit": true,
     "strict": true,
     "baseUrl": "./",
-    "types": ["jest"],
+    "types": ["node", "jest"],
     "esModuleInterop": true,
   },
   "include": [
