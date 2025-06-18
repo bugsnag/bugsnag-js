@@ -13,8 +13,11 @@ const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
 const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
 const { add, clear, merge } = require('./lib/feature-flag-delegate')
+const HUB_PREFIX = '00000'
+const HUB_NOTIFY = 'https://notify.insighthub.smartbear.com'
+const HUB_SESSION = 'https://sessions.insighthub.smartbear.com'
 
-const noop = () => {}
+const noop = () => { }
 
 class Client {
   constructor (configuration, schema = config.schema, internalPlugins = [], notifier) {
@@ -154,6 +157,13 @@ class Client {
       if (!config.apiKey) throw new Error('No Bugsnag API Key set')
       // warn about an apikey that is not of the expected format
       if (!/^[0-9a-f]{32}$/i.test(config.apiKey)) errors.apiKey = 'should be a string of 32 hexadecimal characters'
+
+      if (opts.endpoints === undefined && config.apiKey.startsWith(HUB_PREFIX)) {
+        config.endpoints = {
+          notify: HUB_NOTIFY,
+          sessions: HUB_SESSION
+        }
+      }
     }
 
     // update and elevate some options
@@ -363,7 +373,7 @@ class Client {
 
 const generateConfigErrorMessage = (errors, rawInput) => {
   const er = new Error(
-  `Invalid configuration\n${map(keys(errors), key => `  - ${key} ${errors[key]}, got ${stringify(rawInput[key])}`).join('\n\n')}`)
+    `Invalid configuration\n${map(keys(errors), key => `  - ${key} ${errors[key]}, got ${stringify(rawInput[key])}`).join('\n\n')}`)
   return er
 }
 
