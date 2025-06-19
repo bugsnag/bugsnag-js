@@ -1,6 +1,7 @@
 // This script is designed to be run within the react-native-android-builder Docker image
 // It copies just the files it needs from the source 'fixtures' directory in the destination,
 // before running gradlew (to avoid the need to download gradle multiple times).
+const { resolve } = require('path')
 const common = require('./common')
 const fs = require('fs')
 
@@ -67,7 +68,6 @@ module.exports = {
     try {
       const version = process.env.NOTIFIER_VERSION || common.getCommitId()
       const rnVersion = process.env.REACT_NATIVE_VERSION
-      const registryUrl = process.env.REGISTRY_URL
       const fixtureDir = 'test/react-native/features/fixtures'
       const targetDir = `${fixtureDir}/${rnVersion}`
       const initialDir = process.cwd()
@@ -83,28 +83,31 @@ module.exports = {
       }
 
       // We're not in docker so check the above are set
-      if (rnVersion === undefined || registryUrl === undefined) {
-        throw new Error('Both REACT_NATIVE_VERSION and REGISTRY_URL environment variables must be set')
+      if (rnVersion === undefined) {
+        throw new Error('REACT_NATIVE_VERSION environment variables must be set')
       }
 
       // Copy the JS code into the test fixture
       console.log(`Copying JS app data from ${fixtureDir}/app to ${targetDir}`)
       common.run(`rsync -a ${fixtureDir}/app/${jsSourceDir}/ ${targetDir}`, true)
 
+      const reactNativePath = resolve('dist', 'bugsnag-react-native-cli-*.tgz')
+
       // JavaScript layer
       console.log(`Changing directory to: ${targetDir} and running "npm install"`)
       common.changeDir(`${targetDir}`)
-      common.run(`npm install --registry ${registryUrl}`, true)
+      common.run(`npm ci`, true)
 
       // Install notifier
-      console.log(`Installing notifier: ${version}`)
-      const command = `npm install @bugsnag/react-native@${version}  --registry ${registryUrl} --legacy-peer-deps`
+      console.log(`Installing notifier`)
+      const command = `npm install ${reactNativePath}`
       common.run(command, true)
 
       // Install react-native-file-access
-      const RNFACommand = `npm install react-native-file-access@3.0.4  --registry ${registryUrl}`
+      const RNFACommand = `npm install react-native-file-access@3.0.4`
       common.run(RNFACommand, true)
 
+      // TODO: What does this do? Do we need it?
       // Install any required secondary files
       if (fs.existsSync('./install.sh')) {
         common.run(`BUGSNAG_VERSION=${version} ./install.sh`, true)

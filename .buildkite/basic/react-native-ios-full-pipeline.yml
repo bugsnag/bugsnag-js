@@ -21,6 +21,7 @@ steps:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths: build/rn0.68-hermes.ipa
         commands:
+          - npm run test:publish
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -39,6 +40,7 @@ steps:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths: build/rn0.69.ipa
         commands:
+          - npm run test:publish
           - npm run test:build-react-native-ios
         retry:
           automatic:
