@@ -104,6 +104,9 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
 
 // Pack all the required Bugsnag packages
 function packLocalPackages() {
+  // Build all packages first
+  execSync('npm run build', { cwd: ROOT_DIR, stdio: 'inherit' })
+  
   const packagesDir = resolve(ROOT_DIR, 'packages')
   const packages = [
     'react-native',
