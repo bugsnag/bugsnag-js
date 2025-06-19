@@ -107,15 +107,7 @@ function packLocalPackages() {
   const packagesDir = resolve(ROOT_DIR, 'packages')
   const packages = [
     'react-native',
-    'delivery-react-native',
-    'plugin-react-native-client-sync',
-    'plugin-react-native-event-sync',
-    'plugin-react-native-global-error-handler',
-    'plugin-react-native-hermes',
     'plugin-react-native-navigation',
-    'plugin-react-native-orientation-breadcrumbs',
-    'plugin-react-native-session',
-    'plugin-react-native-unhandled-rejection',
     'plugin-react-navigation'
   ]
 
