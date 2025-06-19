@@ -38,7 +38,7 @@ const fixtureDir = resolve(ROOT_DIR, fixturePath, reactNativeVersion)
 
 const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native-cli/features/fixtures/app/dynamic/')
 
-function packLocalPackages() {
+function packLocalPackages () {
   // Build all packages first
   execSync('npm run build', { cwd: ROOT_DIR, stdio: 'inherit' })
 
