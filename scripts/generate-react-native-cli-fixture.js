@@ -40,6 +40,7 @@ const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native-cli/features/fi
 
 function packLocalPackages () {
   // Build all packages first
+  execSync('npm install', { cwd: ROOT_DIR, stdio: 'inherit' })
   execSync('npm run build', { cwd: ROOT_DIR, stdio: 'inherit' })
 
   // Pack the react-native-cli package
