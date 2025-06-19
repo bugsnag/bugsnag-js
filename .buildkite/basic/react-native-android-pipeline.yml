@@ -16,6 +16,7 @@ steps:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/old-arch/**/reactnative.apk"
         commands:
@@ -39,6 +40,7 @@ steps:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/reactnative.apk"
         commands:

@@ -18,6 +18,7 @@ steps:
           REACT_NATIVE_VERSION: rn0.68-hermes
           LANG: "en_US.UTF-8"
           DEVELOPER_DIR: "/Applications/Xcode14.app"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths: build/rn0.68-hermes.ipa
         commands:
           - npm run test:build-react-native-ios
@@ -35,6 +36,7 @@ steps:
           REACT_NATIVE_VERSION: rn0.69
           LANG: "en_US.UTF-8"
           DEVELOPER_DIR: "/Applications/Xcode14.app"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths: build/rn0.69.ipa
         commands:
           - npm run test:build-react-native-ios
@@ -54,6 +56,7 @@ steps:
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_IOS: "true"
           XCODE_VERSION: "16.2.0"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
@@ -81,6 +84,7 @@ steps:
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"
           XCODE_VERSION: "16.2.0"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
@@ -109,6 +113,7 @@ steps:
           BUILD_IOS: "true"
           XCODE_VERSION: "16.2.0"
           REACT_NATIVE_NAVIGATION: "true"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/react-native-navigation/old-arch/**/output/reactnative.ipa"
         commands:
