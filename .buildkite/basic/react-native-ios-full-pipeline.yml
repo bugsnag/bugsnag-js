@@ -11,7 +11,6 @@ steps:
       #
       - label: ":ios: Build RN 0.68 Hermes ipa"
         key: "rn-0-68-hermes-ipa"
-        depends_on: "publish-js"
         timeout_in_minutes: 20
         agents:
           queue: "macos-12-arm"
@@ -29,7 +28,6 @@ steps:
 
       - label: ":ios: Build RN 0.69 ipa"
         key: "rn-0-69-ipa"
-        depends_on: "publish-js"
         timeout_in_minutes: 20
         agents:
           queue: "macos-12-arm"
@@ -47,7 +45,6 @@ steps:
 
       - label: ':mac: Build RN {{matrix}} test fixture ipa (Old Arch)'
         key: "build-react-native-ios-fixture-old-arch-full"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: "macos-15"
@@ -75,7 +72,6 @@ steps:
 
       - label: ':mac: Build RN {{matrix}} test fixture ipa (New Arch)'
         key: "build-react-native-ios-fixture-new-arch-full"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: "macos-15"
@@ -103,7 +99,6 @@ steps:
 
       - label: ':mac: Build react-native-navigation {{matrix}} test fixture ipa (Old Arch)'
         key: "build-react-native-navigation-ios-fixture-old-arch"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: "macos-15"
