@@ -38,6 +38,23 @@ steps:
         - exit_status: "*"
           limit: 1
 
+  - label: "Build and publish JS packages (new)"
+    key: "publish-new"
+    timeout_in_minutes: 10
+    agents:
+      queue: "macos-node-18"
+    env:
+      NODE_VERSION: "18"
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+    command:
+      - "node scripts/publish-packages.js"
+      - "zip -r packages.zip dist/*.tgz"
+    artifact_paths: "packages.zip"
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 1
+
   #
   # Core tests and checks
   #
