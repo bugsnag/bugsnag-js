@@ -96,15 +96,15 @@ module.exports = {
       // JavaScript layer
       console.log(`Changing directory to: ${targetDir} and running "npm install"`)
       common.changeDir(`${targetDir}`)
-      common.run(`npm ci`, true)
+      common.run('npm ci', true)
 
       // Install notifier
-      console.log(`Installing notifier`)
+      console.log('Installing notifier')
       const command = `npm install ${reactNativePath}`
       common.run(command, true)
 
       // Install react-native-file-access
-      const RNFACommand = `npm install react-native-file-access@3.0.4`
+      const RNFACommand = 'npm install react-native-file-access@3.0.4'
       common.run(RNFACommand, true)
 
       // TODO: What does this do? Do we need it?

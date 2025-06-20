@@ -1,15 +1,17 @@
+#!/usr/bin/env node
+
 const { execSync } = require('child_process')
 const { resolve } = require('path')
 const fs = require('fs')
 
 const ROOT_DIR = resolve(__dirname, '..')
 
-function run(command, options = {}) {
+function run (command, options = {}) {
   console.log(`Running: ${command}`)
   execSync(command, { stdio: 'inherit', ...options })
 }
 
-function packPackages() {
+function packPackages () {
   // Get all package directories
   const packagesDir = resolve(ROOT_DIR, 'packages')
   const packages = fs.readdirSync(packagesDir)
@@ -32,7 +34,7 @@ function packPackages() {
   }
 }
 
-async function main() {
+async function main () {
   try {
     console.log('Installing dependencies...')
     run('npm ci', { cwd: ROOT_DIR })

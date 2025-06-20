@@ -38,8 +38,8 @@ steps:
         - exit_status: "*"
           limit: 1
 
-  - label: "Build and publish JS packages (new)"
-    key: "publish-new"
+  - label: "Build and publish JS packages (local)"
+    key: "publish-js-new"
     timeout_in_minutes: 10
     agents:
       queue: "macos-node-18"

@@ -102,13 +102,9 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
   iosUtils.buildIPA(fixtureDir)
 }
 
-// Pack all the required Bugsnag packages
-function packLocalPackages () {
-  // Build all packages first
-  execSync('npm ci', { cwd: ROOT_DIR, stdio: 'inherit' })
-  execSync('npm run build', { cwd: ROOT_DIR, stdio: 'inherit' })
-
-  const packagesDir = resolve(ROOT_DIR, 'packages')
+// Move all the required Bugsnag packages to the fixture directory
+function getLocalPackages () {
+  const packagesDir = resolve(ROOT_DIR, 'dist')
   const packages = [
     'react-native',
     'plugin-react-native-navigation',
@@ -117,13 +113,24 @@ function packLocalPackages () {
 
   // Pack each package and move the tarballs to the fixture directory
   for (const pkg of packages) {
-    execSync(`npm pack "${resolve(packagesDir, pkg)}" --pack-destination "${fixtureDir}"`, { stdio: 'inherit' })
+    // move the tarball to the fixture directory
+    const tarballName = `bugsnag-${pkg}-*.tgz`
+    const tarballFiles = fs.readdirSync(packagesDir).filter(file => file.match(new RegExp(tarballName.replace('*', '.*'))))
+    if (tarballFiles.length === 0) {
+      console.warn(`No tarball found for ${tarballName} in ${packagesDir}. Please ensure the package is built and available.`)
+      continue
+    } 
+    
+    const tarballFile = tarballFiles[0]
+    const tarballPath = resolve(packagesDir, tarballFile);
+    fs.copyFileSync(tarballPath, resolve(fixtureDir, tarballFile));
+    console.log(`Copied ${tarballFile} to ${fixtureDir}`);
   }
 }
 
 function installFixtureDependencies () {
-  // Pack local packages first
-  packLocalPackages()
+  // Get local packages first
+  getLocalPackages()
 
   // Install non-Bugsnag dependencies
   const externalDependencies = []
