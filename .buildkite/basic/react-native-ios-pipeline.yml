@@ -29,6 +29,7 @@ steps:
           - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
           - "bundle install"
+          - "unzip -q packages.zip"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           - "0.79"
@@ -57,6 +58,7 @@ steps:
           - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
           - "bundle install"
+          - "unzip -q packages.zip"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           - "0.79"
