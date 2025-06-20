@@ -119,12 +119,12 @@ function getLocalPackages () {
     if (tarballFiles.length === 0) {
       console.warn(`No tarball found for ${tarballName} in ${packagesDir}. Please ensure the package is built and available.`)
       continue
-    } 
-    
+    }
+
     const tarballFile = tarballFiles[0]
-    const tarballPath = resolve(packagesDir, tarballFile);
-    fs.copyFileSync(tarballPath, resolve(fixtureDir, tarballFile));
-    console.log(`Copied ${tarballFile} to ${fixtureDir}`);
+    const tarballPath = resolve(packagesDir, tarballFile)
+    fs.copyFileSync(tarballPath, resolve(fixtureDir, tarballFile))
+    console.log(`Copied ${tarballFile} to ${fixtureDir}`)
   }
 }
 

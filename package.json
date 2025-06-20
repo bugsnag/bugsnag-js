@@ -92,7 +92,7 @@
     "test:build-react-native-ios": "bundle install && node -e 'require(\"./scripts/react-native-helper\").buildIOS()'",
     "test:build-react-native-maze-runner": "docker-compose build --pull react-native-maze-runner",
     "test:node": "npm run test:build-node-container && docker compose run --use-aliases node-maze-runner",
-    "test:publish": "node scripts/publish_local.js",
+    "test:publish": "node scripts/publish-packages.js",
     "test:react-native:ios": "npm run test:build-react-native-ios && npm run test:build-react-native-maze-runner && APP_LOCATION=build/$REACT_NATIVE_VERSION.ipa docker-compose run --use-aliases react-native-maze-runner",
     "local-npm:start": "verdaccio --config test/electron/local-npm-config.yml --listen 0.0.0.0:5539",
     "local-npm:publish-all": "lerna publish \"$VERSION_IDENTIFIER\" --yes --force-publish --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'",
