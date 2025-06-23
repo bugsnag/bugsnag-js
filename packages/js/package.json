@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/js",
-  "version": "8.2.0",
+  "version": "8.4.0",
   "main": "node/notifier.js",
   "browser": "browser/notifier.js",
   "types": "types.d.ts",
@@ -36,8 +36,8 @@
     "build": "echo 'No build step required for @bugsnag/js'"
   },
   "dependencies": {
-    "@bugsnag/browser": "^8.2.0",
-    "@bugsnag/node": "^8.2.0"
+    "@bugsnag/browser": "^8.4.0",
+    "@bugsnag/node": "^8.4.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0"

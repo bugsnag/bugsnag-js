@@ -138,7 +138,10 @@
     {
         "pipeline": ".buildkite/basic/react-native-cli-pipeline.yml",
         "block": ".buildkite/block/react-native-cli-pipeline.block.yml",
-        "paths": []
+        "paths": [
+            "test/react-native-cli",
+            "packages/react-native-cli"
+        ]
     },
     {
         "pipeline": ".buildkite/basic/expo-pipeline.yml",

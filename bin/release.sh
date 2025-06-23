@@ -32,7 +32,8 @@ WORKER_PACKAGE_CHANGED=$(npx lerna changed --parseable | grep -c packages/web-wo
 
 # increment package version numbers
 if [ -z "${RETRY_PUBLISH:-}" ]; then
-  npx lerna version "$VERSION" --no-push
+  # ensure we don't use legacy peer deps when bumping versions (https://github.com/nrwl/nx/issues/22066)
+  npm_config_legacy_peer_deps=false npx lerna version "$VERSION" --no-push
 fi
 
 # build packages
