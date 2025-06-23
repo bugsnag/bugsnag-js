@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "Scenario.h"
 
-@interface NativeStackUnhandledScenario : Scenario
+@interface NativePromiseRejectionHandledScenario : Scenario
 
 @end

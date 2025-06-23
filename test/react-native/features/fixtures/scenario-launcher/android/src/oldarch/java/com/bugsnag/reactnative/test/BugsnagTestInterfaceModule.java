@@ -34,6 +34,11 @@ public class BugsnagTestInterfaceModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public boolean runScenarioSync(String scenarioName) {
+    return impl.runScenarioSync(scenarioName);
+  }
+
+  @ReactMethod
   public void startBugsnag(ReadableMap options, Promise promise) {
     impl.startBugsnag(options, promise);
   }
