@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-inline-script-content",
-  "version": "8.2.0",
+  "version": "8.4.0",
   "main": "dist/inline-script-content.js",
   "types": "dist/types/inline-script-content.d.ts",
   "exports": {
@@ -30,7 +30,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.2.0"
+    "@bugsnag/core": "^8.4.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"

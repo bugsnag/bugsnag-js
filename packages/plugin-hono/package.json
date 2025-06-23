@@ -1,32 +1,32 @@
 {
-    "name": "@bugsnag/plugin-hono",
-    "version": "8.0.0",
-    "main": "src/hono.js",
-    "types": "types/bugsnag-hono.d.ts",
-    "description": "@bugsnag/js error handling middleware for Hono web servers",
-    "homepage": "https://www.bugsnag.com/",
-    "repository": {
-      "type": "git",
-      "url": "git@github.com:bugsnag/bugsnag-js.git"
-    },
-    "publishConfig": {
-      "access": "public"
-    },
-    "files": [
-      "src",
-      "types"
-    ],
-    "author": "Bugsnag",
-    "license": "MIT",
-    "peerDependencies": {
-      "@bugsnag/core": "^8.0.0"
-    },
-    "devDependencies": {
-      "@bugsnag/core": "^8.0.0",
-      "hono": "^4.6.3",
-      "typescript": "^5.2.2"
-    },
-    "scripts": {
-      "test:types": "tsc -p tsconfig.json"
-    }
+  "name": "@bugsnag/plugin-hono",
+  "version": "8.4.0",
+  "main": "src/hono.js",
+  "types": "types/bugsnag-hono.d.ts",
+  "description": "@bugsnag/js error handling middleware for Hono web servers",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "types"
+  ],
+  "author": "Bugsnag",
+  "license": "MIT",
+  "peerDependencies": {
+    "@bugsnag/core": "^8.0.0"
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^8.4.0",
+    "hono": "^4.6.3",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "test:types": "tsc -p tsconfig.json"
   }
+}

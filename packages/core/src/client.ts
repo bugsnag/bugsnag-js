@@ -13,17 +13,19 @@ import BREADCRUMB_TYPES from './lib/breadcrumb-types'
 import { add, clear, merge } from './lib/feature-flag-delegate'
 import { BreadcrumbType, Config, Delivery, FeatureFlag, LoggerConfig, NotifiableError, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
 
+const HUB_PREFIX = '00000'
+const HUB_NOTIFY = 'https://notify.insighthub.smartbear.com'
+const HUB_SESSION = 'https://sessions.insighthub.smartbear.com'
+
 const noop = () => {}
 export default class Client<T extends Config = Config> {
   public readonly _notifier?: Notifier
   public readonly _config: T & Required<Config>
   private readonly _schema: any
-
-  public _delivery: Delivery
-
   private readonly _plugins: { [key: string]: any }
-
+  
   public _breadcrumbs: Breadcrumb[]
+  public _delivery: Delivery
   public _session: Session | null
   public _metadata: { [key: string]: any }
   public _featuresIndex: { [key: string]: number }
@@ -194,6 +196,13 @@ export default class Client<T extends Config = Config> {
       if (!config.apiKey) throw new Error('No Bugsnag API Key set')
       // warn about an apikey that is not of the expected format
       if (!/^[0-9a-f]{32}$/i.test(config.apiKey)) errors.apiKey = 'should be a string of 32 hexadecimal characters'
+
+      if (opts.endpoints === undefined && config.apiKey.startsWith(HUB_PREFIX)) {
+        config.endpoints = {
+          notify: HUB_NOTIFY,
+          sessions: HUB_SESSION
+        }
+      }
     }
 
     // update and elevate some options
@@ -403,8 +412,7 @@ export default class Client<T extends Config = Config> {
 }
 
 const generateConfigErrorMessage = (errors: Record<string, Error>, rawInput: Config) => {
-  const er = new Error(
-  `Invalid configuration\n${(Object.keys(errors) as unknown as (keyof Config)[]).map(key => `  - ${key} ${errors[key]}, got ${stringify(rawInput[key])}`).join('\n\n')}`)
+  const er = new Error(`Invalid configuration\n${(Object.keys(errors) as unknown as (keyof Config)[]).map(key => `  - ${key} ${errors[key]}, got ${stringify(rawInput[key])}`).join('\n\n')}`)
   return er
 }
 
