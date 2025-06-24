@@ -15,7 +15,6 @@
     "./lib/es-utils/reduce": "./src/lib/es-utils/reduce.js",
     "./lib/es-utils/keys": "./src/lib/es-utils/keys.js",
     "./lib/derecursify": "./src/lib/derecursify.js",
-    "./lib/metadata-delegate": "./src/lib/metadata-delegate.js",
     "./lib/callback-runner": "./src/lib/callback-runner.js",
     "./lib/path-normalizer": "./src/lib/path-normalizer.js",
     "./lib/validators/string-with-length": "./src/lib/validators/string-with-length.js",
