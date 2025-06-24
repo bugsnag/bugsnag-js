@@ -1,12 +1,11 @@
-const { getStack } = require('@bugsnag/core/lib/node-fallback-stack')
-const { cloneClient } = require('@bugsnag/core')
+const { cloneClient, nodeFallbackStack } = require('@bugsnag/core')
 
 module.exports = {
   name: 'contextualize',
   load: client => {
     const contextualize = (fn, onError) => {
       // capture a stacktrace in case a resulting error has nothing
-      const fallbackStack = getStack()
+      const fallbackStack = nodeFallbackStack.getStack()
 
       const clonedClient = cloneClient(client)
 
