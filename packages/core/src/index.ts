@@ -8,5 +8,6 @@ export { default as jsonPayload } from './lib/json-payload'
 export { default as intRange } from './lib/validators/int-range'
 export { default as isError } from './lib/iserror'
 export { default as nodeFallbackStack } from './lib/node-fallback-stack'
+export { default as runSyncCallbacks } from './lib/sync-callback-runner'
 
 export * from './common'
