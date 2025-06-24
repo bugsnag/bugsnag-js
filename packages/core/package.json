@@ -17,7 +17,6 @@
     "./lib/derecursify": "./src/lib/derecursify.js",
     "./lib/callback-runner": "./src/lib/callback-runner.js",
     "./lib/node-fallback-stack": "./src/lib/node-fallback-stack.js",
-    "./lib/sync-callback-runner": "./src/lib/sync-callback-runner.js",
     "./lib/path-normalizer": "./src/lib/path-normalizer.js",
     "./lib/validators/string-with-length": "./src/lib/validators/string-with-length.js",
     "./lib/validators/list-of-functions": "./src/lib/validators/list-of-functions.js",
