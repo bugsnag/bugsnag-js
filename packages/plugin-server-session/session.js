@@ -1,7 +1,6 @@
-const { intRange } = require('@bugsnag/core')
+const { intRange, runSyncCallbacks } = require('@bugsnag/core')
 const SessionTracker = require('./tracker')
 const Backoff = require('backo')
-const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
 
 module.exports = {
   load: (client) => {
