@@ -129,7 +129,7 @@ ios_10:
     lineNumber: 18
     columnNumber: 25
 
-ios_11:
+ios_12:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: "Can't find variable: foo"
