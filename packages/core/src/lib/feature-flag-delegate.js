@@ -1,4 +1,3 @@
-const filter = require('./es-utils/filter')
 const isArray = require('./es-utils/is-array')
 const jsonStringify = require('@bugsnag/safe-json-stringify')
 
@@ -46,7 +45,7 @@ function merge (existingFeatures, newFeatures, existingFeatureKeys) {
 // by the Bugsnag Event API:
 //   [{ featureFlag: 'name', variant: 'variant' }, { featureFlag: 'name 2' }]
 function toEventApi (featureFlags) {
-  return filter(featureFlags, Boolean).map(
+  return featureFlags.filter(Boolean).map(
     ({ name, variant }) => {
       const flag = { featureFlag: name }
 
