@@ -3,7 +3,6 @@ import Event from './event'
 import Breadcrumb from './breadcrumb'
 import Session from './session'
 import includes from './lib/es-utils/includes'
-import filter from './lib/es-utils/filter'
 import reduce from './lib/es-utils/reduce'
 import runCallbacks from './lib/callback-runner'
 import metadataDelegate from './lib/metadata-delegate'
@@ -274,7 +273,7 @@ export default class Client<T extends Config = Config> {
   }
 
   removeOnError (fn: OnErrorCallback) {
-    this._cbs.e = filter(this._cbs.e, f => f !== fn)
+    this._cbs.e = this._cbs.e.filter( f => f !== fn)
   }
 
   _addOnSessionPayload (fn: OnSessionCallback) {
@@ -286,7 +285,7 @@ export default class Client<T extends Config = Config> {
   }
 
   removeOnSession (fn: OnSessionCallback) {
-    this._cbs.s = filter(this._cbs.s, f => f !== fn)
+    this._cbs.s = this._cbs.s.filter( f => f !== fn)
   }
 
   addOnBreadcrumb (fn: OnBreadcrumbCallback, front = false) {
@@ -294,7 +293,7 @@ export default class Client<T extends Config = Config> {
   }
 
   removeOnBreadcrumb (fn: OnBreadcrumbCallback) {
-    this._cbs.b = filter(this._cbs.b, f => f !== fn)
+    this._cbs.b = this._cbs.b.filter( f => f !== fn)
   }
 
   pauseSession () {

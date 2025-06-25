@@ -1,5 +1,4 @@
-import { Event, LoggerConfig, schema } from '@bugsnag/core'
-import stringWithLength from '@bugsnag/core/lib/validators/string-with-length'
+import { Event, LoggerConfig, schema, stringWithLength } from '@bugsnag/core'
 import os from 'os'
 import { inspect } from 'util'
 
