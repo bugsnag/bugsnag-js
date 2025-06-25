@@ -53,6 +53,8 @@ services:
       BITBAR_ACCESS_KEY:
       HOST: "${HOST:-maze-runner}"
       API_HOST: "${API_HOST:-maze-runner}"
+      MAZE_REPEATER_API_KEY: "${MAZE_REPEATER_API_KEY_BROWSER:-}"
+      MAZE_HUB_REPEATER_API_KEY: "${MAZE_HUB_REPEATER_API_KEY_BROWSER:-}"
     env_file:
       - ${DOCKER_ENV_FILE:-test/browser/features/fixtures/null_env}
     networks:
@@ -78,6 +80,8 @@ services:
       <<: *common-environment
       HOST: "${HOST:-maze-runner}"
       API_HOST: "${API_HOST:-maze-runner}"
+      MAZE_REPEATER_API_KEY: "${MAZE_REPEATER_API_KEY_BROWSER:-}"
+      MAZE_HUB_REPEATER_API_KEY: "${MAZE_HUB_REPEATER_API_KEY_BROWSER:-}"
     env_file:
       - ${DOCKER_ENV_FILE:-test/browser/features/fixtures/null_env}
     networks:
@@ -99,6 +103,8 @@ services:
       NODE_VERSION: "${NODE_VERSION:-12}"
       COMPOSE_PROJECT_NAME: "node${NODE_VERSION:-12}"
       NETWORK_NAME: "${BUILDKITE_JOB_ID:-js-maze-runner}"
+      MAZE_REPEATER_API_KEY: "${MAZE_REPEATER_API_KEY_NODE:-}"
+      MAZE_HUB_REPEATER_API_KEY: "${MAZE_HUB_REPEATER_API_KEY_NODE:-}"
       DEBUG:
     networks:
       default:
@@ -150,6 +156,8 @@ services:
       HERMES:
       RN_VERSION:
       REACT_NATIVE_NAVIGATION:
+      MAZE_REPEATER_API_KEY: "${MAZE_REPEATER_API_KEY_RN:-}"
+      MAZE_HUB_REPEATER_API_KEY: "${MAZE_HUB_REPEATER_API_KEY_RN:-}"
     ports:
       - "9000-9499:9339"
     networks:
