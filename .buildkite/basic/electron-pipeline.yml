@@ -17,6 +17,7 @@ steps:
           electron_version:
             - "^37.0.0" # Latest Version
             - "^36.0.0" # EOL 2025-Oct-28
+            - "^35.0.0" # EOL 2025-Sep-02
           node_version:
             - "22"
         adjustments:
