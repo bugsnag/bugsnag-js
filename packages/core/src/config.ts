@@ -1,4 +1,3 @@
-import isArray from './lib/es-utils/is-array'
 import includes from './lib/es-utils/includes'
 import intRange from './lib/validators/int-range'
 import stringWithLength from './lib/validators/string-with-length'
@@ -210,7 +209,7 @@ const schema: Schema = {
   enabledReleaseStages: {
     defaultValue: () => null,
     message: 'should be an array of strings',
-    validate: (value: unknown) => value === null || (isArray(value) && value.filter(f => typeof f === 'string').length === value.length)
+    validate: (value: unknown) => value === null || (Array.isArray(value) && value.filter(f => typeof f === 'string').length === value.length)
   },
   releaseStage: {
     defaultValue: () => 'production',
@@ -225,7 +224,7 @@ const schema: Schema = {
   enabledBreadcrumbTypes: {
     defaultValue: () => BREADCRUMB_TYPES,
     message: `should be null or a list of available breadcrumb types (${BREADCRUMB_TYPES.join(',')})`,
-    validate: (value: unknown) => value === null || (isArray(value) && value.reduce((accum, maybeType) => {
+    validate: (value: unknown) => value === null || (Array.isArray(value) && value.reduce((accum, maybeType) => {
       if (accum === false) return accum
       // TS doesn't like passing a readonly to a function that might mutate an array
       return includes(BREADCRUMB_TYPES as unknown as any[], maybeType)
@@ -266,7 +265,7 @@ const schema: Schema = {
     defaultValue: () => ['password'],
     message: 'should be an array of strings|regexes',
     validate: (value: unknown) =>
-      isArray(value) && value.length === value.filter(s =>
+      Array.isArray(value) && value.length === value.filter(s =>
         (typeof s === 'string' || (s && typeof s.test === 'function'))
       ).length
   },
@@ -274,7 +273,7 @@ const schema: Schema = {
     defaultValue: () => ([]),
     message: 'should be an array of plugin objects',
     validate: (value: unknown) =>
-      isArray(value) && value.length === value.filter(p =>
+      Array.isArray(value) && value.length === value.filter(p =>
         (p && typeof p === 'object' && typeof p.load === 'function')
       ).length
   },
@@ -282,7 +281,7 @@ const schema: Schema = {
     defaultValue: () => [],
     message: 'should be an array of objects that have a "name" property',
     validate: (value: unknown) =>
-      isArray(value) && value.length === value.filter(feature =>
+      Array.isArray(value) && value.length === value.filter(feature =>
         feature && typeof feature === 'object' && typeof feature.name === 'string'
       ).length
   },
