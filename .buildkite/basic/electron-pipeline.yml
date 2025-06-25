@@ -19,8 +19,8 @@ steps:
             - "^36.0.0" # EOL 2025-Oct-28
           node_version:
             - "22"
-          adjustments:
-            - with:
+        adjustments:
+          - with:
               electron_version: "^34.0.0" # EOL 2025-Jun-24
               node_version: "20"
       commands:
