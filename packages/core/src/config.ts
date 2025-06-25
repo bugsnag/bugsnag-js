@@ -1,4 +1,3 @@
-import filter from './lib/es-utils/filter'
 import reduce from './lib/es-utils/reduce'
 import keys from './lib/es-utils/keys'
 import isArray from './lib/es-utils/is-array'
@@ -161,9 +160,9 @@ const schema: Schema = {
       const providedKeys = keys(value)
       const defaultKeys = keys(defaultErrorTypes())
       // ensure it only has a subset of the allowed keys
-      if (filter(providedKeys, k => includes(defaultKeys, k)).length < providedKeys.length) return false
+      if (providedKeys.filter( k => includes(defaultKeys, k)).length < providedKeys.length) return false
       // ensure all of the values are boolean
-      if (filter(keys(value), k => typeof value[k] !== 'boolean').length > 0) return false
+      if (keys(value).filter(k => typeof value[k] !== 'boolean').length > 0) return false
       return true
     }
   },
@@ -203,7 +202,7 @@ const schema: Schema = {
         'notify' in val && stringWithLength(val.notify) && 'sessions' in val && stringWithLength(val.sessions)
       ) &&
       // ensure no keys other than notify/session are set on endpoints object
-      filter(keys(val), k => !includes(['notify', 'sessions'], k)).length === 0
+      keys(val).filter(k => !includes(['notify', 'sessions'], k)).length === 0
   },
   autoTrackSessions: {
     defaultValue: ()  => true,
@@ -213,7 +212,7 @@ const schema: Schema = {
   enabledReleaseStages: {
     defaultValue: () => null,
     message: 'should be an array of strings',
-    validate: (value: unknown) => value === null || (isArray(value) && filter(value, f => typeof f === 'string').length === value.length)
+    validate: (value: unknown) => value === null || (isArray(value) && value.filter(f => typeof f === 'string').length === value.length)
   },
   releaseStage: {
     defaultValue: () => 'production',
@@ -271,7 +270,7 @@ const schema: Schema = {
     defaultValue: () => ['password'],
     message: 'should be an array of strings|regexes',
     validate: (value: unknown) =>
-      isArray(value) && value.length === filter(value, s =>
+      isArray(value) && value.length === value.filter(s =>
         (typeof s === 'string' || (s && typeof s.test === 'function'))
       ).length
   },
@@ -279,7 +278,7 @@ const schema: Schema = {
     defaultValue: () => ([]),
     message: 'should be an array of plugin objects',
     validate: (value: unknown) =>
-      isArray(value) && value.length === filter(value, p =>
+      isArray(value) && value.length === value.filter(p =>
         (p && typeof p === 'object' && typeof p.load === 'function')
       ).length
   },
@@ -287,7 +286,7 @@ const schema: Schema = {
     defaultValue: () => [],
     message: 'should be an array of objects that have a "name" property',
     validate: (value: unknown) =>
-      isArray(value) && value.length === filter(value, feature =>
+      isArray(value) && value.length === value.filter(feature =>
         feature && typeof feature === 'object' && typeof feature.name === 'string'
       ).length
   },

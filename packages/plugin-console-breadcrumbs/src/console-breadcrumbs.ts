@@ -1,5 +1,4 @@
 import { Client, Config, Plugin } from '@bugsnag/core'
-import filter from '@bugsnag/core/lib/es-utils/filter'
 import reduce from '@bugsnag/core/lib/es-utils/reduce'
 
 type ConsoleMethod = 'log' | 'debug' | 'info' | 'warn' | 'error'
@@ -74,8 +73,8 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const CONSOLE_LOG_METHODS: ConsoleMethod[] = filter(
-  ['log', 'debug', 'info', 'warn', 'error'],
+const consoleMethod: ConsoleMethod[] = ['log', 'debug', 'info', 'warn', 'error']
+const CONSOLE_LOG_METHODS: ConsoleMethod[] = consoleMethod.filter(
   method =>
     typeof console !== 'undefined' && typeof console[method] === 'function'
 )
