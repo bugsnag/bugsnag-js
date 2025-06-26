@@ -1,4 +1,4 @@
-import { add, clear } from '../src/lib/metadata-delegate'
+import metadataDelegate from '../src/lib/metadata-delegate'
 
 // it doesn't seem easy or even impossible to check whether __proto__ keys can be overwritten
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto
@@ -17,7 +17,7 @@ describe('metadata delegate', () => {
       }
     ])('should not add $key keys', ({ key, expected }) => {
       const state = {}
-      add(state, key, 'foo', 'bar')
+      metadataDelegate.add(state, key, "foo", "bar");
       expect(state).toEqual(expected)
     })
   })
@@ -51,7 +51,7 @@ describe('metadata delegate', () => {
         }
       }
     ])('should not overwrite $key keys', ({ key, state, expected }) => {
-      clear(state, key, 'foo')
+      metadataDelegate.clear(state, key, "foo");
       expect(state).toEqual(expected)
     })
   })

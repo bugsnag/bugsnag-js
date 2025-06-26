@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: hono-app
+
+Globals:
+  Function:
+    Timeout: 30
+    Environment:
+      Variables:
+        BUGSNAG_API_KEY:
+        BUGSNAG_NOTIFY_ENDPOINT:
+        BUGSNAG_SESSIONS_ENDPOINT:
+        BUGSNAG_AUTO_TRACK_SESSIONS: true
+        BUGSNAG_AUTO_DETECT_ERRORS: true
+
+Resources:
+  HonoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: app/
+      Handler: index.lambdaHandler
+      Runtime: nodejs18.x
+      Events:
+        HandledException:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
