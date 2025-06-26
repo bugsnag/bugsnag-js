@@ -16,7 +16,6 @@
     "./lib/derecursify": "./src/lib/derecursify.js",
     "./lib/callback-runner": "./src/lib/callback-runner.js",
     "./lib/path-normalizer": "./src/lib/path-normalizer.js",
-    "./lib/extract-object": "./src/lib/extract-object.js",
     "./lib/feature-flag-delegate": "./src/lib/feature-flag-delegate.js"
   },
   "description": "Core classes and utilities for Bugsnag notifiers",
