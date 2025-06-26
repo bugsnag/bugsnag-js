@@ -1,4 +1,4 @@
-import some from './async-every'
+import every from './async-every'
 
 type NodeCallbackType<T = any> = (error?: Error | null, result?: T) => void;
 
@@ -49,7 +49,7 @@ const runCallbacks = <T>(
     }
   }
 
-  return some(callbacks, runMaybeAsyncCallback, cb)
+  return every(callbacks, runMaybeAsyncCallback, cb)
 }
 
 export default runCallbacks
