@@ -5,6 +5,7 @@
     "moduleResolution": "bundler",
     "lib": [ "dom", "esnext" ],
     "allowJs": true,
+    "downlevelIteration": true,
     // "checkJs": true,
     "jsx": "preserve",
     "noEmit": true,
