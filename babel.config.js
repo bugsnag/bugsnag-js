@@ -28,6 +28,7 @@ module.exports = api => {
       ['@babel/plugin-transform-computed-properties', { loose: true }],
       ['@babel/plugin-transform-destructuring', { loose: true }],
       ['@babel/plugin-transform-member-expression-literals'],
+      ['@babel/plugin-transform-object-assign'],
       ['@babel/plugin-transform-property-literals'],
       ['@babel/plugin-transform-parameters', { loose: true }],
       ['@babel/plugin-transform-shorthand-properties'],

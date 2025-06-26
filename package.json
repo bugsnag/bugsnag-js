@@ -12,6 +12,7 @@
     "@babel/plugin-transform-destructuring": "^7.23.3",
     "@babel/plugin-transform-member-expression-literals": "^7.23.3",
     "@babel/plugin-transform-modules-commonjs": "^7.23.3",
+    "@babel/plugin-transform-object-assign": "^7.27.1",
     "@babel/plugin-transform-parameters": "^7.23.3",
     "@babel/plugin-transform-property-literals": "^7.23.3",
     "@babel/plugin-transform-shorthand-properties": "^7.23.3",
