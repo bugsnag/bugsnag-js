@@ -2,7 +2,6 @@ import configSchema from './config'
 import Event from './event'
 import Breadcrumb from './breadcrumb'
 import Session from './session'
-
 import runCallbacks from './lib/callback-runner'
 import metadataDelegate from './lib/metadata-delegate'
 import runSyncCallbacks from './lib/sync-callback-runner'
