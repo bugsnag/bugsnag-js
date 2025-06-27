@@ -28,7 +28,16 @@ const plugins = [
       target: 'es5',
     }
   }),
-  babel({ babelHelpers: 'bundled' }),
+  babel({ 
+    babelHelpers: 'bundled',
+    presets: [
+      ['@babel/preset-env', {
+        targets: {
+          chrome: '43'
+        }
+      }]
+    ]
+  }),
   replace({
     preventAssignment: true,
     values: {
@@ -77,7 +86,18 @@ export default [
         format: 'umd',
         compact: true,
         name: 'Bugsnag',
-        plugins: [terser()],
+        plugins: [terser({
+          ecma: 5, // Target ECMAScript 5 for maximum compatibility with Chrome 43
+          safari10: true, // Enable additional Safari 10 compatibility fixes
+          compress: {
+            drop_console: false, // Keep console statements as they might be needed for debugging
+            pure_funcs: ['console.info', 'console.debug'], // Remove info and debug console calls
+            passes: 2
+          },
+          mangle: {
+            safari10: true
+          }
+        })],
       }, 
     ],
     plugins
