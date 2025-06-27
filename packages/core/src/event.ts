@@ -33,7 +33,7 @@ export default class Event {
   public threads: Thread[]
 
   public _metadata: { [key: string]: any }
-  public _features: FeatureFlag | null[]
+  public _features: (FeatureFlag | null)[]
   public _featuresIndex: { [key: string]: number }
 
   public _user: User

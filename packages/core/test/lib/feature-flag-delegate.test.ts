@@ -1,12 +1,12 @@
-import delegate from '../../src/lib/feature-flag-delegate'
+import featureFlagDelegate from '../../src/lib/feature-flag-delegate'
 
-describe('feature flag delegate', () => {
+describe('feature flag featureFlagDelegate', () => {
   describe('#add', () => {
     it('should do nothing if name is not passed', () => {
       const existingFeatures = [{ name: 'abc', variant: 'xyz' }]
       const existingFeaturesIndex = { abc: 0 }
 
-      delegate.add(existingFeatures, existingFeaturesIndex)
+      featureFlagDelegate.add(existingFeatures, existingFeaturesIndex)
 
       expect(existingFeatures).toStrictEqual([{ name: 'abc', variant: 'xyz' }])
       expect(existingFeaturesIndex).toStrictEqual({ abc: 0 })
@@ -16,7 +16,7 @@ describe('feature flag delegate', () => {
       const existingFeatures = [{ name: 'abc', variant: 'xyz' }]
       const existingFeaturesIndex = { abc: 0 }
 
-      delegate.add(existingFeatures, existingFeaturesIndex, undefined, '???')
+      featureFlagDelegate.add(existingFeatures, existingFeaturesIndex, undefined, '???')
 
       expect(existingFeatures).toStrictEqual([{ name: 'abc', variant: 'xyz' }])
       expect(existingFeaturesIndex).toStrictEqual({ abc: 0 })
@@ -26,7 +26,7 @@ describe('feature flag delegate', () => {
       const existingFeatures = [{ name: 'abc', variant: 'xyz' }]
       const existingFeaturesIndex = { abc: 0 }
 
-      delegate.add(existingFeatures, existingFeaturesIndex, null, '???')
+      featureFlagDelegate.add(existingFeatures, existingFeaturesIndex, null, '???')
 
       expect(existingFeatures).toStrictEqual([{ name: 'abc', variant: 'xyz' }])
       expect(existingFeaturesIndex).toStrictEqual({ abc: 0 })
@@ -36,7 +36,7 @@ describe('feature flag delegate', () => {
       const existingFeatures: any[] = []
       const existingFeaturesIndex = {}
 
-      delegate.add(existingFeatures, existingFeaturesIndex, 'good_feature')
+      featureFlagDelegate.add(existingFeatures, existingFeaturesIndex, 'good_feature')
 
       expect(existingFeatures).toStrictEqual([{ name: 'good_feature', variant: null }])
       expect(existingFeaturesIndex).toStrictEqual({ good_feature: 0 })
@@ -46,7 +46,7 @@ describe('feature flag delegate', () => {
       const existingFeatures: [] = []
       const existingFeaturesIndex = {}
 
-      delegate.add(existingFeatures, existingFeaturesIndex, 'ok_feature', null)
+      featureFlagDelegate.add(existingFeatures, existingFeaturesIndex, 'ok_feature', null)
 
       expect(existingFeatures).toStrictEqual([{ name: 'ok_feature', variant: null }])
       expect(existingFeaturesIndex).toStrictEqual({ ok_feature: 0 })
@@ -56,7 +56,7 @@ describe('feature flag delegate', () => {
       const existingFeatures: any[] = []
       const existingFeaturesIndex = {}
 
-      delegate.add(existingFeatures, existingFeaturesIndex, 'cool_feature', 'very ant')
+      featureFlagDelegate.add(existingFeatures, existingFeaturesIndex, 'cool_feature', 'very ant')
 
       expect(existingFeatures).toStrictEqual([{ name: 'cool_feature', variant: 'very ant' }])
       expect(existingFeaturesIndex).toStrictEqual({ cool_feature: 0 })
@@ -75,7 +75,7 @@ describe('feature flag delegate', () => {
       const existingFeatures: any[] = []
       const existingFeaturesIndex = {}
 
-      delegate.add(existingFeatures, existingFeaturesIndex, 'some_feature', variant)
+      featureFlagDelegate.add(existingFeatures, existingFeaturesIndex, 'some_feature', variant)
 
       expect(existingFeatures).toStrictEqual([{ name: 'some_feature', variant: expected }])
       expect(existingFeaturesIndex).toStrictEqual({ some_feature: 0 })
@@ -85,9 +85,9 @@ describe('feature flag delegate', () => {
       const existingFeatures = [{ name: 'a', variant: 'a' }, { name: 'b', variant: 'b' }, { name: 'c', variant: 'c' }, { name: 'd', variant: 'd' }, { name: 'e', variant: 'e' }]
       const existingFeaturesIndex = { a: 0, b: 1, c: 2, d: 3, e: 4 }
 
-      delegate.add(existingFeatures, existingFeaturesIndex, 'b', 'x')
-      delegate.add(existingFeatures, existingFeaturesIndex, 'e', 'y')
-      delegate.add(existingFeatures, existingFeaturesIndex, 'a', 'z')
+      featureFlagDelegate.add(existingFeatures, existingFeaturesIndex, 'b', 'x')
+      featureFlagDelegate.add(existingFeatures, existingFeaturesIndex, 'e', 'y')
+      featureFlagDelegate.add(existingFeatures, existingFeaturesIndex, 'a', 'z')
 
       expect(existingFeatures).toStrictEqual([{ name: 'a', variant: 'z' }, { name: 'b', variant: 'x' }, { name: 'c', variant: 'c' }, { name: 'd', variant: 'd' }, { name: 'e', variant: 'y' }])
       expect(existingFeaturesIndex).toStrictEqual({ a: 0, b: 1, c: 2, d: 3, e: 4 })
@@ -99,7 +99,7 @@ describe('feature flag delegate', () => {
       const existingFeatures: any[] = []
       const existingFeaturesIndex = {}
 
-      delegate.merge(existingFeatures, [
+      featureFlagDelegate.merge(existingFeatures, [
         { name: 'a', variant: 'b' },
         { name: 'c', variant: 'd' }
       ], existingFeaturesIndex)
@@ -112,7 +112,7 @@ describe('feature flag delegate', () => {
       const existingFeatures = [{ name: 'a', variant: 'a' }, { name: 'b', variant: 'b' }, { name: 'c', variant: 'c' }, { name: 'd', variant: 'd' }, { name: 'e', variant: 'e' }]
       const existingFeaturesIndex = { a: 0, b: 1, c: 2, d: 3, e: 4 }
 
-      delegate.merge(existingFeatures, [
+      featureFlagDelegate.merge(existingFeatures, [
         { name: 'b', variant: 'x' },
         { name: 'e', variant: 'y' },
         { name: 'a', variant: 'z' }
@@ -143,7 +143,7 @@ describe('feature flag delegate', () => {
         { name: 'p', variant: 'p' }
       ]
 
-      delegate.merge(existingFeatures, [
+      featureFlagDelegate.merge(existingFeatures, [
         { name: 'a', variant: 12345 },
         { name: 'c', variant: 0 },
         { name: 'e', variant: true },
@@ -183,7 +183,7 @@ describe('feature flag delegate', () => {
       const existingFeatures = [{ name: 'a', variant: 'a' }, { name: 'b', variant: 'b' }, { name: 'c', variant: 'c' }, { name: 'd', variant: 'd' }, { name: 'e', variant: 'e' }]
       const existingFeaturesIndex = { a: 0, b: 1, c: 2, d: 3, e: 3 }
 
-      delegate.merge(existingFeatures, [
+      featureFlagDelegate.merge(existingFeatures, [
         { name: 'b', variant: 'x' },
         { variant: 'y' },
         { name: 'a', variant: 'z' },
@@ -200,7 +200,7 @@ describe('feature flag delegate', () => {
       const existingFeatures = [{ name: 'a', variant: 'a' }, { name: 'b', variant: 'b' }, { name: 'c', variant: 'c' }, { name: 'd', variant: 'd' }, { name: 'e', variant: 'e' }]
       const existingFeaturesIndex = { a: 'a', b: 'b', c: 'c', d: 'd', e: 'e' }
 
-      delegate.merge(existingFeatures, { a: 'a', b: 'b', c: 'c' }, existingFeaturesIndex)
+      featureFlagDelegate.merge(existingFeatures, { a: 'a', b: 'b', c: 'c' }, existingFeaturesIndex)
 
       expect(existingFeatures).toStrictEqual([{ name: 'a', variant: 'a' }, { name: 'b', variant: 'b' }, { name: 'c', variant: 'c' }, { name: 'd', variant: 'd' }, { name: 'e', variant: 'e' }])
       expect(existingFeaturesIndex).toStrictEqual({ a: 'a', b: 'b', c: 'c', d: 'd', e: 'e' })
@@ -210,7 +210,7 @@ describe('feature flag delegate', () => {
       const features = [{ name: 'a', variant: 'a' }, { name: 'b', variant: 'b' }, { name: 'c', variant: 'c' }, { name: 'd', variant: 'd' }, { name: 'e', variant: 'e' }]
       const featuresIndex = { a: 0, b: 1, c: 2, d: 3, e: 4 }
 
-      delegate.merge(features, [
+      featureFlagDelegate.merge(features, [
         { name: 'b', variant: 'x' },
         'name: yes',
         undefined,
@@ -230,8 +230,8 @@ describe('feature flag delegate', () => {
       const features: any[] = []
       const featuresIndex = {}
 
-      delegate.add(features, featuresIndex, 'a', 'b')
-      delegate.merge(features, [
+      featureFlagDelegate.add(features, featuresIndex, 'a', 'b')
+      featureFlagDelegate.merge(features, [
         { name: 'c', variant: 'd' },
         { name: 'e' },
         { name: 'f', variant: 'g' }
@@ -239,7 +239,7 @@ describe('feature flag delegate', () => {
 
       expect(features).toStrictEqual([{ name: 'a', variant: 'b' }, { name: 'c', variant: 'd' }, { name: 'e', variant: null }, { name: 'f', variant: 'g' }])
 
-      expect(delegate.toEventApi(features)).toStrictEqual([
+      expect(featureFlagDelegate.toEventApi(features)).toStrictEqual([
         { featureFlag: 'a', variant: 'b' },
         { featureFlag: 'c', variant: 'd' },
         { featureFlag: 'e' },
@@ -248,7 +248,7 @@ describe('feature flag delegate', () => {
     })
 
     it('should handle an empty array', () => {
-      expect(delegate.toEventApi([])).toStrictEqual([])
+      expect(featureFlagDelegate.toEventApi([])).toStrictEqual([])
     })
   })
 })
