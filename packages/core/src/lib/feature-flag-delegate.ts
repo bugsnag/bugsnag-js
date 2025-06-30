@@ -1,6 +1,5 @@
-import isArray from './es-utils/is-array'
 import jsonStringify from '@bugsnag/safe-json-stringify'
-import {FeatureFlag} from "../common";
+import type { FeatureFlag } from "../common";
 
 type FeatureFlagEventApi = {
   featureFlag: string
@@ -41,7 +40,7 @@ const featureFlagDelegate: FeatureFlagDelegate = {
   },
 
   merge: (existingFeatures, newFeatures, existingFeatureKeys) => {
-    if (!isArray(newFeatures)) {
+    if (!Array.isArray(newFeatures)) {
       return
     }
 
