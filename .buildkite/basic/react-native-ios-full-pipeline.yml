@@ -18,7 +18,8 @@ steps:
         env:
           REACT_NATIVE_VERSION: rn0.68-hermes
           LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
+          XCODE_VERSION: "14.1.0"
+          NODE_VERSION: "16"
         artifact_paths: build/rn0.68-hermes.ipa
         commands:
           - npm run test:build-react-native-ios
