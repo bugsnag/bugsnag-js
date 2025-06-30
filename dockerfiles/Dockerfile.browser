@@ -50,6 +50,10 @@ RUN npm install --no-package-lock --no-save \
   ../../../../../../bugsnag-browser-*.tgz \
   ../../../../../../bugsnag-js-*.tgz
 
+WORKDIR /app/test/browser/features/fixtures/typescript/3.8
+RUN npm install --no-package-lock --no-save \
+  ../../../../../../bugsnag-browser-*.tgz
+
 # install the dependencies and build each fixture
 WORKDIR /app/test/browser/features/fixtures
 RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_modules/*" | \
