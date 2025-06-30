@@ -12,11 +12,6 @@ if (!process.env.RN_VERSION) {
   process.exit(1)
 }
 
-if (!process.env.REGISTRY_URL) {
-  console.error('Please provide a Registry URL')
-  process.exit(1)
-}
-
 if (!process.env.RCT_NEW_ARCH_ENABLED || (process.env.RCT_NEW_ARCH_ENABLED !== '1' && process.env.RCT_NEW_ARCH_ENABLED !== '0')) {
   console.error('RCT_NEW_ARCH_ENABLED must be set to 1 or 0')
   process.exit(1)
@@ -43,9 +38,22 @@ const fixtureDir = resolve(ROOT_DIR, fixturePath, reactNativeVersion)
 
 const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native-cli/features/fixtures/app/dynamic/')
 
-const PEER_DEPENDENCIES = [
-  `@bugsnag/react-native-cli@${notifierVersion}`
-]
+function packLocalPackages () {
+  // Build all packages first
+  execSync('npm ci', { cwd: ROOT_DIR, stdio: 'inherit' })
+  execSync('npm run build', { cwd: ROOT_DIR, stdio: 'inherit' })
+
+  // Pack the react-native-cli package
+  const packagesDir = resolve(ROOT_DIR, 'packages')
+  const packages = [
+    'react-native-cli'
+  ]
+
+  // Pack each package and move the tarballs to the fixture directory
+  for (const pkg of packages) {
+    execSync(`npm pack "${resolve(packagesDir, pkg)}" --pack-destination "${fixtureDir}"`, { stdio: 'inherit' })
+  }
+}
 
 // Generate the fixture
 if (!process.env.SKIP_GENERATE_FIXTURE) {
@@ -64,8 +72,9 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 
   iosUtils.configureIOSProject(fixtureDir)
 
-  // install the peer dependencies
-  execSync(`npm install --save ${PEER_DEPENDENCIES} --registry ${process.env.REGISTRY_URL} --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })
+  // Pack and install local packages
+  packLocalPackages()
+  execSync('npm install --save bugsnag-*.tgz --legacy-peer-deps', { cwd: fixtureDir, stdio: 'inherit' })
 
   if (process.env.INIT_RN_CLI === 'true' || process.env.INIT_RN_CLI === '1') {
     enableSourceMaps()

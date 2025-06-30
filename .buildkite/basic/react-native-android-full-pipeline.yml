@@ -50,6 +50,7 @@ steps:
         timeout_in_minutes: 20
         env:
           REACT_NATIVE_VERSION: "rn0.68-hermes"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         plugins:
           - docker-compose#v4.12.0:
               pull: react-native-android-builder-java-11-node-16
@@ -69,6 +70,7 @@ steps:
         timeout_in_minutes: 20
         env:
           REACT_NATIVE_VERSION: "rn0.69"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         plugins:
           - docker-compose#v4.12.0:
               pull: react-native-android-builder-java-11-node-16
@@ -82,7 +84,6 @@ steps:
 
       - label: ':android: Build RN {{matrix}} test fixture APK (Old Arch)'
         key: "build-react-native-android-fixture-old-arch-full"
-        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: macos-node-18
@@ -92,6 +93,7 @@ steps:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/old-arch/**/reactnative.apk"
         commands:
@@ -110,7 +112,6 @@ steps:
 
       - label: ':android: Build RN {{matrix}} test fixture APK (New Arch)'
         key: "build-react-native-android-fixture-new-arch-full"
-        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: macos-node-18
@@ -120,6 +121,7 @@ steps:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/reactnative.apk"
         commands:
@@ -138,7 +140,6 @@ steps:
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (Old Arch)'
         key: "build-react-native-navigation-android-fixture-old-arch"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: macos-node-18
@@ -149,6 +150,7 @@ steps:
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
           REACT_NATIVE_NAVIGATION: "true"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/react-native-navigation/old-arch/**/reactnative.apk"
         commands:
@@ -164,7 +166,6 @@ steps:
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (New Arch)'
         key: "build-react-native-navigation-android-fixture-new-arch"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: macos-node-18
@@ -175,6 +176,7 @@ steps:
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"
           REACT_NATIVE_NAVIGATION: "true"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/**/reactnative.apk"
         commands:

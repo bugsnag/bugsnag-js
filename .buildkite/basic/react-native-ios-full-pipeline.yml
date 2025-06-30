@@ -11,7 +11,6 @@ steps:
       #
       - label: ":ios: Build RN 0.68 Hermes ipa"
         key: "rn-0-68-hermes-ipa"
-        depends_on: "publish-js"
         timeout_in_minutes: 20
         agents:
           queue: "macos-12-arm"
@@ -19,8 +18,10 @@ steps:
           REACT_NATIVE_VERSION: rn0.68-hermes
           LANG: "en_US.UTF-8"
           DEVELOPER_DIR: "/Applications/Xcode14.app"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths: build/rn0.68-hermes.ipa
         commands:
+          - npm run test:publish
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -29,7 +30,6 @@ steps:
 
       - label: ":ios: Build RN 0.69 ipa"
         key: "rn-0-69-ipa"
-        depends_on: "publish-js"
         timeout_in_minutes: 20
         agents:
           queue: "macos-12-arm"
@@ -37,8 +37,10 @@ steps:
           REACT_NATIVE_VERSION: rn0.69
           LANG: "en_US.UTF-8"
           DEVELOPER_DIR: "/Applications/Xcode14.app"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths: build/rn0.69.ipa
         commands:
+          - npm run test:publish
           - npm run test:build-react-native-ios
         retry:
           automatic:
@@ -47,7 +49,6 @@ steps:
 
       - label: ':mac: Build RN {{matrix}} test fixture ipa (Old Arch)'
         key: "build-react-native-ios-fixture-old-arch-full"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: "macos-15"
@@ -57,6 +58,7 @@ steps:
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_IOS: "true"
           XCODE_VERSION: "16.2.0"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
@@ -75,7 +77,6 @@ steps:
 
       - label: ':mac: Build RN {{matrix}} test fixture ipa (New Arch)'
         key: "build-react-native-ios-fixture-new-arch-full"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: "macos-15"
@@ -85,6 +86,7 @@ steps:
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"
           XCODE_VERSION: "16.2.0"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
@@ -103,7 +105,6 @@ steps:
 
       - label: ':mac: Build react-native-navigation {{matrix}} test fixture ipa (Old Arch)'
         key: "build-react-native-navigation-ios-fixture-old-arch"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: "macos-15"
@@ -114,6 +115,7 @@ steps:
           BUILD_IOS: "true"
           XCODE_VERSION: "16.2.0"
           REACT_NATIVE_NAVIGATION: "true"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/react-native-navigation/old-arch/**/output/reactnative.ipa"
         commands:

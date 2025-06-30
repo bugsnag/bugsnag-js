@@ -7,7 +7,6 @@ steps:
     steps:
       - label: ':android: RN CLI - {{matrix}} Android build and sourcemap upload tests'
         key: "build-react-native-cli-android-fixture"
-        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: "macos-15-isolated"
@@ -18,6 +17,7 @@ steps:
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
           INIT_RN_CLI: "true"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native-cli/features/fixtures/generated/old-arch/**/reactnative.apk"
         commands:
@@ -35,7 +35,6 @@ steps:
 
       - label: ':mac: RN CLI - {{matrix}} iOS build and sourcemap upload tests'
         key: "build-react-native-cli-ios-fixture"
-        depends_on: "publish-js"
         timeout_in_minutes: 20
         agents:
           queue: "macos-15-isolated"
@@ -47,6 +46,7 @@ steps:
           XCODE_VERSION: "16.2.0"
           INIT_RN_CLI: "true"
           EXPORT_ARCHIVE: "0"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         artifact_paths:
           - "test/react-native-cli/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
