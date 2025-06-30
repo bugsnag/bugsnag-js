@@ -1,0 +1,11 @@
+{
+  "name": "bugsnag-js-fixtures-typescript-3-8",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "typescript": "~3.8.0"
+  }
+}
