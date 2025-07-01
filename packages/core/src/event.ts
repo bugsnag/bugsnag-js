@@ -1,10 +1,9 @@
 import { App, Device, FeatureFlag, Logger, Request, Stackframe, Thread, User, BugsnagError, NotifiableError } from "./common"
 
-import ErrorStackParser from './lib/error-stack-parser'
+import ErrorStackParser from 'error-stack-parser'
 // @ts-expect-error no types
 import StackGenerator from 'stack-generator'
 import hasStack from './lib/has-stack'
-import reduce from './lib/es-utils/reduce'
 import metadataDelegate from './lib/metadata-delegate'
 import featureFlagDelegate from './lib/feature-flag-delegate'
 import isError from './lib/iserror'
@@ -33,7 +32,7 @@ export default class Event {
   public threads: Thread[]
 
   public _metadata: { [key: string]: any }
-  public _features: FeatureFlag | null[]
+  public _features: (FeatureFlag | null)[]
   public _featuresIndex: { [key: string]: number }
 
   public _user: User
@@ -257,7 +256,7 @@ function createBugsnagError (errorClass: unknown, errorMessage: unknown, type: s
     errorClass: ensureString(errorClass),
     errorMessage: ensureString(errorMessage),
     type,
-    stacktrace: reduce(stacktrace, (accum, frame) => {
+    stacktrace: stacktrace.reduce((accum, frame) => {
       const f = formatStackframe(frame)
       // don't include a stackframe if none of its properties are defined
       try {

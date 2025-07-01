@@ -3,12 +3,11 @@ import Event from './event'
 import Breadcrumb from './breadcrumb'
 import Session from './session'
 import includes from './lib/es-utils/includes'
-import reduce from './lib/es-utils/reduce'
 import runCallbacks from './lib/callback-runner'
 import metadataDelegate from './lib/metadata-delegate'
 import runSyncCallbacks from './lib/sync-callback-runner'
 import BREADCRUMB_TYPES from './lib/breadcrumb-types'
-import { add, clear, merge } from './lib/feature-flag-delegate'
+import featureFlagDelegate from './lib/feature-flag-delegate'
 import { BreadcrumbType, Config, Delivery, FeatureFlag, LoggerConfig, NotifiableError, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
 
 const HUB_PREFIX = '00000'
@@ -127,15 +126,15 @@ export default class Client<T extends Config = Config> {
   }
 
   addFeatureFlag (name: string, variant: string | null = null) {
-    add(this._features, this._featuresIndex, name, variant)
+    featureFlagDelegate.add(this._features, this._featuresIndex, name, variant)
   }
 
   addFeatureFlags (featureFlags: FeatureFlag[]) {
-    merge(this._features, featureFlags, this._featuresIndex)
+    featureFlagDelegate.merge(this._features, featureFlags, this._featuresIndex)
   }
 
   clearFeatureFlag (name: string) {
-    clear(this._features, this._featuresIndex, name)
+    featureFlagDelegate.clear(this._features, this._featuresIndex, name)
   }
 
   clearFeatureFlags () {
@@ -156,7 +155,7 @@ export default class Client<T extends Config = Config> {
   }
 
   _configure (opts: T, internalPlugins: Plugin<T>[]) {
-    const schema = reduce(internalPlugins, (schema, plugin) => {
+    const schema = internalPlugins.reduce((schema, plugin) => {
       if (plugin && plugin.configSchema) return Object.assign({}, schema, plugin.configSchema)
       return schema
     }, this._schema)
@@ -167,7 +166,7 @@ export default class Client<T extends Config = Config> {
     }
 
     // accumulate configuration and error messages
-    const { errors, config } = reduce(Object.keys(schema) as unknown as (keyof T)[], (accum, key: keyof typeof opts) => {
+    const { errors, config } = (Object.keys(schema) as (keyof T)[]).reduce((accum: {errors: Record<any, any>, config: Record<any, any>}, key: keyof typeof opts) => {
       const defaultValue = schema[key].defaultValue(opts[key])
 
       if (opts[key] !== undefined) {
@@ -205,7 +204,7 @@ export default class Client<T extends Config = Config> {
 
     // update and elevate some options
     this._metadata = {...config.metadata}
-    merge(this._features, config.featureFlags, this._featuresIndex)
+    featureFlagDelegate.merge(this._features, config.featureFlags, this._featuresIndex)
     this._user = {...config.user}
     this._context = config.context
     if (config.logger) this._logger = config.logger
@@ -220,7 +219,7 @@ export default class Client<T extends Config = Config> {
       this._logger.warn(generateConfigErrorMessage(errors, opts))
     }
 
-    return config
+    return config as T & Required<Config>
   }
 
   getUser () {
@@ -351,7 +350,7 @@ export default class Client<T extends Config = Config> {
     event._metadata = Object.assign({}, event._metadata, this._metadata)
     event._user = Object.assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
-    merge(event._features, this._features, event._featuresIndex)
+    featureFlagDelegate.merge(event._features, this._features, event._featuresIndex)
 
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {
@@ -423,4 +422,3 @@ const stringify = (val: unknown) => {
     default: return String(val)
   }
 }
-
