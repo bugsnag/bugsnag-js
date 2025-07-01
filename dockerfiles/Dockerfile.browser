@@ -50,7 +50,7 @@ RUN npm install --no-package-lock --no-save \
   ../../../../../../bugsnag-browser-*.tgz \
   ../../../../../../bugsnag-js-*.tgz
 
-WORKDIR /app/test/browser/features/fixtures/typescript/3.8
+WORKDIR /app/test/browser/features/fixtures/typescript/3_8
 RUN npm install --no-package-lock --no-save \
   ../../../../../../bugsnag-browser-*.tgz
 
