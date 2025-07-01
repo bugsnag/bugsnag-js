@@ -1,5 +1,5 @@
 const { stripProjectRoot } = require('@bugsnag/plugin-electron-renderer-strip-project-root')
-const featureFlagDelegate = require('@bugsnag/core/lib/feature-flag-delegate')
+const { featureFlagDelegate } = require('@bugsnag/core')
 
 module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
   load: client => {

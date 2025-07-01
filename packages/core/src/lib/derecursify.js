@@ -1,5 +1,3 @@
-const isArray = require('./es-utils/is-array')
-
 const isSafeLiteral = (obj) => (
   typeof obj === 'string' || obj instanceof String ||
   typeof obj === 'number' || obj instanceof Number ||
@@ -53,7 +51,7 @@ module.exports = function (data) {
     }
 
     // handle arrays, and all iterable non-array types (such as Set)
-    if (isArray(obj) || obj[Symbol.iterator]) {
+    if (Array.isArray(obj) || obj[Symbol.iterator]) {
       seen.push(obj)
       const safeArray = []
       try {

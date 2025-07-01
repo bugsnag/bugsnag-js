@@ -81,6 +81,7 @@ module.exports = {
       'plugin-aws-lambda',
       'plugin-express',
       'plugin-koa',
+      'plugin-hono',
       'plugin-restify',
       'plugin-contextualize',
       'plugin-server-*',

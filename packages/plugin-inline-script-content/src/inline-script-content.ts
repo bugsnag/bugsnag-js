@@ -1,5 +1,3 @@
-import reduce from '@bugsnag/core/lib/es-utils/reduce'
-import filter from '@bugsnag/core/lib/es-utils/filter'
 import { Client } from '@bugsnag/core'
 
 const MAX_LINE_LENGTH = 200
@@ -56,7 +54,7 @@ export default (doc = document, win = window) => ({
       const zeroBasedLine = lineNumber - 1
       const start = Math.max(zeroBasedLine - 3, 0)
       const end = Math.min(zeroBasedLine + 3, htmlLines.length)
-      return reduce(htmlLines.slice(start, end), (accum, line, i) => {
+      return htmlLines.slice(start, end).reduce((accum: Record<string, any>, line, i) => {
         accum[start + 1 + i] = line.length <= MAX_LINE_LENGTH ? line : line.substr(0, MAX_LINE_LENGTH)
         return accum
       }, {})
@@ -66,7 +64,7 @@ export default (doc = document, win = window) => ({
       // remove any of our own frames that may be part the stack this
       // happens before the inline script check as it happens for all errors
       // @ts-expect-error Type 'undefined' is not assignable to type 'string'
-      event.errors[0].stacktrace = filter(event.errors[0].stacktrace, f => !(/__trace__$/.test(f.method)))
+      event.errors[0].stacktrace = event.errors[0].stacktrace.filter(f => !(/__trace__$/.test(f.method)))
 
       const frame = event.errors[0].stacktrace[0]
 
@@ -116,7 +114,7 @@ export default (doc = document, win = window) => ({
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
       'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'
     ]
-    
+
     eventListeners.map(o => {
       // @ts-expect-error Element implicitly has an 'any' type because index expression is not of type 'number'
       if (!win[o] || !win[o].prototype || !Object.prototype.hasOwnProperty.call(win[o].prototype, 'addEventListener')) return

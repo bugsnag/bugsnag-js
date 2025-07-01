@@ -1,8 +1,8 @@
 {
   "name": "@bugsnag/core",
-  "main": "./dist/index.cjs",
-  "version": "8.2.0",
-  "types": "./dist/types/index.d.ts",
+  "version": "8.4.0",
+  "main": "dist/index.cjs",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
@@ -11,19 +11,9 @@
     },
     "./lib/es-utils/assign": "./src/lib/es-utils/assign.js",
     "./lib/es-utils/includes": "./src/lib/es-utils/includes.js",
-    "./lib/es-utils/filter": "./src/lib/es-utils/filter.js",
-    "./lib/es-utils/reduce": "./src/lib/es-utils/reduce.js",
-    "./lib/es-utils/keys": "./src/lib/es-utils/keys.js",
     "./lib/derecursify": "./src/lib/derecursify.js",
-    "./lib/metadata-delegate": "./src/lib/metadata-delegate.js",
     "./lib/callback-runner": "./src/lib/callback-runner.js",
-    "./lib/node-fallback-stack": "./src/lib/node-fallback-stack.js",
-    "./lib/sync-callback-runner": "./src/lib/sync-callback-runner.js",
-    "./lib/path-normalizer": "./src/lib/path-normalizer.js",
-    "./lib/validators/string-with-length": "./src/lib/validators/string-with-length.js",
-    "./lib/validators/list-of-functions": "./src/lib/validators/list-of-functions.js",
-    "./lib/extract-object": "./src/lib/extract-object.js",
-    "./lib/feature-flag-delegate": "./src/lib/feature-flag-delegate.js"
+    "./lib/path-normalizer": "./src/lib/path-normalizer.js"
   },
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",

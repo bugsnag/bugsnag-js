@@ -1,6 +1,4 @@
 import { Client, Config, Plugin } from '@bugsnag/core'
-import filter from '@bugsnag/core/lib/es-utils/filter'
-import reduce from '@bugsnag/core/lib/es-utils/reduce'
 
 type ConsoleMethod = 'log' | 'debug' | 'info' | 'warn' | 'error'
 
@@ -27,9 +25,8 @@ const plugin: Plugin = {
       console[method] = (...args: any) => {
         client.leaveBreadcrumb(
           'Console output',
-          reduce(
-            args,
-            (accum, arg, i) => {
+          args.reduce(
+            (accum: Record<string, any>, arg: any, i: number) => {
               // do the best/simplest stringification of each argument
               let stringified = '[Unknown value]'
               // this may fail if the input is:
@@ -74,8 +71,8 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const CONSOLE_LOG_METHODS: ConsoleMethod[] = filter(
-  ['log', 'debug', 'info', 'warn', 'error'],
+const consoleMethod: ConsoleMethod[] = ['log', 'debug', 'info', 'warn', 'error']
+const CONSOLE_LOG_METHODS: ConsoleMethod[] = consoleMethod.filter(
   method =>
     typeof console !== 'undefined' && typeof console[method] === 'function'
 )

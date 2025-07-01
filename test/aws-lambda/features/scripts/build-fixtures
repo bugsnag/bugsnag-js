@@ -24,6 +24,7 @@ BUGSNAG_PACKAGES = [
   "plugin-aws-lambda",
   "plugin-contextualize",
   "plugin-express",
+  "plugin-hono",
   "plugin-intercept",
   "plugin-node-device",
   "plugin-node-in-project",
