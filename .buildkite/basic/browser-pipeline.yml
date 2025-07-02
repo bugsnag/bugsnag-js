@@ -180,30 +180,30 @@ steps:
 #        concurrency_method: eager
 
       # Skipped pending PLAT-14093 
-      # - label: ":bitbar: ie_11 Browser tests"
-      #   depends_on: "browser-maze-runner-bb"
-      #   timeout_in_minutes: 30
-      #   plugins:
-      #     docker-compose#v4.12.0:
-      #       pull: browser-maze-runner-bb
-      #       run: browser-maze-runner-bb
-      #       service-ports: true
-      #       use-aliases: true
-      #       command:
-      #         - "--farm=bb"
-      #         - "--browser=ie_11"
-      #         - "--no-tunnel"
-      #         - "--aws-public-ip"
-      #     artifacts#v1.5.0:
-      #       upload:
-      #         - "./test/browser/maze_output/failed/**/*"
-      #     test-collector#v1.10.2:
-      #       files: "reports/TEST-*.xml"
-      #       format: "junit"
-      #       branch: "^main|next$$"
-      #       api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
-      #   concurrency: 25
-      #   concurrency_group: "bitbar"
-      #   concurrency_method: eager
-      #   env:
-      #     HOST: "localhost" # IE11 needs the host set to localhost for some reason
+      - label: ":bitbar: ie_11 Browser tests"
+        depends_on: "browser-maze-runner-bb"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v4.12.0:
+            pull: browser-maze-runner-bb
+            run: browser-maze-runner-bb
+            service-ports: true
+            use-aliases: true
+            command:
+              - "--farm=bb"
+              - "--browser=ie_11"
+              - "--no-tunnel"
+              - "--aws-public-ip"
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
+        concurrency: 25
+        concurrency_group: "bitbar"
+        concurrency_method: eager
+        env:
+          HOST: "localhost" # IE11 needs the host set to localhost for some reason
