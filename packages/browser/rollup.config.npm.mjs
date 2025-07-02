@@ -28,7 +28,16 @@ const plugins = [
       target: 'es5',
     }
   }),
-  babel({ babelHelpers: 'bundled' }),
+  babel({ 
+    babelHelpers: 'bundled',
+    presets: [
+      ['@babel/preset-env', {
+        targets: {
+          ie: '11'
+        }
+      }]
+    ]
+  }),
   replace({
     preventAssignment: true,
     values: {
