@@ -8,6 +8,9 @@ export default {
     file: `dist/bundle.js`,
     format: 'iife',
     name: 'BugsnagTS38Test',
+    globals: {
+      '@bugsnag/browser': 'Bugsnag'
+    }
   },
   external: ['@bugsnag/browser'],
   plugins: [ 
@@ -15,7 +18,10 @@ export default {
       tsconfig: './tsconfig.json',
       sourceMap: false,
       inlineSources: false,
-      module: 'es2015'
+      module: 'es2015',
+      compilerOptions: {
+        types: []
+      }
     }),
     resolve({ 
       browser: true,
