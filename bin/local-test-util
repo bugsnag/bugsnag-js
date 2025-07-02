@@ -101,7 +101,13 @@ async function ex (cmd, args, uopts) {
   return new Promise((resolve, reject) => {
     const proc = spawn(cmd, args, opts)
     proc.on('error', reject)
-    proc.on('close', () => resolve())
+    proc.on('close', (code) => {
+      if (code === 0) {
+        resolve()
+      } else {
+        reject(new Error(`Command "${cmd} ${args.join(' ')}" failed with exit code ${code}`))
+      }
+    })
   })
 }
 
