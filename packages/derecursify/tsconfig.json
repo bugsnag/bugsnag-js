@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "lib": [ "dom", "es2022" ],
+    "lib": [ "es2022" ],
     "strict": true,
     "allowJs": true,
+    "target": "es5",
+    "module": "commonjs",
     "outDir": "dist",
     "declaration": true,
-    "emitDeclarationOnly": true,
-    "declarationDir": "dist/types"
+    "declarationDir": "dist",
+    "skipLibCheck": true
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "**/*.test.ts"]
 }

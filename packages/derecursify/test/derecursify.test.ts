@@ -1,4 +1,4 @@
-import derecursify from '../../src/lib/derecursify'
+import derecursify from '..' // Use default import from the package.json main field
 
 describe('delivery: react native makeSafe', () => {
   it('leaves simple types intact', () => {

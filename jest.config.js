@@ -27,6 +27,7 @@ module.exports = {
   ],
   projects: [
     project('core', ['core']),
+    project('utilities', ['derecursify']),
     project('web workers', ['web-worker'], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),

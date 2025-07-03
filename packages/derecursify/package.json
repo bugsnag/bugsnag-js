@@ -2,8 +2,8 @@
   "name": "@bugsnag/derecursify",
   "version": "8.4.0",
   "description": "Internal utility for safely serializing objects",
-  "main": "derecursify.js",
-  "types": "derecursify.d.ts",
+  "main": "dist/derecursify.js",
+  "types": "dist/derecursify.d.ts",
   "private": true,
   "license": "MIT",
   "author": "Bugsnag",
@@ -11,8 +11,10 @@
     "type": "git",
     "url": "https://github.com/bugsnag/bugsnag-js.git"
   },
-  "files": [
-    "derecursify.js",
-    "derecursify.d.ts"
-  ]
+  "scripts": {
+    "clean": "rm -fr dist",
+    "build": "npm run clean && tsc",
+    "test:types": "tsc -p tsconfig.json --noEmit"
+  },
+  "files": ["dist"]
 }
