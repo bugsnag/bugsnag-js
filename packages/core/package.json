@@ -11,11 +11,8 @@
     },
     "./lib/es-utils/assign": "./src/lib/es-utils/assign.js",
     "./lib/es-utils/includes": "./src/lib/es-utils/includes.js",
-    "./lib/es-utils/reduce": "./src/lib/es-utils/reduce.js",
-    "./lib/es-utils/keys": "./src/lib/es-utils/keys.js",
     "./lib/callback-runner": "./src/lib/callback-runner.js",
-    "./lib/path-normalizer": "./src/lib/path-normalizer.js",
-    "./lib/feature-flag-delegate": "./src/lib/feature-flag-delegate.js"
+    "./lib/path-normalizer": "./src/lib/path-normalizer.js"
   },
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",

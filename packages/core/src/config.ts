@@ -1,6 +1,3 @@
-import reduce from './lib/es-utils/reduce'
-import keys from './lib/es-utils/keys'
-import isArray from './lib/es-utils/is-array'
 import includes from './lib/es-utils/includes'
 import intRange from './lib/validators/int-range'
 import stringWithLength from './lib/validators/string-with-length'
@@ -157,12 +154,12 @@ const schema: Schema = {
     validate: (value: unknown) => {
       // ensure we have an object
       if (typeof value !== 'object' || !value) return false
-      const providedKeys = keys(value)
-      const defaultKeys = keys(defaultErrorTypes())
+      const providedKeys = Object.keys(value)
+      const defaultKeys = Object.keys(defaultErrorTypes())
       // ensure it only has a subset of the allowed keys
       if (providedKeys.filter( k => includes(defaultKeys, k)).length < providedKeys.length) return false
       // ensure all of the values are boolean
-      if (keys(value).filter(k => typeof value[k] !== 'boolean').length > 0) return false
+      if (providedKeys.filter(k => typeof value[k as keyof typeof value] !== 'boolean').length > 0) return false
       return true
     }
   },
@@ -202,7 +199,7 @@ const schema: Schema = {
         'notify' in val && stringWithLength(val.notify) && 'sessions' in val && stringWithLength(val.sessions)
       ) &&
       // ensure no keys other than notify/session are set on endpoints object
-      keys(val).filter(k => !includes(['notify', 'sessions'], k)).length === 0
+      Object.keys(val).filter(k => !includes(['notify', 'sessions'], k)).length === 0
   },
   autoTrackSessions: {
     defaultValue: ()  => true,
@@ -212,7 +209,7 @@ const schema: Schema = {
   enabledReleaseStages: {
     defaultValue: () => null,
     message: 'should be an array of strings',
-    validate: (value: unknown) => value === null || (isArray(value) && value.filter(f => typeof f === 'string').length === value.length)
+    validate: (value: unknown) => value === null || (Array.isArray(value) && value.filter(f => typeof f === 'string').length === value.length)
   },
   releaseStage: {
     defaultValue: () => 'production',
@@ -227,7 +224,7 @@ const schema: Schema = {
   enabledBreadcrumbTypes: {
     defaultValue: () => BREADCRUMB_TYPES,
     message: `should be null or a list of available breadcrumb types (${BREADCRUMB_TYPES.join(',')})`,
-    validate: (value: unknown) => value === null || (isArray(value) && reduce(value, (accum, maybeType) => {
+    validate: (value: unknown) => value === null || (Array.isArray(value) && value.reduce((accum, maybeType) => {
       if (accum === false) return accum
       // TS doesn't like passing a readonly to a function that might mutate an array
       return includes(BREADCRUMB_TYPES as unknown as any[], maybeType)
@@ -243,8 +240,7 @@ const schema: Schema = {
     message: 'should be an object with { id, email, name } properties',
     validate: (value: unknown) =>
       (value === null) ||
-      (value && reduce(
-        keys(value),
+      !!(value && Object.keys(value).reduce(
         (accum, key) => accum && includes(['id', 'email', 'name'], key),
         true
       ))
@@ -259,8 +255,7 @@ const schema: Schema = {
     message: 'should be null or an object with methods { debug, info, warn, error }',
     validate: (value: unknown) =>
       (!value) ||
-      (value && reduce(
-        ['debug', 'info', 'warn', 'error'],
+      (value && ['debug', 'info', 'warn', 'error'].reduce(
         // @ts-expect-error - TS doesn't know that value is an object
         (accum, method) => accum && typeof value[method] === 'function',
         true
@@ -270,7 +265,7 @@ const schema: Schema = {
     defaultValue: () => ['password'],
     message: 'should be an array of strings|regexes',
     validate: (value: unknown) =>
-      isArray(value) && value.length === value.filter(s =>
+      Array.isArray(value) && value.length === value.filter(s =>
         (typeof s === 'string' || (s && typeof s.test === 'function'))
       ).length
   },
@@ -278,7 +273,7 @@ const schema: Schema = {
     defaultValue: () => ([]),
     message: 'should be an array of plugin objects',
     validate: (value: unknown) =>
-      isArray(value) && value.length === value.filter(p =>
+      Array.isArray(value) && value.length === value.filter(p =>
         (p && typeof p === 'object' && typeof p.load === 'function')
       ).length
   },
@@ -286,7 +281,7 @@ const schema: Schema = {
     defaultValue: () => [],
     message: 'should be an array of objects that have a "name" property',
     validate: (value: unknown) =>
-      isArray(value) && value.length === value.filter(feature =>
+      Array.isArray(value) && value.length === value.filter(feature =>
         feature && typeof feature === 'object' && typeof feature.name === 'string'
       ).length
   },
