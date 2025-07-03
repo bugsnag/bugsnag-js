@@ -1,13 +1,13 @@
-import { fileURLToPath } from 'node:url';
-
 import eslint from '@eslint/js';
 import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginJest from 'eslint-plugin-jest';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import { createRequire } from 'module';
 
-const __filename = fileURLToPath(import.meta.url);
+const require = createRequire(import.meta.url);
 
+/** @type {import('@typescript-eslint/utils').TSESLint.FlatConfig} */
 const c = tseslint.config(
   // Files to ignore
   {
@@ -42,6 +42,7 @@ const c = tseslint.config(
     plugins: {
       '@typescript-eslint': tseslint.plugin,
       import: eslintPluginImport,
+      'custom-rules': require('./eslint-rules'),
     },
     languageOptions: {
       parser: tseslint.parser,
@@ -103,6 +104,9 @@ const c = tseslint.config(
 
       // Support TypeScript 3.8 by disallowing import { type Module } from 'module'
       'import/consistent-type-specifier-style': ['warn', 'prefer-top-level'],
+
+      // Prevent inline type exports like export { type Bugsnag }
+      'custom-rules/no-inline-type-exports': 'warn',
 
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',

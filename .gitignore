@@ -19,3 +19,4 @@ compile_commands.json
 .cache
 .clangd
 Gemfile.lock
+.ts38-validation
