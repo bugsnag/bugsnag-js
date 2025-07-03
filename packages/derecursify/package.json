@@ -5,13 +5,15 @@
   "main": "dist/derecursify.js",
   "module": "dist/derecursify.js",
   "types": "dist/derecursify.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/derecursify.d.ts",
       "default": "./dist/derecursify.js"
     }
   },
-  "private": true,
   "license": "MIT",
   "author": "Bugsnag",
   "repository": {
