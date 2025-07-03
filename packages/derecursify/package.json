@@ -3,7 +3,14 @@
   "version": "8.4.0",
   "description": "Internal utility for safely serializing objects",
   "main": "dist/derecursify.js",
+  "module": "dist/derecursify.js",
   "types": "dist/derecursify.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/derecursify.d.ts",
+      "default": "./dist/derecursify.js"
+    }
+  },
   "private": true,
   "license": "MIT",
   "author": "Bugsnag",

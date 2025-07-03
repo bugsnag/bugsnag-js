@@ -7,7 +7,7 @@ This is a private package used internally by other Bugsnag packages.
 ## Usage
 
 ```javascript
-const derecursify = require('@bugsnag/derecursify')
+const { derecursify } = require('@bugsnag/derecursify')
 
 const obj = { a: 1, b: new Date(), c: new Error('test') }
 obj.circular = obj

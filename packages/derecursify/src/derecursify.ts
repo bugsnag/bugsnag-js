@@ -101,4 +101,6 @@ const derecursify = (data: unknown): object => {
   return visit(data)
 }
 
+// Export both named and default for CommonJS compatibility
+export { derecursify }
 export default derecursify

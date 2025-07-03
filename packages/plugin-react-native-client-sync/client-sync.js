@@ -1,5 +1,5 @@
 const { DeviceEventEmitter, NativeEventEmitter, NativeModules, Platform } = require('react-native')
-const derecursify = require('@bugsnag/derecursify')
+const { derecursify } = require('@bugsnag/derecursify')
 
 module.exports = (NativeClient) => ({
   load: (client) => {
