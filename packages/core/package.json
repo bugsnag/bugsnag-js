@@ -11,7 +11,6 @@
     },
     "./lib/es-utils/assign": "./src/lib/es-utils/assign.js",
     "./lib/es-utils/includes": "./src/lib/es-utils/includes.js",
-    "./lib/callback-runner": "./src/lib/callback-runner.js",
     "./lib/path-normalizer": "./src/lib/path-normalizer.js"
   },
   "description": "Core classes and utilities for Bugsnag notifiers",

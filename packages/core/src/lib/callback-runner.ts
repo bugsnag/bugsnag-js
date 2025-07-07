@@ -1,12 +1,18 @@
-const some = require('./async-every')
+import every from './async-every'
+import type { NodeCallbackType } from './async-every'
 
-module.exports = (callbacks, event, onCallbackError, cb) => {
+const runCallbacks = <T>(
+  callbacks: any[],
+  event: T,
+  onCallbackError: (err: Error) => void,
+  cb: NodeCallbackType<boolean>
+): void => {
   // This function is how we support different kinds of callback:
   //  - synchronous - return value
   //  - node-style async with callback - cb(err, value)
   //  - promise/thenable - resolve(value)
   // It normalises each of these into the lowest common denominator – a node-style callback
-  const runMaybeAsyncCallback = (fn, cb) => {
+  const runMaybeAsyncCallback = (fn: any, cb: NodeCallbackType<boolean>) => {
     if (typeof fn !== 'function') return cb(null)
     try {
       // if function appears sync…
@@ -16,9 +22,9 @@ module.exports = (callbacks, event, onCallbackError, cb) => {
         if (ret && typeof ret.then === 'function') {
           return ret.then(
             // resolve
-            val => setTimeout(() => cb(null, val)),
+            (val: boolean | undefined ) => setTimeout(() => cb(null, val)),
             // reject
-            err => {
+            (err: Error) => {
               setTimeout(() => {
                 onCallbackError(err)
                 return cb(null, true)
@@ -29,18 +35,20 @@ module.exports = (callbacks, event, onCallbackError, cb) => {
         return cb(null, ret)
       }
       // if function is async…
-      fn(event, (err, result) => {
+      fn(event, (err: Error, result: any) => {
         if (err) {
           onCallbackError(err)
           return cb(null)
         }
         cb(null, result)
       })
-    } catch (e) {
+    } catch (e: any) {
       onCallbackError(e)
       cb(null)
     }
   }
 
-  some(callbacks, runMaybeAsyncCallback, cb)
+  return every(callbacks, runMaybeAsyncCallback, cb)
 }
+
+export default runCallbacks

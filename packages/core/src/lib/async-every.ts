@@ -1,3 +1,5 @@
+export type NodeCallbackType<T = any> = (error?: Error | null, result?: T) => void;
+
 // This is a heavily modified/simplified version of
 //   https://github.com/othiym23/async-some
 // with the logic flipped so that it is akin to the
@@ -9,7 +11,11 @@
 //   - or the end of the array is reached
 // the callback (cb) will be passed (null, false) if any of the items in arr
 // caused fn to call back with false, otherwise it will be passed (null, true)
-module.exports = (arr, fn, cb) => {
+const every = <T>(
+  arr: T[],
+  fn: (item: T, cb: NodeCallbackType) => void,
+  cb: NodeCallbackType<boolean>
+): void => {
   let index = 0
 
   const next = () => {
@@ -24,3 +30,5 @@ module.exports = (arr, fn, cb) => {
 
   next()
 }
+
+export default every
