@@ -33,6 +33,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
+    "@babel/preset-env": "^7.28.0",
     "@bugsnag/delivery-x-domain-request": "^8.4.0",
     "@bugsnag/delivery-xml-http-request": "^8.4.0",
     "@bugsnag/plugin-app-duration": "^8.4.0",
@@ -57,6 +58,7 @@
     "@rollup/plugin-terser": "^0.4.4"
   },
   "dependencies": {
-    "@bugsnag/core": "^8.4.0"
+    "@bugsnag/core": "^8.4.0",
+    "core-js": "^3.43.0"
   }
 }

@@ -21,6 +21,16 @@ module.exports = api => {
       presets: ['@babel/preset-react', 'module:metro-react-native-babel-preset']
     })
   } else {
+    // Always include @babel/preset-env for non-test environments, with polyfill injection
+    presets.push([
+      '@babel/preset-env',
+      {
+        targets: { ie: '11' },
+        useBuiltIns: 'usage',
+        corejs: 3,
+        debug: true
+      }
+    ])
     plugins.push(
       ['@babel/plugin-transform-arrow-functions'],
       ['@babel/plugin-transform-block-scoping'],

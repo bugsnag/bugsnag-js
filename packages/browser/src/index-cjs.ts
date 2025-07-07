@@ -1,3 +1,6 @@
+import 'core-js/es/symbol'
+import 'core-js'
+
 import { Breadcrumb, Client, Event, Session } from '@bugsnag/core'
 
 import assign from '@bugsnag/core/lib/es-utils/assign'
