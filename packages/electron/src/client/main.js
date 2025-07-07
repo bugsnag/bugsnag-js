@@ -29,7 +29,7 @@ const createMainClient = (opts) => {
   // Normalise the project root upfront so renderers have a fully resolved path
   // The renderers can't do this themselves as they cannot access the 'path' module
   if (opts.projectRoot) {
-    const { normalizePath } = require('@bugsnag/core')
+    const normalizePath = require('@bugsnag/path-normalizer')
     opts.projectRoot = normalizePath(opts.projectRoot)
   }
 
