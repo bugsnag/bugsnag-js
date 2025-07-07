@@ -1,4 +1,4 @@
-import plugin from '../'
+import plugin from '../src/client-sync'
 import { Client, Breadcrumb } from '@bugsnag/core'
 
 import { DeviceEventEmitter } from 'react-native'

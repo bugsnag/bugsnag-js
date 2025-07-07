@@ -5,9 +5,7 @@
   "main": "dist/derecursify.js",
   "module": "dist/derecursify.js",
   "types": "dist/derecursify.d.ts",
-  "publishConfig": {
-    "access": "public"
-  },
+  "private": true,
   "exports": {
     ".": {
       "types": "./dist/derecursify.d.ts",
