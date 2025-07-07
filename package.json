@@ -77,8 +77,8 @@
     "test:node": "npm run test:build-node-container && docker compose run --use-aliases node-maze-runner",
     "test:react-native:ios": "npm run test:build-react-native-ios && npm run test:build-react-native-maze-runner && APP_LOCATION=build/$REACT_NATIVE_VERSION.ipa docker-compose run --use-aliases react-native-maze-runner",
     "local-npm:start": "verdaccio --config test/electron/local-npm-config.yml --listen 0.0.0.0:5539",
-    "local-npm:publish-all": "lerna publish \"$VERSION_IDENTIFIER\" --yes --force-publish --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'",
-    "local-npm:publish-all-win32": "lerna publish %VERSION_IDENTIFIER% --yes --force-publish --exact --no-push --no-git-reset --no-git-tag-version --registry 'http://0.0.0.0:5539'",
+    "local-npm:publish-all": "lerna publish \"$VERSION_IDENTIFIER\" --yes --force-publish --exact --no-push --no-git-reset --no-git-tag-version --no-verify-access --registry 'http://0.0.0.0:5539'",
+    "local-npm:publish-all-win32": "lerna publish %VERSION_IDENTIFIER% --yes --force-publish --exact --no-push --no-git-reset --no-git-tag-version --no-verify-access --registry 'http://0.0.0.0:5539'",
     "test:electron": "xvfb-maybe --auto-servernum -- cucumber-js test/electron/features --retry 3 --retry-tag-filter @flaky"
   },
   "overrides": {
