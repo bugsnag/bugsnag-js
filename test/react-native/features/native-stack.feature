@@ -11,18 +11,14 @@ Scenario: Handled JS error with native stacktrace
   # On 0.75+ the Error name is set to the native exception class
   And the event "exceptions.0.errorClass" equals the version-dependent string:
     | arch | version | value                      |
-    | new  | 0.79    | java.lang.RuntimeException |
-    | new  | 0.78    | java.lang.RuntimeException |
-    | new  | 0.77    | java.lang.RuntimeException |
-    | new  | 0.76    | java.lang.RuntimeException |
-    | new  | 0.75    | java.lang.RuntimeException |
-    | new  | default | Error                      |
-    | old  | 0.79    | java.lang.RuntimeException |
-    | old  | 0.78    | java.lang.RuntimeException |
-    | old  | 0.77    | java.lang.RuntimeException |
-    | old  | 0.76    | java.lang.RuntimeException |
-    | old  | 0.75    | java.lang.RuntimeException |
-    | old  | default | Error                      |
+    | new  | 0.72    | Error                      |
+    | new  | 0.74    | Error                      |
+    | new  | default | java.lang.RuntimeException |
+    | old  | 0.68    | Error                      |
+    | old  | 0.69    | Error                      |
+    | old  | 0.72    | Error                      |
+    | old  | 0.74    | Error                      |
+    | old  | default | java.lang.RuntimeException |
 
   And the event "exceptions.0.message" equals "NativeStackHandledScenario"
   And the event "exceptions.0.type" equals "reactnativejs"
@@ -61,18 +57,14 @@ Scenario: Unhandled JS error with native stacktrace
   # On 0.75+ the Error name is set to the native exception class
   And the event "exceptions.0.errorClass" equals the version-dependent string:
     | arch | version | value                      |
-    | new  | 0.79    | java.lang.RuntimeException |
-    | new  | 0.78    | java.lang.RuntimeException |
-    | new  | 0.77    | java.lang.RuntimeException |
-    | new  | 0.76    | java.lang.RuntimeException |
-    | new  | 0.75    | java.lang.RuntimeException |
-    | new  | default | Error                      |
-    | old  | 0.79    | java.lang.RuntimeException |
-    | old  | 0.78    | java.lang.RuntimeException |
-    | old  | 0.77    | java.lang.RuntimeException |
-    | old  | 0.76    | java.lang.RuntimeException |
-    | old  | 0.75    | java.lang.RuntimeException |
-    | old  | default | Error                      |
+    | new  | 0.72    | Error                      |
+    | new  | 0.74    | Error                      |
+    | new  | default | java.lang.RuntimeException |
+    | old  | 0.68    | Error                      |
+    | old  | 0.69    | Error                      |
+    | old  | 0.72    | Error                      |
+    | old  | 0.74    | Error                      |
+    | old  | default | java.lang.RuntimeException |
 
   And the event "exceptions.0.message" equals "NativeStackUnhandledScenario"
   And the event "exceptions.0.type" equals "reactnativejs"
@@ -139,43 +131,23 @@ Scenario: Handled JS error with native stacktrace
   # On 0.74+ New Arch there is no JS stacktrace - see PLAT-12193
   And the event "exceptions.0.stacktrace.20.columnNumber" equals the version-dependent string:
   | arch | version | value                   |
-  | new  | 0.79    | @skip                   |
-  | new  | 0.78    | @skip                   |
-  | new  | 0.77    | @skip                   |
-  | new  | 0.76    | @skip                   |
-  | new  | 0.75    | @skip                   |
-  | new  | 0.74    | @skip                   |
-  | new  | default | @not_null               |
+  | new  | 0.72    | @not_null               |
+  | new  | default | @skip                   |
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.file" equals the version-dependent string:
   | arch | version | value                   |
-  | new  | 0.79    | @skip                   |
-  | new  | 0.78    | @skip                   |
-  | new  | 0.77    | @skip                   |
-  | new  | 0.76    | @skip                   |
-  | new  | 0.75    | @skip                   |
-  | new  | 0.74    | @skip                   |
-  | new  | default | @not_null               |
+  | new  | 0.72    | @not_null               |
+  | new  | default | @skip                   |
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.lineNumber" equals the version-dependent string:
   | arch | version | value                   |
-  | new  | 0.79    | @skip                   |
-  | new  | 0.78    | @skip                   |
-  | new  | 0.77    | @skip                   |
-  | new  | 0.76    | @skip                   |
-  | new  | 0.75    | @skip                   |
-  | new  | 0.74    | @skip                   |
-  | new  | default | @not_null               |
+  | new  | 0.72    | @not_null               |
+  | new  | default | @skip                   |
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.type" equals the version-dependent string:
   | arch | version | value                   |
-  | new  | 0.79    | @skip                   |
-  | new  | 0.78    | @skip                   |
-  | new  | 0.77    | @skip                   |
-  | new  | 0.76    | @skip                   |
-  | new  | 0.75    | @skip                   |
-  | new  | 0.74    | @skip                   |
-  | new  | default | @null                   |
+  | new  | 0.72    | @null                   |
+  | new  | default | @skip                   |
   | old  | default | @null                   |
 
 # Skipped on New Arch below 0.74 - see PLAT-12193
@@ -203,41 +175,21 @@ Scenario: Unhandled JS error with native stacktrace
   # On 0.74+ New Arch there is no JS stacktrace - see PLAT-12193
   And the event "exceptions.0.stacktrace.20.columnNumber" equals the version-dependent string:
   | arch | version | value                   |
-  | new  | 0.79    | @skip                   |
-  | new  | 0.78    | @skip                   |
-  | new  | 0.77    | @skip                   |
-  | new  | 0.76    | @skip                   |
-  | new  | 0.75    | @skip                   |
-  | new  | 0.74    | @skip                   |
-  | new  | default | @not_null               |
+  | new  | 0.72    | @not_null               |
+  | new  | default | @skip                   |
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.file" equals the version-dependent string:
   | arch | version | value                   |
-  | new  | 0.79    | @skip                   |
-  | new  | 0.78    | @skip                   |
-  | new  | 0.77    | @skip                   |
-  | new  | 0.76    | @skip                   |
-  | new  | 0.75    | @skip                   |
-  | new  | 0.74    | @skip                   |
-  | new  | default | @not_null               |
+  | new  | 0.72    | @not_null               |
+  | new  | default | @skip                   |
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.lineNumber" equals the version-dependent string:
   | arch | version | value                   |
-  | new  | 0.79    | @skip                   |
-  | new  | 0.78    | @skip                   |
-  | new  | 0.77    | @skip                   |
-  | new  | 0.76    | @skip                   |
-  | new  | 0.75    | @skip                   |
-  | new  | 0.74    | @skip                   |
-  | new  | default | @not_null               |
+  | new  | 0.72    | @not_null               |
+  | new  | default | @skip                   |
   | old  | default | @not_null               |
   And the event "exceptions.0.stacktrace.20.type" equals the version-dependent string:
   | arch | version | value                   |
-  | new  | 0.79    | @skip                   |
-  | new  | 0.78    | @skip                   |
-  | new  | 0.77    | @skip                   |
-  | new  | 0.76    | @skip                   |
-  | new  | 0.75    | @skip                   |
-  | new  | 0.74    | @skip                   |
-  | new  | default | @null                   |
+  | new  | 0.72    | @null                   |
+  | new  | default | @skip                   |
   | old  | default | @null                   |
