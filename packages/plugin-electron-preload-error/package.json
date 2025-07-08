@@ -15,10 +15,9 @@
     "preload-error.js"
   ],
   "devDependencies": {
-    "@bugsnag/electron-test-helpers": "^8.4.0",
-    "@bugsnag/path-normalizer": "^8.4.0"
+    "@bugsnag/electron-test-helpers": "^8.4.0"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@bugsnag/path-normalizer": "^8.4.0"
   },
   "author": "Bugsnag",
