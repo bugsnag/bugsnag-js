@@ -10,8 +10,7 @@
       "default": "./dist/index.cjs"
     },
     "./lib/es-utils/assign": "./src/lib/es-utils/assign.js",
-    "./lib/es-utils/includes": "./src/lib/es-utils/includes.js",
-    "./lib/callback-runner": "./src/lib/callback-runner.js"
+    "./lib/es-utils/includes": "./src/lib/es-utils/includes.js"
   },
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
