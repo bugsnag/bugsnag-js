@@ -56,7 +56,11 @@ module.exports = {
     mainActivityContents = mainActivityContents.replace(mainActivityPattern, mainActivityReplacement)
     fs.writeFileSync(mainActivityPath, mainActivityContents)
   },
-  buildAPK: function buildAPK (fixtureDir) {
+  buildAPK: function buildAPK (fixtureDir, newArchEnabled) {
+    if (newArchEnabled) {
+      execFileSync('./gradlew', ['generateCodegenArtifactsFromSchema'], { cwd: `${fixtureDir}/android`, stdio: 'inherit' })
+    }
+
     execFileSync('./gradlew', ['assembleRelease'], { cwd: `${fixtureDir}/android`, stdio: 'inherit' })
     fs.copyFileSync(`${fixtureDir}/android/app/build/outputs/apk/release/app-release.apk`, `${fixtureDir}/reactnative.apk`)
   }
