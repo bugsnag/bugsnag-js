@@ -1,4 +1,4 @@
-import derecursift from '../../src/lib/derecursify'
+import derecursify from '..' // Use default import from the package.json main field
 
 describe('delivery: react native makeSafe', () => {
   it('leaves simple types intact', () => {
@@ -25,7 +25,7 @@ describe('delivery: react native makeSafe', () => {
       _undefined: undefined
     }
 
-    const result = derecursift(data)
+    const result = derecursify(data)
 
     /* eslint-disable-next-line @typescript-eslint/no-dynamic-delete */
     delete data[symbol] // we don't copy Symbol keys over
@@ -50,13 +50,13 @@ describe('delivery: react native makeSafe', () => {
         enumerable: true
       })
 
-      const result = derecursift(object)
+      const result = derecursify(object)
       expect(result).toStrictEqual({ badProperty: '[Throws: failure]' })
     })
 
     it('when they are properties', () => {
       const value = { errorProp: new Error('something wrong') }
-      const result = derecursift(value)
+      const result = derecursify(value)
       expect(result).toStrictEqual({ errorProp: { name: 'Error', message: 'something wrong' } })
     })
   })
@@ -66,7 +66,7 @@ describe('delivery: react native makeSafe', () => {
       const object: { self?: any } = {}
       object.self = object
 
-      const result = derecursift(object)
+      const result = derecursify(object)
       expect(result).toStrictEqual({ self: '[Circular]' })
     })
 
@@ -77,7 +77,7 @@ describe('delivery: react native makeSafe', () => {
 
       outer.inner.parent = outer
 
-      const result = derecursift(outer)
+      const result = derecursify(outer)
       expect(result).toStrictEqual({ inner: { parent: '[Circular]' } })
     })
 
@@ -85,7 +85,7 @@ describe('delivery: react native makeSafe', () => {
       const array: any[] = [{}, {}]
       array[0].circularRef = array
 
-      const result = derecursift(array)
+      const result = derecursify(array)
       expect(result).toStrictEqual([{ circularRef: '[Circular]' }, {}])
     })
 
@@ -96,7 +96,7 @@ describe('delivery: react native makeSafe', () => {
 
       object.container = values
 
-      const result = derecursift(values)
+      const result = derecursify(values)
       expect(result).toStrictEqual([{ container: '[Circular]' }])
     })
 
@@ -112,7 +112,7 @@ describe('delivery: react native makeSafe', () => {
         someObject: metaData
       }]
 
-      const result = derecursift(array)
+      const result = derecursify(array)
       expect(result).toStrictEqual([
         {
           someObject: {
