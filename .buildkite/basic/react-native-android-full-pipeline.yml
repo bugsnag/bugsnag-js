@@ -218,6 +218,8 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
+          RN_VERSION: "0.68"
+          RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
@@ -251,6 +253,8 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
+          RN_VERSION: "0.69"
+          RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
