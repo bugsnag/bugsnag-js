@@ -7,8 +7,7 @@
     "outDir": "dist",
     "declaration": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "dist/types",
-    "types": ["node"]
+    "declarationDir": "dist/types"
   },
   "include": ["src/**/*.ts", "src/**/*.js", "safe-json-stringify.d.ts"]
 }
