@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from 'async_hooks'
 
-import assign from '@bugsnag/core/lib/es-utils/assign'
+
 
 // extend the base config schema with some browser-specific options
 import { schema as baseConfig } from '@bugsnag/core'
@@ -24,7 +24,7 @@ import { BugsnagStatic, Client, Config, Event, Logger } from '@bugsnag/core'
 
 type AfterErrorCb = (err: any, event: Event, logger: Logger) => void;
 
-const schema = assign({}, baseConfig, browserConfig)
+const schema = Object.assign({}, baseConfig, browserConfig)
 
 export interface NodeConfig extends Config {
   hostname?: string

@@ -1,7 +1,7 @@
 /* eslint-env worker, serviceworker */
 
 import { schema } from '@bugsnag/core'
-import assign from '@bugsnag/core/lib/es-utils/assign'
+
 import getPrefixedConsole from './get-prefixed-console'
 
 export default {
@@ -9,7 +9,7 @@ export default {
     ...schema.appType,
     defaultValue: () => 'workerjs'
   },
-  logger: assign({}, schema.logger, {
+  logger: Object.assign({}, schema.logger, {
     defaultValue: () =>
       (typeof console !== 'undefined' && typeof console.debug === 'function')
         ? getPrefixedConsole()

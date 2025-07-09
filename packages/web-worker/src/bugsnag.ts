@@ -11,7 +11,7 @@ import pluginBrowserDevice from '@bugsnag/plugin-browser-device'
 import pluginBrowserSession from '@bugsnag/plugin-browser-session'
 import pluginPreventDiscard from './prevent-discard'
 import { Client, Config, BugsnagStatic, schema as baseConfig } from '@bugsnag/core'
-import assign from '@bugsnag/core/lib/es-utils/assign'
+
 
 export interface WorkerConfig extends Config {
   collectUserIp?: boolean
@@ -28,7 +28,7 @@ const url = 'https://github.com/bugsnag/bugsnag-js'
 const version = '__BUGSNAG_NOTIFIER_VERSION__'
 
 // extend the base config schema with some worker-specific options
-const schema = assign({}, baseConfig, workerConfig)
+const schema = Object.assign({}, baseConfig, workerConfig)
 
 type WorkerClient = Partial<Client> & {
   _client: Client | null

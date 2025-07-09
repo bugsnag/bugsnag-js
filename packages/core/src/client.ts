@@ -3,7 +3,7 @@ import Event from './event'
 import Breadcrumb from './breadcrumb'
 import Session from './session'
 import includes from './lib/es-utils/includes'
-import assign from './lib/es-utils/assign'
+
 import runCallbacks from './lib/callback-runner'
 import metadataDelegate from './lib/metadata-delegate'
 import runSyncCallbacks from './lib/sync-callback-runner'
@@ -157,7 +157,7 @@ export default class Client<T extends Config = Config> {
 
   _configure (opts: T, internalPlugins: Plugin<T>[]) {
     const schema = internalPlugins.reduce((schema, plugin) => {
-      if (plugin && plugin.configSchema) return assign({}, schema, plugin.configSchema)
+      if (plugin && plugin.configSchema) return Object.assign({}, schema, plugin.configSchema)
       return schema
     }, this._schema)
 
@@ -177,7 +177,7 @@ export default class Client<T extends Config = Config> {
           accum.config[key] = defaultValue
         } else {
           if (schema[key].allowPartialObject) {
-            accum.config[key] = assign(defaultValue, opts[key])
+            accum.config[key] = Object.assign(defaultValue, opts[key])
           } else {
             accum.config[key] = opts[key]
           }
@@ -204,9 +204,9 @@ export default class Client<T extends Config = Config> {
     }
 
     // update and elevate some options
-    this._metadata = assign({}, config.metadata)
+    this._metadata = Object.assign({}, config.metadata)
     featureFlagDelegate.merge(this._features, config.featureFlags, this._featuresIndex)
-    this._user = assign({}, config.user)
+    this._user = Object.assign({}, config.user)
     this._context = config.context
     if (config.logger) this._logger = config.logger
 
@@ -255,7 +255,7 @@ export default class Client<T extends Config = Config> {
     session.app.version = this._config.appVersion
     session.app.type = this._config.appType
 
-    session._user = assign({}, this._user)
+    session._user = Object.assign({}, this._user)
 
     // run onSession callbacks
     const ignore = runSyncCallbacks(this._cbs.s, session, 'onSession', this._logger)
@@ -342,14 +342,14 @@ export default class Client<T extends Config = Config> {
   }
 
   _notify (event: Event, onError?: OnErrorCallback, postReportCallback: (err: Error | null | undefined, event: Event) => void = noop) {
-    event.app = assign({}, event.app, {
+    event.app = Object.assign({}, event.app, {
       releaseStage: this._config.releaseStage,
       version: this._config.appVersion,
       type: this._config.appType
     })
     event.context = event.context || this._context
-    event._metadata = assign({}, event._metadata, this._metadata)
-    event._user = assign({}, event._user, this._user)
+    event._metadata = Object.assign({}, event._metadata, this._metadata)
+    event._user = Object.assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
     featureFlagDelegate.merge(event._features, this._features, event._featuresIndex)
 
