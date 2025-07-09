@@ -20,6 +20,7 @@ BUGSNAG_PACKAGES = [
   "in-flight",
   "js",
   "node",
+  "path-normalizer",
   "plugin-app-duration",
   "plugin-aws-lambda",
   "plugin-contextualize",
