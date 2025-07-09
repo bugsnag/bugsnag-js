@@ -2,7 +2,7 @@ const { schema } = require('./common')
 const { listOfFunctions, stringWithLength } = require('@bugsnag/core')
 const { inspect } = require('util')
 const { app } = require('electron')
-const { normalizePath } = require('@bugsnag/core')
+const normalizePath = require('@bugsnag/path-normalizer')
 
 module.exports.schema = {
   ...schema,
