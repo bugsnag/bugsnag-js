@@ -1,5 +1,6 @@
 Feature: Compatibility with TypeScript
 
+@skip_safari_10
 Scenario Outline: TypeScript <version> does not error
     When I navigate to the test URL "/typescript/<directory>/index.html"
     And I wait to receive an error
