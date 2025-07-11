@@ -25,10 +25,20 @@ const plugins = [
     // don't output anything if there's a TS error
     noEmitOnError: true,
     compilerOptions: {
-      target: 'es5',
+      target: 'es2015', // Output ES2015 for babel to process
     }
   }),
-  babel({ babelHelpers: 'bundled' }),
+  babel({ 
+    babelHelpers: 'bundled',
+    // Use the local babel configuration that targets Chrome 43
+    configFile: './babel.config.js',
+    // Process ALL files, including dependencies
+    exclude: [],
+    // Include all extensions that might contain code
+    extensions: ['.js', '.ts', '.mjs', '.cjs'],
+    // Ensure babel processes the entire bundle, including node_modules
+    include: ['**/*']
+  }),
   replace({
     preventAssignment: true,
     values: {
