@@ -1,5 +1,6 @@
  
-import { Client, Config, Session, jsonPayload } from '@bugsnag/core'
+import { Client, Config, Session } from '@bugsnag/core'
+import * as jsonPayload from '@bugsnag/core/lib/json-payload'
 
 import getApiUrl from './get-api-url'
 import matchPageProtocol from './match-page-protocol'

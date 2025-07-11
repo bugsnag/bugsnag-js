@@ -49,5 +49,32 @@ export default [
       },
     ],
     plugins
+  },
+  // json-payload separate export
+  {
+    input: "src/lib/json-payload.ts",
+    external,
+    output: [
+      {
+        ...sharedOutput,
+        entryFileNames: 'lib/json-payload.mjs',
+        format: 'esm',
+        preserveModules: false
+      }
+    ],
+    plugins
+  },
+  {
+    input: "src/lib/json-payload.ts",
+    external,
+    output: [
+      {
+        ...sharedOutput,
+        entryFileNames: 'lib/json-payload.cjs',
+        format: 'cjs',
+        preserveModules: false
+      },
+    ],
+    plugins
   }
 ];
