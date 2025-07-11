@@ -9,5 +9,5 @@
     "emitDeclarationOnly": true,
     "declarationDir": "dist/types"
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "./safe-json-stringify.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.js", "src/safe-json-stringify.d.ts"]
 }

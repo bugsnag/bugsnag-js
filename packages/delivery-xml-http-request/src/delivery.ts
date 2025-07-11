@@ -1,5 +1,5 @@
 import { Delivery, Client, Config } from '@bugsnag/core'
-import * as jsonPayload from '@bugsnag/core/lib/json-payload'
+import jsonPayload from '@bugsnag/core/lib/json-payload'
 
 function getIntegrityHeaderValue (windowOrWorkerGlobalScope: Window, requestBody: string) {
   if (windowOrWorkerGlobalScope.isSecureContext && windowOrWorkerGlobalScope.crypto && windowOrWorkerGlobalScope.crypto.subtle && windowOrWorkerGlobalScope.crypto.subtle.digest && typeof TextEncoder === 'function') {

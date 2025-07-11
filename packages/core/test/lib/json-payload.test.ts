@@ -1,6 +1,6 @@
 import type { EventDeliveryPayload, SessionDeliveryPayload } from '../../src/common'
 import Event from '../../src/event'
-import * as jsonPayload from '../../src/lib/json-payload'
+import jsonPayload from '../../src/lib/json-payload'
 import Session from '../../src/session'
 
 function makeBigObject () {
