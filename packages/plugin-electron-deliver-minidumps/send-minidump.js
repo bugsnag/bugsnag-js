@@ -1,7 +1,7 @@
 const { createReadStream } = require('fs')
 const { createGzip } = require('zlib')
 const { basename } = require('path')
-const { jsonPayload } = require('@bugsnag/core')
+const jsonPayload = require('@bugsnag/core/lib/json-payload')
 const FormData = require('form-data')
 
 module.exports = (net, client) => {

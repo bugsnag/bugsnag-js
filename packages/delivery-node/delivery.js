@@ -1,4 +1,4 @@
-const { jsonPayload } = require('@bugsnag/core')
+const jsonPayload = require('@bugsnag/core/lib/json-payload')
 const request = require('./request')
 
 module.exports = (client) => ({

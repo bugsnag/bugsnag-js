@@ -7,7 +7,6 @@
             "dockerfiles/Dockerfile.browser",
             "packages/core",
             "packages/browser",
-            "packages/delivery-x-domain-request",
             "packages/delivery-xml-http-request",
             "packages/plugin-app-duration",
             "packages/plugin-browser-context",
