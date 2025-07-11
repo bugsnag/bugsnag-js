@@ -59,6 +59,7 @@ export default [
         format: 'esm'
       }
     ],
+    external: ['@bugsnag/json-payload'],
     plugins
   }),
   createRollupConfig({
@@ -70,6 +71,7 @@ export default [
         format: 'cjs',
       },
     ],
+    external: ['@bugsnag/json-payload'],
     plugins
   }),
   createRollupConfig({
@@ -79,6 +81,9 @@ export default [
         ...sharedOutput,
         entryFileNames: 'bugsnag.js',
         format: 'umd',
+        globals: {
+          '@bugsnag/json-payload': 'BugsnagJsonPayload'
+        },
         name: 'Bugsnag'
       },
       {
@@ -87,9 +92,13 @@ export default [
         format: 'umd',
         compact: true,
         name: 'Bugsnag',
+        globals: {
+          '@bugsnag/json-payload': 'BugsnagJsonPayload'
+        },
         plugins: [terser()],
       }, 
     ],
+    external: ['@bugsnag/json-payload'],
     plugins
   })
 ];
