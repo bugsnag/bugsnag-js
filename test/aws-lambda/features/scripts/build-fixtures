@@ -23,6 +23,7 @@ BUGSNAG_PACKAGES = [
   "path-normalizer",
   "plugin-app-duration",
   "plugin-aws-lambda",
+  "plugin-browser-session",
   "plugin-contextualize",
   "plugin-express",
   "plugin-hono",
@@ -33,7 +34,7 @@ BUGSNAG_PACKAGES = [
   "plugin-node-uncaught-exception",
   "plugin-node-unhandled-rejection",
   "plugin-server-session",
-  "plugin-strip-project-root",
+  "plugin-strip-project-root"
 ]
 
 def heading(message)
