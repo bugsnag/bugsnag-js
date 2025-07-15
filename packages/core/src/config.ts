@@ -156,7 +156,7 @@ const schema: Schema = {
       const providedKeys = Object.keys(value)
       const defaultKeys = Object.keys(defaultErrorTypes())
       // ensure it only has a subset of the allowed keys
-      if (providedKeys.filter( k => defaultKeys.includes(k)).length < providedKeys.length) return false
+      if (providedKeys.filter( k => defaultKeys.indexOf(k) !== -1).length < providedKeys.length) return false
       // ensure all of the values are boolean
       if (providedKeys.filter(k => typeof value[k as keyof typeof value] !== 'boolean').length > 0) return false
       return true
@@ -198,7 +198,7 @@ const schema: Schema = {
         'notify' in val && stringWithLength(val.notify) && 'sessions' in val && stringWithLength(val.sessions)
       ) &&
       // ensure no keys other than notify/session are set on endpoints object
-      Object.keys(val).filter(k => !['notify', 'sessions'].includes(k)).length === 0
+      Object.keys(val).filter(k => ['notify', 'sessions'].indexOf(k) === -1).length === 0
   },
   autoTrackSessions: {
     defaultValue: ()  => true,
@@ -226,7 +226,7 @@ const schema: Schema = {
     validate: (value: unknown) => value === null || (Array.isArray(value) && value.reduce((accum, maybeType) => {
       if (accum === false) return accum
       // TS doesn't like passing a readonly to a function that might mutate an array
-      return BREADCRUMB_TYPES.includes(maybeType)
+      return BREADCRUMB_TYPES.indexOf(maybeType) !== -1
     }, true))
   },
   context: {
@@ -240,7 +240,7 @@ const schema: Schema = {
     validate: (value: unknown) =>
       (value === null) ||
       !!(value && Object.keys(value).reduce(
-        (accum, key) => accum && ['id', 'email', 'name'].includes(key),
+        (accum, key) => accum && ['id', 'email', 'name'].indexOf(key) !== -1,
         true
       ))
   },

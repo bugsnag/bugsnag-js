@@ -305,7 +305,7 @@ export default class Client<T extends Config = Config> {
   leaveBreadcrumb (message: string, metadata?: any, type?: BreadcrumbType) {
     // coerce bad values so that the defaults get set
     message = typeof message === 'string' ? message : ''
-    type = (typeof type === 'string' && BREADCRUMB_TYPES.includes(type)) ? type : 'manual'
+    type = (typeof type === 'string' && BREADCRUMB_TYPES.indexOf(type) !== -1) ? type : 'manual'
     metadata = typeof metadata === 'object' && metadata !== null ? metadata : {}
 
     // if no message, discard
@@ -331,7 +331,7 @@ export default class Client<T extends Config = Config> {
   _isBreadcrumbTypeEnabled (type: any) {
     const types = this._config.enabledBreadcrumbTypes
 
-    return types === null || types.includes(type)
+    return types === null || types.indexOf(type) !== -1
   }
 
   notify (maybeError: NotifiableError, onError?: OnErrorCallback, postReportCallback: (err: Error | null | undefined, event: Event) => void = noop) {
@@ -352,7 +352,7 @@ export default class Client<T extends Config = Config> {
     featureFlagDelegate.merge(event._features, this._features, event._featuresIndex)
 
     // exit early if events should not be sent on the current releaseStage
-    if (this._config.enabledReleaseStages !== null && !this._config.enabledReleaseStages.includes(this._config.releaseStage)) {
+    if (this._config.enabledReleaseStages !== null && this._config.enabledReleaseStages.indexOf(this._config.releaseStage) === -1) {
       this._logger.warn('Event not sent due to releaseStage/enabledReleaseStages configuration')
       return postReportCallback(null, event)
     }

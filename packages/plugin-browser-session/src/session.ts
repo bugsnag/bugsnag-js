@@ -13,7 +13,7 @@ const sessionDelegate: SessionDelegate = {
     sessionClient._pausedSession = null
 
     // exit early if the current releaseStage is not enabled
-    if (sessionClient._config.enabledReleaseStages && !sessionClient._config.enabledReleaseStages.includes(sessionClient._config.releaseStage)) {
+    if (sessionClient._config.enabledReleaseStages && sessionClient._config.enabledReleaseStages.indexOf(sessionClient._config.releaseStage) === -1) {
       sessionClient._logger.warn('Session not sent due to releaseStage/enabledReleaseStages configuration')
       return sessionClient
     }
