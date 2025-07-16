@@ -1,7 +1,6 @@
-import type { EventDeliveryPayload, SessionDeliveryPayload } from '../../src/common'
-import Event from '../../src/event'
-import jsonPayload from '../../src/lib/json-payload'
-import Session from '../../src/session'
+import type { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
+import { Event, Session } from '@bugsnag/core'
+import jsonPayload from '../'
 
 function makeBigObject () {
   const big: Record<string, string> = {}
