@@ -15,11 +15,23 @@ const sharedOutput = {
   strict: false, // 'use strict' in WebKit enables Tail Call Optimization, which breaks stack trace handling
 }
 
+const treeshake = {
+  moduleSideEffects: false,
+  unknownGlobalSideEffects: false,
+  tryCatchDeoptimization: false
+}
+
 const plugins = [
   nodeResolve({
-    browser: true
+    browser: true,
+    preferBuiltins: false,
+    // Enable tree-shaking for better dead code elimination
+    exportConditions: ['import']
   }),
-  commonjs(),
+  commonjs({
+    // Improve tree-shaking for CommonJS modules
+    ignoreTryCatch: 'remove'
+  }),
   typescript({
     removeComments: true,
     // don't output anything if there's a TS error
@@ -59,7 +71,8 @@ export default [
         format: 'esm'
       }
     ],
-    plugins
+    plugins,
+    treeshake
   }),
   createRollupConfig({
     input: "src/index-cjs.ts",
@@ -70,7 +83,8 @@ export default [
         format: 'cjs',
       },
     ],
-    plugins
+    plugins,
+    treeshake
   }),
   createRollupConfig({
     input: "src/index-umd.ts",
@@ -87,9 +101,18 @@ export default [
         format: 'umd',
         compact: true,
         name: 'Bugsnag',
-        plugins: [terser()],
+        plugins: [terser({
+          compress: {
+            pure_getters: true,
+            unsafe: true,
+            unsafe_comps: true,
+            unsafe_math: true,
+            passes: 2
+          }
+        })]
       }, 
     ],
-    plugins
+    plugins,
+    treeshake
   })
 ];
