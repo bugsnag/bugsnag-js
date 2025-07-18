@@ -105,7 +105,6 @@ export default [
           compress: {
             pure_getters: true,
             unsafe: true,
-            unsafe_comps: true,
             unsafe_math: true,
             passes: 2
           }
