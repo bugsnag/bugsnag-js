@@ -2,14 +2,12 @@ import configSchema from './config'
 import Event from './event'
 import Breadcrumb from './breadcrumb'
 import Session from './session'
-import includes from './lib/es-utils/includes'
-
 import runCallbacks from './lib/callback-runner'
 import metadataDelegate from './lib/metadata-delegate'
 import runSyncCallbacks from './lib/sync-callback-runner'
-import BREADCRUMB_TYPES from './lib/breadcrumb-types'
 import featureFlagDelegate from './lib/feature-flag-delegate'
-import { BreadcrumbType, Config, Delivery, FeatureFlag, LoggerConfig, NotifiableError, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
+
+import { BreadcrumbType, BREADCRUMB_TYPES, Config, Delivery, FeatureFlag, LoggerConfig, NotifiableError, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
 
 const HUB_PREFIX = '00000'
 const HUB_NOTIFY = 'https://notify.insighthub.smartbear.com'
@@ -307,7 +305,7 @@ export default class Client<T extends Config = Config> {
   leaveBreadcrumb (message: string, metadata?: any, type?: BreadcrumbType) {
     // coerce bad values so that the defaults get set
     message = typeof message === 'string' ? message : ''
-    type = (typeof type === 'string' && includes(BREADCRUMB_TYPES, type)) ? type : 'manual'
+    type = (typeof type === 'string' && BREADCRUMB_TYPES.indexOf(type) !== -1) ? type : 'manual'
     metadata = typeof metadata === 'object' && metadata !== null ? metadata : {}
 
     // if no message, discard
@@ -330,10 +328,10 @@ export default class Client<T extends Config = Config> {
     }
   }
 
-  _isBreadcrumbTypeEnabled (type: string) {
+  _isBreadcrumbTypeEnabled (type: any) {
     const types = this._config.enabledBreadcrumbTypes
 
-    return types === null || includes(types, type)
+    return types === null || types.indexOf(type) !== -1
   }
 
   notify (maybeError: NotifiableError, onError?: OnErrorCallback, postReportCallback: (err: Error | null | undefined, event: Event) => void = noop) {
@@ -354,7 +352,7 @@ export default class Client<T extends Config = Config> {
     featureFlagDelegate.merge(event._features, this._features, event._featuresIndex)
 
     // exit early if events should not be sent on the current releaseStage
-    if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {
+    if (this._config.enabledReleaseStages !== null && this._config.enabledReleaseStages.indexOf(this._config.releaseStage) === -1) {
       this._logger.warn('Event not sent due to releaseStage/enabledReleaseStages configuration')
       return postReportCallback(null, event)
     }

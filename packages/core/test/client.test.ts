@@ -1,8 +1,7 @@
 import Client from '../src/client'
 import Event from '../src/event'
 import Session from '../src/session'
-import breadcrumbTypes from '../src/lib/breadcrumb-types'
-import { BreadcrumbType } from '../src/common'
+import { BreadcrumbType, BREADCRUMB_TYPES } from '../src/common'
 
 const noop = () => {}
 const id = <T>(a: T) => a
@@ -633,32 +632,32 @@ describe('Client', () => {
   })
 
   describe('_isBreadcrumbTypeEnabled()', () => {
-    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes is not configured', (type) => {
+    it.each(BREADCRUMB_TYPES)('returns true for "%s" when enabledBreadcrumbTypes is not configured', (type) => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
 
       expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
     })
 
-    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes=null', (type) => {
+    it.each(BREADCRUMB_TYPES)('returns true for "%s" when enabledBreadcrumbTypes=null', (type) => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: null })
 
       expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
     })
 
-    it.each(breadcrumbTypes)('returns false for "%s" when enabledBreadcrumbTypes=[]', (type) => {
+    it.each(BREADCRUMB_TYPES)('returns false for "%s" when enabledBreadcrumbTypes=[]', (type) => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: [] })
 
       expect(client._isBreadcrumbTypeEnabled(type)).toBe(false)
     })
 
-    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes only contains it', (type) => {
+    it.each(BREADCRUMB_TYPES)('returns true for "%s" when enabledBreadcrumbTypes only contains it', (type) => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: [type as BreadcrumbType] })
 
       expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
     })
 
-    it.each(breadcrumbTypes)('returns false for "%s" when enabledBreadcrumbTypes does not contain it', (type) => {
-      const enabledBreadcrumbTypes = breadcrumbTypes.filter(enabledType => enabledType !== type)
+    it.each(BREADCRUMB_TYPES)('returns false for "%s" when enabledBreadcrumbTypes does not contain it', (type) => {
+      const enabledBreadcrumbTypes = BREADCRUMB_TYPES.filter(enabledType => enabledType !== type)
 
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
