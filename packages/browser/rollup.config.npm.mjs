@@ -104,7 +104,6 @@ export default [
         plugins: [terser({
           compress: {
             pure_getters: true,
-            unsafe: true,
             unsafe_math: true,
             passes: 2
           }
