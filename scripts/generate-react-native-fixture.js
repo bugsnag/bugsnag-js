@@ -59,10 +59,10 @@ let reactNativeSafeAreaContextVersion = '4.14.0'
 
 // RN 0.77 requires react-native-screens 4.6.0, which in turn requires react navigation v7
 if (parseFloat(reactNativeVersion) >= 0.77) {
-  reactNavigationVersion = '7.0.14'
-  reactNavigationNativeStackVersion = '7.2.0'
-  reactNativeScreensVersion = '4.9.0'
-  reactNativeSafeAreaContextVersion = '5.2.0'
+  reactNavigationVersion = '7.1.14'
+  reactNavigationNativeStackVersion = '7.3.21'
+  reactNativeScreensVersion = '4.11.1'
+  reactNativeSafeAreaContextVersion = '5.5.1'
 }
 
 const REACT_NAVIGATION_PEER_DEPENDENCIES = [
@@ -110,7 +110,7 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 // Build the android fixture
 if (process.env.BUILD_ANDROID === 'true' || process.env.BUILD_ANDROID === '1') {
   // build the android app
-  androidUtils.buildAPK(fixtureDir)
+  androidUtils.buildAPK(fixtureDir, isNewArchEnabled)
 }
 
 // Build the iOS fixture
