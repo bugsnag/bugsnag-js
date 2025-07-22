@@ -101,8 +101,8 @@ steps:
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
         retry:
           automatic:
             - exit_status: "*"
@@ -133,8 +133,8 @@ steps:
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (Old Arch)'
         key: "build-react-native-navigation-android-fixture-old-arch"
@@ -155,7 +155,6 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.71"
           - "0.72"
         retry:
           automatic:
@@ -185,7 +184,6 @@ steps:
             - exit_status: "*"
               limit: 1
         matrix:
-          - "0.71"
           - "0.72"
 
       #
@@ -220,6 +218,8 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
+          RN_VERSION: "0.68"
+          RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
@@ -253,6 +253,8 @@ steps:
         env:
           SKIP_NAVIGATION_SCENARIOS: "true"
           HERMES: "true"
+          RN_VERSION: "0.69"
+          RCT_NEW_ARCH_ENABLED: "0"
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
@@ -294,8 +296,8 @@ steps:
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
 
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
@@ -337,8 +339,8 @@ steps:
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (Old Arch) end-to-end tests"
         depends_on: "build-react-native-navigation-android-fixture-old-arch"
@@ -376,7 +378,6 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.71"
           - "0.72"
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (New Arch) end-to-end tests"
@@ -415,5 +416,4 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.71"
           - "0.72"

@@ -19,3 +19,6 @@ compile_commands.json
 .cache
 .clangd
 Gemfile.lock
+# IDE files
+.idea/
+*.iml
