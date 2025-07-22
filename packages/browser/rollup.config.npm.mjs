@@ -15,7 +15,11 @@ const sharedOutput = {
   strict: false, // 'use strict' in WebKit enables Tail Call Optimization, which breaks stack trace handling
 }
 
-const treeshake = 'safest'; // Use 'safest' to ensure we don't accidentally remove necessary code, especially in UMD builds
+const treeshake = {
+  preset: 'smallest', // More aggressive than 'safest'
+  propertyReadSideEffects: false,
+  unknownGlobalSideEffects: false
+};
 
 const plugins = [
   nodeResolve({
@@ -53,7 +57,7 @@ const plugins = [
       'process.env.NODE_ENV': JSON.stringify('production'),
       __BUGSNAG_NOTIFIER_VERSION__: packageJson.version,
     },
-  }),
+  })
 ]
 
 export default [
@@ -99,9 +103,30 @@ export default [
         name: 'Bugsnag',
         plugins: [terser({
           compress: {
+            passes: 3, // Increase from 2
+            drop_console: true, // Remove console statements
+            drop_debugger: true, // Remove debugger statements
             pure_getters: true,
             unsafe_math: true,
-            passes: 2
+            // unsafe_methods: true,
+            // unsafe_proto: true,
+            // unsafe_regexp: true,
+            // unsafe_undefined: true,
+            conditionals: true,
+            dead_code: true,
+            evaluate: true,
+            if_return: true,
+            join_vars: true,
+            reduce_vars: true,
+            unused: true
+          },
+          // mangle: {
+          //   properties: {
+          //     regex: /^_/ // Mangle private properties starting with _
+          //   }
+          // },
+          format: {
+            comments: false // Remove all comments
           }
         })]
       }, 
