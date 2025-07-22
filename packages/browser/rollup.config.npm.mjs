@@ -15,11 +15,7 @@ const sharedOutput = {
   strict: false, // 'use strict' in WebKit enables Tail Call Optimization, which breaks stack trace handling
 }
 
-const treeshake = {
-  moduleSideEffects: false,
-  unknownGlobalSideEffects: false,
-  tryCatchDeoptimization: false
-}
+const treeshake = 'safest'; // Use 'safest' to ensure we don't accidentally remove necessary code, especially in UMD builds
 
 const plugins = [
   nodeResolve({
