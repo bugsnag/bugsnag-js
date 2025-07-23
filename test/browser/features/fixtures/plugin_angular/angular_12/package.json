@@ -29,7 +29,7 @@
   },
   "overrides": {
     "@angular-devkit/build-angular": {
-      "stylus": "github:stylus/stylus#0.54.8"
+      "stylus": "0.0.1-security"
     }
   }
 }
