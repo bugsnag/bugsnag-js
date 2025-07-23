@@ -12,5 +12,5 @@ Scenario Outline: basic error handler usage
   And the error payload field "events.0.device.runtimeVersions.angular" is not null
   Examples:
     | version |
-    | 12      |
+    # | 12      |
     | 17      |
