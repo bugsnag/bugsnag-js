@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bugsnag Angular Example</title>
+  <base href="/docs/plugin_angular/angular_12/dist/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <pre id="bugsnag-test-should-run">PENDING</pre>
+  <script>
+    var el = document.getElementById('bugsnag-test-should-run')
+    el.textContent = el.innerText = (
+      typeof Set !== 'undefined' &&
+      typeof Promise !== 'undefined' &&
+      typeof Array.from === 'function'
+    ) ? 'YES' : 'NO'
+  </script>
+  <app-root></app-root>
+</body>
+</html>
