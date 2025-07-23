@@ -21,4 +21,5 @@ export type {
     User,
     FeatureFlag,
     BreadcrumbType,
+    NotifiableError
 } from '@bugsnag/core'
