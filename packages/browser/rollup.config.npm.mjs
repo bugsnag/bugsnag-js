@@ -30,9 +30,7 @@ const plugins = [
     browser: true,
     preferBuiltins: false,
     // Enable tree-shaking for better dead code elimination
-    exportConditions: ['import'],
-    // More aggressive tree shaking
-    modulesOnly: true, // Only resolve ES modules for better tree shaking
+    exportConditions: ['import']
   }),
   commonjs({
     // Improve tree-shaking for CommonJS modules
@@ -67,18 +65,14 @@ const plugins = [
 ]
 
 // External dependencies to reduce bundle size
-const external = [
-  // Keep heavy dependencies external for certain builds
-  // 'error-stack-parser', 
-  // 'stack-generator',
-  // '@bugsnag/safe-json-stringify',
-  // '@bugsnag/cuid'
-]
+// For ES modules and CJS, we'll keep dependencies bundled for now
+// to avoid runtime dependency resolution issues
+const external = []
 
 export default [
   createRollupConfig({
     input: "src/index-es.ts",
-    external, // Add external dependencies
+    external, // Keep dependencies bundled for ESM
     output: [
       {
         ...sharedOutput,
@@ -92,7 +86,7 @@ export default [
   }),
   createRollupConfig({
     input: "src/index-cjs.ts",
-    external, // Add external dependencies
+    external, // Keep dependencies bundled for CJS
     output: [
       {
         ...sharedOutput,
