@@ -8,15 +8,17 @@ export {
   Event, 
   Session,
   schema,
-  // Common types and interfaces
-  type Config,
-  type BugsnagStatic,
-  type Plugin,
-  type OnErrorCallback,
-  type OnBreadcrumbCallback,
-  type OnSessionCallback,
-  type User,
-  type FeatureFlag,
-  type BreadcrumbType,
   BREADCRUMB_TYPES
+} from '@bugsnag/core'
+
+export type {
+    Config,
+    BugsnagStatic,
+    Plugin,
+    OnErrorCallback,
+    OnBreadcrumbCallback,
+    OnSessionCallback,
+    User,
+    FeatureFlag,
+    BreadcrumbType,
 } from '@bugsnag/core'
