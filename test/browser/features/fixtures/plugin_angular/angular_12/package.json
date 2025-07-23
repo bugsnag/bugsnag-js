@@ -26,5 +26,10 @@
     "@angular/cli": "~12.2.18",
     "@angular/compiler-cli": "~12.2.0",
     "typescript": "~4.3.5"
+  },
+  "overrides": {
+    "@angular-devkit/build-angular": {
+      "stylus": "github:stylus/stylus#0.54.8"
+    }
   }
 }
