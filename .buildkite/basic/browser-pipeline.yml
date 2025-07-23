@@ -84,7 +84,7 @@ steps:
           - edge_17
           - safari_10
           - ios_15
-          - android_7
+          - android_8
           # TODO: Move these to BitBar
           - chrome_43
           - chrome_72
