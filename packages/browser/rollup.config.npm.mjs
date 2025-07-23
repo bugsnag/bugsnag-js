@@ -18,7 +18,11 @@ const sharedOutput = {
 const treeshake = {
   preset: 'smallest', // More aggressive than 'safest'
   propertyReadSideEffects: false,
-  unknownGlobalSideEffects: false
+  unknownGlobalSideEffects: false,
+  // Be more aggressive with module side effects
+  moduleSideEffects: false,
+  // Enable more aggressive tree shaking for annotations
+  annotations: true
 };
 
 const plugins = [
@@ -26,7 +30,9 @@ const plugins = [
     browser: true,
     preferBuiltins: false,
     // Enable tree-shaking for better dead code elimination
-    exportConditions: ['import']
+    exportConditions: ['import'],
+    // More aggressive tree shaking
+    modulesOnly: true, // Only resolve ES modules for better tree shaking
   }),
   commonjs({
     // Improve tree-shaking for CommonJS modules
@@ -60,9 +66,19 @@ const plugins = [
   })
 ]
 
+// External dependencies to reduce bundle size
+const external = [
+  // Keep heavy dependencies external for certain builds
+  // 'error-stack-parser', 
+  // 'stack-generator',
+  // '@bugsnag/safe-json-stringify',
+  // '@bugsnag/cuid'
+]
+
 export default [
   createRollupConfig({
     input: "src/index-es.ts",
+    external, // Add external dependencies
     output: [
       {
         ...sharedOutput,
@@ -76,6 +92,7 @@ export default [
   }),
   createRollupConfig({
     input: "src/index-cjs.ts",
+    external, // Add external dependencies
     output: [
       {
         ...sharedOutput,
@@ -88,6 +105,8 @@ export default [
   }),
   createRollupConfig({
     input: "src/index-umd.ts",
+    // UMD needs all dependencies bundled for standalone use
+    external: [], // Keep dependencies bundled for UMD
     output: [
       {
         ...sharedOutput,
