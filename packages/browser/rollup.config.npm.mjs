@@ -108,10 +108,10 @@ export default [
             drop_debugger: true, // Remove debugger statements
             pure_getters: true,
             unsafe_math: true,
-            unsafe_methods: true,
-            unsafe_proto: true,
-            unsafe_regexp: true,
-            unsafe_undefined: true,
+            // unsafe_methods: true,
+            // unsafe_proto: true,
+            // unsafe_regexp: true,
+            // unsafe_undefined: true,
             conditionals: true,
             dead_code: true,
             evaluate: true,
@@ -120,11 +120,11 @@ export default [
             reduce_vars: true,
             unused: true
           },
-          mangle: {
-            properties: {
-              regex: /^_/ // Mangle private properties starting with _
-            }
-          },
+          // mangle: {
+          //   properties: {
+          //     regex: /^_/ // Mangle private properties starting with _
+          //   }
+          // },
           format: {
             comments: false // Remove all comments
           }
