@@ -68,7 +68,23 @@ const plugins = [
 // For ES modules and CJS, we'll keep dependencies bundled for now
 // to avoid runtime dependency resolution issues
 const external = [
-  // '@bugsnag/core'
+  '@bugsnag/core',
+  '@bugsnag/plugin-window-onerror',
+  '@bugsnag/plugin-window-unhandled-rejection',
+  '@bugsnag/plugin-app-duration',
+  '@bugsnag/plugin-browser-device',
+  '@bugsnag/plugin-browser-context',
+  '@bugsnag/plugin-browser-request',
+  '@bugsnag/plugin-simple-throttle',
+  '@bugsnag/plugin-console-breadcrumbs',
+  '@bugsnag/plugin-network-breadcrumbs',
+  '@bugsnag/plugin-navigation-breadcrumbs',
+  '@bugsnag/plugin-interaction-breadcrumbs',
+  '@bugsnag/plugin-inline-script-content',
+  '@bugsnag/plugin-browser-session',
+  '@bugsnag/plugin-client-ip',
+  '@bugsnag/plugin-strip-query-string',
+  '@bugsnag/delivery-xml-http-request'
 ]
 
 export default [
