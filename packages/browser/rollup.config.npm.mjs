@@ -67,7 +67,9 @@ const plugins = [
 // External dependencies to reduce bundle size
 // For ES modules and CJS, we'll keep dependencies bundled for now
 // to avoid runtime dependency resolution issues
-const external = []
+const external = [
+  // '@bugsnag/core'
+]
 
 export default [
   createRollupConfig({
@@ -121,10 +123,10 @@ export default [
             drop_debugger: true, // Remove debugger statements
             pure_getters: true,
             unsafe_math: true,
-            // unsafe_methods: true,
-            // unsafe_proto: true,
-            // unsafe_regexp: true,
-            // unsafe_undefined: true,
+            unsafe_methods: true,
+            unsafe_proto: true,
+            unsafe_regexp: true,
+            unsafe_undefined: true,
             conditionals: true,
             dead_code: true,
             evaluate: true,
@@ -133,11 +135,7 @@ export default [
             reduce_vars: true,
             unused: true
           },
-          // mangle: {
-          //   properties: {
-          //     regex: /^_/ // Mangle private properties starting with _
-          //   }
-          // },
+          mangle: true,
           format: {
             comments: false // Remove all comments
           }
