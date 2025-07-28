@@ -37,6 +37,4 @@ const plugin: Plugin<PluginConfig> = {
   }
 }
 
-// Export both typed and untyped versions for flexibility
-export const typedPlugin = plugin
-export default plugin as Plugin
+export default plugin 
