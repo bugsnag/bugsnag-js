@@ -2,7 +2,7 @@ import { Config, Plugin, Stackframe } from '@bugsnag/core'
 import normalizePath from '@bugsnag/path-normalizer'
 
 interface PluginConfig extends Config {
-  projectRoot: string
+  projectRoot?: string
 }
 
 const plugin: Plugin<PluginConfig> = {
