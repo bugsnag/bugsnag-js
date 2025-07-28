@@ -1,16 +1,19 @@
-import { Plugin } from '@bugsnag/core'
+import { Config, Plugin } from '@bugsnag/core'
 import os from 'os'
+
+export interface PluginConfig extends Config {
+  hostname: string
+}
 
 /*
  * Automatically detects Node server details ('device' in the API)
  */
-const plugin: Plugin = {
+const plugin: Plugin<PluginConfig> = {
   load: (client) => {
     const device = {
       osName: `${os.platform()} (${os.arch()})`,
       osVersion: os.release(),
       totalMemory: os.totalmem(),
-      // @ts-expect-error _config is private API
       hostname: client._config.hostname,
       runtimeVersions: { node: process.versions.node }
     }
@@ -34,4 +37,6 @@ const plugin: Plugin = {
   }
 }
 
-export default plugin
+// Export both typed and untyped versions for flexibility
+export const typedPlugin = plugin
+export default plugin as Plugin

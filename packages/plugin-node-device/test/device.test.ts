@@ -1,8 +1,8 @@
-import plugin from '../src/device'
-import { Client } from '@bugsnag/core'
+import { Client, schema as coreSchema } from '@bugsnag/core'
+import plugin, { PluginConfig } from '../src/device'
 
 const schema = {
-  ...require('@bugsnag/core').schema,
+  ...coreSchema,
   hostname: {
     defaultValue: () => 'test-machine.local',
     validate: () => true,
@@ -12,12 +12,12 @@ const schema = {
 
 describe('plugin: node device', () => {
   it('should set device = { hostname, runtimeVersions } add an onError callback which adds device time', done => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin] }, schema)
+    const client = new Client<PluginConfig>({ apiKey: 'API_KEY_YEAH', hostname: 'test-machine.local', plugins: [plugin]}, schema)
 
     expect(client._cbs.sp.length).toBe(1)
     expect(client._cbs.e.length).toBe(1)
 
-    client._setDelivery(client => ({
+    client._setDelivery(() => ({
       sendEvent: (payload) => {
         expect(payload.events[0].device).toBeDefined()
         expect(payload.events[0].device.time instanceof Date).toBe(true)
