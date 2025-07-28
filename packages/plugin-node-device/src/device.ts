@@ -1,14 +1,16 @@
-const os = require('os')
+import { Plugin } from '@bugsnag/core'
+import os from 'os'
 
 /*
  * Automatically detects Node server details ('device' in the API)
  */
-module.exports = {
+const plugin: Plugin = {
   load: (client) => {
     const device = {
       osName: `${os.platform()} (${os.arch()})`,
       osVersion: os.release(),
       totalMemory: os.totalmem(),
+      // @ts-expect-error _config is private API
       hostname: client._config.hostname,
       runtimeVersions: { node: process.versions.node }
     }
@@ -31,3 +33,5 @@ module.exports = {
     }, true)
   }
 }
+
+export default plugin
