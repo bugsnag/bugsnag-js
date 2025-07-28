@@ -155,7 +155,7 @@ steps:
             service-ports: true
             use-aliases: true
             command:
-              - "--https"
+#              - "--https"
               - "--farm=bb"
               - "--device={{matrix}}"
               - "--browser=Chrome"
@@ -186,7 +186,7 @@ steps:
             service-ports: true
             use-aliases: true
             command:
-              - "--https"
+#              - "--https"
               - "--farm=bb"
               - "--device={{matrix}}"
               - "--browser=Chrome"
