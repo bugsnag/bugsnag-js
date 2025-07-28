@@ -2,7 +2,7 @@ import { Config, Plugin } from '@bugsnag/core'
 import os from 'os'
 
 export interface PluginConfig extends Config {
-  hostname: string
+  hostname?: string
 }
 
 /*
