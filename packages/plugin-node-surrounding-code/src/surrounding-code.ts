@@ -1,6 +1,6 @@
 import { Config, Plugin, Stackframe } from '@bugsnag/core'
 import { createReadStream } from 'fs'
-import { Writable } from 'stream'
+import { Writable, WritableOptions } from 'stream'
 import byline from 'byline'
 import path from 'path'
 import pump from 'pump'
@@ -18,7 +18,7 @@ const plugin: Plugin<PluginConfig> = {
   load: client => {
     if (!client._config.sendCode) return
 
-    const loadSurroundingCode = (stackframe: Stackframe, cache) => new Promise((resolve, reject) => {
+    const loadSurroundingCode = (stackframe: Stackframe, cache: Record<string, any>) => new Promise((resolve, reject) => {
       try {
         if (!stackframe.lineNumber || !stackframe.file) return resolve(stackframe)
         const file = path.resolve(client._config.projectRoot ?? '', stackframe.file)
@@ -37,7 +37,7 @@ const plugin: Plugin<PluginConfig> = {
       }
     })
 
-    client.addOnError(event => new Promise((resolve, reject) => {
+    client.addOnError(event => new Promise((resolve: (value?: any) => void, reject: (reason?: any) => void) => {
       const cache = Object.create(null)
       const allFrames: Stackframe[] = event.errors.reduce((accum: Stackframe[], er) => accum.concat(er.stacktrace), [])
       pMapSeries(allFrames.map(stackframe => () => loadSurroundingCode(stackframe, cache)))
@@ -54,7 +54,7 @@ const plugin: Plugin<PluginConfig> = {
   }
 }
 
-const getSurroundingCode = (file, lineNumber, cb) => {
+const getSurroundingCode = (file: string, lineNumber: number, cb: (err: Error | null, code?: Record<string, string>) => void) => {
   const start = lineNumber - SURROUNDING_LINES
   const end = lineNumber + SURROUNDING_LINES
 
@@ -91,8 +91,8 @@ class CodeRange extends Writable {
   private _end: number
   private _n: number
   private _code: Record<string, string>
-  
-  constructor (opts) {
+
+  constructor (opts: Pick<WritableOptions, "decodeStrings" | "highWaterMark" | "objectMode" | "signal"> & { start: number, end: number }) {
     super({ ...opts, decodeStrings: false })
     this._start = opts.start
     this._end = opts.end
@@ -100,7 +100,7 @@ class CodeRange extends Writable {
     this._code = {}
   }
 
-  _write (chunk, enc, cb) {
+  _write (chunk: string, enc: any, cb: (err?: Error | null) => void): void {
     this._n++
     if (this._n < this._start) return cb(null)
     if (this._n <= this._end) {
@@ -116,9 +116,9 @@ class CodeRange extends Writable {
   }
 }
 
-const pMapSeries = (ps) => {
+const pMapSeries = (ps: Array<() => Promise<any>>) => {
   return new Promise((resolve, reject) => {
-    const res = []
+    const res: any[] = []
     ps
       .reduce((accum, p) => {
         return accum.then(r => {
