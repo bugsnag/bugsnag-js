@@ -129,7 +129,6 @@ const pMapSeries = (ps: Array<() => Promise<Stackframe>>) => {
       }, Promise.resolve({} as Stackframe))
       .then((r: Stackframe) => { res.push(r) })
       .then(() => { resolve(res.slice(1)) })
-      // .catch(reject)
   })
 }
 
