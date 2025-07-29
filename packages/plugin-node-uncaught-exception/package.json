@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/plugin-node-uncaught-exception",
   "version": "8.4.0",
-  "main": "uncaught-exception.js",
+  "main": "dist/uncaught-exception.js",
+  "types": "dist/types/uncaught-exception.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/uncaught-exception.d.ts",
+      "default": "./dist/uncaught-exception.js",
+      "import": "./dist/uncaught-exception.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to capture and report uncaught exceptions",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,15 +20,21 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
-  "scripts": {},
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.4.0"
+    "@bugsnag/core": "^8.4.0",
+    "@types/node": "^18.19.121"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*",
+    "test:types": "tsc -p tsconfig.json"
   }
 }
