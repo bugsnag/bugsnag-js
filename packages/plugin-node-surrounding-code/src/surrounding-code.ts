@@ -1,20 +1,27 @@
+import { Config, Plugin, Stackframe } from '@bugsnag/core'
+import { createReadStream } from 'fs'
+import { Writable } from 'stream'
+import byline from 'byline'
+import path from 'path'
+import pump from 'pump'
+
+
+interface PluginConfig extends Config {
+  sendCode?: boolean;
+  projectRoot?: string;
+}
+
 const SURROUNDING_LINES = 3
 const MAX_LINE_LENGTH = 200
 
-const { createReadStream } = require('fs')
-const { Writable } = require('stream')
-const pump = require('pump')
-const byline = require('byline')
-const path = require('path')
-
-module.exports = {
+const plugin: Plugin<PluginConfig> = {
   load: client => {
     if (!client._config.sendCode) return
 
-    const loadSurroundingCode = (stackframe, cache) => new Promise((resolve, reject) => {
+    const loadSurroundingCode = (stackframe: Stackframe, cache) => new Promise((resolve, reject) => {
       try {
         if (!stackframe.lineNumber || !stackframe.file) return resolve(stackframe)
-        const file = path.resolve(client._config.projectRoot, stackframe.file)
+        const file = path.resolve(client._config.projectRoot ?? '', stackframe.file)
         const cacheKey = `${file}@${stackframe.lineNumber}`
         if (cacheKey in cache) {
           stackframe.code = cache[cacheKey]
@@ -32,7 +39,7 @@ module.exports = {
 
     client.addOnError(event => new Promise((resolve, reject) => {
       const cache = Object.create(null)
-      const allFrames = event.errors.reduce((accum, er) => accum.concat(er.stacktrace), [])
+      const allFrames: Stackframe[] = event.errors.reduce((accum: Stackframe[], er) => accum.concat(er.stacktrace), [])
       pMapSeries(allFrames.map(stackframe => () => loadSurroundingCode(stackframe, cache)))
         .then(resolve)
         .catch(reject)
@@ -80,6 +87,11 @@ const getSurroundingCode = (file, lineNumber, cb) => {
 //   '15': '}'
 // }
 class CodeRange extends Writable {
+  private _start: number
+  private _end: number
+  private _n: number
+  private _code: Record<string, string>
+  
   constructor (opts) {
     super({ ...opts, decodeStrings: false })
     this._start = opts.start
@@ -118,3 +130,5 @@ const pMapSeries = (ps) => {
       .then(() => { resolve(res.slice(1)) })
   })
 }
+
+export default plugin

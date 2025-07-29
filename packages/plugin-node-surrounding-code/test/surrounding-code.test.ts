@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from 'fs'
-import plugin from '../'
+import plugin from '../src/surrounding-code'
 import { join } from 'path'
 import { Client, Event, schema as defaultSchema } from '@bugsnag/core'
 
