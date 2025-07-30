@@ -31,8 +31,7 @@
     "pump": "^3.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.4.0",
-    "@types/node": "^18.19.121"
+    "@bugsnag/core": "^8.4.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
