@@ -28,8 +28,7 @@
     "@bugsnag/path-normalizer": "^8.4.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.4.0",
-    "@types/node": "^18.19.74"
+    "@bugsnag/core": "^8.4.0"
   },
     "scripts": {
     "build": "npm run build:npm",
