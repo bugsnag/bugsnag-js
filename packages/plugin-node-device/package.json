@@ -25,8 +25,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.4.0",
-    "@types/node": "^18.19.74"
+    "@bugsnag/core": "^8.4.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
