@@ -19,6 +19,7 @@ BUGSNAG_PACKAGES = [
   "delivery-node",
   "in-flight",
   "js",
+  "json-payload",
   "node",
   "path-normalizer",
   "plugin-app-duration",

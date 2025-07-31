@@ -4,6 +4,7 @@
   "main": "dist/index-cjs.cjs",
   "types": "dist/types/index-es.d.ts",
   "browser": "./dist/bugsnag.js",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/types/index-es.d.ts",
@@ -33,7 +34,6 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-x-domain-request": "^8.4.0",
     "@bugsnag/delivery-xml-http-request": "^8.4.0",
     "@bugsnag/plugin-app-duration": "^8.4.0",
     "@bugsnag/plugin-browser-context": "^8.4.0",
