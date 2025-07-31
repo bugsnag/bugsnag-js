@@ -148,6 +148,8 @@ steps:
           - ANDROID_7
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
+        env:
+          HOST: "local" # Required for BitBar devices"
         plugins:
           docker-compose#v4.12.0:
             pull: browser-maze-runner-bb
@@ -155,7 +157,7 @@ steps:
             service-ports: true
             use-aliases: true
             command:
-#              - "--https"
+              - "--https"
               - "--farm=bb"
               - "--device={{matrix}}"
               - "--browser=Chrome"
@@ -179,6 +181,8 @@ steps:
           - IOS_18
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
+        env:
+          HOST: "local" # Required for BitBar devices"
         plugins:
           docker-compose#v4.12.0:
             pull: browser-maze-runner-bb
@@ -186,10 +190,10 @@ steps:
             service-ports: true
             use-aliases: true
             command:
-#              - "--https"
+              - "--https"
               - "--farm=bb"
               - "--device={{matrix}}"
-              - "--browser=Chrome"
+              - "--browser=Safari"
               - "--no-tunnel"
               - "--aws-public-ip"
           artifacts#v1.5.0:

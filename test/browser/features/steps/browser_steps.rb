@@ -22,11 +22,12 @@ end
 
 When('the test should run in this browser') do
   wait = Selenium::WebDriver::Wait.new(timeout: 10)
+  $logger.info Maze.driver.page_source
   wait.until {
-    Maze.driver.find_element(id: 'bugsnag-test-should-run') &&
-        Maze.driver.find_element(id: 'bugsnag-test-should-run').text != 'PENDING'
+    Maze.driver.find_element(:tag_name => 'pre') &&
+        Maze.driver.find_element(:tag_name => 'pre').text != 'PENDING'
   }
-  if Maze.driver.find_element(id: 'bugsnag-test-should-run').text == 'NO'
+  if Maze.driver.find_element(:tag_name => 'pre').text == 'NO'
     Maze::Server.reset!
     skip_this_scenario
   end
