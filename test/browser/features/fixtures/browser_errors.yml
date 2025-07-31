@@ -103,7 +103,7 @@ safari_16:
     lineNumber: 18
     columnNumber: 25
 
-ios_10:
+ios_12_safari:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: "Can't find variable: foo"
@@ -129,7 +129,7 @@ ios_10:
     lineNumber: 18
     columnNumber: 25
 
-ios_11:
+ios_18_safari:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: "Can't find variable: foo"
@@ -155,85 +155,7 @@ ios_11:
     lineNumber: 18
     columnNumber: 25
 
-ios_15:
-  handled:
-    errorClass: 'ReferenceError'
-    errorMessage: "Can't find variable: foo"
-  unhandled_syntax:
-    errorClass: 'SyntaxError'
-    errorMessage: "Unexpected token '!'. Parse error."
-    lineNumber: 18
-    columnNumber: 0
-    file: '/unhandled/script/a.html'
-  unhandled_thrown:
-    errorClass: 'Error'
-    errorMessage: "bad things"
-    lineNumber: 18
-    columnNumber: 22
-  unhandled_undefined_function:
-    errorClass: 'ReferenceError'
-    errorMessage: "Can't find variable: nevergoingtoexist_notinamillionyears"
-    lineNumber: 18
-    columnNumber: 43
-  unhandled_malformed_uri:
-    errorClass: 'URIError'
-    errorMessage: URI error
-    lineNumber: 18
-    columnNumber: 25
-
-android_4:
-  handled:
-    errorClass: 'ReferenceError'
-    errorMessage: 'foo is not defined'
-  unhandled_syntax:
-    errorClass: 'SyntaxError'
-    errorMessage: "Unexpected token '!'"
-    lineNumber: 18
-    columnNumber: 13
-    file: '/unhandled/script/a.html'
-  unhandled_thrown:
-    errorClass: 'Error'
-    errorMessage: "bad things"
-    lineNumber: 18
-    columnNumber: 13
-  unhandled_undefined_function:
-    errorClass: 'ReferenceError'
-    errorMessage: nevergoingtoexist_notinamillionyears is not defined
-    lineNumber: 18
-    columnNumber: 7
-  unhandled_malformed_uri:
-    errorClass: 'URIError'
-    errorMessage: URI malformed
-    lineNumber: 18
-    columnNumber: 7
-
-android_6:
-  handled:
-    errorClass: 'ReferenceError'
-    errorMessage: 'foo is not defined'
-  unhandled_syntax:
-    errorClass: 'SyntaxError'
-    errorMessage: "Unexpected token '!'"
-    lineNumber: 18
-    columnNumber: 13
-    file: '/unhandled/script/a.html'
-  unhandled_thrown:
-    errorClass: 'Error'
-    errorMessage: "bad things"
-    lineNumber: 18
-    columnNumber: 13
-  unhandled_undefined_function:
-    errorClass: 'ReferenceError'
-    errorMessage: nevergoingtoexist_notinamillionyears is not defined
-    lineNumber: 18
-    columnNumber: 7
-  unhandled_malformed_uri:
-    errorClass: 'URIError'
-    errorMessage: URI malformed
-    lineNumber: 18
-    columnNumber: 7
-
-android_7:
+android_7_chrome:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: 'foo is not defined'

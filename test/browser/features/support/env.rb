@@ -29,11 +29,19 @@ def get_test_url(path)
   uri.to_s
 end
 
-def get_error_message id
-  browser = Maze.config.browser
-  raise "The browser '#{browser}' does not exist in 'browser_errors.yml'" unless ERRORS.has_key?(browser)
+# Cater for browser testing with Appium on BitBar
+def browser_name
+  if Maze.config.device.nil?
+    Maze.config.browser
+  else
+    "#{Maze.config.device.device}_#{Maze.config.device.browser}".downcase
+  end
+end
 
-  ERRORS[browser][id]
+def get_error_message id
+  raise "The browser '#{browser}' does not exist in 'browser_errors.yml'" unless ERRORS.has_key?(browser_name)
+
+  ERRORS[browser_name][id]
 end
 
 Before('@skip_if_local_storage_is_unavailable') do |scenario|
@@ -43,10 +51,11 @@ end
 ERRORS = YAML::load_file('features/fixtures/browser_errors.yml')
 
 ERRORS.keys.each do |browser|
-  Before("@skip_#{browser}") do |scenario|
+  Before("@skip_#{browser}") do |_scenario|
     skip_this_scenario if Maze.config.browser == browser
   end
 end
+
 BeforeAll do
   Maze.config.receive_no_requests_wait = 15
   Maze.config.enforce_bugsnag_integrity = false

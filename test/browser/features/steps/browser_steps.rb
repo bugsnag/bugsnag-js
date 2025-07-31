@@ -35,12 +35,12 @@ end
 When('I let the test page run for up to {int} seconds') do |n|
   wait = Selenium::WebDriver::Wait.new(timeout: n)
   wait.until {
-    Maze.driver.find_element(id: 'bugsnag-test-state') &&
+    Maze.driver.find_element(:tag_name => 'pre') &&
         (
-        Maze.driver.find_element(id: 'bugsnag-test-state').text == 'DONE' ||
-            Maze.driver.find_element(id: 'bugsnag-test-state').text == 'ERROR'
+        Maze.driver.find_element(:tag_name => 'pre').text == 'DONE' ||
+            Maze.driver.find_element(:tag_name => 'pre').text == 'ERROR'
         )
   }
-  txt = Maze.driver.find_element(id: 'bugsnag-test-state').text
+  txt = Maze.driver.find_element(:tag_name => 'pre').text
   Maze.check.equal('DONE', txt, "Expected #bugsnag-test-state text to be 'DONE'. It was '#{txt}'.")
 end
