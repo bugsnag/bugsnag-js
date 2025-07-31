@@ -20,9 +20,7 @@ const treeshake = {
   propertyReadSideEffects: false,
   unknownGlobalSideEffects: false,
   // Be more aggressive with module side effects
-  moduleSideEffects: false,
-  // Enable more aggressive tree shaking for annotations
-  annotations: true
+  moduleSideEffects: false
 };
 
 const plugins = [
