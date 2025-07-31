@@ -22,7 +22,6 @@ end
 
 When('the test should run in this browser') do
   wait = Selenium::WebDriver::Wait.new(timeout: 10)
-  $logger.info Maze.driver.page_source
   wait.until {
     Maze.driver.find_element(:tag_name => 'pre') &&
         Maze.driver.find_element(:tag_name => 'pre').text != 'PENDING'

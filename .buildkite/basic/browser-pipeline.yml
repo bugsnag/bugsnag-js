@@ -148,8 +148,6 @@ steps:
           - ANDROID_7
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
-        env:
-          HOST: "local" # Required for BitBar devices"
         plugins:
           docker-compose#v4.12.0:
             pull: browser-maze-runner-bb
@@ -181,8 +179,6 @@ steps:
           - IOS_18
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
-        env:
-          HOST: "local" # Required for BitBar devices"
         plugins:
           docker-compose#v4.12.0:
             pull: browser-maze-runner-bb
