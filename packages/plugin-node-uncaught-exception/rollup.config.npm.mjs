@@ -2,5 +2,5 @@ import createRollupConfig from "../../.rollup/index.mjs"
 
 export default createRollupConfig({
     input: "src/uncaught-exception.ts",
-    external: [/node_modules/],
+    external: ['async_hooks'],
 })
