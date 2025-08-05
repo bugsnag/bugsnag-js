@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/plugin-node-device",
   "version": "8.4.0",
-  "main": "device.js",
+  "main": "dist/device.js",
+  "types": "dist/types/device.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/device.d.ts",
+      "default": "./dist/device.js",
+      "import": "./dist/device.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to set device info in node",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,15 +20,21 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
-  "scripts": {},
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.4.0"
+    "@bugsnag/core": "^8.4.0",
+    "@types/node": "^18.19.74"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*",
+    "test:types": "tsc -p tsconfig.json"
   }
 }
