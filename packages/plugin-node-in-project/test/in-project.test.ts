@@ -1,4 +1,4 @@
-import plugin from '../'
+import plugin from '../src/in-project'
 import { join } from 'path'
 import { Client, Event, schema } from '@bugsnag/core'
 
