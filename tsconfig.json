@@ -31,7 +31,6 @@
     "packages/plugin-strip-project-root",
     "packages/plugin-interaction-breadcrumbs",
     "packages/plugin-intercept",
-    "packages/plugin-node-unhandled-rejection",
     "packages/plugin-node-surrounding-code",
     "packages/browser"
   ],
