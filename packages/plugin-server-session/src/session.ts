@@ -1,9 +1,21 @@
-import { Plugin, Client, Config, intRange, runSyncCallbacks } from '@bugsnag/core'
+import { App, Client, Config, Device, Notifier, Plugin, Session, intRange, runSyncCallbacks } from '@bugsnag/core'
 import SessionTracker from './tracker'
 import Backoff from 'backo'
 
 interface PluginConfig extends Config {
   sessionSummaryInterval?: number
+}
+
+interface SessionCount {
+  startedAt: string
+  sessionsStarted: number
+}
+
+interface SessionPayload extends Session{
+  notifier: Notifier
+  device: Device
+  app: App
+  sessionCounts: SessionCount[]
 }
 
 const plugin: Plugin<PluginConfig> = {
@@ -50,22 +62,6 @@ const plugin: Plugin<PluginConfig> = {
   }
 }
 
-interface SessionCount {
-  startedAt: string
-  sessionsStarted: number
-}
-
-interface SessionPayload {
-  notifier: any
-  device: Record<string, unknown>
-  app: {
-    releaseStage: string
-    version: string
-    type: string
-  }
-  sessionCounts: SessionCount[]
-}
-
 const sendSessionSummary = (client: Client) => (sessionCounts: SessionCount[]): void => {
   // exit early if the current releaseStage is not enabled
   if (client._config.enabledReleaseStages !== null && !client._config.enabledReleaseStages.includes(client._config.releaseStage)) {
@@ -104,7 +100,7 @@ const sendSessionSummary = (client: Client) => (sessionCounts: SessionCount[]): 
       sessionCounts
     }
 
-    const ignore = runSyncCallbacks(client._cbs.sp, payload as any, 'onSessionPayload', client._logger)
+    const ignore = runSyncCallbacks(client._cbs.sp, payload as SessionPayload, 'onSessionPayload', client._logger)
     if (ignore) {
       client._logger.debug('Session not sent due to onSessionPayload callback')
       return cb(null)
