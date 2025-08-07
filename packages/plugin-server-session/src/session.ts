@@ -8,7 +8,7 @@ interface PluginConfig extends Config {
 
 const plugin: Plugin<PluginConfig> = {
   load: (client) => {
-    const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval ?? 0)
+    const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval ?? undefined)
     sessionTracker.on('summary', sendSessionSummary(client))
     sessionTracker.start()
     client._sessionDelegate = {

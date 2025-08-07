@@ -6,9 +6,9 @@ const DEFAULT_SUMMARY_INTERVAL = 10 * 1000
 class SessionTracker extends EventEmitter {
   private _sessions: Map<string, number>
   public _interval: NodeJS.Timeout | null
-  private _intervalLength: number
+  private _intervalLength?: number
 
-  constructor (intervalLength: number) {
+  constructor (intervalLength?: number) {
     super()
     this._sessions = new Map()
     this._interval = null
