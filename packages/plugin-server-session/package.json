@@ -25,7 +25,6 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@types/backo2": "^1.0.4",
     "backo": "^1.1.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import { Plugin, Client, Config, intRange, runSyncCallbacks } from '@bugsnag/core'
 import SessionTracker from './tracker'
-import Backoff from 'backo2'
+import Backoff from 'backo'
 
 interface PluginConfig extends Config {
   sessionSummaryInterval?: number
