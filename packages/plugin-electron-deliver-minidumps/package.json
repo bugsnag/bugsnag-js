@@ -19,7 +19,7 @@
     "send-minidump.js"
   ],
   "dependencies": {
-    "form-data": "^4.0.0"
+    "form-data": "^4.0.2"
   },
   "devDependencies": {
     "@bugsnag/core": "^8.4.0",

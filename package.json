@@ -53,7 +53,7 @@
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-standard": "^4.0.1",
     "exorcist": "^2.0.0",
-    "form-data": "^2.3.3",
+    "form-data": "^4.0.4",
     "formidable": "^1.2.2",
     "glob": "^7.1.6",
     "jest": "^26.4.2",
@@ -99,6 +99,9 @@
     "test:electron": "xvfb-maybe --auto-servernum -- cucumber-js test/electron/features --retry 3 --retry-tag-filter @flaky"
   },
   "overrides": {
+    "@jest-runner/electron": {
+      "form-data": "^3.0.3"
+    },
     "@types/babel__traverse": "7.17.1",
     "@types/express-serve-static-core": "4.17.28",
     "@types/prettier": "2.6.0",
