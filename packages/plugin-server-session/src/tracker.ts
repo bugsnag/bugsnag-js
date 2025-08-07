@@ -1,8 +1,14 @@
-const DEFAULT_SUMMARY_INTERVAL = 10 * 1000
-const Emitter = require('events').EventEmitter
+import { Session } from '@bugsnag/core'
+import EventEmitter from 'events'
 
-module.exports = class SessionTracker extends Emitter {
-  constructor (intervalLength) {
+const DEFAULT_SUMMARY_INTERVAL = 10 * 1000
+
+class SessionTracker extends EventEmitter {
+  private _sessions: Map<string, number>
+  public _interval: NodeJS.Timeout | null
+  private _intervalLength: number
+
+  constructor (intervalLength: number) {
     super()
     this._sessions = new Map()
     this._interval = null
@@ -18,11 +24,13 @@ module.exports = class SessionTracker extends Emitter {
   }
 
   stop () {
-    clearInterval(this._interval)
+    if (this._interval !== null) {
+      clearInterval(this._interval)
+    }
     this._interval = null
   }
 
-  track (session) {
+  track (session: Session) {
     const key = dateToMsKey(session.startedAt)
     const cur = this._sessions.get(key)
     this._sessions.set(key, typeof cur === 'undefined' ? 1 : cur + 1)
@@ -30,7 +38,7 @@ module.exports = class SessionTracker extends Emitter {
   }
 
   _summarize () {
-    const summary = []
+    const summary: Array<{ startedAt: string, sessionsStarted: number }> = []
     this._sessions.forEach((val, key) => {
       summary.push({ startedAt: key, sessionsStarted: val })
       this._sessions.delete(key)
@@ -40,9 +48,11 @@ module.exports = class SessionTracker extends Emitter {
   }
 }
 
-const dateToMsKey = (d) => {
+const dateToMsKey = (d: Date) => {
   const dk = new Date(d)
   dk.setSeconds(0)
   dk.setMilliseconds(0)
   return dk.toISOString()
 }
+
+export default SessionTracker

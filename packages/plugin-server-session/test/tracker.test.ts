@@ -1,6 +1,6 @@
-import Tracker from '../tracker'
 import { Session } from '@bugsnag/core'
 import timekeeper from 'timekeeper'
+import Tracker from '../src/tracker'
 
 describe('session tracker', () => {
   it('should track sessions and summarize per minute', done => {
