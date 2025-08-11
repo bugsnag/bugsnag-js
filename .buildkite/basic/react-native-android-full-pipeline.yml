@@ -16,7 +16,6 @@ steps:
               build: android-builder-base-java-11
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
               cache-from:  android-builder-base-java-11:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-11
-          - docker-compose#v4.12.0:
               push: android-builder-base-java-11:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-11
         retry:
           automatic:
@@ -32,7 +31,6 @@ steps:
               build: react-native-android-builder-java-11-node-16
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
               cache-from:  react-native-android-builder-java-11-node-16:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-          - docker-compose#v4.12.0:
               push: react-native-android-builder-java-11-node-16:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
         retry:
           automatic:
@@ -44,7 +42,7 @@ steps:
       #
       - label: ":android: Build RN 0.68 Hermes apk"
         key: "rn-0-68-hermes-apk"
-        depends_on: 
+        depends_on:
           - "android-builder-image-java-11-node-16"
           - "publish-js"
         timeout_in_minutes: 20
@@ -63,7 +61,7 @@ steps:
 
       - label: ":android: Build RN 0.69 apk"
         key: "rn-0-69-apk"
-        depends_on: 
+        depends_on:
           - "android-builder-image-java-11-node-16"
           - "publish-js"
         timeout_in_minutes: 20
