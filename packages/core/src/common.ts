@@ -146,7 +146,7 @@ export interface FeatureFlag {
 }
 
 export interface LoggerConfig {
-  debug: (msg: any) => void
+  debug: (msg: any, err?: unknown) => void
   info: (msg: any) => void
   warn: (msg: any) => void
   error: (msg: any, err?: unknown) => void

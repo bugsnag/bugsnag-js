@@ -84,7 +84,7 @@ const sendSessionSummary = (client: Client) => (sessionCounts: SessionCount[]): 
       client._logger.error('Session delivery failed, max retries exceeded', err)
       return
     }
-    client._logger.debug('Session delivery failed, retry #' + (backoff.attempts + 1) + '/' + maxAttempts + (err ? ': ' + err.toString() : ''))
+    client._logger.debug('Session delivery failed, retry #' + (backoff.attempts + 1) + '/' + maxAttempts, err)
     setTimeout(() => req(handleRes), backoff.duration())
   }
 
