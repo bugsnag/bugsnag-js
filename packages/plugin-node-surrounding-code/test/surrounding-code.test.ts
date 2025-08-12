@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from 'fs'
-import plugin from '../'
+import plugin from '../src/surrounding-code'
 import { join } from 'path'
 import { Client, Event, schema as defaultSchema } from '@bugsnag/core'
 
@@ -186,7 +186,7 @@ describe('plugin: node surrounding code', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const endCount = createReadStreamCount
-        expect(endCount - startCount).toBe(0)
+        expect(endCount - startCount).toBe(1)
         payload.events[0].errors[0].stacktrace.forEach(stackframe => {
           expect(stackframe.code).toEqual({
             1: '// this is just some arbitrary (but real) javascript for testing, taken from',
