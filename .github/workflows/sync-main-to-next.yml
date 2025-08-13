@@ -126,7 +126,7 @@ jobs:
                     owner,
                     repo,
                     pull_number: pr.data.number,
-                    team_reviewers: ["bugsnag-dev"]
+                    team_reviewers: ["bugsnag-js-developers"]
                   });
                 } catch (e) {
                   console.log('Reviewer request skipped or failed:', e.message);
