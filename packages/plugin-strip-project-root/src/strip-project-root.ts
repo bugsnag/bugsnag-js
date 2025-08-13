@@ -1,4 +1,4 @@
-import { Config, Plugin, Stackframe } from '@bugsnag/core'
+import type { Config, Plugin, Stackframe } from '@bugsnag/core'
 import normalizePath from '@bugsnag/path-normalizer'
 
 interface PluginConfig extends Config {
