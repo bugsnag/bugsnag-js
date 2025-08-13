@@ -35,7 +35,7 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
-            const syncBranchName = `sync-main-to-next-${Date.now()}`;
+            const syncBranchName = `sync-main-to-next-${context.runId}`;
 
             try {
               // Get the latest commit from main branch
