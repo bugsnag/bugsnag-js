@@ -1,10 +1,26 @@
-const { intRange, runSyncCallbacks } = require('@bugsnag/core')
-const SessionTracker = require('./tracker')
-const Backoff = require('backo')
+import { App, Client, Config, Device, Notifier, Plugin, Session, intRange, runSyncCallbacks } from '@bugsnag/core'
+import SessionTracker from './tracker'
+import Backoff from 'backo'
 
-module.exports = {
+interface PluginConfig extends Config {
+  sessionSummaryInterval?: number
+}
+
+interface SessionCount {
+  startedAt: string
+  sessionsStarted: number
+}
+
+interface SessionPayload extends Session{
+  notifier: Notifier
+  device: Device
+  app: App
+  sessionCounts: SessionCount[]
+}
+
+const plugin: Plugin<PluginConfig> = {
   load: (client) => {
-    const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval)
+    const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval ?? undefined)
     sessionTracker.on('summary', sendSessionSummary(client))
     sessionTracker.start()
     client._sessionDelegate = {
@@ -31,8 +47,9 @@ module.exports = {
           return client
         }
 
-        // Otherwise start a new session
-        return client.startSession()
+        // Otherwise start a new session and ensure a Client is always returned
+        const newClient = client.startSession()
+        return newClient || client
       }
     }
   },
@@ -45,7 +62,7 @@ module.exports = {
   }
 }
 
-const sendSessionSummary = client => sessionCounts => {
+const sendSessionSummary = (client: Client) => (sessionCounts: SessionCount[]): void => {
   // exit early if the current releaseStage is not enabled
   if (client._config.enabledReleaseStages !== null && !client._config.enabledReleaseStages.includes(client._config.releaseStage)) {
     client._logger.warn('Session not sent due to releaseStage/enabledReleaseStages configuration')
@@ -58,7 +75,7 @@ const sendSessionSummary = client => sessionCounts => {
   const maxAttempts = 10
   req(handleRes)
 
-  function handleRes (err) {
+  function handleRes (err?: Error | null): void {
     if (!err) {
       const sessionCount = sessionCounts.reduce((accum, s) => accum + s.sessionsStarted, 0)
       return client._logger.debug(`${sessionCount} session(s) reported`)
@@ -67,11 +84,11 @@ const sendSessionSummary = client => sessionCounts => {
       client._logger.error('Session delivery failed, max retries exceeded', err)
       return
     }
-    client._logger.debug('Session delivery failed, retry #' + (backoff.attempts + 1) + '/' + maxAttempts, err)
+    client._logger.error('Session delivery failed, retry #' + (backoff.attempts + 1) + '/' + maxAttempts, err)
     setTimeout(() => req(handleRes), backoff.duration())
   }
 
-  function req (cb) {
+  function req (cb: (err?: Error | null) => void) {
     const payload = {
       notifier: client._notifier,
       device: {},
@@ -83,7 +100,7 @@ const sendSessionSummary = client => sessionCounts => {
       sessionCounts
     }
 
-    const ignore = runSyncCallbacks(client._cbs.sp, payload, 'onSessionPayload', client._logger)
+    const ignore = runSyncCallbacks(client._cbs.sp, payload as SessionPayload, 'onSessionPayload', client._logger)
     if (ignore) {
       client._logger.debug('Session not sent due to onSessionPayload callback')
       return cb(null)
@@ -92,3 +109,5 @@ const sendSessionSummary = client => sessionCounts => {
     client._delivery.sendSession(payload, cb)
   }
 }
+
+export default plugin
