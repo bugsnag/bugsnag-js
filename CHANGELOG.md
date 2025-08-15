@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- (electron) Remove usage of deprecated `session.setPreloads` API [#2524](https://github.com/bugsnag/bugsnag-js/pull/2524)
+
+### Fixed
+
+- (plugin-electron-ipc) Fixed exports in `package.json` to improve TypeScript compatibility [#2524](https://github.com/bugsnag/bugsnag-js/pull/2524)
+
 ## [8.4.0] - 2025-06-18
 
 ### Added
