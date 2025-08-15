@@ -29,18 +29,22 @@ module.exports = {
     ipcMain.handle(CHANNEL_RENDERER_TO_MAIN, bugsnagIpcMain.handle)
     ipcMain.on(CHANNEL_RENDERER_TO_MAIN_SYNC, bugsnagIpcMain.handleSync)
 
-    setPreload()
+    setPreload(client)
   }
 }
 
-const setPreload = () => {
+const setPreload = (client) => {
   const bugsnagPreloadPath = resolve(__dirname, 'dist', 'preload.bundle.js')
 
   // for every session created, insert Bugsnag's preload script
   app.on('session-created', session => {
-    session.registerPreloadScript({
-      type: 'frame',
-      filePath: bugsnagPreloadPath
-    })
+    try {
+      session.registerPreloadScript({
+        type: 'frame',
+        filePath: bugsnagPreloadPath
+      })
+    } catch (err) {
+      client._logger.error('Failed to register Bugsnag preload script:', err)
+    }
   })
 }
