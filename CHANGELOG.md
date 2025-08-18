@@ -4,7 +4,7 @@
 
 ### Changed
 
-- (electron) Remove usage of deprecated `session.setPreloads` API [#2524](https://github.com/bugsnag/bugsnag-js/pull/2524)
+- (electron) Prefer `registerPreloadScript` over `session.setPreloads` API when available [#2524](https://github.com/bugsnag/bugsnag-js/pull/2524)
 
 ### Fixed
 
