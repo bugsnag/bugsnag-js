@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . ./
 
-RUN npm install --no-package-lock --no-save bugsnag-node*.tgz bugsnag-plugin-hono*.tgz
+RUN npm install --no-package-lock --no-save bugsnag-*.tgz
 
 ENV NODE_ENV production
 CMD node scenarios/app
