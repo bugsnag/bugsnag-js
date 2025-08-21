@@ -74,7 +74,7 @@ const REACT_NAVIGATION_PEER_DEPENDENCIES = [
 ]
 
 const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
-  `react-native-navigation@7.41.0` // Issue with 7.42.0
+  'react-native-navigation@7.41.0' // Issue with 7.42.0
 ]
 
 // install and build the packages
