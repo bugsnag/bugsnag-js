@@ -96,6 +96,8 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 
   replaceGeneratedFixtureFiles()
 
+  installFixtureDependencies()
+
   androidUtils.configureAndroidProject(fixtureDir, isNewArchEnabled)
 
   if (!isNewArchEnabled) {
@@ -105,7 +107,11 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 
   iosUtils.configureIOSProject(fixtureDir)
 
-  installFixtureDependencies()
+  if (parseFloat(reactNativeVersion) < 0.70) {
+    // Older RN versions need to be patched to fix the boost download URL
+    const applyPatch = ['apply', '--ignore-whitespace', resolve(replacementFilesDir, 'patches/react-native-boost.patch')]
+    execFileSync('git', applyPatch, { cwd: fixtureDir, stdio: 'inherit' })
+  }
 
   // link react-native-navigation using rnn-link tool
   if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
