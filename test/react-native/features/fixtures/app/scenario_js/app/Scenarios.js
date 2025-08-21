@@ -4,6 +4,7 @@ export { HandledNativeErrorScenario } from './scenarios/HandledNativeErrorScenar
 
 // unhandled.feature
 export { UnhandledNativeErrorScenario } from './scenarios/UnhandledNativeErrorScenario'
+export { UnhandledNativeErrorSyncScenario } from './scenarios/UnhandledNativeErrorSyncScenario'
 export { UnhandledJsErrorScenario } from './scenarios/UnhandledJsErrorScenario'
 export { UnhandledJsErrorSeverityScenario } from './scenarios/UnhandledJsErrorSeverityScenario'
 export { UnhandledJsPromiseRejectionScenario } from './scenarios/UnhandledJsPromiseRejectionScenario'
@@ -61,8 +62,8 @@ export { SessionJsControlledManualNativeScenario } from './scenarios/SessionJsCo
 export { SessionNativeControlledManualJsScenario } from './scenarios/SessionNativeControlledManualJsScenario'
 
 // native-stack.feature
-export { NativeStackHandledScenario } from './scenarios/NativeStackHandledScenario'
-export { NativeStackUnhandledScenario } from './scenarios/NativeStackUnhandledScenario'
+export { NativePromiseRejectionHandledScenario } from './scenarios/NativePromiseRejectionHandledScenario'
+export { NativePromiseRejectionUnhandledScenario } from './scenarios/NativePromiseRejectionUnhandledScenario'
 
 // override_unhandled.feature
 export { HandledOverrideJsErrorScenario } from './scenarios/HandledOverrideJsErrorScenario'

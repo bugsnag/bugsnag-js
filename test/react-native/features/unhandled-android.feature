@@ -26,9 +26,30 @@ Scenario: Reporting an Unhandled promise rejection as handled
   And the event "unhandled" is false
   And the exception "message" equals "UnhandledJsPromiseRejectionAsHandledScenario"
 
-Scenario: Reporting an Unhandled Native error
+Scenario: Reporting an Unhandled Native error (async method)
   When I run "UnhandledNativeErrorScenario" and relaunch the crashed app
   And I configure Bugsnag for "UnhandledNativeErrorScenario"
+  Then I wait to receive an error
+  And the event "unhandled" is true
+  And the event "exceptions.0.errorClass" equals the version-dependent string:
+  | arch | version | value                      |
+  | new  | 0.72    | java.lang.RuntimeException |
+  | new  | default | Error                      |
+  | old  | default | java.lang.RuntimeException |
+  And the event "exceptions.0.type" equals the version-dependent string:
+  | arch | version | value                      |
+  | new  | 0.72    | android                    |
+  | new  | default | reactnativejs              |
+  | old  | default | android                    |
+  And the event "exceptions.0.message" equals the version-dependent string:
+  | arch | version | value                                                   |
+  | new  | 0.72    | UnhandledNativeErrorScenario                            |
+  | new  | default | Exception in HostFunction: UnhandledNativeErrorScenario |
+  | old  | default | UnhandledNativeErrorScenario                            |
+
+Scenario: Reporting an Unhandled Native error (synchronous method)
+  When I run "UnhandledNativeErrorSyncScenario" and relaunch the crashed app
+  And I configure Bugsnag for "UnhandledNativeErrorSyncScenario"
   Then I wait to receive an error
   And the event "unhandled" is true
   And the event "exceptions.0.errorClass" equals the version-dependent string:

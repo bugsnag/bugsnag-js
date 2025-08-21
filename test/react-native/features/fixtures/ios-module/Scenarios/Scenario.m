@@ -37,4 +37,8 @@
      reject:(RCTPromiseRejectBlock)reject {
 }
 
+- (NSNumber *)runSync {
+    return @(NO);
+}
+
 @end

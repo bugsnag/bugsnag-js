@@ -70,6 +70,12 @@ public class BugsnagModule extends ReactContextBaseJavaModule {
       promise.resolve(true);
   }
 
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  public Boolean runScenarioSync(String scenarioName) {
+      Scenario testScenario = factory.testScenarioForName(scenarioName, reactContext);
+      return testScenario.runSync();
+  }
+
   @ReactMethod
   public void startBugsnag(ReadableMap options, Promise promise) {
     Configuration bugsnagConfig = createConfiguration(options);

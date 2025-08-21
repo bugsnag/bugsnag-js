@@ -26,9 +26,39 @@ Scenario: Reporting an Unhandled promise rejection as handled
   And the event "unhandled" is false
   And the exception "message" equals "UnhandledJsPromiseRejectionAsHandledScenario"
 
-Scenario: Reporting an Unhandled Native error
+Scenario: Reporting an Unhandled Native error (async)
   When I run "UnhandledNativeErrorScenario" and relaunch the crashed app
   And I configure Bugsnag for "UnhandledNativeErrorScenario"
+  Then I wait to receive an error
+  And the event "exceptions.0.errorClass" equals the version-dependent string:
+  | arch | version | value                   |
+  | new  | 0.79    | NSException             |
+  | new  | 0.78    | NSException             |
+  | new  | 0.77    | NSException             |
+  | new  | 0.76    | NSException             |
+  | new  | 0.75    | N8facebook3jsi7JSErrorE |
+  | new  | 0.74    | N8facebook3jsi7JSErrorE |
+  | new  | 0.73    | N8facebook3jsi7JSErrorE |
+  | new  | default | NSException             |
+  | old  | default | NSException             |
+
+  And the event "exceptions.0.type" equals "cocoa"
+  And the event "unhandled" is true
+  And the event "exceptions.0.message" equals the version-dependent string:
+  | arch | version | value                                                                                                                     |
+  | new  | 0.79    | UnhandledNativeErrorScenario                                                                                              |
+  | new  | 0.78    | UnhandledNativeErrorScenario                                                                                              |
+  | new  | 0.77    | UnhandledNativeErrorScenario                                                                                              |
+  | new  | 0.76    | UnhandledNativeErrorScenario                                                                                              |
+  | new  | 0.75    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
+  | new  | 0.74    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
+  | new  | 0.73    | Exception in HostFunction: UnhandledNativeErrorScenario\n\nError: Exception in HostFunction: UnhandledNativeErrorScenario |
+  | new  | default | UnhandledNativeErrorScenario                                                                                              |
+  | old  | default | UnhandledNativeErrorScenario                                                                                              |
+
+Scenario: Reporting an Unhandled Native error (sync)
+  When I run "UnhandledNativeErrorSyncScenario" and relaunch the crashed app
+  And I configure Bugsnag for "UnhandledNativeErrorSyncScenario"
   Then I wait to receive an error
   And the event "exceptions.0.errorClass" equals the version-dependent string:
   | arch | version | value                   |

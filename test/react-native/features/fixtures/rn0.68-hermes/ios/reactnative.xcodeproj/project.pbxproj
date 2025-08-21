@@ -21,8 +21,8 @@
 		A1EAB12027F5C1A7005EFEE6 /* UnhandledNativeErrorScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EAB0FB27F5C1A5005EFEE6 /* UnhandledNativeErrorScenario.m */; };
 		A1EAB12127F5C1A7005EFEE6 /* ContextNativeCustomScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EAB0FD27F5C1A6005EFEE6 /* ContextNativeCustomScenario.m */; };
 		A1EAB12227F5C1A7005EFEE6 /* FeatureFlagsNativeCrashScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EAB0FE27F5C1A6005EFEE6 /* FeatureFlagsNativeCrashScenario.m */; };
-		A1EAB12327F5C1A7005EFEE6 /* NativeStackUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EAB10027F5C1A6005EFEE6 /* NativeStackUnhandledScenario.m */; };
-		A1EAB12427F5C1A7005EFEE6 /* NativeStackHandledScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1EAB10127F5C1A6005EFEE6 /* NativeStackHandledScenario.swift */; };
+		A1EAB12327F5C1A7005EFEE6 /* NativePromiseRejectionUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EAB10027F5C1A6005EFEE6 /* NativePromiseRejectionUnhandledScenario.m */; };
+		A1EAB12427F5C1A7005EFEE6 /* NativePromiseRejectionHandledScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1EAB10127F5C1A6005EFEE6 /* NativePromiseRejectionHandledScenario.swift */; };
 		A1EAB12527F5C1A7005EFEE6 /* AppNativeHandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EAB10427F5C1A6005EFEE6 /* AppNativeHandledScenario.m */; };
 		A1EAB12627F5C1A7005EFEE6 /* HandledNativeErrorScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EAB10827F5C1A6005EFEE6 /* HandledNativeErrorScenario.m */; };
 		A1EAB12727F5C1A7005EFEE6 /* BreadcrumbsNativeManualScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EAB10927F5C1A6005EFEE6 /* BreadcrumbsNativeManualScenario.m */; };
@@ -74,8 +74,8 @@
 		A1EAB0FD27F5C1A6005EFEE6 /* ContextNativeCustomScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContextNativeCustomScenario.m; path = "../../ios-module/Scenarios/ContextNativeCustomScenario.m"; sourceTree = "<group>"; };
 		A1EAB0FE27F5C1A6005EFEE6 /* FeatureFlagsNativeCrashScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FeatureFlagsNativeCrashScenario.m; path = "../../ios-module/Scenarios/FeatureFlagsNativeCrashScenario.m"; sourceTree = "<group>"; };
 		A1EAB0FF27F5C1A6005EFEE6 /* AppNativeUnhandledScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppNativeUnhandledScenario.h; path = "../../ios-module/Scenarios/AppNativeUnhandledScenario.h"; sourceTree = "<group>"; };
-		A1EAB10027F5C1A6005EFEE6 /* NativeStackUnhandledScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NativeStackUnhandledScenario.m; path = "../../ios-module/Scenarios/NativeStackUnhandledScenario.m"; sourceTree = "<group>"; };
-		A1EAB10127F5C1A6005EFEE6 /* NativeStackHandledScenario.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NativeStackHandledScenario.swift; path = "../../ios-module/Scenarios/NativeStackHandledScenario.swift"; sourceTree = "<group>"; };
+		A1EAB10027F5C1A6005EFEE6 /* NativePromiseRejectionUnhandledScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NativePromiseRejectionUnhandledScenario.m; path = "../../ios-module/Scenarios/NativePromiseRejectionUnhandledScenario.m"; sourceTree = "<group>"; };
+		A1EAB10127F5C1A6005EFEE6 /* NativePromiseRejectionHandledScenario.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NativePromiseRejectionHandledScenario.swift; path = "../../ios-module/Scenarios/NativePromiseRejectionHandledScenario.swift"; sourceTree = "<group>"; };
 		A1EAB10227F5C1A6005EFEE6 /* ResumeSessionScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResumeSessionScenario.h; path = "../../ios-module/Scenarios/ResumeSessionScenario.h"; sourceTree = "<group>"; };
 		A1EAB10327F5C1A6005EFEE6 /* UnhandledNativeErrorScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnhandledNativeErrorScenario.h; path = "../../ios-module/Scenarios/UnhandledNativeErrorScenario.h"; sourceTree = "<group>"; };
 		A1EAB10427F5C1A6005EFEE6 /* AppNativeHandledScenario.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppNativeHandledScenario.m; path = "../../ios-module/Scenarios/AppNativeHandledScenario.m"; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 		A1EAB11927F5C1A6005EFEE6 /* DeviceNativeHandledScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceNativeHandledScenario.h; path = "../../ios-module/Scenarios/DeviceNativeHandledScenario.h"; sourceTree = "<group>"; };
 		A1EAB11A27F5C1A7005EFEE6 /* MetadataNativeUnhandledScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataNativeUnhandledScenario.h; path = "../../ios-module/Scenarios/MetadataNativeUnhandledScenario.h"; sourceTree = "<group>"; };
 		A1EAB11B27F5C1A7005EFEE6 /* BreadcrumbsNativeManualScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BreadcrumbsNativeManualScenario.h; path = "../../ios-module/Scenarios/BreadcrumbsNativeManualScenario.h"; sourceTree = "<group>"; };
-		A1EAB11C27F5C1A7005EFEE6 /* NativeStackUnhandledScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NativeStackUnhandledScenario.h; path = "../../ios-module/Scenarios/NativeStackUnhandledScenario.h"; sourceTree = "<group>"; };
+		A1EAB11C27F5C1A7005EFEE6 /* NativePromiseRejectionUnhandledScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NativePromiseRejectionUnhandledScenario.h; path = "../../ios-module/Scenarios/NativePromiseRejectionUnhandledScenario.h"; sourceTree = "<group>"; };
 		A1EAB11D27F5C1A7005EFEE6 /* FeatureFlagsNativeCrashScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeatureFlagsNativeCrashScenario.h; path = "../../ios-module/Scenarios/FeatureFlagsNativeCrashScenario.h"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -226,9 +226,9 @@
 				A1EAB11627F5C1A6005EFEE6 /* MetadataNativeUnhandledScenario.m */,
 				A1EAB10F27F5C1A6005EFEE6 /* NativeFeatureFlagsScenario.h */,
 				A1EAB0F927F5C1A5005EFEE6 /* NativeFeatureFlagsScenario.m */,
-				A1EAB10127F5C1A6005EFEE6 /* NativeStackHandledScenario.swift */,
-				A1EAB11C27F5C1A7005EFEE6 /* NativeStackUnhandledScenario.h */,
-				A1EAB10027F5C1A6005EFEE6 /* NativeStackUnhandledScenario.m */,
+				A1EAB10127F5C1A6005EFEE6 /* NativePromiseRejectionHandledScenario.swift */,
+				A1EAB11C27F5C1A7005EFEE6 /* NativePromiseRejectionUnhandledScenario.h */,
+				A1EAB10027F5C1A6005EFEE6 /* NativePromiseRejectionUnhandledScenario.m */,
 				A1EAB10A27F5C1A6005EFEE6 /* PauseSessionScenario.h */,
 				A1EAB10C27F5C1A6005EFEE6 /* PauseSessionScenario.m */,
 				0154E1F72806DFD4009044E4 /* RCTFatalScenario.m */,
@@ -527,10 +527,10 @@
 				A1EAB12E27F5C1A7005EFEE6 /* MetadataNativeUnhandledScenario.m in Sources */,
 				0154E1F82806DFD4009044E4 /* RCTFatalScenario.m in Sources */,
 				A1EAB13027F5C1A7005EFEE6 /* UserNativeClientScenario.m in Sources */,
-				A1EAB12427F5C1A7005EFEE6 /* NativeStackHandledScenario.swift in Sources */,
+				A1EAB12427F5C1A7005EFEE6 /* NativePromiseRejectionHandledScenario.swift in Sources */,
 				A1EAB0F727F5C17F005EFEE6 /* BugsnagModule.m in Sources */,
 				A1EAB12727F5C1A7005EFEE6 /* BreadcrumbsNativeManualScenario.m in Sources */,
-				A1EAB12327F5C1A7005EFEE6 /* NativeStackUnhandledScenario.m in Sources */,
+				A1EAB12327F5C1A7005EFEE6 /* NativePromiseRejectionUnhandledScenario.m in Sources */,
 				A1EAB12927F5C1A7005EFEE6 /* PauseSessionScenario.m in Sources */,
 				A1EAB12C27F5C1A7005EFEE6 /* StartSessionScenario.m in Sources */,
 				A1EAB12B27F5C1A7005EFEE6 /* AppNativeUnhandledScenario.m in Sources */,
