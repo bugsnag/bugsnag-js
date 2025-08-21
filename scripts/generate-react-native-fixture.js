@@ -38,8 +38,16 @@ const fixtureDir = resolve(ROOT_DIR, fixturePath, reactNativeVersion)
 
 const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtures/app/dynamic/')
 
+const INTERNAL_DEPENDENCIES = [
+  '@bugsnag/react-native',
+  '@bugsnag/plugin-react-navigation',
+  '@bugsnag/plugin-react-native-navigation'
+]
+
+// make sure we install a compatible versions of peer dependencies
+const reactNativeFileAccessVersion = '3.1.1' // parseFloat(reactNativeVersion) <= 0.69 ? '1.7.1' : '3.1.1'
 const PEER_DEPENDENCIES = [
-  'react-native-file-access@3.1.1'
+  `react-native-file-access@${reactNativeFileAccessVersion}`
 ]
 
 let reactNavigationVersion = '6.1.18'
@@ -53,6 +61,9 @@ if (parseFloat(reactNativeVersion) >= 0.77) {
   reactNavigationNativeStackVersion = '7.3.21'
   reactNativeScreensVersion = '4.11.1'
   reactNativeSafeAreaContextVersion = '5.5.1'
+} else if (parseFloat(reactNativeVersion) <= 0.69) {
+  reactNativeScreensVersion = '3.14.0'
+  reactNativeSafeAreaContextVersion = '4.3.4'
 }
 
 const REACT_NAVIGATION_PEER_DEPENDENCIES = [
@@ -62,9 +73,8 @@ const REACT_NAVIGATION_PEER_DEPENDENCIES = [
   `react-native-safe-area-context@${reactNativeSafeAreaContextVersion}`
 ]
 
-const reactNativeNavigationVersion = '7.41.0' // Issue with 7.42.0
 const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
-  `react-native-navigation@${reactNativeNavigationVersion}`
+  `react-native-navigation@7.41.0` // Issue with 7.42.0
 ]
 
 // install and build the packages
@@ -116,9 +126,9 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
 
 function installFixtureDependencies () {
   // get the react native package plus all of it's dependencies
-  const packageJson = JSON.parse(fs.readFileSync(`${ROOT_DIR}/packages/react-native/package.json`, 'utf8'))
-  const bugsnagPackages = Object.keys(packageJson.dependencies)
-    .filter(dep => dep.startsWith('@bugsnag/')).concat('@bugsnag/react-native')
+  const bugsnagReactNativePkg = JSON.parse(fs.readFileSync(`${ROOT_DIR}/packages/react-native/package.json`, 'utf8'))
+  const bugsnagPackages = Object.keys(bugsnagReactNativePkg.dependencies)
+    .filter(dep => dep.startsWith('@bugsnag/')).concat(INTERNAL_DEPENDENCIES)
 
   // pack the bugsnag packages into the test fixture directory
   const workSpaceArgs = bugsnagPackages.map(dep => `--workspace=${dep}`)
