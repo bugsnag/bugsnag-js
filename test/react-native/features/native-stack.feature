@@ -2,8 +2,8 @@ Feature: Native stacktrace is parsed for promise rejections
 
 # Skipped on New Arch below 0.74 - see PLAT-12193
 @android_only @skip_new_arch_below_074
-Scenario: Handled JS error with native stacktrace
-  When I run "NativeStackHandledScenario"
+Scenario: Handled native promise rejection with native stacktrace
+  When I run "NativePromiseRejectionHandledScenario"
   Then I wait to receive an error
   And the event "unhandled" is false
   And the error payload field "events.0.exceptions" is an array with 1 elements
@@ -20,7 +20,7 @@ Scenario: Handled JS error with native stacktrace
     | old  | 0.74    | Error                      |
     | old  | default | java.lang.RuntimeException |
 
-  And the event "exceptions.0.message" equals "NativeStackHandledScenario"
+  And the event "exceptions.0.message" equals "NativePromiseRejectionHandledScenario"
   And the event "exceptions.0.type" equals "reactnativejs"
   And the error payload field "events.0.exceptions.0.stacktrace" is a non-empty array
 
@@ -33,7 +33,7 @@ Scenario: Handled JS error with native stacktrace
     | com.reactnative.scenarios.Scenario.generateException |
     | generateException |
   And the error payload field "events.0.exceptions.0.stacktrace.1.method" equals one of:
-    | com.reactnative.scenarios.NativeStackHandledScenario.run |
+    | com.reactnative.scenarios.NativePromiseRejectionHandledScenario.run |
     | run |
   And the error payload field "events.0.exceptions.0.stacktrace.2.method" equals one of:
     | com.reactnative.module.BugsnagModule.runScenario |
@@ -49,8 +49,8 @@ Scenario: Handled JS error with native stacktrace
 
 # Skipped on New Arch below 0.74 - see PLAT-12193
 @android_only @skip_new_arch_below_074
-Scenario: Unhandled JS error with native stacktrace
-  When I run "NativeStackUnhandledScenario"
+Scenario: Unhandled native promise rejection with native stacktrace
+  When I run "NativePromiseRejectionUnhandledScenario"
   Then I wait to receive an error
   And the event "unhandled" is true
 
@@ -66,7 +66,7 @@ Scenario: Unhandled JS error with native stacktrace
     | old  | 0.74    | Error                      |
     | old  | default | java.lang.RuntimeException |
 
-  And the event "exceptions.0.message" equals "NativeStackUnhandledScenario"
+  And the event "exceptions.0.message" equals "NativePromiseRejectionUnhandledScenario"
   And the event "exceptions.0.type" equals "reactnativejs"
   And the error payload field "events.0.exceptions.0.stacktrace" is a non-empty array
 
@@ -76,7 +76,7 @@ Scenario: Unhandled JS error with native stacktrace
     | Scenario.kt |
     | SourceFile  |
   And the error payload field "events.0.exceptions.0.stacktrace.1.file" equals one of:
-    | NativeStackUnhandledScenario.kt |
+    | NativePromiseRejectionUnhandledScenario.kt |
     | SourceFile |
   And the error payload field "events.0.exceptions.0.stacktrace.2.file" equals one of:
     | BugsnagModule.java |
@@ -86,7 +86,7 @@ Scenario: Unhandled JS error with native stacktrace
     | com.reactnative.scenarios.Scenario.generateException |
     | generateException |
   And the error payload field "events.0.exceptions.0.stacktrace.1.method" equals one of:
-    | com.reactnative.scenarios.NativeStackUnhandledScenario.run |
+    | com.reactnative.scenarios.NativePromiseRejectionUnhandledScenario.run |
     | run |
   And the error payload field "events.0.exceptions.0.stacktrace.2.method" equals one of:
     | com.reactnative.module.BugsnagModule.runScenario |
@@ -107,13 +107,13 @@ Scenario: Unhandled JS error with native stacktrace
 
 # Skipped on New Arch below 0.74 - see PLAT-12193
 @ios_only @skip_new_arch_below_074
-Scenario: Handled JS error with native stacktrace
-  When I run "NativeStackHandledScenario"
+Scenario: Handled native promise rejection with native stacktrace
+  When I run "NativePromiseRejectionHandledScenario"
   Then I wait to receive an error
   And the event "unhandled" is false
   And the error payload field "events.0.exceptions" is an array with 1 elements
   And the event "exceptions.0.errorClass" equals "Error"
-  And the event "exceptions.0.message" equals "NativeStackHandledScenario"
+  And the event "exceptions.0.message" equals "NativePromiseRejectionHandledScenario"
   And the event "exceptions.0.type" equals "reactnativejs"
   And the error payload field "events.0.exceptions.0.stacktrace" is a non-empty array
 
@@ -152,12 +152,12 @@ Scenario: Handled JS error with native stacktrace
 
 # Skipped on New Arch below 0.74 - see PLAT-12193
 @ios_only @skip_new_arch_below_074
-Scenario: Unhandled JS error with native stacktrace
-  When I run "NativeStackUnhandledScenario"
+Scenario: Unhandled native promise rejection with native stacktrace
+  When I run "NativePromiseRejectionUnhandledScenario"
   Then I wait to receive an error
   And the event "unhandled" is true
   And the event "exceptions.0.errorClass" equals "Error"
-  And the event "exceptions.0.message" equals "NativeStackUnhandledScenario"
+  And the event "exceptions.0.message" equals "NativePromiseRejectionUnhandledScenario"
   And the event "exceptions.0.type" equals "reactnativejs"
   And the error payload field "events.0.exceptions.0.stacktrace" is a non-empty array
 
