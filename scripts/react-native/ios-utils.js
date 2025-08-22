@@ -51,13 +51,6 @@ module.exports = {
 
     // Older RN versions require some additional setup
     if (parseFloat(reactNativeVersion) < 0.72) {
-      const rootDir = resolve(__dirname, '../../')
-      const replacementFilesDir = resolve(rootDir, 'test/react-native/features/fixtures/app/dynamic/')
-
-      // patch to fix boost download url
-      const applyPatch = ['apply', '--ignore-whitespace', resolve(replacementFilesDir, 'patches/react-native-boost.patch')]
-      execFileSync('git', applyPatch, { cwd: fixtureDir, stdio: 'inherit' })
-
       // pin the ruby version and replace the gemfile
       if (fs.existsSync(resolve(fixtureDir, '.ruby-version'))) {
         fs.rmSync(resolve(fixtureDir, '.ruby-version'))
@@ -66,11 +59,30 @@ module.exports = {
       if (fs.existsSync(resolve(fixtureDir, 'Gemfile.lock'))) {
         fs.rmSync(resolve(fixtureDir, 'Gemfile.lock'))
       }
-  
+
+      const replacementFilesDir = resolve(__dirname, '../../test/react-native/features/fixtures/app/dynamic/')
       fs.copyFileSync(resolve(replacementFilesDir, 'ios/Gemfile'), resolve(fixtureDir, 'Gemfile'))
 
       // bump the minimum iOS version to 13
       podfileContents = podfileContents.replace(/platform\s*:ios,\s*(?:'[\d.]+'|min_ios_version_supported)/, "platform :ios, '13.0'")
+      
+      // enable hermes
+      podfileContents = podfileContents.replace(':hermes_enabled => flags[:hermes_enabled]', ':hermes_enabled => true')
+
+      // fix boost issues - apply patch to fix the boost download url
+      const applyPatch = ['apply', '--ignore-whitespace', resolve(replacementFilesDir, 'patches/react-native-boost.patch')]
+      execFileSync('git', applyPatch, { cwd: fixtureDir, stdio: 'inherit' })
+
+      // apply this build configuration to work around a boost issue in modern xcode versions: https://github.com/facebook/react-native/issues/37748#issuecomment-1580589448
+      const boostPostInstallFix = `installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']
+      end
+    end`
+
+      const postInstallHook = 'post_install do |installer|\n'
+      podfileContents = podfileContents.replace(postInstallHook, `${postInstallHook}    ${boostPostInstallFix}\n`)
+
       fs.writeFileSync(`${fixtureDir}/ios/Podfile`, podfileContents)
     }
   },
