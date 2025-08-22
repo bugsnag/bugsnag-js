@@ -111,6 +111,11 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
     // Older RN versions need to be patched to fix the boost download URL
     const applyPatch = ['apply', '--ignore-whitespace', resolve(replacementFilesDir, 'patches/react-native-boost.patch')]
     execFileSync('git', applyPatch, { cwd: fixtureDir, stdio: 'inherit' })
+
+    // remove the ruby version
+    if (fs.existsSync(resolve(fixtureDir, '.ruby-version'))) {
+      fs.rmSync(resolve(fixtureDir, '.ruby-version'))
+    }
   }
 
   // link react-native-navigation using rnn-link tool
