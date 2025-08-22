@@ -112,10 +112,12 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
     const applyPatch = ['apply', '--ignore-whitespace', resolve(replacementFilesDir, 'patches/react-native-boost.patch')]
     execFileSync('git', applyPatch, { cwd: fixtureDir, stdio: 'inherit' })
 
-    // remove the ruby version
+    // pin the ruby version and gemfile
     if (fs.existsSync(resolve(fixtureDir, '.ruby-version'))) {
       fs.rmSync(resolve(fixtureDir, '.ruby-version'))
     }
+
+    fs.copyFileSync(resolve(replacementFilesDir, 'ios/Gemfile'), resolve(fixtureDir, 'Gemfile'))
   }
 
   // link react-native-navigation using rnn-link tool
