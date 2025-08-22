@@ -36,7 +36,7 @@ if (isNewArchEnabled) {
 
 const fixtureDir = resolve(ROOT_DIR, fixturePath, reactNativeVersion)
 
-const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtures/app/dynamic/')
+const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtures/replacements/')
 
 const INTERNAL_DEPENDENCIES = [
   '@bugsnag/react-native',

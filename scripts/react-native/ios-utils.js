@@ -60,7 +60,7 @@ module.exports = {
         fs.rmSync(resolve(fixtureDir, 'Gemfile.lock'))
       }
 
-      const replacementFilesDir = resolve(__dirname, '../../test/react-native/features/fixtures/app/dynamic/')
+      const replacementFilesDir = resolve(__dirname, '../../test/react-native/features/fixtures/replacements/')
       fs.copyFileSync(resolve(replacementFilesDir, 'ios/Gemfile'), resolve(fixtureDir, 'Gemfile'))
 
       // bump the minimum iOS version to 13
