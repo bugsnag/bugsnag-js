@@ -3,7 +3,7 @@ const fs = require('fs')
 const { resolve } = require('path')
 
 module.exports = {
-  configureIOSProject: function configureIOSProject (fixtureDir) {
+  configureIOSProject: function configureIOSProject (fixtureDir, reactNativeVersion) {
     // update the bundle identifier in pbxproj
     let pbxProjContents = fs.readFileSync(`${fixtureDir}/ios/reactnative.xcodeproj/project.pbxproj`, 'utf8')
     pbxProjContents = pbxProjContents.replaceAll('org.reactjs.native.example', 'com.bugsnag.fixtures')
@@ -48,6 +48,31 @@ module.exports = {
     plistContents = plistContents.replace(allowLocalNetworking, '')
 
     fs.writeFileSync(plistpath, plistContents.replace(searchPattern, replacement))
+
+    // Older RN versions require some additional setup
+    if (parseFloat(reactNativeVersion) < 0.72) {
+      const rootDir = resolve(__dirname, '../../')
+      const replacementFilesDir = resolve(rootDir, 'test/react-native/features/fixtures/app/dynamic/')
+
+      // patch to fix boost download url
+      const applyPatch = ['apply', '--ignore-whitespace', resolve(replacementFilesDir, 'patches/react-native-boost.patch')]
+      execFileSync('git', applyPatch, { cwd: fixtureDir, stdio: 'inherit' })
+
+      // pin the ruby version and replace the gemfile
+      if (fs.existsSync(resolve(fixtureDir, '.ruby-version'))) {
+        fs.rmSync(resolve(fixtureDir, '.ruby-version'))
+      }
+  
+      if (fs.existsSync(resolve(fixtureDir, 'Gemfile.lock'))) {
+        fs.rmSync(resolve(fixtureDir, 'Gemfile.lock'))
+      }
+  
+      fs.copyFileSync(resolve(replacementFilesDir, 'ios/Gemfile'), resolve(fixtureDir, 'Gemfile'))
+
+      // bump the minimum iOS version to 13
+      podfileContents = podfileContents.replace(/platform\s*:ios,\s*(?:'[\d.]+'|min_ios_version_supported)/, "platform :ios, '13.0'")
+      fs.writeFileSync(`${fixtureDir}/ios/Podfile`, podfileContents)
+    }
   },
   buildIPA: function buildIPA (fixtureDir, exportArchive = true) {
     fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })

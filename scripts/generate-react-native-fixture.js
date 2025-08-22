@@ -105,20 +105,7 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
     androidUtils.configureReactNavigationAndroid(fixtureDir, reactNativeVersion)
   }
 
-  iosUtils.configureIOSProject(fixtureDir)
-
-  if (parseFloat(reactNativeVersion) < 0.70) {
-    // Older RN versions need to be patched to fix the boost download URL
-    const applyPatch = ['apply', '--ignore-whitespace', resolve(replacementFilesDir, 'patches/react-native-boost.patch')]
-    execFileSync('git', applyPatch, { cwd: fixtureDir, stdio: 'inherit' })
-
-    // pin the ruby version and gemfile
-    if (fs.existsSync(resolve(fixtureDir, '.ruby-version'))) {
-      fs.rmSync(resolve(fixtureDir, '.ruby-version'))
-    }
-
-    fs.copyFileSync(resolve(replacementFilesDir, 'ios/Gemfile'), resolve(fixtureDir, 'Gemfile'))
-  }
+  iosUtils.configureIOSProject(fixtureDir, reactNativeVersion)
 
   // link react-native-navigation using rnn-link tool
   if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
