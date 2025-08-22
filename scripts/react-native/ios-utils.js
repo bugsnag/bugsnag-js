@@ -55,7 +55,7 @@ module.exports = {
       if (fs.existsSync(resolve(fixtureDir, '.ruby-version'))) {
         fs.rmSync(resolve(fixtureDir, '.ruby-version'))
       }
-  
+
       if (fs.existsSync(resolve(fixtureDir, 'Gemfile.lock'))) {
         fs.rmSync(resolve(fixtureDir, 'Gemfile.lock'))
       }
@@ -65,7 +65,7 @@ module.exports = {
 
       // bump the minimum iOS version to 13
       podfileContents = podfileContents.replace(/platform\s*:ios,\s*(?:'[\d.]+'|min_ios_version_supported)/, "platform :ios, '13.0'")
-      
+
       // enable hermes
       podfileContents = podfileContents.replace(':hermes_enabled => flags[:hermes_enabled]', ':hermes_enabled => true')
 
