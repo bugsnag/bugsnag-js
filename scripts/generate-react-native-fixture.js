@@ -132,10 +132,10 @@ function installFixtureDependencies () {
 
   // pack the bugsnag packages into the test fixture directory
   const workSpaceArgs = bugsnagPackages.map(dep => `--workspace=${dep}`)
-  execSync(`npm pack --pack-destination=${fixtureDir} ${workSpaceArgs.join(' ')}`, { cwd: ROOT_DIR, stdio: 'inherit' })
+  execFileSync('npm', ['pack', `--pack-destination=${fixtureDir}`, ...workSpaceArgs], { cwd: ROOT_DIR, stdio: 'inherit' })
 
   // pack the scenario launcher
-  execSync(`npm pack ${ROOT_DIR}/test/react-native/features/fixtures/scenario-launcher --pack-destination ${fixtureDir}`, { cwd: ROOT_DIR, stdio: 'inherit' })
+  execFileSync('npm', ['pack', resolve(ROOT_DIR, 'test/react-native/features/fixtures/scenario-launcher'), '--pack-destination', fixtureDir], { cwd: ROOT_DIR, stdio: 'inherit' })
 
   // add dependencies for react-native-navigation (wix)
   if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
