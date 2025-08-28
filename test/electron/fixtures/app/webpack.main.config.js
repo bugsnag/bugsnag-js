@@ -16,16 +16,14 @@ module.exports = {
   plugins: [
     new webpack.ProgressPlugin(),
     new webpack.DefinePlugin({
-      baseBugsnagConfig: JSON.stringify({
-        apiKey: process.env.BUGSNAG_API_KEY,
-        endpoints: {
-          notify: process.env.BUGSNAG_ENDPOINT_NOTIFY,
-          sessions: process.env.BUGSNAG_ENDPOINT_SESSIONS,
-          minidumps: process.env.BUGSNAG_ENDPOINT_MINIDUMPS
-        }
-      }),
       preloadRelativeDir: JSON.stringify(join('..', 'renderer')),
       htmlRelativePath: JSON.stringify(join('..', 'renderer', 'main_window', 'index.html'))
+    }),
+    new webpack.EnvironmentPlugin({
+      BUGSNAG_API_KEY: process.env.BUGSNAG_API_KEY,
+      BUGSNAG_ENDPOINT_NOTIFY: process.env.BUGSNAG_ENDPOINT_NOTIFY,
+      BUGSNAG_ENDPOINT_SESSIONS: process.env.BUGSNAG_ENDPOINT_SESSIONS,
+      BUGSNAG_ENDPOINT_MINIDUMPS: process.env.BUGSNAG_ENDPOINT_MINIDUMPS
     })
   ],
   module: {

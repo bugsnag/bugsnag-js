@@ -11,7 +11,15 @@ const configFile = process.env.BUGSNAG_CONFIG || 'default'
 // eslint-disable-next-line no-undef
 const bugsnagConfig = __non_webpack_require__(`./${configFile}`)
 
-// eslint-disable-next-line no-undef
+const baseBugsnagConfig = {
+  apiKey: process.env.BUGSNAG_API_KEY,
+  endpoints: {
+    notify: process.env.BUGSNAG_ENDPOINT_NOTIFY,
+    sessions: process.env.BUGSNAG_ENDPOINT_SESSIONS,
+    minidumps: process.env.BUGSNAG_ENDPOINT_MINIDUMPS
+  }
+}
+
 const config = { ...baseBugsnagConfig, ...bugsnagConfig() }
 
 Bugsnag.start(config)
