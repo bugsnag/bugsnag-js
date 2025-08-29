@@ -1,10 +1,10 @@
 # Changelog
 
-## [Unreleased]
+## [8.5.0] - 2025-09-01
 
-### Changed
+### Added
 
-- (electron) Prefer `registerPreloadScript` over `session.setPreloads` API when available [#2524](https://github.com/bugsnag/bugsnag-js/pull/2524)
+- (electron) Use `registerPreloadScript` API when available [#2524](https://github.com/bugsnag/bugsnag-js/pull/2524)
 
 ### Fixed
 
