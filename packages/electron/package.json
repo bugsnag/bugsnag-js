@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron",
-  "version": "8.4.0",
+  "version": "8.5.0",
   "main": "src/notifier.js",
   "exports": {
     ".": {
@@ -17,7 +17,7 @@
       "types": "./types/notifier.d.ts",
       "default": "./src/client/renderer.js",
       "import": "./src/client/renderer.js"
-    } 
+    }
   },
   "types": "types/notifier.d.ts",
   "description": "@bugsnag/electron notifier",
@@ -42,9 +42,9 @@
     "@bugsnag/plugin-electron-app-breadcrumbs": "^8.4.0",
     "@bugsnag/plugin-electron-client-state-manager": "^8.4.0",
     "@bugsnag/plugin-electron-client-state-persistence": "^8.4.0",
-    "@bugsnag/plugin-electron-deliver-minidumps": "^8.4.0",
+    "@bugsnag/plugin-electron-deliver-minidumps": "^8.5.0",
     "@bugsnag/plugin-electron-device": "^8.4.0",
-    "@bugsnag/plugin-electron-ipc": "^8.4.0",
+    "@bugsnag/plugin-electron-ipc": "^8.5.0",
     "@bugsnag/plugin-electron-net-breadcrumbs": "^8.4.0",
     "@bugsnag/plugin-electron-network-status": "^8.4.0",
     "@bugsnag/plugin-electron-preload-error": "^8.4.0",
