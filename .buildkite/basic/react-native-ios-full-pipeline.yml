@@ -9,45 +9,8 @@ steps:
       #
       # Test fixtures
       #
-      - label: ":ios: Build RN 0.68 Hermes ipa"
-        key: "rn-0-68-hermes-ipa"
-        depends_on: "publish-js"
-        timeout_in_minutes: 20
-        agents:
-          queue: "macos-12-arm"
-        env:
-          REACT_NATIVE_VERSION: rn0.68-hermes
-          LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
-        artifact_paths: build/rn0.68-hermes.ipa
-        commands:
-          - npm run test:build-react-native-ios
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
-      - label: ":ios: Build RN 0.69 ipa"
-        key: "rn-0-69-ipa"
-        depends_on: "publish-js"
-        timeout_in_minutes: 20
-        agents:
-          queue: "macos-12-arm"
-        env:
-          REACT_NATIVE_VERSION: rn0.69
-          LANG: "en_US.UTF-8"
-          DEVELOPER_DIR: "/Applications/Xcode14.app"
-        artifact_paths: build/rn0.69.ipa
-        commands:
-          - npm run test:build-react-native-ios
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
       - label: ':mac: Build RN {{matrix}} test fixture ipa (Old Arch)'
         key: "build-react-native-ios-fixture-old-arch-full"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: "macos-15"
@@ -63,11 +26,13 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
+          - "0.68"
+          - "0.69"
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
         retry:
           automatic:
             - exit_status: "*"
@@ -75,7 +40,6 @@ steps:
 
       - label: ':mac: Build RN {{matrix}} test fixture ipa (New Arch)'
         key: "build-react-native-ios-fixture-new-arch-full"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: "macos-15"
@@ -94,8 +58,8 @@ steps:
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
         retry:
           automatic:
             - exit_status: "*"
@@ -103,7 +67,6 @@ steps:
 
       - label: ':mac: Build react-native-navigation {{matrix}} test fixture ipa (Old Arch)'
         key: "build-react-native-navigation-ios-fixture-old-arch"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: "macos-15"
@@ -120,7 +83,6 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.71"
           - "0.72"
         retry:
           automatic:
@@ -157,68 +119,6 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":bitbar: :ios: RN 0.68 (hermes) iOS end-to-end tests"
-        depends_on: "rn-0-68-hermes-ipa"
-        timeout_in_minutes: 40
-        plugins:
-          artifacts#v1.5.0:
-            download: "build/rn0.68-hermes.ipa"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.12.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            use-aliases: true
-            command:
-              - --app=build/rn0.68-hermes.ipa
-              - --farm=bb
-              - --device=IOS_15|IOS_16
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-          test-collector#v1.10.2:
-            files: "reports/TEST-*.xml"
-            format: "junit"
-            branch: "^main|next$$"
-            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
-        env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
-        concurrency: 5
-        concurrency_group: "browserstack-app"
-        concurrency_method: eager
-
-      - label: ":bitbar: :ios: RN 0.69 iOS end-to-end tests"
-        depends_on: "rn-0-69-ipa"
-        timeout_in_minutes: 40
-        plugins:
-          artifacts#v1.5.0:
-            download: "build/rn0.69.ipa"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.12.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            use-aliases: true
-            command:
-              - --app=build/rn0.69.ipa
-              - --farm=bb
-              - --device=IOS_15|IOS_16
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-          test-collector#v1.10.2:
-            files: "reports/TEST-*.xml"
-            format: "junit"
-            branch: "^main|next$$"
-            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
-        env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
-        concurrency: 5
-        concurrency_group: "browserstack-app"
-        concurrency_method: eager
-
       - label: ":bitbar: :mac: RN {{matrix}} iOS (Old Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-old-arch-full"
         timeout_in_minutes: 40
@@ -252,11 +152,13 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
+          - "0.68"
+          - "0.69"
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
 
       - label: ":bitbar: :mac: RN {{matrix}} iOS (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch-full"
@@ -294,8 +196,8 @@ steps:
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
 
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't currently support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
@@ -335,7 +237,6 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.71"
           - "0.72"
 
       # Skipped due to build failures with react-native-navigation when new arch is enabled
@@ -375,5 +276,4 @@ steps:
       #   concurrency_group: "bitbar"
       #   concurrency_method: eager
       #   matrix:
-      #     - "0.71"
       #     - "0.72"
