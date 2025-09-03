@@ -6,90 +6,17 @@ steps:
   - group: "React Native (Android) Tests"
     steps:
       #
-      # Android builder
-      #
-      - label: ":docker: Build Java 11 Android Builder base image"
-        key: "android-builder-base-java-11"
-        timeout_in_minutes: 30
-        plugins:
-          - docker-compose#v4.12.0:
-              build: android-builder-base-java-11
-              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-              cache-from:  android-builder-base-java-11:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-11
-          - docker-compose#v4.12.0:
-              push: android-builder-base-java-11:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:android-builder-base-java-11
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
-      - label: ":docker: Build RN Android Builder image (Java 11, Node 16)"
-        key: "android-builder-image-java-11-node-16"
-        depends_on: "android-builder-base-java-11"
-        timeout_in_minutes: 20
-        plugins:
-          - docker-compose#v4.12.0:
-              build: react-native-android-builder-java-11-node-16
-              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
-              cache-from:  react-native-android-builder-java-11-node-16:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-          - docker-compose#v4.12.0:
-              push: react-native-android-builder-java-11-node-16:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-${BRANCH_NAME}
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
-      #
       # Test fixture builds
       #
-      - label: ":android: Build RN 0.68 Hermes apk"
-        key: "rn-0-68-hermes-apk"
-        depends_on:
-          - "android-builder-image-java-11-node-16"
-          - "publish-js"
-        timeout_in_minutes: 20
-        env:
-          REACT_NATIVE_VERSION: "rn0.68-hermes"
-        plugins:
-          - docker-compose#v4.12.0:
-              pull: react-native-android-builder-java-11-node-16
-              run: react-native-android-builder-java-11-node-16
-        artifact_paths:
-          - build/rn0.68-hermes.apk
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
-      - label: ":android: Build RN 0.69 apk"
-        key: "rn-0-69-apk"
-        depends_on:
-          - "android-builder-image-java-11-node-16"
-          - "publish-js"
-        timeout_in_minutes: 20
-        env:
-          REACT_NATIVE_VERSION: "rn0.69"
-        plugins:
-          - docker-compose#v4.12.0:
-              pull: react-native-android-builder-java-11-node-16
-              run: react-native-android-builder-java-11-node-16
-        artifact_paths:
-          - build/rn0.69.apk
-        retry:
-          automatic:
-            - exit_status: "*"
-              limit: 1
-
-      - label: ':android: Build RN {{matrix}} test fixture APK (Old Arch)'
+      - label: ':android: Build RN {{matrix.reactnative}} test fixture APK (Old Arch)'
         key: "build-react-native-android-fixture-old-arch-full"
-        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: macos-node-18
         env:
-          JAVA_VERSION: "17"
+          JAVA_VERSION: "{{matrix.java}}"
           NODE_VERSION: "18"
-          RN_VERSION: "{{matrix}}"
+          RN_VERSION: "{{matrix.reactnative}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
         artifact_paths:
@@ -98,11 +25,22 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.72"
-          - "0.74"
-          - "0.76"
-          - "0.77"
-          - "0.78"
+          setup:
+            reactnative:
+              - "0.72"
+              - "0.74"
+              - "0.76"
+              - "0.78"
+              - "0.79"
+            java:
+              - "17"
+          adjustments:
+            - with:
+                reactnative: "0.68"
+                java: "11"
+            - with:
+                reactnative: "0.69"
+                java: "11"
         retry:
           automatic:
             - exit_status: "*"
@@ -110,7 +48,6 @@ steps:
 
       - label: ':android: Build RN {{matrix}} test fixture APK (New Arch)'
         key: "build-react-native-android-fixture-new-arch-full"
-        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: macos-node-18
@@ -133,12 +70,11 @@ steps:
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (Old Arch)'
         key: "build-react-native-navigation-android-fixture-old-arch"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: macos-node-18
@@ -155,7 +91,6 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.71"
           - "0.72"
         retry:
           automatic:
@@ -164,7 +99,6 @@ steps:
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (New Arch)'
         key: "build-react-native-navigation-android-fixture-new-arch"
-        depends_on: "publish-js"
         timeout_in_minutes: 30
         agents:
           queue: macos-node-18
@@ -185,86 +119,11 @@ steps:
             - exit_status: "*"
               limit: 1
         matrix:
-          - "0.71"
           - "0.72"
 
       #
       # End-to-end tests
       #
-      - label: ":bitbar: :android: RN 0.68 (Hermes) Android end-to-end tests"
-        depends_on: "rn-0-68-hermes-apk"
-        timeout_in_minutes: 30
-        plugins:
-          artifacts#v1.9.0:
-            download: "build/rn0.68-hermes.apk"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.7.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            command:
-              - --app=build/rn0.68-hermes.apk
-              - --app-activity=com.reactnative.MainActivity
-              - --app-package=com.reactnative
-              - --farm=bb
-              - --device=ANDROID_10|ANDROID_11|ANDROID_12
-              - --appium-version=1.22
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-          test-collector#v1.10.2:
-            files: "reports/TEST-*.xml"
-            format: "junit"
-            branch: "^main|next$$"
-            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
-        env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
-        concurrency: 25
-        concurrency_group: 'bitbar'
-        concurrency_method: eager
-        retry:
-          automatic:
-            - exit_status: 103  # Appium session failed
-              limit: 2
-
-      - label: ":bitbar: :android: RN 0.69 Android end-to-end tests"
-        depends_on: "rn-0-69-apk"
-        timeout_in_minutes: 30
-        plugins:
-          artifacts#v1.9.0:
-            download: "build/rn0.69.apk"
-            upload: ./test/react-native/maze_output/**/*
-          docker-compose#v4.7.0:
-            pull: react-native-maze-runner
-            run: react-native-maze-runner
-            service-ports: true
-            command:
-              - --app=build/rn0.69.apk
-              - --app-activity=com.reactnative.MainActivity
-              - --app-package=com.reactnative
-              - --farm=bb
-              - --device=ANDROID_10|ANDROID_11|ANDROID_12
-              - --appium-version=1.22
-              - --fail-fast
-              - --no-tunnel
-              - --aws-public-ip
-          test-collector#v1.10.2:
-            files: "reports/TEST-*.xml"
-            format: "junit"
-            branch: "^main|next$$"
-            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
-        env:
-          SKIP_NAVIGATION_SCENARIOS: "true"
-          HERMES: "true"
-        concurrency: 25
-        concurrency_group: 'bitbar'
-        concurrency_method: eager
-        retry:
-          automatic:
-            - exit_status: 103  # Appium session failed
-              limit: 2
-
       - label: ":bitbar: :android: RN {{matrix}} Android 12 (Old Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-old-arch-full"
         timeout_in_minutes: 30
@@ -302,11 +161,13 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
+          - "0.68"
+          - "0.69"
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
 
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
@@ -351,8 +212,8 @@ steps:
           - "0.72"
           - "0.74"
           - "0.76"
-          - "0.77"
           - "0.78"
+          - "0.79"
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (Old Arch) end-to-end tests"
         depends_on: "build-react-native-navigation-android-fixture-old-arch"
@@ -393,7 +254,6 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.71"
           - "0.72"
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (New Arch) end-to-end tests"
@@ -435,5 +295,4 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.71"
           - "0.72"

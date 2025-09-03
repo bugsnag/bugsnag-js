@@ -7,7 +7,6 @@ steps:
     steps:
       - label: ':android: Build RN {{matrix}} test fixture APK (Old Arch)'
         key: "build-react-native-android-fixture-old-arch"
-        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: macos-node-18
@@ -23,7 +22,7 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.79"
+          - "0.80"
         retry:
           automatic:
             - exit_status: "*"
@@ -31,7 +30,6 @@ steps:
 
       - label: ':android: Build RN {{matrix}} test fixture APK (New Arch)'
         key: "build-react-native-android-fixture-new-arch"
-        depends_on: "publish-js"
         timeout_in_minutes: 15
         agents:
           queue: macos-node-18
@@ -51,7 +49,7 @@ steps:
             - exit_status: "*"
               limit: 1
         matrix:
-          - "0.79"
+          - "0.80"
 
       #
       # End-to-end tests
@@ -93,7 +91,7 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.79"
+          - "0.80"
 
       - label: ":bitbar: :android: RN {{matrix}} Android 12 (New Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch"
@@ -132,5 +130,5 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.79"
+          - "0.80"
 

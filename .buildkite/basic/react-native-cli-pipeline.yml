@@ -25,9 +25,9 @@ steps:
           - "bundle install"
           - "bundle exec maze-runner features/build-app-tests/build-android-app.feature"
         matrix:
+          - "0.80"
           - "0.79"
           - "0.78"
-          - "0.77"
         retry:
           automatic:
             - exit_status: "*"
@@ -54,9 +54,9 @@ steps:
           - "bundle install"
           - "bundle exec maze-runner features/build-app-tests/build-ios-app.feature"
         matrix:
+          - "0.80"
           - "0.79"
           - "0.78"
-          - "0.77"
         retry:
           automatic:
             - exit_status: "*"
@@ -92,9 +92,9 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
         matrix:
+          - "0.80"
           - "0.79"
           - "0.78"
-          - "0.77"
         retry:
           automatic:
             - exit_status: 103  # Appium session failed
@@ -127,9 +127,9 @@ steps:
         concurrency_group: "browserstack-app"
         concurrency_method: eager
         matrix:
+          - "0.80"
           - "0.79"
           - "0.78"
-          - "0.77"
         retry:
           automatic:
             - exit_status: 103  # Appium session failed

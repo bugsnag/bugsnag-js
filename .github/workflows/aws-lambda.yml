@@ -21,10 +21,10 @@ jobs:
 
     - run: sam --version
 
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
 
     - name: Install Ruby
-      uses: ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651
+      uses: ruby/setup-ruby@efbf473cab83af4468e8606cc33eca9281bb213f
       with:
         ruby-version: '3.1'
 
