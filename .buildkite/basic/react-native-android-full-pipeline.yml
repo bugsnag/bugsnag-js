@@ -44,7 +44,7 @@ steps:
       #
       - label: ":android: Build RN 0.68 Hermes apk"
         key: "rn-0-68-hermes-apk"
-        depends_on: 
+        depends_on:
           - "android-builder-image-java-11-node-16"
           - "publish-js"
         timeout_in_minutes: 20
@@ -63,7 +63,7 @@ steps:
 
       - label: ":android: Build RN 0.69 apk"
         key: "rn-0-69-apk"
-        depends_on: 
+        depends_on:
           - "android-builder-image-java-11-node-16"
           - "publish-js"
         timeout_in_minutes: 20
@@ -223,6 +223,10 @@ steps:
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
+        retry:
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
 
       - label: ":bitbar: :android: RN 0.69 Android end-to-end tests"
         depends_on: "rn-0-69-apk"
@@ -256,6 +260,10 @@ steps:
         concurrency: 25
         concurrency_group: 'bitbar'
         concurrency_method: eager
+        retry:
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
 
       - label: ":bitbar: :android: RN {{matrix}} Android 12 (Old Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-old-arch-full"
@@ -284,6 +292,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
@@ -327,6 +338,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RCT_NEW_ARCH_ENABLED: "1"
           RN_VERSION: "{{matrix}}"
@@ -368,6 +382,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
@@ -407,6 +424,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RCT_NEW_ARCH_ENABLED: "1"
           RN_VERSION: "{{matrix}}"

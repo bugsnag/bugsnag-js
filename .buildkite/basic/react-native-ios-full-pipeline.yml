@@ -187,6 +187,10 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
 
       - label: ":bitbar: :ios: RN 0.69 iOS end-to-end tests"
         depends_on: "rn-0-69-ipa"
@@ -218,6 +222,10 @@ steps:
         concurrency: 5
         concurrency_group: "browserstack-app"
         concurrency_method: eager
+        retry:
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
 
       - label: ":bitbar: :mac: RN {{matrix}} iOS (Old Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-old-arch-full"
@@ -245,6 +253,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
@@ -287,6 +298,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
@@ -327,6 +341,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
