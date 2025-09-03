@@ -151,6 +151,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
@@ -196,6 +199,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RCT_NEW_ARCH_ENABLED: "1"
           RN_VERSION: "{{matrix}}"
@@ -237,6 +243,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
@@ -275,6 +284,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RCT_NEW_ARCH_ENABLED: "1"
           RN_VERSION: "{{matrix}}"
