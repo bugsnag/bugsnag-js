@@ -1,9 +1,10 @@
-const { nodeFallbackStack } = require('@bugsnag/core')
+import type { Config, Plugin, Stackframe } from '@bugsnag/core'
+import { nodeFallbackStack } from '@bugsnag/core'
 
-module.exports = {
+const plugin: Plugin = {
   name: 'intercept',
   load: client => {
-    const intercept = (onError = () => {}, cb) => {
+    const intercept = (onError = () => {}, cb: (data: any[]) => void) => {
       if (typeof cb !== 'function') {
         cb = onError
         onError = () => {}
@@ -12,7 +13,7 @@ module.exports = {
       // capture a stacktrace in case a resulting error has nothing
       const fallbackStack = nodeFallbackStack.getStack()
 
-      return (err, ...data) => {
+      return (err: Error, ...data: any[]) => {
         if (err) {
           // check if the stacktrace has no context, if so, if so append the frames we created earlier
           if (err.stack) nodeFallbackStack.maybeUseFallbackStack(err, fallbackStack)
@@ -31,6 +32,9 @@ module.exports = {
     return intercept
   }
 }
+
+
+export default plugin
 
 // add a default export for ESM modules without interop
 module.exports.default = module.exports
