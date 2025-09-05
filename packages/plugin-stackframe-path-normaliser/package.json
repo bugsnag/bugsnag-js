@@ -1,13 +1,24 @@
 {
   "name": "@bugsnag/plugin-stackframe-path-normaliser",
   "version": "8.4.0",
-  "main": "path-normaliser.js",
+  "main": "dist/path-normaliser.js",
+  "types": "dist/types/path-normaliser.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/path-normaliser.d.ts",
+      "default": "./dist/path-normaliser.js",
+      "import": "./dist/path-normaliser.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to normalise file paths in stackframes",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
     "url": "git@github.com:bugsnag/bugsnag-js.git"
   },
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -18,5 +29,11 @@
   },
   "devDependencies": {
     "@bugsnag/core": "^8.4.0"
+  },
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*",
+    "test:types": "tsc -p tsconfig.json"
   }
 }
