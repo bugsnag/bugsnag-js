@@ -62,7 +62,7 @@ if (!process.env.SKIP_GENERATE_FIXTURE) {
 
   androidUtils.configureAndroidProject(fixtureDir, isNewArchEnabled)
 
-  iosUtils.configureIOSProject(fixtureDir)
+  iosUtils.configureIOSProject(fixtureDir, reactNativeVersion)
 
   // install the peer dependencies
   execSync(`npm install --save ${PEER_DEPENDENCIES} --registry ${process.env.REGISTRY_URL} --legacy-peer-deps`, { cwd: fixtureDir, stdio: 'inherit' })

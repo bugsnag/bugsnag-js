@@ -18,7 +18,6 @@ steps:
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
               cache-from:
                 - browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
-          - docker-compose#v4.12.0:
               push:
                 - browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
         retry:
@@ -39,7 +38,6 @@ steps:
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
               cache-from:
                 - browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
-          - docker-compose#v4.12.0:
               push:
                 - browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
         retry:

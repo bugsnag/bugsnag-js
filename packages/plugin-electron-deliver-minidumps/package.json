@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-deliver-minidumps",
-  "version": "8.4.0",
+  "version": "8.5.0",
   "main": "deliver-minidumps.js",
   "description": "@bugsnag/electron plugin to deliver minidumps to Bugsnag",
   "homepage": "https://www.bugsnag.com/",
@@ -20,7 +20,7 @@
   ],
   "dependencies": {
     "@bugsnag/json-payload": "^8.4.0",
-    "form-data": "^4.0.0"
+    "form-data": "^4.0.4"
   },
   "devDependencies": {
     "@bugsnag/core": "^8.4.0",

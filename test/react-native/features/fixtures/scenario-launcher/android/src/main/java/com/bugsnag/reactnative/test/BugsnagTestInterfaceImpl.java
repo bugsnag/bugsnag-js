@@ -65,6 +65,11 @@ class BugsnagTestInterfaceImpl {
       promise.resolve(true);
   }
 
+  public boolean runScenarioSync(String scenarioName) {
+    Scenario testScenario = factory.testScenarioForName(scenarioName, reactContext);
+    return testScenario.runSync();
+  }
+
   public void startBugsnag(ReadableMap options, Promise promise) {
     Configuration bugsnagConfig = createConfiguration(options);
     bugsnagConfig.setLogger(new Logger() {
