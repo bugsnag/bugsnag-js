@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/plugin-node-surrounding-code",
   "version": "8.4.0",
-  "main": "surrounding-code.js",
+  "main": "dist/surrounding-code.js",
+  "types": "dist/types/surrounding-code.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/surrounding-code.d.ts",
+      "default": "./dist/surrounding-code.js",
+      "import": "./dist/surrounding-code.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to load surrounding code in Node stacktraces",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,12 +20,13 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
-  "scripts": {},
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
+    "@types/byline": "^4.2.36",
+    "@types/pump": "^1.1.3",
     "byline": "^5.0.0",
     "pump": "^3.0.0"
   },
@@ -26,5 +35,11 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*",
+    "test:types": "tsc -p tsconfig.json"
   }
 }
