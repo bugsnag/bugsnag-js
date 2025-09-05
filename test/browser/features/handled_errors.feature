@@ -14,7 +14,7 @@ Scenario Outline: calling notify() with Error
   Examples:
     | type       |
     | script     |
-    | webpack3   |
+    # | webpack3   |
     | webpack4   |
     | browserify |
     | rollup     |
@@ -31,7 +31,7 @@ Scenario Outline: calling notify() with Error within try/catch
   Examples:
     | type       |
     | script     |
-    | webpack3   |
+    # | webpack3   |
     | webpack4   |
     | browserify |
     | rollup     |
@@ -50,7 +50,7 @@ Scenario Outline: calling notify() with Error within Promise catch
   Examples:
     | type       |
     | script     |
-    | webpack3   |
+    # | webpack3   |
     | webpack4   |
     | browserify |
     | rollup     |

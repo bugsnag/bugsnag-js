@@ -7,4 +7,4 @@ var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)
 
 export const apiKey = API_KEY
 export const endpoints = { notify: NOTIFY, sessions: SESSIONS }
-export const plugins = [new BugsnagReactPlugin(React)]
+export const plugins = [new BugsnagReactPlugin(React as any)]
