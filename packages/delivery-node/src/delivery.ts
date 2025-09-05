@@ -1,11 +1,16 @@
-const { jsonPayload } = require('@bugsnag/core')
-const request = require('./request')
+import type { Client, Config, Plugin } from '@bugsnag/core'
+import { jsonPayload } from '@bugsnag/core'
+import request from './request'
 
-module.exports = (client) => ({
+interface PluginConfig extends Config {
+  agent?: any
+}
+
+const plugin: Plugin<PluginConfig> = (client: Client) => ({
   sendEvent: (event, cb = () => {}) => {
     const body = jsonPayload.event(event, client._config.redactedKeys)
 
-    const _cb = err => {
+    const _cb = (err: Error | null) => {
       if (err) client._logger.error(`Event failed to send…\n${(err && err.stack) ? err.stack : err}`, err)
       if (body.length > 10e5) {
         client._logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
@@ -62,3 +67,6 @@ module.exports = (client) => ({
     }
   }
 })
+
+
+export default plugin
