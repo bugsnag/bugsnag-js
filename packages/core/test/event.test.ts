@@ -447,7 +447,7 @@ describe('@bugsnag/core/event', () => {
   })
 
   describe('Event.getGroupingDiscriminator() / Event.setGroupingDiscriminator', () => {
-    it('sets and retrieves grouping discriminator on client', () => {
+    it('sets and retrieves grouping discriminator on event', () => {
       const event = new Event('Error', 'test message', [])
 
       // Initially should be undefined
