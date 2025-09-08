@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/plugin-node-in-project",
   "version": "8.4.0",
-  "main": "in-project.js",
+  "main": "dist/in-project.js",
+  "types": "dist/types/in-project.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/in-project.d.ts",
+      "default": "./dist/in-project.js",
+      "import": "./dist/in-project.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to mark whether stackframes are 'in-project'",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,12 +20,20 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
-  "scripts": {},
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
     "@bugsnag/path-normalizer": "^8.4.0"
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^8.4.0"
+  },
+    "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*",
+    "test:types": "tsc -p tsconfig.json"
   }
 }

@@ -1,7 +1,9 @@
-module.exports = {
+import type { Plugin, Stackframe } from '@bugsnag/core'
+
+const plugin: Plugin = {
   load (client) {
     client.addOnError(event => {
-      const allFrames = event.errors.reduce((accum, er) => accum.concat(er.stacktrace), [])
+      const allFrames: Stackframe[] = event.errors.reduce((accum: Stackframe[], er) => accum.concat(er.stacktrace), [])
 
       allFrames.forEach(stackframe => {
         if (typeof stackframe.file !== 'string') {
@@ -13,3 +15,5 @@ module.exports = {
     })
   }
 }
+
+export default plugin
