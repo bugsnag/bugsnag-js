@@ -20,7 +20,6 @@ import pluginIp from '@bugsnag/plugin-client-ip'
 import pluginStripQueryString from '@bugsnag/plugin-strip-query-string'
 
 // delivery mechanisms
-import dXDomainRequest from '@bugsnag/delivery-x-domain-request'
 import dXMLHttpRequest from '@bugsnag/delivery-xml-http-request'
 
 const name = 'Bugsnag JavaScript'
@@ -88,9 +87,8 @@ const notifier: BrowserClient = {
     // @ts-expect-error
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url });
 
-    // set delivery based on browser capability (IE 8+9 have an XDomainRequest object)
     // @ts-expect-error
-    (bugsnag as BrowserClient)._setDelivery?.(window.XDomainRequest ? dXDomainRequest : dXMLHttpRequest)
+    (bugsnag as BrowserClient)._setDelivery?.(dXMLHttpRequest)
 
     bugsnag._logger.debug('Loaded!')
     bugsnag.leaveBreadcrumb('Bugsnag loaded', {}, 'state')

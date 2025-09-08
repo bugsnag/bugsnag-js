@@ -95,6 +95,10 @@ steps:
           - "0.80"
           - "0.79"
           - "0.78"
+        retry:
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
 
       - label: ":browserstack: :mac: RN CLI - {{matrix}} iOS end-to-end tests"
         depends_on: "build-react-native-cli-ios-fixture"
@@ -126,3 +130,7 @@ steps:
           - "0.80"
           - "0.79"
           - "0.78"
+        retry:
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2

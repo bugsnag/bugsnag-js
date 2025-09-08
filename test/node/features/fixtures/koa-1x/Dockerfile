@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . ./
 
-RUN npm install --no-package-lock --no-save bugsnag-core*.tgz bugsnag-node*.tgz bugsnag-plugin-koa*.tgz
+RUN npm install --no-package-lock --no-save bugsnag-*.tgz
 
 ENV NODE_ENV production
 CMD node scenarios/app

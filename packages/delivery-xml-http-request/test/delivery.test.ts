@@ -1,5 +1,5 @@
 import delivery from '../'
-import { Client, EventDeliveryPayload } from '@bugsnag/core'
+import type { Client, EventDeliveryPayload } from '@bugsnag/core'
 
 interface MockXMLHttpRequest {
   method: string | null
