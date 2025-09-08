@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Add additional grouping discriminator property to events [#2544](https://github.com/bugsnag/bugsnag-js/pull/2544)
+- (plugin-react-native-client-sync) Handle grouping discriminator property [#2544](https://github.com/bugsnag/bugsnag-js/pull/2544)
+
 ## [8.5.0] - 2025-09-01
 
 ### Added
