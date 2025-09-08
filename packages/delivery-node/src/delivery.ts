@@ -1,5 +1,5 @@
 import type { Client, Config, Delivery } from '@bugsnag/core'
-import { jsonPayload } from '@bugsnag/core'
+import * as jsonPayload from '@bugsnag/json-payload'
 import request from './request'
 import http from 'http'
 
