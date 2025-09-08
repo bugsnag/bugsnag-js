@@ -97,7 +97,8 @@ describe('@bugsnag/core/grouping discriminator', () => {
       const expectedResults = [
         'client-discriminator', // First call uses client discriminator
         'custom-discriminator', // Second call has event discriminator set
-        'client-discriminator' // Third call uses client discriminator again
+        'client-discriminator', // Third call uses client discriminator again
+        undefined // Fourth call has the discriminator cleared
       ]
 
       client._setDelivery(client => ({
@@ -127,6 +128,11 @@ describe('@bugsnag/core/grouping discriminator', () => {
 
       // Third notify - should use client discriminator again
       client.notify(new Error('test error 3'))
+
+      // Second notify - clear the event discriminator
+      client.notify(new Error('test error 4'), (event) => {
+        event.setGroupingDiscriminator(undefined)
+      })
     })
 
     it('allows changing client discriminator between notify calls', (done) => {
