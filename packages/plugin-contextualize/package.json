@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/plugin-contextualize",
   "version": "8.4.0",
-  "main": "contextualize.js",
+  "main": "dist/contextualize.js",
+  "types": "dist/types/contextualize.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/contextualize.d.ts",
+      "default": "./dist/contextualize.js",
+      "import": "./dist/contextualize.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to add context to unhandled events",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,7 +20,7 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -21,5 +29,11 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*",
+    "test:types": "tsc -p tsconfig.json"
   }
 }

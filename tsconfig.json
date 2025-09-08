@@ -19,7 +19,6 @@
     "packages/delivery-react-native",
     "packages/in-flight",
     "packages/plugin-aws-lambda",
-    "packages/plugin-contextualize",
     "packages/plugin-navigation-breadcrumbs",
     "packages/plugin-react",
     "packages/plugin-vue",
