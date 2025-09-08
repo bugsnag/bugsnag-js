@@ -40,7 +40,7 @@ const delivery = (client: Client): Delivery => ({
         },
         body,
         agent: internalClient._config.agent
-      }, (err, body) => _cb(err))
+      }, (err) => _cb(err))
     } catch (e: any) {
       _cb(e)
     }
