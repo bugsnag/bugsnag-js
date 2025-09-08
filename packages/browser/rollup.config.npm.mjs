@@ -15,11 +15,25 @@ const sharedOutput = {
   strict: false, // 'use strict' in WebKit enables Tail Call Optimization, which breaks stack trace handling
 }
 
+const treeshake = {
+  preset: 'smallest', // More aggressive than 'safest'
+  propertyReadSideEffects: false,
+  unknownGlobalSideEffects: false,
+  // Be more aggressive with module side effects
+  moduleSideEffects: false
+};
+
 const plugins = [
   nodeResolve({
-    browser: true
+    browser: true,
+    preferBuiltins: false,
+    // Enable tree-shaking for better dead code elimination
+    exportConditions: ['import']
   }),
-  commonjs(),
+  commonjs({
+    // Improve tree-shaking for CommonJS modules
+    ignoreTryCatch: 'remove'
+  }),
   typescript({
     removeComments: true,
     // don't output anything if there's a TS error
@@ -45,12 +59,36 @@ const plugins = [
       'process.env.NODE_ENV': JSON.stringify('production'),
       __BUGSNAG_NOTIFIER_VERSION__: packageJson.version,
     },
-  }),
+  })
+]
+
+// External dependencies to reduce bundle size
+// For ES modules and CJS, we'll keep dependencies bundled for now
+// to avoid runtime dependency resolution issues
+const external = [
+  '@bugsnag/core',
+  '@bugsnag/plugin-window-onerror',
+  '@bugsnag/plugin-window-unhandled-rejection',
+  '@bugsnag/plugin-app-duration',
+  '@bugsnag/plugin-browser-device',
+  '@bugsnag/plugin-browser-context',
+  '@bugsnag/plugin-browser-request',
+  '@bugsnag/plugin-simple-throttle',
+  '@bugsnag/plugin-console-breadcrumbs',
+  '@bugsnag/plugin-network-breadcrumbs',
+  '@bugsnag/plugin-navigation-breadcrumbs',
+  '@bugsnag/plugin-interaction-breadcrumbs',
+  '@bugsnag/plugin-inline-script-content',
+  '@bugsnag/plugin-browser-session',
+  '@bugsnag/plugin-client-ip',
+  '@bugsnag/plugin-strip-query-string',
+  '@bugsnag/delivery-xml-http-request'
 ]
 
 export default [
   createRollupConfig({
     input: "src/index-es.ts",
+    external, // Keep dependencies bundled for ESM
     output: [
       {
         ...sharedOutput,
@@ -59,10 +97,12 @@ export default [
         format: 'esm'
       }
     ],
-    plugins
+    plugins,
+    treeshake
   }),
   createRollupConfig({
     input: "src/index-cjs.ts",
+    external, // Keep dependencies bundled for CJS
     output: [
       {
         ...sharedOutput,
@@ -70,10 +110,13 @@ export default [
         format: 'cjs',
       },
     ],
-    plugins
+    plugins,
+    treeshake
   }),
   createRollupConfig({
     input: "src/index-umd.ts",
+    // UMD needs all dependencies bundled for standalone use
+    external: [], // Keep dependencies bundled for UMD
     output: [
       {
         ...sharedOutput,
@@ -87,9 +130,33 @@ export default [
         format: 'umd',
         compact: true,
         name: 'Bugsnag',
-        plugins: [terser()],
+        plugins: [terser({
+          compress: {
+            passes: 3, // Increase from 2
+            drop_console: true, // Remove console statements
+            drop_debugger: true, // Remove debugger statements
+            pure_getters: true,
+            unsafe_math: true,
+            unsafe_methods: true,
+            unsafe_proto: true,
+            unsafe_regexp: true,
+            unsafe_undefined: true,
+            conditionals: true,
+            dead_code: true,
+            evaluate: true,
+            if_return: true,
+            join_vars: true,
+            reduce_vars: true,
+            unused: true
+          },
+          mangle: true,
+          format: {
+            comments: false // Remove all comments
+          }
+        })]
       }, 
     ],
-    plugins
+    plugins,
+    treeshake
   })
 ];
