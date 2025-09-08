@@ -111,7 +111,7 @@ describe('@bugsnag/core/grouping discriminator', () => {
           expect(eventPayload.groupingDiscriminator).toBe(expectedResults[callCount])
 
           callCount++
-          if (callCount === 3) {
+          if (callCount === 4) {
             done()
           }
         },
@@ -129,7 +129,7 @@ describe('@bugsnag/core/grouping discriminator', () => {
       // Third notify - should use client discriminator again
       client.notify(new Error('test error 3'))
 
-      // Second notify - clear the event discriminator
+      // Fourth notify - clear the event discriminator
       client.notify(new Error('test error 4'), (event) => {
         event.setGroupingDiscriminator(undefined)
       })
