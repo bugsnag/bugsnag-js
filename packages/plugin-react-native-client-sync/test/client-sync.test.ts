@@ -36,6 +36,21 @@ describe('plugin: react native client sync', () => {
       c.setContext('1234')
     })
 
+    it('updates grouping discriminator', done => {
+      const c = new Client({
+        apiKey: 'api_key',
+        plugins: [
+          plugin({
+            updateGroupingDiscriminator: (update: any) => {
+              expect(update).toBe('test-discriminator')
+              done()
+            }
+          })
+        ]
+      })
+      c.setGroupingDiscriminator('test-discriminator')
+    })
+
     it('updates metadata', done => {
       const c = new Client({
         apiKey: 'api_key',
@@ -188,6 +203,19 @@ describe('plugin: react native client sync', () => {
 
       setTimeout(() => {
         expect(c.getContext()).toBe('new context')
+      }, 1)
+    })
+
+    it('silently updates grouping discriminator when an update is received', () => {
+      MockAddListener.mockImplementation((event: any, listener: (payload: any) => void) => {
+        setTimeout(() => listener({ type: 'GroupingDiscriminatorUpdate', data: 'new-discriminator' }), 0)
+      })
+      const c = new Client({ apiKey: 'api_key', plugins: [plugin()] })
+      expect(MockAddListener).toHaveBeenCalledWith('bugsnag::sync', expect.any(Function))
+      expect(c.getGroupingDiscriminator()).toBe(undefined)
+
+      setTimeout(() => {
+        expect(c.getGroupingDiscriminator()).toBe('new-discriminator')
       }, 1)
     })
 
