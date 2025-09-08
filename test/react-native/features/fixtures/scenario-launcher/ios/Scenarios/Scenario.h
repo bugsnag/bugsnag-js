@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)run:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 
+- (NSNumber *)runSync;
+
 @end
 
 NS_ASSUME_NONNULL_END

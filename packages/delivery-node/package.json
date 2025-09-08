@@ -30,6 +30,9 @@
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
   },
+    "dependencies": {
+    "@bugsnag/json-payload": "^8.4.0"
+  },
   "scripts": {
     "build": "npm run build:npm",
     "build:npm": "rollup --config rollup.config.npm.mjs",

@@ -9,6 +9,7 @@
         "@bugsnag/delivery-node": "bugsnag-delivery-node.tgz",
         "@bugsnag/in-flight": "bugsnag-in-flight.tgz",
         "@bugsnag/js": "bugsnag-js.tgz",
+        "@bugsnag/json-payload": "bugsnag-json-payload.tgz",
         "@bugsnag/node": "bugsnag-node.tgz",
         "@bugsnag/path-normalizer": "bugsnag-path-normalizer.tgz",
         "@bugsnag/plugin-app-duration": "bugsnag-plugin-app-duration.tgz",

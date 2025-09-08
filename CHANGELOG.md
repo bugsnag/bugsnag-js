@@ -1,5 +1,15 @@
 # Changelog
 
+## [8.5.0] - 2025-09-01
+
+### Added
+
+- (electron) Use `registerPreloadScript` API when available [#2524](https://github.com/bugsnag/bugsnag-js/pull/2524)
+
+### Fixed
+
+- (plugin-electron-ipc) Fixed exports in `package.json` to improve TypeScript compatibility [#2524](https://github.com/bugsnag/bugsnag-js/pull/2524)
+
 ## [8.4.0] - 2025-06-18
 
 ### Added

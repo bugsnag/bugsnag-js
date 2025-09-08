@@ -29,26 +29,37 @@ module.exports = {
     ipcMain.handle(CHANNEL_RENDERER_TO_MAIN, bugsnagIpcMain.handle)
     ipcMain.on(CHANNEL_RENDERER_TO_MAIN_SYNC, bugsnagIpcMain.handleSync)
 
-    setPreload()
+    setPreload(client)
   }
 }
 
-const setPreload = () => {
+const setPreload = (client) => {
   const bugsnagPreload = resolve(__dirname, 'dist', 'preload.bundle.js')
 
   // for every session created, insert Bugsnag's preload script
   app.on('session-created', session => {
-    // setPreloads replaces any existing value, so check the existing value first
-    const existingPreloads = session.getPreloads()
-    session.setPreloads([bugsnagPreload, ...existingPreloads])
+    if (typeof session.registerPreloadScript === 'function') {
+      try {
+        session.registerPreloadScript({
+          type: 'frame',
+          filePath: bugsnagPreload
+        })
+      } catch (err) {
+        client._logger.error('Failed to register Bugsnag preload script:', err)
+      }
+    } else {
+      // setPreloads replaces any existing value, so check the existing value first
+      const existingPreloads = session.getPreloads()
+      session.setPreloads([bugsnagPreload, ...existingPreloads])
 
-    // ensure our preload is never replaced with subsequent setPreloads calls
-    const setPreloads = session.setPreloads
-    session.setPreloads = (...args) => {
+      // ensure our preload is never replaced with subsequent setPreloads calls
+      const setPreloads = session.setPreloads
+      session.setPreloads = (...args) => {
       // if an invalid (non-array) parameter is passed, send it through to the
       // original method to let that raise an error in the default way
-      if (!Array.isArray(args[0])) setPreloads.call(session, ...args)
-      setPreloads.call(session, [bugsnagPreload, ...args[0]])
+        if (!Array.isArray(args[0])) setPreloads.call(session, ...args)
+        setPreloads.call(session, [bugsnagPreload, ...args[0]])
+      }
     }
   })
 }

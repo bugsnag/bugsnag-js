@@ -11,6 +11,7 @@ COPY jest ./jest
 ADD min_packages.tar .
 COPY .rollup ./.rollup
 COPY bin ./bin
+COPY eslint-rules ./eslint-rules
 COPY scripts ./scripts
 COPY test ./test
 COPY packages ./packages

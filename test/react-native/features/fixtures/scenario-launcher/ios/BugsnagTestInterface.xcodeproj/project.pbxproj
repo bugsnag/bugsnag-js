@@ -1,0 +1,408 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DA2260AC2E58AD79008384E6 /* BugsnagTestInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = DA2260AB2E58AD79008384E6 /* BugsnagTestInterface.mm */; };
+		DA2260D42E58AD99008384E6 /* ContextNativeCustomScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260B42E58AD99008384E6 /* ContextNativeCustomScenario.m */; };
+		DA2260D52E58AD99008384E6 /* MetadataNativeUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260C02E58AD99008384E6 /* MetadataNativeUnhandledScenario.m */; };
+		DA2260D62E58AD99008384E6 /* UserNativeClientScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260D32E58AD99008384E6 /* UserNativeClientScenario.m */; };
+		DA2260D72E58AD99008384E6 /* StartSessionScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260CF2E58AD99008384E6 /* StartSessionScenario.m */; };
+		DA2260D82E58AD99008384E6 /* DeviceNativeUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260B82E58AD99008384E6 /* DeviceNativeUnhandledScenario.m */; };
+		DA2260D92E58AD99008384E6 /* ResumeSessionScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260CB2E58AD99008384E6 /* ResumeSessionScenario.m */; };
+		DA2260DA2E58AD99008384E6 /* DeviceNativeHandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260B62E58AD99008384E6 /* DeviceNativeHandledScenario.m */; };
+		DA2260DB2E58AD99008384E6 /* MetadataNativeScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260BE2E58AD99008384E6 /* MetadataNativeScenario.m */; };
+		DA2260DC2E58AD99008384E6 /* PauseSessionScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260C82E58AD99008384E6 /* PauseSessionScenario.m */; };
+		DA2260DD2E58AD99008384E6 /* NativeFeatureFlagsScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260C22E58AD99008384E6 /* NativeFeatureFlagsScenario.m */; };
+		DA2260DE2E58AD99008384E6 /* RCTFatalScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260C92E58AD99008384E6 /* RCTFatalScenario.m */; };
+		DA2260DF2E58AD99008384E6 /* FeatureFlagsNativeCrashScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260BA2E58AD99008384E6 /* FeatureFlagsNativeCrashScenario.m */; };
+		DA2260E02E58AD99008384E6 /* AppNativeHandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260AE2E58AD99008384E6 /* AppNativeHandledScenario.m */; };
+		DA2260E12E58AD99008384E6 /* HandledNativeErrorScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260BC2E58AD99008384E6 /* HandledNativeErrorScenario.m */; };
+		DA2260E22E58AD99008384E6 /* NativePromiseRejectionHandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260C42E58AD99008384E6 /* NativePromiseRejectionHandledScenario.m */; };
+		DA2260E32E58AD99008384E6 /* NativePromiseRejectionUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260C62E58AD99008384E6 /* NativePromiseRejectionUnhandledScenario.m */; };
+		DA2260E42E58AD99008384E6 /* BreadcrumbsNativeManualScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260B22E58AD99008384E6 /* BreadcrumbsNativeManualScenario.m */; };
+		DA2260E52E58AD99008384E6 /* Scenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260CD2E58AD99008384E6 /* Scenario.m */; };
+		DA2260E62E58AD99008384E6 /* UnhandledNativeErrorScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260D12E58AD99008384E6 /* UnhandledNativeErrorScenario.m */; };
+		DA2260E72E58AD99008384E6 /* AppNativeUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260B02E58AD99008384E6 /* AppNativeUnhandledScenario.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DA22609A2E58ACAB008384E6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		DA22609C2E58ACAB008384E6 /* libBugsnagTestInterface.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBugsnagTestInterface.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA2260AA2E58AD79008384E6 /* BugsnagTestInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BugsnagTestInterface.h; sourceTree = "<group>"; };
+		DA2260AB2E58AD79008384E6 /* BugsnagTestInterface.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = BugsnagTestInterface.mm; sourceTree = "<group>"; };
+		DA2260AD2E58AD99008384E6 /* AppNativeHandledScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppNativeHandledScenario.h; path = Scenarios/AppNativeHandledScenario.h; sourceTree = "<group>"; };
+		DA2260AE2E58AD99008384E6 /* AppNativeHandledScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppNativeHandledScenario.m; path = Scenarios/AppNativeHandledScenario.m; sourceTree = "<group>"; };
+		DA2260AF2E58AD99008384E6 /* AppNativeUnhandledScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppNativeUnhandledScenario.h; path = Scenarios/AppNativeUnhandledScenario.h; sourceTree = "<group>"; };
+		DA2260B02E58AD99008384E6 /* AppNativeUnhandledScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppNativeUnhandledScenario.m; path = Scenarios/AppNativeUnhandledScenario.m; sourceTree = "<group>"; };
+		DA2260B12E58AD99008384E6 /* BreadcrumbsNativeManualScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BreadcrumbsNativeManualScenario.h; path = Scenarios/BreadcrumbsNativeManualScenario.h; sourceTree = "<group>"; };
+		DA2260B22E58AD99008384E6 /* BreadcrumbsNativeManualScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = BreadcrumbsNativeManualScenario.m; path = Scenarios/BreadcrumbsNativeManualScenario.m; sourceTree = "<group>"; };
+		DA2260B32E58AD99008384E6 /* ContextNativeCustomScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContextNativeCustomScenario.h; path = Scenarios/ContextNativeCustomScenario.h; sourceTree = "<group>"; };
+		DA2260B42E58AD99008384E6 /* ContextNativeCustomScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContextNativeCustomScenario.m; path = Scenarios/ContextNativeCustomScenario.m; sourceTree = "<group>"; };
+		DA2260B52E58AD99008384E6 /* DeviceNativeHandledScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DeviceNativeHandledScenario.h; path = Scenarios/DeviceNativeHandledScenario.h; sourceTree = "<group>"; };
+		DA2260B62E58AD99008384E6 /* DeviceNativeHandledScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DeviceNativeHandledScenario.m; path = Scenarios/DeviceNativeHandledScenario.m; sourceTree = "<group>"; };
+		DA2260B72E58AD99008384E6 /* DeviceNativeUnhandledScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DeviceNativeUnhandledScenario.h; path = Scenarios/DeviceNativeUnhandledScenario.h; sourceTree = "<group>"; };
+		DA2260B82E58AD99008384E6 /* DeviceNativeUnhandledScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DeviceNativeUnhandledScenario.m; path = Scenarios/DeviceNativeUnhandledScenario.m; sourceTree = "<group>"; };
+		DA2260B92E58AD99008384E6 /* FeatureFlagsNativeCrashScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FeatureFlagsNativeCrashScenario.h; path = Scenarios/FeatureFlagsNativeCrashScenario.h; sourceTree = "<group>"; };
+		DA2260BA2E58AD99008384E6 /* FeatureFlagsNativeCrashScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FeatureFlagsNativeCrashScenario.m; path = Scenarios/FeatureFlagsNativeCrashScenario.m; sourceTree = "<group>"; };
+		DA2260BB2E58AD99008384E6 /* HandledNativeErrorScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HandledNativeErrorScenario.h; path = Scenarios/HandledNativeErrorScenario.h; sourceTree = "<group>"; };
+		DA2260BC2E58AD99008384E6 /* HandledNativeErrorScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HandledNativeErrorScenario.m; path = Scenarios/HandledNativeErrorScenario.m; sourceTree = "<group>"; };
+		DA2260BD2E58AD99008384E6 /* MetadataNativeScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MetadataNativeScenario.h; path = Scenarios/MetadataNativeScenario.h; sourceTree = "<group>"; };
+		DA2260BE2E58AD99008384E6 /* MetadataNativeScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MetadataNativeScenario.m; path = Scenarios/MetadataNativeScenario.m; sourceTree = "<group>"; };
+		DA2260BF2E58AD99008384E6 /* MetadataNativeUnhandledScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MetadataNativeUnhandledScenario.h; path = Scenarios/MetadataNativeUnhandledScenario.h; sourceTree = "<group>"; };
+		DA2260C02E58AD99008384E6 /* MetadataNativeUnhandledScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MetadataNativeUnhandledScenario.m; path = Scenarios/MetadataNativeUnhandledScenario.m; sourceTree = "<group>"; };
+		DA2260C12E58AD99008384E6 /* NativeFeatureFlagsScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NativeFeatureFlagsScenario.h; path = Scenarios/NativeFeatureFlagsScenario.h; sourceTree = "<group>"; };
+		DA2260C22E58AD99008384E6 /* NativeFeatureFlagsScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NativeFeatureFlagsScenario.m; path = Scenarios/NativeFeatureFlagsScenario.m; sourceTree = "<group>"; };
+		DA2260C32E58AD99008384E6 /* NativePromiseRejectionHandledScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NativePromiseRejectionHandledScenario.h; path = Scenarios/NativePromiseRejectionHandledScenario.h; sourceTree = "<group>"; };
+		DA2260C42E58AD99008384E6 /* NativePromiseRejectionHandledScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NativePromiseRejectionHandledScenario.m; path = Scenarios/NativePromiseRejectionHandledScenario.m; sourceTree = "<group>"; };
+		DA2260C52E58AD99008384E6 /* NativePromiseRejectionUnhandledScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NativePromiseRejectionUnhandledScenario.h; path = Scenarios/NativePromiseRejectionUnhandledScenario.h; sourceTree = "<group>"; };
+		DA2260C62E58AD99008384E6 /* NativePromiseRejectionUnhandledScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NativePromiseRejectionUnhandledScenario.m; path = Scenarios/NativePromiseRejectionUnhandledScenario.m; sourceTree = "<group>"; };
+		DA2260C72E58AD99008384E6 /* PauseSessionScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PauseSessionScenario.h; path = Scenarios/PauseSessionScenario.h; sourceTree = "<group>"; };
+		DA2260C82E58AD99008384E6 /* PauseSessionScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = PauseSessionScenario.m; path = Scenarios/PauseSessionScenario.m; sourceTree = "<group>"; };
+		DA2260C92E58AD99008384E6 /* RCTFatalScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RCTFatalScenario.m; path = Scenarios/RCTFatalScenario.m; sourceTree = "<group>"; };
+		DA2260CA2E58AD99008384E6 /* ResumeSessionScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ResumeSessionScenario.h; path = Scenarios/ResumeSessionScenario.h; sourceTree = "<group>"; };
+		DA2260CB2E58AD99008384E6 /* ResumeSessionScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ResumeSessionScenario.m; path = Scenarios/ResumeSessionScenario.m; sourceTree = "<group>"; };
+		DA2260CC2E58AD99008384E6 /* Scenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Scenario.h; path = Scenarios/Scenario.h; sourceTree = "<group>"; };
+		DA2260CD2E58AD99008384E6 /* Scenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Scenario.m; path = Scenarios/Scenario.m; sourceTree = "<group>"; };
+		DA2260CE2E58AD99008384E6 /* StartSessionScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StartSessionScenario.h; path = Scenarios/StartSessionScenario.h; sourceTree = "<group>"; };
+		DA2260CF2E58AD99008384E6 /* StartSessionScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = StartSessionScenario.m; path = Scenarios/StartSessionScenario.m; sourceTree = "<group>"; };
+		DA2260D02E58AD99008384E6 /* UnhandledNativeErrorScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UnhandledNativeErrorScenario.h; path = Scenarios/UnhandledNativeErrorScenario.h; sourceTree = "<group>"; };
+		DA2260D12E58AD99008384E6 /* UnhandledNativeErrorScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UnhandledNativeErrorScenario.m; path = Scenarios/UnhandledNativeErrorScenario.m; sourceTree = "<group>"; };
+		DA2260D22E58AD99008384E6 /* UserNativeClientScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserNativeClientScenario.h; path = Scenarios/UserNativeClientScenario.h; sourceTree = "<group>"; };
+		DA2260D32E58AD99008384E6 /* UserNativeClientScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UserNativeClientScenario.m; path = Scenarios/UserNativeClientScenario.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DA2260992E58ACAB008384E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DA2260932E58ACAB008384E6 = {
+			isa = PBXGroup;
+			children = (
+				DA2260AD2E58AD99008384E6 /* AppNativeHandledScenario.h */,
+				DA2260AE2E58AD99008384E6 /* AppNativeHandledScenario.m */,
+				DA2260AF2E58AD99008384E6 /* AppNativeUnhandledScenario.h */,
+				DA2260B02E58AD99008384E6 /* AppNativeUnhandledScenario.m */,
+				DA2260B12E58AD99008384E6 /* BreadcrumbsNativeManualScenario.h */,
+				DA2260B22E58AD99008384E6 /* BreadcrumbsNativeManualScenario.m */,
+				DA2260B32E58AD99008384E6 /* ContextNativeCustomScenario.h */,
+				DA2260B42E58AD99008384E6 /* ContextNativeCustomScenario.m */,
+				DA2260B52E58AD99008384E6 /* DeviceNativeHandledScenario.h */,
+				DA2260B62E58AD99008384E6 /* DeviceNativeHandledScenario.m */,
+				DA2260B72E58AD99008384E6 /* DeviceNativeUnhandledScenario.h */,
+				DA2260B82E58AD99008384E6 /* DeviceNativeUnhandledScenario.m */,
+				DA2260B92E58AD99008384E6 /* FeatureFlagsNativeCrashScenario.h */,
+				DA2260BA2E58AD99008384E6 /* FeatureFlagsNativeCrashScenario.m */,
+				DA2260BB2E58AD99008384E6 /* HandledNativeErrorScenario.h */,
+				DA2260BC2E58AD99008384E6 /* HandledNativeErrorScenario.m */,
+				DA2260BD2E58AD99008384E6 /* MetadataNativeScenario.h */,
+				DA2260BE2E58AD99008384E6 /* MetadataNativeScenario.m */,
+				DA2260BF2E58AD99008384E6 /* MetadataNativeUnhandledScenario.h */,
+				DA2260C02E58AD99008384E6 /* MetadataNativeUnhandledScenario.m */,
+				DA2260C12E58AD99008384E6 /* NativeFeatureFlagsScenario.h */,
+				DA2260C22E58AD99008384E6 /* NativeFeatureFlagsScenario.m */,
+				DA2260C32E58AD99008384E6 /* NativePromiseRejectionHandledScenario.h */,
+				DA2260C42E58AD99008384E6 /* NativePromiseRejectionHandledScenario.m */,
+				DA2260C52E58AD99008384E6 /* NativePromiseRejectionUnhandledScenario.h */,
+				DA2260C62E58AD99008384E6 /* NativePromiseRejectionUnhandledScenario.m */,
+				DA2260C72E58AD99008384E6 /* PauseSessionScenario.h */,
+				DA2260C82E58AD99008384E6 /* PauseSessionScenario.m */,
+				DA2260C92E58AD99008384E6 /* RCTFatalScenario.m */,
+				DA2260CA2E58AD99008384E6 /* ResumeSessionScenario.h */,
+				DA2260CB2E58AD99008384E6 /* ResumeSessionScenario.m */,
+				DA2260CC2E58AD99008384E6 /* Scenario.h */,
+				DA2260CD2E58AD99008384E6 /* Scenario.m */,
+				DA2260CE2E58AD99008384E6 /* StartSessionScenario.h */,
+				DA2260CF2E58AD99008384E6 /* StartSessionScenario.m */,
+				DA2260D02E58AD99008384E6 /* UnhandledNativeErrorScenario.h */,
+				DA2260D12E58AD99008384E6 /* UnhandledNativeErrorScenario.m */,
+				DA2260D22E58AD99008384E6 /* UserNativeClientScenario.h */,
+				DA2260D32E58AD99008384E6 /* UserNativeClientScenario.m */,
+				DA2260AA2E58AD79008384E6 /* BugsnagTestInterface.h */,
+				DA2260AB2E58AD79008384E6 /* BugsnagTestInterface.mm */,
+				DA22609D2E58ACAB008384E6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DA22609D2E58ACAB008384E6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DA22609C2E58ACAB008384E6 /* libBugsnagTestInterface.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DA22609B2E58ACAB008384E6 /* BugsnagTestInterface */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA2260A62E58ACAB008384E6 /* Build configuration list for PBXNativeTarget "BugsnagTestInterface" */;
+			buildPhases = (
+				DA2260982E58ACAB008384E6 /* Sources */,
+				DA2260992E58ACAB008384E6 /* Frameworks */,
+				DA22609A2E58ACAB008384E6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BugsnagTestInterface;
+			packageProductDependencies = (
+			);
+			productName = BugsnagTestInterface;
+			productReference = DA22609C2E58ACAB008384E6 /* libBugsnagTestInterface.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DA2260942E58ACAB008384E6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					DA22609B2E58ACAB008384E6 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+				};
+			};
+			buildConfigurationList = DA2260972E58ACAB008384E6 /* Build configuration list for PBXProject "BugsnagTestInterface" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DA2260932E58ACAB008384E6;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = DA22609D2E58ACAB008384E6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DA22609B2E58ACAB008384E6 /* BugsnagTestInterface */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DA2260982E58ACAB008384E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA2260D42E58AD99008384E6 /* ContextNativeCustomScenario.m in Sources */,
+				DA2260D52E58AD99008384E6 /* MetadataNativeUnhandledScenario.m in Sources */,
+				DA2260D62E58AD99008384E6 /* UserNativeClientScenario.m in Sources */,
+				DA2260D72E58AD99008384E6 /* StartSessionScenario.m in Sources */,
+				DA2260D82E58AD99008384E6 /* DeviceNativeUnhandledScenario.m in Sources */,
+				DA2260D92E58AD99008384E6 /* ResumeSessionScenario.m in Sources */,
+				DA2260DA2E58AD99008384E6 /* DeviceNativeHandledScenario.m in Sources */,
+				DA2260DB2E58AD99008384E6 /* MetadataNativeScenario.m in Sources */,
+				DA2260DC2E58AD99008384E6 /* PauseSessionScenario.m in Sources */,
+				DA2260DD2E58AD99008384E6 /* NativeFeatureFlagsScenario.m in Sources */,
+				DA2260DE2E58AD99008384E6 /* RCTFatalScenario.m in Sources */,
+				DA2260DF2E58AD99008384E6 /* FeatureFlagsNativeCrashScenario.m in Sources */,
+				DA2260E02E58AD99008384E6 /* AppNativeHandledScenario.m in Sources */,
+				DA2260E12E58AD99008384E6 /* HandledNativeErrorScenario.m in Sources */,
+				DA2260E22E58AD99008384E6 /* NativePromiseRejectionHandledScenario.m in Sources */,
+				DA2260E32E58AD99008384E6 /* NativePromiseRejectionUnhandledScenario.m in Sources */,
+				DA2260E42E58AD99008384E6 /* BreadcrumbsNativeManualScenario.m in Sources */,
+				DA2260E52E58AD99008384E6 /* Scenario.m in Sources */,
+				DA2260E62E58AD99008384E6 /* UnhandledNativeErrorScenario.m in Sources */,
+				DA2260E72E58AD99008384E6 /* AppNativeUnhandledScenario.m in Sources */,
+				DA2260AC2E58AD79008384E6 /* BugsnagTestInterface.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		DA2260A42E58ACAB008384E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		DA2260A52E58ACAB008384E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DA2260A72E58ACAB008384E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7W9PZ27Y5F;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DA2260A82E58ACAB008384E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7W9PZ27Y5F;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DA2260972E58ACAB008384E6 /* Build configuration list for PBXProject "BugsnagTestInterface" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA2260A42E58ACAB008384E6 /* Debug */,
+				DA2260A52E58ACAB008384E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA2260A62E58ACAB008384E6 /* Build configuration list for PBXNativeTarget "BugsnagTestInterface" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA2260A72E58ACAB008384E6 /* Debug */,
+				DA2260A82E58ACAB008384E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DA2260942E58ACAB008384E6 /* Project object */;
+}
