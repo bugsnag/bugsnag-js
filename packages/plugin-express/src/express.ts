@@ -114,6 +114,10 @@ const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
 
 export default plugin
 
+// CommonJS compatibility
+module.exports = plugin
+module.exports.default = plugin
+
 // Add getPlugin method type augmentation
 declare module '@bugsnag/core' {
   interface Client {
