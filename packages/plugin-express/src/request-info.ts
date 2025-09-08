@@ -1,6 +1,5 @@
 import { extractObject } from '@bugsnag/core'
 
-// Express request object interface
 interface ExpressRequest {
   url: string
   connection?: {
@@ -28,7 +27,6 @@ interface ExpressRequest {
   ip?: string
 }
 
-// Extracted request info interface (output)
 interface RequestInfo {
   url: string
   path: string
