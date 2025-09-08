@@ -43,6 +43,7 @@ class Client {
     this._features = []
     this._context = undefined
     this._user = {}
+    this._groupingDiscriminator = undefined
 
     // callbacks:
     //  e: onError
@@ -116,6 +117,16 @@ class Client {
 
   setContext (c) {
     this._context = c
+  }
+
+  getGroupingDiscriminator () {
+    return this._groupingDiscriminator
+  }
+
+  setGroupingDiscriminator (groupingDiscriminator) {
+    const previousValue = this._groupingDiscriminator
+    this._groupingDiscriminator = groupingDiscriminator
+    return previousValue
   }
 
   _configure (opts, internalPlugins) {
@@ -315,6 +326,9 @@ class Client {
     event._user = assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
     merge(event._features, this._features, event._featuresIndex)
+
+    const groupingDiscriminator = event.getGroupingDiscriminator() || this._groupingDiscriminator
+    if (groupingDiscriminator) event.setGroupingDiscriminator(groupingDiscriminator)
 
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && !includes(this._config.enabledReleaseStages, this._config.releaseStage)) {
