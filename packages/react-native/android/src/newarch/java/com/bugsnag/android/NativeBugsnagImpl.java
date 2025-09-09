@@ -72,6 +72,11 @@ public class NativeBugsnagImpl extends NativeBugsnagSpec {
   }
 
   @Override
+  public void updateGroupingDiscriminator(@Nullable String groupingDiscriminator) {
+    impl.updateGroupingDiscriminator(groupingDiscriminator);
+  }
+
+  @Override
   public void addMetadata(String section, ReadableMap metadata) {
     impl.addMetadata(section, metadata);
   }

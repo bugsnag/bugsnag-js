@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "core"
+        "core",
+        "react-native"
     ]
 }
