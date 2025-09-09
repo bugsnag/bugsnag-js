@@ -16,11 +16,11 @@ export interface RestifyRequest {
       family?: string
     }
   }
-  method: string  // Required in practice
+  method: string
   headers: Record<string, string | undefined>
   httpVersion?: string
-  getPath(): string  // Required in practice
-  absoluteUri(path: string): string  // Required in practice
+  getPath(): string
+  absoluteUri(path: string): string
   params?: Record<string, any>
   query?: Record<string, any>
   body?: Record<string, any>

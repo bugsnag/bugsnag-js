@@ -74,10 +74,7 @@ const plugin: Plugin = {
         event.request = { ...event.request, ...request }
         event.addMetadata('request', metadata)
         if (event._handledState.severityReason.type === 'unhandledException') {
-          // Modify the event properties directly instead of reassigning readonly _handledState
-          event.severity = handledState.severity
-          event.unhandled = handledState.unhandled
-          event._handledState.severityReason = handledState.severityReason
+            (event as any)._handledState = handledState
         }
       }, true);
 
@@ -85,8 +82,6 @@ const plugin: Plugin = {
     }
 
     const errorHandler = (req: Request, res: Response, err: RestifyError, cb: () => void) => {
-      const internalClient = client as InternalClient
-
       if (!internalClient._config.autoDetectErrors) return cb()
       if (err.statusCode && err.statusCode < 500) return cb()
 
@@ -111,8 +106,7 @@ const plugin: Plugin = {
 }
 
 const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
-  // Type assertion is safe here because we know Restify requests have the properties we need
-  const { body, ...requestInfo } = extractRequestInfo(req as unknown as RestifyRequest)
+  const { body, ...requestInfo } = extractRequestInfo(req as RestifyRequest)
   return {
     metadata: requestInfo,
     request: {
@@ -126,5 +120,7 @@ const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
   }
 }
 
-// module.exports.default = module.exports
 export default plugin
+
+module.exports = plugin
+module.exports.default = plugin
