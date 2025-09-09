@@ -1,17 +1,17 @@
 import { extractObject } from '@bugsnag/core'
 
-interface ExpressRequest {
+export interface ExpressRequest {
   url: string
   connection?: {
     address?: () => {
-      port: number
-      address: string
-      family: string
+      port?: number
+      address?: string
+      family?: string
     }
-    remoteAddress: string
-    remotePort: number
-    bytesRead: number
-    bytesWritten: number
+    remoteAddress?: string
+    remotePort?: number
+    bytesRead?: number
+    bytesWritten?: number
     encrypted?: boolean
   }
   params?: Record<string, any>
@@ -39,10 +39,10 @@ interface RequestInfo {
   clientIp?: string
   referer?: string
   connection?: {
-    remoteAddress: string
-    remotePort: number
-    bytesRead: number
-    bytesWritten: number
+    remoteAddress?: string
+    remotePort?: number
+    bytesRead?: number
+    bytesWritten?: number
     localPort?: number
     localAddress?: string
     IPVersion?: string

@@ -1,13 +1,22 @@
 import type { Client, Plugin } from '@bugsnag/core'
 import { cloneClient } from '@bugsnag/core'
+import { AsyncLocalStorage } from 'async_hooks'
 import type { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
 import * as express from 'express'
+import type { ExpressRequest } from './request-info'
 import extractRequestInfo from './request-info'
 
 // Extend Express Request interface to include bugsnag client
 declare module 'express-serve-static-core' {
   interface Request {
     bugsnag?: Client
+  }
+}
+
+// Add getPlugin method type augmentation
+declare module '@bugsnag/core' {
+  interface Client {
+    getPlugin(id: 'express'): BugsnagPluginExpressResult | undefined
   }
 }
 
@@ -31,6 +40,10 @@ interface ExtractedRequestData {
   request: RequestMetadata
 }
 
+interface InternalClient extends Client {
+  _clientContext: AsyncLocalStorage<Client>
+}
+
 const handledState = {
   severity: 'error' as const,
   unhandled: true,
@@ -43,9 +56,10 @@ const handledState = {
 const plugin: Plugin = {
   name: 'express',
   load: (client: Client): BugsnagPluginExpressResult => {
+    const internalClient = client as InternalClient
     const requestHandler = (req: Request, res: Response, next: NextFunction) => {
       // clone the client to be scoped to this request. If sessions are enabled, start one
-      const requestClient = cloneClient(client)
+      const requestClient = cloneClient(internalClient)
       if (requestClient._config.autoTrackSessions) {
         requestClient.startSession()
       }
@@ -60,18 +74,17 @@ const plugin: Plugin = {
         event.addMetadata('request', metadata)
         if (event._handledState.severityReason.type === 'unhandledException') {
           event.severity = 'error';
-          // Update handled state - using type assertion to maintain JS compatibility
           (event as any)._handledState = handledState
         }
       }, true)
 
-      ;(client as any)._clientContext.run(requestClient, next)
+      internalClient._clientContext.run(requestClient, next)
     }
 
     const errorHandler: ErrorRequestHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-      if (!client._config.autoDetectErrors) return next(err)
+      if (!internalClient._config.autoDetectErrors) return next(err)
 
-      const event = client.Event.create(err, false, handledState, 'express middleware', 1)
+      const event = internalClient.Event.create(err, false, handledState, 'express middleware', 1)
 
       const { metadata, request } = getRequestAndMetadataFromReq(req)
       event.request = { ...event.request, ...request }
@@ -80,17 +93,17 @@ const plugin: Plugin = {
       if (req.bugsnag) {
         req.bugsnag._notify(event)
       } else {
-        client._logger.warn(
+        internalClient._logger.warn(
           'req.bugsnag is not defined. Make sure the @bugsnag/plugin-express requestHandler middleware is added first.'
         )
-        client._notify(event)
+        internalClient._notify(event)
       }
 
       next(err)
     }
 
     const runInContext = (req: Request, res: Response, next: NextFunction) => {
-      ;(client as any)._clientContext.run(req.bugsnag, next)
+      (client as InternalClient)._clientContext.run(req.bugsnag as Client, next)
     }
 
     return { requestHandler, errorHandler, runInContext }
@@ -98,7 +111,7 @@ const plugin: Plugin = {
 }
 
 const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
-  const { body, ...requestInfo } = extractRequestInfo(req as any)
+  const { body, ...requestInfo } = extractRequestInfo(req as ExpressRequest)
   return {
     metadata: requestInfo,
     request: {
@@ -113,14 +126,3 @@ const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
 }
 
 export default plugin
-
-// CommonJS compatibility
-module.exports = plugin
-module.exports.default = plugin
-
-// Add getPlugin method type augmentation
-declare module '@bugsnag/core' {
-  interface Client {
-    getPlugin(id: 'express'): BugsnagPluginExpressResult | undefined
-  }
-}
