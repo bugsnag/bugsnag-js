@@ -312,7 +312,6 @@ class Client {
 
   notify (maybeError, onError, postReportCallback = noop) {
     const event = Event.create(maybeError, true, undefined, 'notify()', this._depth + 1, this._logger)
-    if (this._groupingDiscriminator) event.setGroupingDiscriminator(this._groupingDiscriminator)
     this._notify(event, onError, postReportCallback)
   }
 
@@ -326,6 +325,7 @@ class Client {
     event._metadata = assign({}, event._metadata, this._metadata)
     event._user = assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
+    event.setGroupingDiscriminator(this._groupingDiscriminator)
     merge(event._features, this._features, event._featuresIndex)
 
     // exit early if events should not be sent on the current releaseStage
