@@ -78,14 +78,15 @@ RCT_EXPORT_MODULE();
             }
             break;
 
-        case BSGClientObserverUpdateGroupingDiscriminator:
-            if ([value isKindOfClass:[NSString class]] || !value) {
-                return @{
-                    @"type": @"GroupingDiscriminatorUpdate",
-                    @"data": value ?: [NSNull null]
-                };
-            }
-            break;
+        // TODO: Implement when supported in Cocoa SDK
+        // case BSGClientObserverUpdateGroupingDiscriminator:
+        //     if ([value isKindOfClass:[NSString class]] || !value) {
+        //         return @{
+        //             @"type": @"GroupingDiscriminatorUpdate",
+        //             @"data": value ?: [NSNull null]
+        //         };
+        //     }
+        //     break;
     }
 
     return nil;
