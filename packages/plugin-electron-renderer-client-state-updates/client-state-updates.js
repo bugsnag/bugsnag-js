@@ -24,6 +24,7 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     client.addFeatureFlags = safeExec(client, BugsnagIpcRenderer, 'addFeatureFlags')
     client.clearFeatureFlag = safeExec(client, BugsnagIpcRenderer, 'clearFeatureFlag')
     client.clearFeatureFlags = safeExec(client, BugsnagIpcRenderer, 'clearFeatureFlags')
+    client.setGroupingDiscriminator = safeExec(client, BugsnagIpcRenderer, 'setGroupingDiscriminator')
 
     client.startSession = () => {
       safeExec(client, BugsnagIpcRenderer, 'startSession')()
@@ -64,5 +65,6 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     client.getContext = safeExec(client, BugsnagIpcRenderer, 'getContext')
     client.getUser = safeExec(client, BugsnagIpcRenderer, 'getUser')
     client.getMetadata = safeExec(client, BugsnagIpcRenderer, 'getMetadata')
+    client.getGroupingDiscriminator = safeExec(client, BugsnagIpcRenderer, 'getGroupingDiscriminator')
   }
 })
