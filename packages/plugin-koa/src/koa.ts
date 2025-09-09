@@ -1,5 +1,34 @@
-const { cloneClient } = require('@bugsnag/core')
-const extractRequestInfo = require('./request-info')
+import { Client, cloneClient, Plugin } from '@bugsnag/core'
+import { AsyncLocalStorage } from 'async_hooks'
+import * as Koa from 'koa'
+import extractRequestInfo from './request-info'
+
+interface BugsnagPluginKoaResult {
+  errorHandler: (err: KoaError, ctx: Koa.Context) => void
+  requestHandler: Koa.Middleware
+}
+
+// add a new call signature for the getPlugin() method that types the plugin result
+declare module '@bugsnag/core' {
+  interface Client {
+    getPlugin(id: 'koa'): BugsnagPluginKoaResult | undefined
+  }
+}
+
+// define ctx.bugsnag for koa middleware by declaration merging
+declare module 'koa' {
+  interface BaseContext {
+    bugsnag?: Client
+  }
+}
+
+interface InternalClient extends Client {
+  _clientContext: AsyncLocalStorage<Client>
+}
+
+interface KoaError extends Error {
+  status?: number
+}
 
 const handledState = {
   severity: 'error',
@@ -10,12 +39,14 @@ const handledState = {
   }
 }
 
-module.exports = {
+const plugin: Plugin = {
   name: 'koa',
-  load: client => {
-    const requestHandler = async (ctx, next) => {
+  load: (client: Client): BugsnagPluginKoaResult => {
+    const internalClient = client as InternalClient
+
+    const requestHandler = async (ctx: Koa.Context, next: Koa.Next) => {
       // clone the client to be scoped to this request. If sessions are enabled, start one
-      const requestClient = cloneClient(client)
+      const requestClient = cloneClient(internalClient)
       if (requestClient._config.autoTrackSessions) {
         requestClient.startSession()
       }
@@ -28,17 +59,17 @@ module.exports = {
         event.request = { ...event.request, ...request }
         event.addMetadata('request', metadata)
         if (event._handledState.severityReason.type === 'unhandledException') {
-          event.severity = 'error'
-          event._handledState = handledState
+          event.severity = 'error';
+          (event as any)._handledState = handledState
         }
       }, true)
 
-      await client._clientContext.run(requestClient, next)
+      await internalClient._clientContext.run(requestClient, next)
     }
 
-    requestHandler.v1 = function * (next) {
+    requestHandler.v1 = function * (this: Koa.Context, next: Koa.Next) {
       // clone the client to be scoped to this request. If sessions are enabled, start one
-      const requestClient = cloneClient(client)
+      const requestClient = cloneClient(internalClient)
       if (requestClient._config.autoTrackSessions) {
         requestClient.startSession()
       }
@@ -55,20 +86,20 @@ module.exports = {
       yield next
     }
 
-    const errorHandler = (err, ctx) => {
+    const errorHandler = (err: KoaError, ctx: Koa.Context) => {
       // don't notify if "autoDetectErrors" is disabled OR the error was triggered
       // by ctx.throw with a non 5xx status
       const shouldNotify =
-        client._config.autoDetectErrors &&
+        internalClient._config.autoDetectErrors &&
         (err.status === undefined || err.status >= 500)
 
       if (shouldNotify) {
-        const event = client.Event.create(err, false, handledState, 'koa middleware', 1)
+        const event = internalClient.Event.create(err, false, handledState, 'koa middleware', 1)
 
         if (ctx.bugsnag) {
           ctx.bugsnag._notify(event)
         } else {
-          client._logger.warn('ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.')
+          internalClient._logger.warn('ctx.bugsnag is not defined. Make sure the @bugsnag/plugin-koa requestHandler middleware is added first.')
 
           // the request metadata should be added by the requestHandler, but as there's
           // no "ctx.bugsnag" we have to assume the requestHandler has not run
@@ -76,7 +107,7 @@ module.exports = {
           event.request = { ...event.request, ...request }
           event.addMetadata('request', metadata)
 
-          client._notify(event)
+          internalClient._notify(event)
         }
       }
 
@@ -95,7 +126,7 @@ module.exports = {
   }
 }
 
-const getRequestAndMetadataFromCtx = ctx => {
+const getRequestAndMetadataFromCtx = (ctx: Koa.Context) => {
   // Exclude new mappings from metaData but keep existing ones to preserve backwards compatibility
   const { body, ...requestInfo } = extractRequestInfo(ctx)
 
@@ -113,4 +144,6 @@ const getRequestAndMetadataFromCtx = ctx => {
   }
 }
 
-module.exports.default = module.exports
+export default plugin
+module.exports.default = plugin 
+module.exports = plugin
