@@ -69,7 +69,7 @@ class Event {
 
   setGroupingDiscriminator (value) {
     const previousValue = this._groupingDiscriminator
-    this._groupingDiscriminator = typeof value === 'string' ? value : undefined
+    if (typeof value === 'string' || value === null || value === undefined) this._groupingDiscriminator = value
     return previousValue
   }
 

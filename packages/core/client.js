@@ -123,9 +123,9 @@ class Client {
     return this._groupingDiscriminator
   }
 
-  setGroupingDiscriminator (groupingDiscriminator) {
+  setGroupingDiscriminator (value) {
     const previousValue = this._groupingDiscriminator
-    this._groupingDiscriminator = groupingDiscriminator
+    if (typeof value === 'string' || value === null || value === undefined) this._groupingDiscriminator = value
     return previousValue
   }
 
