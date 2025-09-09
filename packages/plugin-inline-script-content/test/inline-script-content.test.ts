@@ -1,7 +1,6 @@
-import plugin from '../inline-script-content'
+import plugin from '../src/inline-script-content'
 
-import Client from '@bugsnag/core/client'
-import Event from '@bugsnag/core/event'
+import { Client, Event, EventDeliveryPayload } from '@bugsnag/core'
 
 describe('plugin: inline script content', () => {
   it('should add an onError callback which captures the HTML content if file=current url', () => {
@@ -27,7 +26,7 @@ Lorem ipsum dolor sit amet.
     const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
-    const payloads = []
+    const payloads: EventDeliveryPayload[] = []
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
@@ -48,7 +47,7 @@ Lorem ipsum dolor sit amet.
     // check it installed a new onreadystatechange handler
     expect(document.onreadystatechange === prevHandler).toBe(false)
     // now check it calls the previous one
-    document.onreadystatechange({} as unknown as globalThis.Event)
+    document.onreadystatechange?.({} as unknown as globalThis.Event)
     expect(client).toBe(client)
   })
 
@@ -91,7 +90,7 @@ Lorem ipsum dolor sit amet.
     const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
-    const payloads = []
+    const payloads: EventDeliveryPayload[] = []
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
@@ -127,7 +126,7 @@ Lorem ipsum dolor sit amet.
     const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
-    const payloads = []
+    const payloads: EventDeliveryPayload[] = []
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
@@ -136,7 +135,7 @@ Lorem ipsum dolor sit amet.
     ]))
     expect(payloads.length).toEqual(1)
     expect(payloads[0].events[0].errors[0].stacktrace[0].code).toBeDefined()
-    const surroundingCode = payloads[0].events[0].errors[0].stacktrace[0].code
+    const surroundingCode = payloads[0].events[0].errors[0].stacktrace[0].code as Record<string, string>
     Object.keys(surroundingCode).forEach(line => {
       expect(surroundingCode[line].length > 200).toBe(false)
     })
@@ -162,7 +161,7 @@ Lorem ipsum dolor sit amet.
     const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
-    const payloads = []
+    const payloads: EventDeliveryPayload[] = []
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
@@ -225,7 +224,7 @@ Lorem ipsum dolor sit amet.
     const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
-    const payloads = []
+    const payloads: EventDeliveryPayload[] = []
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
@@ -254,7 +253,7 @@ Lorem ipsum dolor sit amet.
     const window = { location: { href: 'https://app.bugsnag.com/errors' } } as unknown as Window &typeof globalThis
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
-    const payloads = []
+    const payloads: EventDeliveryPayload[] = []
 
     expect(client._cbs.e.length).toBe(1)
     client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
