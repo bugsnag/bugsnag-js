@@ -32,7 +32,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   it('should emit events when grouping discriminator changes', done => {
     const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
-    emitter.on('ContextUpdate', (groupingDiscriminator: string) => {
+    emitter.on('GroupingDiscriminatorUpdate', (groupingDiscriminator: string) => {
       expect(groupingDiscriminator).toBe('discriminator')
       done()
     })
