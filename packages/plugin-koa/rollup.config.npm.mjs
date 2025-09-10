@@ -2,5 +2,5 @@ import createRollupConfig from "../../.rollup/index.mjs"
 
 export default createRollupConfig({
     input: "src/koa.ts",
-    external: ["koa"],
+    external: ["koa", "async_hooks", "http", "net"],
 })
