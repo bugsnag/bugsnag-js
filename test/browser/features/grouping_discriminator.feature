@@ -8,7 +8,7 @@ Scenario: multiple notify() calls with different grouping discriminators
 
   # First error - no discriminator
   And the error payload field "events.0.exceptions.0.message" equals "no-discriminator"
-  And the error payload field "events.0.groupingDiscriminator" is not present
+  And the error payload field "events.0.groupingDiscriminator" is null
   
   # Second error - uses client discriminator
   And the error payload field "events.1.exceptions.0.message" equals "client-discriminator"
@@ -20,12 +20,12 @@ Scenario: multiple notify() calls with different grouping discriminators
   
   # Fourth error - cleared discriminator on event (null)
   And the error payload field "events.3.groupingDiscriminator" equals "null-discriminator"
-  And the error payload field "events.3.groupingDiscriminator" is not present
+  And the error payload field "events.3.groupingDiscriminator" is null
 
   # Fifth error - cleared discriminator on event (undefined)
   And the error payload field "events.4.groupingDiscriminator" equals "undefined-discriminator"
-  And the error payload field "events.4.groupingDiscriminator" is not present
+  And the error payload field "events.4.groupingDiscriminator" is null
 
   # Sixth error - cleared discriminator on client and event
   And the error payload field "events.5.groupingDiscriminator" equals "no-discriminator-2"
-  And the error payload field "events.5.groupingDiscriminator" is not present
+  And the error payload field "events.5.groupingDiscriminator" is null
