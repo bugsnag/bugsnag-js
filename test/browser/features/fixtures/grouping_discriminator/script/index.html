@@ -15,33 +15,44 @@
   </head>
   <body>
     <script>
+      // ensure functions are run in roder
+      async function sleep (ms = 0) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+      }
+
+      async function run () {
         Bugsnag.notify(new Error('no-discriminator'))
-
-        // Set client grouping discriminator
-        Bugsnag.setGroupingDiscriminator('client-discriminator')
-      
+        sleep(50)
+        
         // Notify with error that should use client discriminator
+        Bugsnag.setGroupingDiscriminator('client-discriminator')
         Bugsnag.notify(new Error('client-discriminator'))
-
+        sleep(50)
+        
         // Notify with error and set event discriminator
         Bugsnag.notify(new Error('event-discriminator'), function (event) {
-            event.setGroupingDiscriminator('event-discriminator')
+          event.setGroupingDiscriminator('event-discriminator')
         })
-
+        sleep(50)
+        
         // Notify with error and explicitly set event discriminator to null
         Bugsnag.notify(new Error('null-discriminator'), function (event) {
-            event.setGroupingDiscriminator(null)
+          event.setGroupingDiscriminator(null)
         })
-
+        sleep(50)
+        
         // Notify with error and explicitly set event discriminator to undefined
         Bugsnag.notify(new Error('undefined-discriminator'), function (event) {
-            event.setGroupingDiscriminator(undefined)
+          event.setGroupingDiscriminator(undefined)
         })
-
+        sleep(50)
+        
         // Clear client grouping discriminator
         Bugsnag.setGroupingDiscriminator(undefined)
-
         Bugsnag.notify(new Error('no-discriminator-2'))
+      }
+
+      run()
     </script>
   </body>
 </html>
