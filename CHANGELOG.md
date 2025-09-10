@@ -7,6 +7,10 @@
 - Add additional grouping discriminator property to events [#2544](https://github.com/bugsnag/bugsnag-js/pull/2544)
 - (plugin-react-native-client-sync|plugin-electron-client-state-manager|plugin-electron-renderer-client-state-updates) Handle grouping discriminator property [#2544](https://github.com/bugsnag/bugsnag-js/pull/2544)
 
+### Changed
+
+- (react-native) Update bugsnag-android from v6.12.1 to [v6.18.0](https://github.com/bugsnag/bugsnag-android/blob/v6.18.0/CHANGELOG.md#6180-2025-09-10)
+
 ## [8.5.0] - 2025-09-01
 
 ### Added
