@@ -15,46 +15,30 @@
   </head>
   <body>
     <script>
-      // ensure functions are run in order
-      async function sleep (ms) {
-        return new Promise(function (resolve) { 
-          setTimeout(resolve, ms) 
-        })
-      }
-
-      async function run () {
-        Bugsnag.notify(new Error('no-discriminator'))
-        sleep(50)
-        
-        // Notify with error that should use client discriminator
-        Bugsnag.setGroupingDiscriminator('client-discriminator')
-        Bugsnag.notify(new Error('client-discriminator'))
-        sleep(50)
-        
-        // Notify with error and set event discriminator
-        Bugsnag.notify(new Error('event-discriminator'), function (event) {
-          event.setGroupingDiscriminator('event-discriminator')
-        })
-        sleep(50)
-        
-        // Notify with error and explicitly set event discriminator to null
-        Bugsnag.notify(new Error('null-discriminator'), function (event) {
-          event.setGroupingDiscriminator(null)
-        })
-        sleep(50)
-        
-        // Notify with error and explicitly set event discriminator to undefined
-        Bugsnag.notify(new Error('undefined-discriminator'), function (event) {
-          event.setGroupingDiscriminator(undefined)
-        })
-        sleep(50)
-        
-        // Clear client grouping discriminator
-        Bugsnag.setGroupingDiscriminator(undefined)
-        Bugsnag.notify(new Error('no-discriminator-2'))
-      }
-
-      run()
+      Bugsnag.notify(new Error('no-discriminator'))
+      
+      // Notify with error that should use client discriminator
+      Bugsnag.setGroupingDiscriminator('client-discriminator')
+      Bugsnag.notify(new Error('client-discriminator'))
+      
+      // Notify with error and set event discriminator
+      Bugsnag.notify(new Error('event-discriminator'), function (event) {
+        event.setGroupingDiscriminator('event-discriminator')
+      })
+      
+      // Notify with error and explicitly set event discriminator to null
+      Bugsnag.notify(new Error('null-discriminator'), function (event) {
+        event.setGroupingDiscriminator(null)
+      })
+      
+      // Notify with error and explicitly set event discriminator to undefined
+      Bugsnag.notify(new Error('undefined-discriminator'), function (event) {
+        event.setGroupingDiscriminator(undefined)
+      })
+      
+      // Clear client grouping discriminator
+      Bugsnag.setGroupingDiscriminator(undefined)
+      Bugsnag.notify(new Error('no-discriminator-2'))
     </script>
   </body>
 </html>
