@@ -1,6 +1,6 @@
+import type { IncomingMessage } from 'http'
 import type { Context } from 'koa'
 import type { AddressInfo } from 'net'
-import type { IncomingMessage } from 'http'
 
 interface KoaRequest extends Context {
   request: Context['request'] & {
@@ -8,32 +8,6 @@ interface KoaRequest extends Context {
   }
   req: IncomingMessage
 }
-
-// interface KoaRequest {
-//   url?: string
-//   connection?: {
-//     remoteAddress?: string
-//     remotePort?: number
-//     bytesRead?: number
-//     bytesWritten?: number
-//     localPort?: number
-//     localAddress?: string
-//     IPVersion?: string
-//     address?: () => {
-//       port?: number
-//       address?: string
-//       family?: string
-//     }
-//   }
-//   method: string
-//   headers: Record<string, string | undefined>
-//   httpVersion?: string
-//   params?: Record<string, any>
-//   query?: Record<string, any>
-//   body?: Record<string, any>
-//   request: any
-//   ip?: string
-// }
 
 interface RequestInfo {
     url?: string
@@ -59,11 +33,17 @@ interface RequestInfo {
 const extractRequestInfo = (ctx?: KoaRequest): RequestInfo => {
   if (!ctx) return {}
   const request = ctx.req
-  const connection = request.connection
+  const connection = request.socket
   const address = connection && connection.address && connection.address()
-  const addressInfo = address && typeof address === 'object' ? address as AddressInfo : null
-  const portNumber = addressInfo?.port
+  const portNumber = address && (address as AddressInfo).port
   const url = `${ctx.request.href}`
+  
+  // Helper to get first value from header (handles string | string[] | undefined)
+  const getFirstHeader = (header: string | string[] | undefined): string | undefined => {
+    if (Array.isArray(header)) return header[0]
+    return header
+  }
+  
   return {
     url,
     path: request.url,
@@ -72,20 +52,16 @@ const extractRequestInfo = (ctx?: KoaRequest): RequestInfo => {
     httpVersion: request.httpVersion,
     query: ctx.request.query,
     body: ctx.request.body,
-    referer: Array.isArray(request.headers.referer) 
-      ? request.headers.referer[0] 
-      : (request.headers.referer || (request.headers.referrer && Array.isArray(request.headers.referrer)
-        ? request.headers.referrer[0]
-        : request.headers.referrer)),
-    clientIp: ctx.ip || (request.connection ? request.connection.remoteAddress : undefined),
-    connection: request.connection ? {
-      remoteAddress: request.connection.remoteAddress,
-      remotePort: request.connection.remotePort,
-      bytesRead: request.connection.bytesRead,
-      bytesWritten: request.connection.bytesWritten,
+    referer: getFirstHeader(request.headers.referer) || getFirstHeader(request.headers.referrer),
+    clientIp: ctx.ip || (request.socket ? request.socket.remoteAddress : undefined),
+    connection: request.socket ? {
+      remoteAddress: request.socket.remoteAddress,
+      remotePort: request.socket.remotePort,
+      bytesRead: request.socket.bytesRead,
+      bytesWritten: request.socket.bytesWritten,
       localPort: portNumber,
-      localAddress: addressInfo?.address,
-      IPVersion: addressInfo?.family
+      localAddress: address ? (address as AddressInfo).address : undefined,
+      IPVersion: address ? (address as AddressInfo).family : undefined
     } : undefined
   }
 }
