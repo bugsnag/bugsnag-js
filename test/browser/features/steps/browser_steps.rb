@@ -59,9 +59,7 @@ When('the following sets are present in the current {word} payloads:') do |reque
   expected_values.each do |expected_data|
     # if value is 'nil' then the field should not be present in the payload
     expected_data.each do |field_path, expected_value|
-      if expected_value == 'nil'
-        expected_data[field_path] = nil
-      end
+      expected_data[field_path] = nil if expected_value == 'nil'
     end
     Maze.check.true(payload_values.include?(expected_data),
                     "#{expected_data} was not found in any of the current payloads")
