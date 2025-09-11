@@ -145,5 +145,3 @@ const getRequestAndMetadataFromCtx = (ctx: Koa.Context) => {
 }
 
 export default plugin
-module.exports.default = plugin 
-module.exports = plugin
