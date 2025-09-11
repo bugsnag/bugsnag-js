@@ -9,6 +9,7 @@
 
 ### Changed
 
+- (react-native) Update bugsnag-cocoa to [v6.33.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.33.1)
 - (react-native) Update bugsnag-android from v6.12.1 to [v6.18.0](https://github.com/bugsnag/bugsnag-android/blob/v6.18.0/CHANGELOG.md#6180-2025-09-10)
 
 ## [8.5.0] - 2025-09-01
