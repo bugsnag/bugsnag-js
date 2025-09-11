@@ -90,7 +90,7 @@ describe('plugin: koa', () => {
           httpVersion: '1.0',
           method: 'GET',
           url: '/xyz',
-          connection: {
+          socket: {
             remoteAddress: '123.456.789.0',
             remotePort: 9876,
             bytesRead: 192837645,
