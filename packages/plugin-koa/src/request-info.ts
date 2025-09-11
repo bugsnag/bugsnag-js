@@ -30,12 +30,16 @@ interface RequestInfo {
     }
 }
 
+const isAddressInfo = (info: any): info is AddressInfo => {
+  return info && typeof info === 'object' && 'port' in info && 'address' in info && 'family' in info
+}
+
 const extractRequestInfo = (ctx?: KoaRequest): RequestInfo => {
   if (!ctx) return {}
   const request = ctx.req
-  const connection = request.socket
+  const connection = request.socket || request.connection
   const address = connection && connection.address && connection.address()
-  const portNumber = address && (address as AddressInfo).port
+  const portNumber = isAddressInfo(address) ? address.port : undefined
   const url = `${ctx.request.href}`
   
   // Helper to get first value from header (handles string | string[] | undefined)
@@ -60,8 +64,8 @@ const extractRequestInfo = (ctx?: KoaRequest): RequestInfo => {
       bytesRead: request.socket.bytesRead,
       bytesWritten: request.socket.bytesWritten,
       localPort: portNumber,
-      localAddress: address ? (address as AddressInfo).address : undefined,
-      IPVersion: address ? (address as AddressInfo).family : undefined
+      localAddress: isAddressInfo(address) ? address.address : undefined,
+      IPVersion: isAddressInfo(address) ? address.family : undefined
     } : undefined
   }
 }
