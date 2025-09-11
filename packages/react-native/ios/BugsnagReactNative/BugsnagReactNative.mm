@@ -73,7 +73,7 @@ BSG_EXPORT_METHOD(updateContext:(NSString *)context) {
     BSG_EXPORT_RETURN
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(updateGroupingDiscriminator:(NSString *)groupingDiscriminator) {
+BSG_EXPORT_METHOD(updateGroupingDiscriminator:(NSString *)groupingDiscriminator) {
     [Bugsnag client].groupingDiscriminator = groupingDiscriminator;
 }
 
