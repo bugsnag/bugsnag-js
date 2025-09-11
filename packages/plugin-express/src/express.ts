@@ -3,8 +3,8 @@ import { cloneClient } from '@bugsnag/core'
 import { AsyncLocalStorage } from 'async_hooks'
 import type { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
 import * as express from 'express'
-import type { ExpressRequest } from './request-info'
 import extractRequestInfo from './request-info'
+import type { RequestInfo } from './request-info'
 
 // Extend Express Request interface to include bugsnag client
 declare module 'express-serve-static-core' {
@@ -26,18 +26,16 @@ interface BugsnagPluginExpressResult {
   runInContext: express.RequestHandler
 }
 
-interface RequestMetadata {
-  body?: any
-  clientIp?: string
-  headers: Record<string, any>
-  httpMethod: string
-  url: string
-  referer?: string
-}
-
 interface ExtractedRequestData {
-  metadata: any
-  request: RequestMetadata
+  metadata: Omit<RequestInfo, 'body'>
+  request: {
+    body: RequestInfo['body']
+    clientIp: RequestInfo['clientIp']
+    headers: RequestInfo['headers']
+    httpMethod: RequestInfo['httpMethod']
+    url: RequestInfo['url']
+    referer: RequestInfo['referer']
+  }
 }
 
 interface InternalClient extends Client {
@@ -111,7 +109,7 @@ const plugin: Plugin = {
 }
 
 const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
-  const { body, ...requestInfo } = extractRequestInfo(req as ExpressRequest)
+  const { body, ...requestInfo } = extractRequestInfo(req as Request)
   return {
     metadata: requestInfo,
     request: {
@@ -126,6 +124,3 @@ const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
 }
 
 export default plugin
-
-module.exports = plugin
-module.exports.default = plugin
