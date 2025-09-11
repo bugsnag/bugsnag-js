@@ -1,42 +1,12 @@
 import { extractObject } from '@bugsnag/core'
+import type { Request } from 'restify'
+import type { AddressInfo } from 'net'
 
-export interface RestifyRequest {
-  url?: string
-  connection?: {
-    remoteAddress?: string
-    remotePort?: number
-    bytesRead?: number
-    bytesWritten?: number
-    localPort?: number
-    localAddress?: string
-    IPVersion?: string
-    address?: () => {
-      port?: number
-      address?: string
-      family?: string
-    }
-  }
-  method: string
-  headers: Record<string, string | undefined>
-  httpVersion?: string
-  getPath(): string
-  absoluteUri(path: string): string
-  params?: Record<string, any>
-  query?: Record<string, any>
-  body?: Record<string, any>
-}
-
-export interface RequestInfo {
-    url: string
+export interface RequestInfo extends Omit<Request, 'path' | 'connection'> {
     path: string
-    httpMethod: string
-    headers: Record<string, string | undefined>
-    httpVersion?: string
-    params?: Record<string, any>
-    query?: Record<string, any>
-    body?: Record<string, any>
-    clientIp?: string
-    referer?: string
+    httpMethod?: string
+    clientIp?: string | string[]
+    referer?: string | string[]
     connection?: {
       remoteAddress?: string
       remotePort?: number
@@ -48,13 +18,17 @@ export interface RequestInfo {
     }
 }
 
-const extractRequestInfo = (req: RestifyRequest): RequestInfo => {
-  const connection = req.connection
+const isAddressInfo = (info: any): info is AddressInfo => {
+  return info && typeof info === 'object' && 'port' in info && 'address' in info && 'family' in info
+}
+
+const extractRequestInfo = (req: Request): RequestInfo => {
+  const connection = req.socket || req.connection
   const address = connection && connection.address && connection.address()
-  const portNumber = address && address.port
+  const portNumber = isAddressInfo(address) ? address.port : undefined
   const path = req.getPath() || req.url
   const url = req.absoluteUri(path as string)
-  const request: RequestInfo = {
+  const request: Partial<RequestInfo> = {
     url: url,
     path: path as string,
     httpMethod: req.method,
@@ -76,11 +50,11 @@ const extractRequestInfo = (req: RestifyRequest): RequestInfo => {
       bytesRead: connection.bytesRead,
       bytesWritten: connection.bytesWritten,
       localPort: portNumber,
-      localAddress: address ? address.address : undefined,
-      IPVersion: address ? address.family : undefined
+      localAddress: isAddressInfo(address) ? address.address : undefined,
+      IPVersion: isAddressInfo(address) ? address.family : undefined,
     }
   }
-  return request
+  return request as RequestInfo
 }
 
 export default extractRequestInfo

@@ -3,7 +3,7 @@ import { cloneClient } from '@bugsnag/core'
 import { AsyncLocalStorage } from 'async_hooks'
 import type { Next, Request, Response } from 'restify'
 import restify from 'restify'
-import type { RequestInfo, RestifyRequest } from './request-info'
+import type { RequestInfo } from './request-info'
 import extractRequestInfo from './request-info'
 
 declare module 'restify' {
@@ -31,12 +31,12 @@ interface BugsnagPluginRestifyResult {
 interface ExtractedRequestData {
   metadata: Omit<RequestInfo, 'body'>
   request: {
-    body?: Record<string, any>
-    clientIp?: string
-    headers: Record<string, any>
-    httpMethod: string
-    url: string
-    referer?: string
+    body: RequestInfo['body']
+    clientIp: RequestInfo['clientIp']
+    headers: RequestInfo['headers']
+    httpMethod: RequestInfo['httpMethod']
+    url: RequestInfo['url']
+    referer: RequestInfo['referer']
   }
 }
 
@@ -106,7 +106,7 @@ const plugin: Plugin = {
 }
 
 const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
-  const { body, ...requestInfo } = extractRequestInfo(req as RestifyRequest)
+  const { body, ...requestInfo } = extractRequestInfo(req)
   return {
     metadata: requestInfo,
     request: {
