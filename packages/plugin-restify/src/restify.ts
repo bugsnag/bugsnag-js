@@ -121,6 +121,3 @@ const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
 }
 
 export default plugin
-
-module.exports = plugin
-module.exports.default = plugin
