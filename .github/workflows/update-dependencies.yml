@@ -24,7 +24,7 @@ jobs:
     env:
       SUBMODULE: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.target_submodule || inputs.target_submodule }}
       VERSION: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.target_version || inputs.target_version }}
-      BUNDLE_GITHUB__COM: ${{ secrets.BUNDLE_ACCESS_TOKEN }}
+      BUNDLE_GITHUB__COM: ${{ github.token }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REVIEWER: gingerbenw
     steps:
