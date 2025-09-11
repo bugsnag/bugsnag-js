@@ -45,6 +45,9 @@ jobs:
         with:
           ruby-version: 2.7
 
+      - name: Debug bundler config
+        run: bundle config
+
       - name: Install dependencies
         run: bundle install
 
