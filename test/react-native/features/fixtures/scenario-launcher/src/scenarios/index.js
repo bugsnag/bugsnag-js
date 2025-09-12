@@ -84,3 +84,4 @@ export { ReactNativeNavigationBreadcrumbsDisabledScenario } from './ReactNativeN
 
 // grouping-discriminator.feature
 export { GroupingDiscriminatorScenario } from './GroupingDiscriminatorScenario'
+export { GroupingDiscriminatorNativeScenario } from './GroupingDiscriminatorNativeScenario'
