@@ -25,6 +25,13 @@ module.exports = (NativeClient) => ({
       return ret
     }
 
+    const origSetGroupingDiscriminator = client.setGroupingDiscriminator
+    client.setGroupingDiscriminator = function () {
+      const ret = origSetGroupingDiscriminator.apply(this, arguments)
+      NativeClient.updateGroupingDiscriminator(this._groupingDiscriminator)
+      return ret
+    }
+
     const origAddMetadata = client.addMetadata
     client.addMetadata = function (section, key, value) {
       const ret = origAddMetadata.apply(this, arguments)
@@ -98,6 +105,9 @@ module.exports = (NativeClient) => ({
           break
         case 'ContextUpdate':
           origSetContext.call(client, event.data)
+          break
+        case 'GroupingDiscriminatorUpdate':
+          origSetGroupingDiscriminator.call(client, event.data)
           break
         case 'AddFeatureFlag':
           origAddFeatureFlag.call(client, event.data.name, event.data.variant)

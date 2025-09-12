@@ -29,6 +29,16 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     client.setContext('ctx')
   })
 
+  it('should emit events when grouping discriminator changes', done => {
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const { emitter } = client.getPlugin('clientStateManager')
+    emitter.on('GroupingDiscriminatorUpdate', (groupingDiscriminator: string) => {
+      expect(groupingDiscriminator).toBe('discriminator')
+      done()
+    })
+    client.setGroupingDiscriminator('discriminator')
+  })
+
   interface MetadataUpdatePayload {
     section: string
     values?: Record<string, unknown>

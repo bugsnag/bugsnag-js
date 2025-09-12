@@ -1,0 +1,7 @@
+{
+    "conventionalCommits.scopes": [
+        "core",
+        "react-native",
+        "electron"
+    ]
+}

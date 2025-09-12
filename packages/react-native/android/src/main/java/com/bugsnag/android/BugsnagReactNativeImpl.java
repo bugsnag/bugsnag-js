@@ -161,6 +161,14 @@ class BugsnagReactNativeImpl {
     }
   }
 
+  void updateGroupingDiscriminator(@Nullable String groupingDiscriminator) {
+    try {
+      plugin.updateGroupingDiscriminator(groupingDiscriminator);
+    } catch (Throwable exc) {
+      logFailure("updateGroupingDiscriminator", exc);
+    }
+  }
+
   void addMetadata(@NonNull String section, @Nullable ReadableMap data) {
     try {
       plugin.addMetadata(section, data != null ? data.toHashMap() : null);

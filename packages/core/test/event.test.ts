@@ -445,4 +445,28 @@ describe('@bugsnag/core/event', () => {
       expect(serialized.correlation).toBeUndefined()
     })
   })
+
+  describe('Event.getGroupingDiscriminator() / Event.setGroupingDiscriminator', () => {
+    it('sets and retrieves grouping discriminator on event', () => {
+      const event = new Event('Error', 'test message', [])
+
+      // Initially should be undefined
+      expect(event.getGroupingDiscriminator()).toBe(undefined)
+
+      // Set a value and retrieve it
+      const previousValue = event.setGroupingDiscriminator('event-discriminator')
+      expect(previousValue).toBe(undefined)
+      expect(event.getGroupingDiscriminator()).toBe('event-discriminator')
+
+      // Update the value
+      const previousValue2 = event.setGroupingDiscriminator('updated-discriminator')
+      expect(previousValue2).toBe('event-discriminator')
+      expect(event.getGroupingDiscriminator()).toBe('updated-discriminator')
+
+      // Clear the value
+      const previousValue3 = event.setGroupingDiscriminator(undefined)
+      expect(previousValue3).toBe('updated-discriminator')
+      expect(event.getGroupingDiscriminator()).toBe(undefined)
+    })
+  })
 })
