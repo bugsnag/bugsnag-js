@@ -74,7 +74,8 @@ BSG_EXPORT_METHOD(updateContext:(NSString *)context) {
 }
 
 BSG_EXPORT_METHOD(updateGroupingDiscriminator:(NSString *)groupingDiscriminator) {
-    [Bugsnag client].groupingDiscriminator = groupingDiscriminator;
+    [Bugsnag setGroupingDiscriminator:groupingDiscriminator];
+    BSG_EXPORT_RETURN
 }
 
 BSG_EXPORT_METHOD(updateCodeBundleId:(NSString *)codeBundleId) {
