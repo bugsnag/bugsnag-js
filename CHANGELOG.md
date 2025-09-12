@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- (plugin-window-onerror) Guard against errors when trying to call previous handler [#2551](https://github.com/bugsnag/bugsnag-js/pull/2551)
+
 ## [8.5.0] - 2025-09-01
 
 ### Added
