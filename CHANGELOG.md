@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
-### Dependencies
+### Changed
 
 Update bugsnag-cocoa to [v6.33.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.33.1) [#2552](https://github.com/bugsnag/bugsnag-js/pull/2552)
+
+### Fixed
+
+- (plugin-window-onerror) Guard against errors when trying to call previous handler [#2551](https://github.com/bugsnag/bugsnag-js/pull/2551)
 
 ## [8.5.0] - 2025-09-01
 

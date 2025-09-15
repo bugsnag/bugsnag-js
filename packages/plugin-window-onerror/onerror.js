@@ -60,7 +60,7 @@ module.exports = (win = window, component = 'window onerror') => ({
         client._notify(event)
       }
 
-      if (typeof prevOnError === 'function') prevOnError.apply(this, arguments)
+      try { prevOnError.apply(this, arguments) } catch (e) {}
     }
 
     const prevOnError = win.onerror
