@@ -69,11 +69,29 @@ Scenario: a handled error passed to req.bugsnag.notify()
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
+  And the event "severityReason.type" equals "handledException"
+  And the event "severityReason.attributes" is null
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "handled"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
   And the event "request.url" equals "http://restify/handled"
+  And the event "request.httpMethod" equals "GET"
+  And the event "request.clientIp" is not null
+
+Scenario: a manual event with unhandledException type gets modified by the plugin
+  Then I open the URL "http://restify/unhandled-exception"
+  And I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is true
+  And the event "severity" equals "error"
+  And the event "severityReason.type" equals "unhandledErrorMiddleware"
+  And the event "severityReason.attributes.framework" equals "Restify"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "unhandled-exception"
+  And the exception "type" equals "nodejs"
+  And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://restify/unhandled-exception"
   And the event "request.httpMethod" equals "GET"
   And the event "request.clientIp" is not null
 
