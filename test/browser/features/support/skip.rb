@@ -1,21 +1,21 @@
-(1..50).each do |version|
-    Before("@skip_ios_#{version}") do
-        if Maze.config.browser == "ios_#{version}"
-            skip_this_scenario("Skipping scenario on iOS #{current_browser}")
-        end
+Before('@skip_http') do |_scenario|
+    skip_this_scenario("Skipping scenario") if Maze.config.https == false
+end
+
+["chrome", "firefox", "safari", "edge", "ie", "ios"].each do |browser|
+    Before("@skip_#{browser}") do
+      skip_this_scenario("Skipping scenario: Not supported on #{browser}") if Maze.config.browser.include?("#{browser}")
     end
-  
-    Before("@skip_before_ios_#{version}") do
-        if Maze.config.browser.include? "ios_"
-            browser_version = Maze.config.browser.sub("ios_", "").to_i
-    
-            if browser_version < version
-                skip_this_scenario("Skipping scenario on iOS #{browser_version}")
+
+    1.upto(200) do |version|
+        Before("@skip_#{browser}_#{version}") do
+            skip_this_scenario("Skipping scenario: Not supported on #{browser} #{version}") if Maze.config.browser == "#{browser}_#{version}"
+        end
+        Before("@skip_before_#{browser}_#{version}") do
+            if Maze.config.browser.include?("#{browser}")
+                browser_version = Maze.config.browser.sub("#{browser}_", "").to_i
+                skip_this_scenario("Skipping scenario: Not supported on #{browser} #{version}") if browser_version < version
             end
         end
     end
-end
-
-Before('@skip_http') do |_scenario|
-    skip_this_scenario("Skipping scenario") if Maze.config.https == false
 end
