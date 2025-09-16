@@ -14,14 +14,6 @@
     </script>
   </head>
   <body>
-    <pre id="bugsnag-test-should-run">PENDING</pre>
-    <script nomodule>
-      var __lacksModuleSupport = true;
-    </script>
-    <script>
-      var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = typeof __lacksModuleSupport !== 'undefined' ? 'NO' : 'YES'
-    </script>
     <script type="module">
       var customError = {
         name: 'Unlikely scenario',
