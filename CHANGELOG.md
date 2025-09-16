@@ -4,7 +4,8 @@
 
 ### Changed
 
-Update bugsnag-cocoa to [v6.33.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.33.1) [#2552](https://github.com/bugsnag/bugsnag-js/pull/2552)
+- Update bugsnag-cocoa to [v6.33.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.33.1) [#2552](https://github.com/bugsnag/bugsnag-js/pull/2552)
+- Update bugsnag-android to [v6.18.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.18.0) [#2556](https://github.com/bugsnag/bugsnag-js/pull/2556)
 
 ### Fixed
 
