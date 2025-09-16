@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+Update bugsnag-cocoa to [v6.33.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.33.1) [#2552](https://github.com/bugsnag/bugsnag-js/pull/2552)
+
 ### Fixed
 
 - (plugin-window-onerror) Guard against errors when trying to call previous handler [#2551](https://github.com/bugsnag/bugsnag-js/pull/2551)
@@ -44,7 +48,6 @@
 ## [8.3.0] - 2025-03-04
 
 This release adds support for React Native 0.77 and 0.78 to `@bugsnag/react-native`
-
 ### Added
 
 - (react-native-cli) Add support for `AppDelegate.swift` files to insert command [#2319](https://github.com/bugsnag/bugsnag-js/pull/2319)
