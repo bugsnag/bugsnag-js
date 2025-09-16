@@ -27,6 +27,24 @@ describe('clientStateUpdatesPlugin', () => {
       expect(client.getContext()).toBe('ctx')
     })
 
+    it('propagates grouping discriminator changes', () => {
+      const mockBugsnagIpcRenderer = {
+        setGroupingDiscriminator: jest.fn()
+      }
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+
+      client.setGroupingDiscriminator('discriminator')
+      expect(mockBugsnagIpcRenderer.setGroupingDiscriminator).toHaveBeenCalledWith('discriminator')
+    })
+
+    it('forwards upstream changes to grouping discriminator', () => {
+      const mockBugsnagIpcRenderer = {
+        getGroupingDiscriminator: () => 'discriminator'
+      }
+      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      expect(client.getGroupingDiscriminator()).toBe('discriminator')
+    })
+
     it('propagates user changes', () => {
       const mockBugsnagIpcRenderer = {
         setUser: jest.fn()

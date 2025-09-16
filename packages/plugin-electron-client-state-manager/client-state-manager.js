@@ -22,6 +22,13 @@ module.exports = {
       return ret
     }
 
+    const origSetGroupingDiscriminator = client.setGroupingDiscriminator
+    client.setGroupingDiscriminator = (...args) => {
+      const ret = origSetGroupingDiscriminator.call(client, ...args)
+      emitter.emit('GroupingDiscriminatorUpdate', client.getGroupingDiscriminator())
+      return ret
+    }
+
     const origAddMetadata = client.addMetadata
     client.addMetadata = (...args) => {
       const ret = origAddMetadata.call(client, ...args)
