@@ -1,4 +1,4 @@
-import delivery from '../'
+import delivery from '../src/delivery'
 import http from 'http'
 import type { Client, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 import type { AddressInfo } from 'net'
