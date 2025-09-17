@@ -42,8 +42,12 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
       const updates = { metadata: client._metadata, features: client._features }
       const user = client.getUser()
       const context = client.getContext()
+      const groupingDiscriminator = client.getGroupingDiscriminator()
       if (context && context.length > 0) {
         updates.context = context
+      }
+      if (groupingDiscriminator) {
+        updates.groupingDiscriminator = groupingDiscriminator
       }
       if (Object.keys(user).length > 0) {
         updates.user = user
@@ -58,6 +62,7 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
     client._featuresIndex = {}
     client._features = []
     client._context = undefined
+    client._groupingDiscriminator = undefined
     client._user = {}
 
     // use main process state once configured properties are synched
