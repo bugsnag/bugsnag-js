@@ -284,7 +284,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     emitter.on('FeatureFlagUpdate', featuresCb)
     emitter.on('GroupingDiscriminatorUpdate', groupingDiscriminatorCb)
 
-    // update just context
+    // update just grouping discriminator
     bulkUpdate({
       groupingDiscriminator: 'discriminator'
     })
