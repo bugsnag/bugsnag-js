@@ -253,7 +253,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     emitter.on('UserUpdate', userCb)
     emitter.on('FeatureFlagUpdate', featuresCb)
     emitter.on('GroupingDiscriminatorUpdate', groupingDiscriminatorCb)
-    
+
     // update just metadata
     bulkUpdate({
       metadata: {
@@ -268,7 +268,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     expect(groupingDiscriminatorCb).not.toHaveBeenCalledWith()
   })
 
-    it('should support bulk updates (only grouping discriminator)', () => {
+  it('should support bulk updates (only grouping discriminator)', () => {
     const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
