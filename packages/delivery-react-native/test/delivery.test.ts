@@ -27,6 +27,7 @@ type NativeClientEvent = Pick<EventWithInternals,
   user: EventWithInternals['_user']
   metadata: EventWithInternals['_metadata']
   correlation: EventWithInternals['_correlation']
+  groupingDiscriminator: EventWithInternals['_groupingDiscriminator']
   nativeStack: NativeStackIOS | NativeStackAndroid
 }
 

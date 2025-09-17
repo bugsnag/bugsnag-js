@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		DA2260AC2E58AD79008384E6 /* BugsnagTestInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = DA2260AB2E58AD79008384E6 /* BugsnagTestInterface.mm */; };
 		DA2260D42E58AD99008384E6 /* ContextNativeCustomScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260B42E58AD99008384E6 /* ContextNativeCustomScenario.m */; };
+		DA2260D42E58AD99008384E6 /* GroupingDiscriminatorNativeScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260B42E58AD99008384E6 /* GroupingDiscriminatorNativeScenario.m */; };
 		DA2260D52E58AD99008384E6 /* MetadataNativeUnhandledScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260C02E58AD99008384E6 /* MetadataNativeUnhandledScenario.m */; };
 		DA2260D62E58AD99008384E6 /* UserNativeClientScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260D32E58AD99008384E6 /* UserNativeClientScenario.m */; };
 		DA2260D72E58AD99008384E6 /* StartSessionScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2260CF2E58AD99008384E6 /* StartSessionScenario.m */; };
@@ -54,6 +55,8 @@
 		DA2260B22E58AD99008384E6 /* BreadcrumbsNativeManualScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = BreadcrumbsNativeManualScenario.m; path = Scenarios/BreadcrumbsNativeManualScenario.m; sourceTree = "<group>"; };
 		DA2260B32E58AD99008384E6 /* ContextNativeCustomScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContextNativeCustomScenario.h; path = Scenarios/ContextNativeCustomScenario.h; sourceTree = "<group>"; };
 		DA2260B42E58AD99008384E6 /* ContextNativeCustomScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContextNativeCustomScenario.m; path = Scenarios/ContextNativeCustomScenario.m; sourceTree = "<group>"; };
+		DA2260B32E58AD99008384E6 /* GroupingDiscriminatorNativeScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GroupingDiscriminatorNativeScenario.h; path = Scenarios/GroupingDiscriminatorNativeScenario.h; sourceTree = "<group>"; };
+		DA2260B42E58AD99008384E6 /* GroupingDiscriminatorNativeScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = GroupingDiscriminatorNativeScenario.m; path = Scenarios/GroupingDiscriminatorNativeScenario.m; sourceTree = "<group>"; };
 		DA2260B52E58AD99008384E6 /* DeviceNativeHandledScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DeviceNativeHandledScenario.h; path = Scenarios/DeviceNativeHandledScenario.h; sourceTree = "<group>"; };
 		DA2260B62E58AD99008384E6 /* DeviceNativeHandledScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DeviceNativeHandledScenario.m; path = Scenarios/DeviceNativeHandledScenario.m; sourceTree = "<group>"; };
 		DA2260B72E58AD99008384E6 /* DeviceNativeUnhandledScenario.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DeviceNativeUnhandledScenario.h; path = Scenarios/DeviceNativeUnhandledScenario.h; sourceTree = "<group>"; };
@@ -109,6 +112,8 @@
 				DA2260B22E58AD99008384E6 /* BreadcrumbsNativeManualScenario.m */,
 				DA2260B32E58AD99008384E6 /* ContextNativeCustomScenario.h */,
 				DA2260B42E58AD99008384E6 /* ContextNativeCustomScenario.m */,
+				DA2260B32E58AD99008384E6 /* GroupingDiscriminatorNativeScenario.h */,
+				DA2260B42E58AD99008384E6 /* GroupingDiscriminatorNativeScenario.m */,
 				DA2260B52E58AD99008384E6 /* DeviceNativeHandledScenario.h */,
 				DA2260B62E58AD99008384E6 /* DeviceNativeHandledScenario.m */,
 				DA2260B72E58AD99008384E6 /* DeviceNativeUnhandledScenario.h */,
@@ -215,6 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA2260D42E58AD99008384E6 /* ContextNativeCustomScenario.m in Sources */,
+				DA2260D42E58AD99008384E6 /* GroupingDiscriminatorNativeScenario.m in Sources */,
 				DA2260D52E58AD99008384E6 /* MetadataNativeUnhandledScenario.m in Sources */,
 				DA2260D62E58AD99008384E6 /* UserNativeClientScenario.m in Sources */,
 				DA2260D72E58AD99008384E6 /* StartSessionScenario.m in Sources */,
