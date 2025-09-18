@@ -13,7 +13,7 @@ describe('plugin: electron renderer event data', () => {
     expect(onError).not.toHaveBeenCalled()
   })
 
-  it('sets context, breadcrumbs, app, device, user, feature flags and metadata from the main process', async () => {
+  it('sets context, groupingDiscriminator, breadcrumbs, app, device, user, feature flags and metadata from the main process', async () => {
     const context = 'abc context xyz'
     const breadcrumbs = [new Breadcrumb('message', { metadata: true }, 'manual')]
     const app = { abc: 123 }
@@ -21,8 +21,9 @@ describe('plugin: electron renderer event data', () => {
     const user = { id: '10293847' }
     const features = [{ name: 'flag1', variant: 'variant1' }]
     const metadata = { meta: { data: true } }
+    const groupingDiscriminator = 'test-discriminator'
 
-    const { sendEvent } = makeClient({ context, breadcrumbs, app, device, user, features, metadata })
+    const { sendEvent } = makeClient({ context, breadcrumbs, app, device, user, features, metadata, groupingDiscriminator })
 
     const event = await sendEvent()
 
@@ -33,6 +34,7 @@ describe('plugin: electron renderer event data', () => {
     expect(event.getUser()).toStrictEqual(user)
     expect(event._features).toStrictEqual(features)
     expect(event.getMetadata('meta')).toStrictEqual(metadata.meta)
+    expect(event.getGroupingDiscriminator()).toStrictEqual(groupingDiscriminator)
   })
 
   it('prefers pre-existing context from the event', async () => {
@@ -43,6 +45,16 @@ describe('plugin: electron renderer event data', () => {
     const event = await sendEvent()
 
     expect(event.context).toBe('hello')
+  })
+
+  it('prefers pre-existing groupingDiscriminator from the event', async () => {
+    const { client, sendEvent } = makeClient({ groupingDiscriminator: 'goodbye' })
+
+    client.addOnError(event => { event.setGroupingDiscriminator('hello') }, true)
+
+    const event = await sendEvent()
+
+    expect(event.getGroupingDiscriminator()).toBe('hello')
   })
 
   it('prefers pre-existing user from the event', async () => {

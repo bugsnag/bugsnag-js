@@ -78,6 +78,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  void updateGroupingDiscriminator(@Nullable String groupingDiscriminator) {
+    impl.updateGroupingDiscriminator(groupingDiscriminator);
+  }
+
+  @ReactMethod
   void addMetadata(@NonNull String section, @Nullable ReadableMap data) {
     impl.addMetadata(section, data);
   }

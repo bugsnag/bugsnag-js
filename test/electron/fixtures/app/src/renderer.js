@@ -95,3 +95,11 @@ document.getElementById('renderer-clear-context').onclick = () => {
 document.getElementById('renderer-clear-metadata').onclick = () => {
   Bugsnag.clearMetadata('renderer')
 }
+
+document.getElementById('main-process-set-grouping-discriminator').onclick = () => {
+  window.RunnerAPI.mainProcessSetGroupingDiscriminator('main-process-discriminator')
+}
+
+document.getElementById('renderer-set-grouping-discriminator').onclick = () => {
+  Bugsnag.setGroupingDiscriminator('renderer-process-discriminator')
+}

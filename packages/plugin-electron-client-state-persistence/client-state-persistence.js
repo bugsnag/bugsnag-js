@@ -36,6 +36,14 @@ module.exports = {
         }
       })
 
+      clientStateManager.emitter.on('GroupingDiscriminatorUpdate', groupingDiscriminator => {
+        try {
+          NativeClient.updateGroupingDiscriminator(groupingDiscriminator)
+        } catch (e) {
+          client._logger.error(e)
+        }
+      })
+
       clientStateManager.emitter.on('MetadataUpdate', ({ section, values }) => {
         try {
           NativeClient.updateMetadata(section, values)

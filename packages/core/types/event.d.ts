@@ -56,6 +56,10 @@ declare class Event {
 
   // trace correlation
   public setTraceCorrelation(traceId: string, spanId?: string): void
+
+  // grouping discriminators
+  public getGroupingDiscriminator(): string | undefined
+  public setGroupingDiscriminator(value: string | undefined): string | undefined
 }
 
 interface HandledState {

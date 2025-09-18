@@ -27,6 +27,7 @@ module.exports = (client, NativeClient) => ({
       user: event._user,
       metadata: derecursify(event._metadata),
       groupingHash: event.groupingHash,
+      groupingDiscriminator: event._groupingDiscriminator,
       apiKey: event.apiKey,
       featureFlags: event.toJSON().featureFlags,
       nativeStack: nativeStack,

@@ -36,6 +36,16 @@ describe('BugsnagIpcRenderer', () => {
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'setContext', JSON.stringify('ctx'))
   })
 
+  it('should call ipcRenderer correctly for getGroupingDiscriminator', () => {
+    BugsnagIpcRenderer.getGroupingDiscriminator()
+    expect(electron.ipcRenderer.sendSync).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN_SYNC, 'getGroupingDiscriminator')
+  })
+
+  it('should call ipcRenderer correctly for setGroupingDiscriminator', async () => {
+    await BugsnagIpcRenderer.setGroupingDiscriminator('ctx')
+    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'setGroupingDiscriminator', JSON.stringify('ctx'))
+  })
+
   it('should call ipcRenderer correctly for getUser', () => {
     BugsnagIpcRenderer.getUser()
     expect(electron.ipcRenderer.sendSync).toHaveBeenCalledWith(

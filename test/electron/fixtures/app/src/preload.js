@@ -48,5 +48,8 @@ contextBridge.exposeInMainWorld('RunnerAPI', {
   mainProcessRequestError: () => {
     ipcRenderer.send('main-process-request-error')
   },
+  mainProcessSetGroupingDiscriminator: (discriminator) => {
+    ipcRenderer.send('main-process-set-grouping-discriminator', discriminator)
+  },
   preloadStart: Date.now()
 })

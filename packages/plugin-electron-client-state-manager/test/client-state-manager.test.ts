@@ -29,6 +29,16 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     client.setContext('ctx')
   })
 
+  it('should emit events when grouping discriminator changes', done => {
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const { emitter } = client.getPlugin('clientStateManager')
+    emitter.on('GroupingDiscriminatorUpdate', (groupingDiscriminator: string) => {
+      expect(groupingDiscriminator).toBe('discriminator')
+      done()
+    })
+    client.setGroupingDiscriminator('discriminator')
+  })
+
   interface MetadataUpdatePayload {
     section: string
     values?: Record<string, unknown>
@@ -137,11 +147,13 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     const featuresCb = jest.fn()
     const contextCb = jest.fn()
     const userCb = jest.fn()
+    const groupingDiscriminatorCb = jest.fn()
 
     emitter.on('FeatureFlagUpdate', featuresCb)
     emitter.on('MetadataReplace', metadataCb)
     emitter.on('ContextUpdate', contextCb)
     emitter.on('UserUpdate', userCb)
+    emitter.on('GroupingDiscriminatorUpdate', groupingDiscriminatorCb)
 
     // update everything
     bulkUpdate({
@@ -155,7 +167,8 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
       features: [
         { name: 'flag name 1', variant: 'variant name 1' },
         { name: 'flag name 2', variant: 'variant name 2' }
-      ]
+      ],
+      groupingDiscriminator: 'discriminator'
     })
 
     expect(featuresCb).toHaveBeenCalledWith([
@@ -166,6 +179,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     expect(metadataCb).toHaveBeenCalledWith({ section: { key: 'value' } })
     expect(contextCb).toHaveBeenCalledWith('ctx')
     expect(userCb).toHaveBeenCalledWith({ id: '123', name: 'Jim', email: 'jim@jim.com' })
+    expect(groupingDiscriminatorCb).toHaveBeenCalledWith('discriminator')
   })
 
   it('should support bulk updates (only context)', () => {
@@ -175,10 +189,14 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     const metadataCb = jest.fn()
     const contextCb = jest.fn()
     const userCb = jest.fn()
+    const featuresCb = jest.fn()
+    const groupingDiscriminatorCb = jest.fn()
 
     emitter.on('MetadataReplace', metadataCb)
     emitter.on('ContextUpdate', contextCb)
     emitter.on('UserUpdate', userCb)
+    emitter.on('FeatureFlagUpdate', featuresCb)
+    emitter.on('GroupingDiscriminatorUpdate', groupingDiscriminatorCb)
 
     // update just context
     bulkUpdate({
@@ -188,6 +206,8 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     expect(metadataCb).not.toHaveBeenCalled()
     expect(contextCb).toHaveBeenCalledWith('ctx')
     expect(userCb).not.toHaveBeenCalled()
+    expect(featuresCb).not.toHaveBeenCalled()
+    expect(groupingDiscriminatorCb).not.toHaveBeenCalled()
   })
 
   it('should support bulk updates (only user)', () => {
@@ -197,10 +217,14 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     const metadataCb = jest.fn()
     const contextCb = jest.fn()
     const userCb = jest.fn()
+    const featuresCb = jest.fn()
+    const groupingDiscriminatorCb = jest.fn()
 
     emitter.on('MetadataReplace', metadataCb)
     emitter.on('ContextUpdate', contextCb)
     emitter.on('UserUpdate', userCb)
+    emitter.on('FeatureFlagUpdate', featuresCb)
+    emitter.on('GroupingDiscriminatorUpdate', groupingDiscriminatorCb)
 
     // update just user
     bulkUpdate({
@@ -210,6 +234,8 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     expect(metadataCb).not.toHaveBeenCalled()
     expect(contextCb).not.toHaveBeenCalledWith()
     expect(userCb).toHaveBeenCalledWith({ id: '123', name: 'Jim', email: 'jim@jim.com' })
+    expect(featuresCb).not.toHaveBeenCalledWith()
+    expect(groupingDiscriminatorCb).not.toHaveBeenCalledWith()
   })
 
   it('should support bulk updates (only metadata)', () => {
@@ -219,10 +245,14 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     const metadataCb = jest.fn()
     const contextCb = jest.fn()
     const userCb = jest.fn()
+    const featuresCb = jest.fn()
+    const groupingDiscriminatorCb = jest.fn()
 
     emitter.on('MetadataReplace', metadataCb)
     emitter.on('ContextUpdate', contextCb)
     emitter.on('UserUpdate', userCb)
+    emitter.on('FeatureFlagUpdate', featuresCb)
+    emitter.on('GroupingDiscriminatorUpdate', groupingDiscriminatorCb)
 
     // update just metadata
     bulkUpdate({
@@ -234,5 +264,35 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
     expect(metadataCb).toHaveBeenCalledWith({ section: { key: 'value' } })
     expect(contextCb).not.toHaveBeenCalled()
     expect(userCb).not.toHaveBeenCalled()
+    expect(featuresCb).not.toHaveBeenCalledWith()
+    expect(groupingDiscriminatorCb).not.toHaveBeenCalledWith()
+  })
+
+  it('should support bulk updates (only grouping discriminator)', () => {
+    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
+
+    const metadataCb = jest.fn()
+    const featuresCb = jest.fn()
+    const contextCb = jest.fn()
+    const groupingDiscriminatorCb = jest.fn()
+    const userCb = jest.fn()
+
+    emitter.on('MetadataReplace', metadataCb)
+    emitter.on('ContextUpdate', contextCb)
+    emitter.on('UserUpdate', userCb)
+    emitter.on('FeatureFlagUpdate', featuresCb)
+    emitter.on('GroupingDiscriminatorUpdate', groupingDiscriminatorCb)
+
+    // update just grouping discriminator
+    bulkUpdate({
+      groupingDiscriminator: 'discriminator'
+    })
+
+    expect(metadataCb).not.toHaveBeenCalled()
+    expect(contextCb).not.toHaveBeenCalled()
+    expect(userCb).not.toHaveBeenCalled()
+    expect(featuresCb).not.toHaveBeenCalled()
+    expect(groupingDiscriminatorCb).toHaveBeenCalledWith('discriminator')
   })
 })

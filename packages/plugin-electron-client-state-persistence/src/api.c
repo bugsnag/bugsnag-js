@@ -233,6 +233,35 @@ static napi_value UpdateContext(napi_env env, napi_callback_info info) {
   return NULL;
 }
 
+static napi_value UpdateGroupingDiscriminator(napi_env env, napi_callback_info info) {
+  size_t argc = 1;
+  napi_value args[1];
+  napi_status status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
+  assert(status == napi_ok);
+
+  if (argc < 1) {
+    napi_throw_type_error(env, NULL, "Wrong number of arguments, expected 1");
+    return NULL;
+  }
+
+  napi_valuetype valuetype0;
+  status = napi_typeof(env, args[0], &valuetype0);
+  assert(status == napi_ok);
+
+  if (valuetype0 == napi_string) {
+    char *grouping_discriminator = read_string_value(env, args[0], false);
+    throw_error_from_status(env, becsp_set_grouping_discriminator(grouping_discriminator));
+    free(grouping_discriminator);
+  } else if (valuetype0 == napi_null) {
+    becsp_set_grouping_discriminator(NULL);
+  } else {
+    napi_throw_type_error(env, NULL,
+                          "Wrong argument type, expected string or null");
+  }
+
+  return NULL;
+}
+
 static napi_value UpdateUser(napi_env env, napi_callback_info info) {
   size_t argc = 3;
   napi_value args[3];
@@ -472,6 +501,10 @@ napi_value Init(napi_env env, napi_value exports) {
   assert(status == napi_ok);
 
   desc = DECLARE_NAPI_METHOD("updateContext", UpdateContext);
+  status = napi_define_properties(env, exports, 1, &desc);
+  assert(status == napi_ok);
+
+  desc = DECLARE_NAPI_METHOD("updateGroupingDiscriminator", UpdateGroupingDiscriminator);
   status = napi_define_properties(env, exports, 1, &desc);
   assert(status == napi_ok);
 
