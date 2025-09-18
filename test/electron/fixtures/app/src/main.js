@@ -148,3 +148,7 @@ ipcMain.on('main-process-get-request', (_event, fail) => {
 ipcMain.on('main-process-request-error', () => {
   networkRequestError()
 })
+
+ipcMain.on('main-process-set-grouping-discriminator', (_event, discriminator) => {
+  Bugsnag.setGroupingDiscriminator(discriminator)
+})

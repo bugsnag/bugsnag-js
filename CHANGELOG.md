@@ -6,6 +6,7 @@
 
 - Add additional grouping discriminator property to events [#2544](https://github.com/bugsnag/bugsnag-js/pull/2544)
 - (react-native) Handle additional grouping discriminator [#2557](https://github.com/bugsnag/bugsnag-js/pull/2557)
+- (electron) Handle additional grouping discriminator [#2561](https://github.com/bugsnag/bugsnag-js/pull/2561)
 
 ### Changed
 
