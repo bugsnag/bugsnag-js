@@ -129,7 +129,7 @@ Then('the following sets are present in the current {word} payloads:') do |reque
     payload_hash
   end
   expected_values.each do |expected_data|
-    # if value is 'nil' then the field should not be present in the payload
+    # For test data, if the value is the string 'nil', it represents an absent field.
     expected_data.each do |field_path, expected_value|
       expected_data[field_path] = nil if expected_value == 'nil'
     end
