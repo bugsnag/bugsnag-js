@@ -12,7 +12,7 @@ describe('plugin: restify', () => {
     expect(middleware.errorHandler.length).toBe(4)
   })
 
-  it('proves that readonly _handledState properties can be modified individually', () => {
+  it('proves that readonly _handledState properties can be modified with type casting', () => {
     const originalHandledState = {
       unhandled: false,
       severity: 'warning',
@@ -29,11 +29,9 @@ describe('plugin: restify', () => {
 
     expect(event._handledState.unhandled).toBe(false)
     expect(event._handledState.severity).toBe('warning')
-    expect(event._handledState.severityReason.type).toBe('handledException')
+    expect(event._handledState.severityReason.type).toBe('handledException');
 
-    event._handledState.severity = newHandledState.severity
-    event._handledState.unhandled = newHandledState.unhandled
-    event._handledState.severityReason = newHandledState.severityReason
+    (event as any)._handledState = newHandledState
 
     expect(event._handledState.unhandled).toBe(true)
     expect(event._handledState.severity).toBe('error')

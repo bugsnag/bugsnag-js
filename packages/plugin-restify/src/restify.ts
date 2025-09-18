@@ -74,10 +74,7 @@ const plugin: Plugin = {
         event.request = { ...event.request, ...request }
         event.addMetadata('request', metadata)
         if (event._handledState.severityReason.type === 'unhandledException') {
-            event.severity = handledState.severity
-            event._handledState.severity = handledState.severity
-            event._handledState.unhandled = handledState.unhandled
-            event._handledState.severityReason = handledState.severityReason
+          (event as any)._handledState = handledState
         }
       }, true);   
 
