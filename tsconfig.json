@@ -21,7 +21,6 @@
     "packages/plugin-navigation-breadcrumbs",
     "packages/plugin-react",
     "packages/plugin-vue",
-    "packages/plugin-koa",
     "packages/node",
     "packages/plugin-interaction-breadcrumbs",
     "packages/browser"
