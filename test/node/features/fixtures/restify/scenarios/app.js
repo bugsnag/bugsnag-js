@@ -95,19 +95,6 @@ server.get('/handled', function (req, res, next) {
   next()
 })
 
-server.get('/unhandled-exception', function (req, res, next) {
-  var event = req.bugsnag.Event.create(new Error('unhandled-exception'), true, {
-    severity: 'info',
-    unhandled: false,
-    severityReason: { type: 'unhandledException' }
-  }, 'manual', 1)
-  req.bugsnag._notify(event)
-  res.setHeader('Content-Type', 'text/html')
-  res.writeHead(200)
-  res.end('OK')
-  next()
-})
-
 server.post('/bodytest', function (req, res, next) {
   throw new Error('request body')
 })
