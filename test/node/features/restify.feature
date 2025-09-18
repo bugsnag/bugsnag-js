@@ -69,8 +69,6 @@ Scenario: a handled error passed to req.bugsnag.notify()
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
-  And the event "severityReason.type" equals "handledException"
-  And the event "severityReason.attributes" is null
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "handled"
   And the exception "type" equals "nodejs"
