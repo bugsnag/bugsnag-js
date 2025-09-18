@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": [ "dom", "es2022" ],
+    "strict": true,
+    "allowJs": true,
+    "outDir": "dist",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist/types"
+  },
+  "include": ["src/**/*.ts", "src/**/*.js", "safe-json-stringify.d.ts"]
+}

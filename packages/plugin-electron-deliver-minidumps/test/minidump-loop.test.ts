@@ -1,6 +1,5 @@
 import EventEmitter from 'events'
-import Session from '@bugsnag/core/session'
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { Breadcrumb, Session } from '@bugsnag/core'
 import NetworkStatus from '@bugsnag/electron-network-status'
 import MinidumpDeliveryLoop from '../minidump-loop'
 
@@ -47,8 +46,8 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
       await runDeliveryLoop()
 
-      expect(sendMinidump).toBeCalledTimes(1)
-      expect(minidumpQueue.remove).toBeCalledTimes(1)
+      expect(sendMinidump).toHaveBeenCalledTimes(1)
+      expect(minidumpQueue.remove).toHaveBeenCalledTimes(1)
     })
 
     it('sends minidumps with no event', async () => {
@@ -63,8 +62,8 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
       await runDeliveryLoop()
 
-      expect(sendMinidump).toBeCalledTimes(1)
-      expect(minidumpQueue.remove).toBeCalledTimes(1)
+      expect(sendMinidump).toHaveBeenCalledTimes(1)
+      expect(minidumpQueue.remove).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -80,8 +79,8 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     await runDeliveryLoop(2)
 
-    expect(sendMinidump).toBeCalledTimes(0)
-    expect(minidumpQueue.remove).toBeCalledTimes(2)
+    expect(sendMinidump).toHaveBeenCalledTimes(0)
+    expect(minidumpQueue.remove).toHaveBeenCalledTimes(2)
   })
 
   it('allows on send callback to mutate the event', async () => {
@@ -122,7 +121,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     await runDeliveryLoop(1)
 
-    expect(sendMinidump).toBeCalledWith('minidump-path', {
+    expect(sendMinidump).toHaveBeenCalledWith('minidump-path', {
       breadcrumbs: [
         {
           name: 'crumby',
@@ -157,7 +156,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     expect(eventMinidumpPath).toBe('minidump-path')
 
-    expect(minidumpQueue.remove).toBeCalledWith({
+    expect(minidumpQueue.remove).toHaveBeenCalledWith({
       minidumpPath: 'minidump-path',
       eventPath: 'event-path'
     })
@@ -177,8 +176,8 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     await runDeliveryLoop(2)
 
-    expect(sendMinidump).toBeCalledTimes(0)
-    expect(minidumpQueue.remove).toBeCalledTimes(2)
+    expect(sendMinidump).toHaveBeenCalledTimes(0)
+    expect(minidumpQueue.remove).toHaveBeenCalledTimes(2)
 
     // the callbacks are called twice as there are two minidumps and are called
     // in order of most recently added -> least recently added
@@ -209,8 +208,8 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     await runDeliveryLoop(2)
 
-    expect(sendMinidump).toBeCalledTimes(2)
-    expect(minidumpQueue.remove).toBeCalledTimes(2)
+    expect(sendMinidump).toHaveBeenCalledTimes(2)
+    expect(minidumpQueue.remove).toHaveBeenCalledTimes(2)
 
     expect(callbacks[3]).toHaveBeenCalledTimes(2)
     expect(callbacks[2]).toHaveBeenCalledTimes(2)
@@ -238,8 +237,8 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     await runDeliveryLoop(3)
 
-    expect(sendMinidump).toBeCalledTimes(2)
-    expect(minidumpQueue.remove).toBeCalledTimes(2)
+    expect(sendMinidump).toHaveBeenCalledTimes(2)
+    expect(minidumpQueue.remove).toHaveBeenCalledTimes(2)
 
     expect(jest.getTimerCount()).toBe(0)
   })
@@ -261,8 +260,8 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     await runDeliveryLoop(2)
 
-    expect(sendMinidump).toBeCalledTimes(2)
-    expect(minidumpQueue.remove).toBeCalledTimes(1)
+    expect(sendMinidump).toHaveBeenCalledTimes(2)
+    expect(minidumpQueue.remove).toHaveBeenCalledTimes(1)
   })
 
   describe('watchNetworkStatus', () => {
@@ -283,14 +282,14 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
       // ensure that nothing is delivered while disconnected
       await runDeliveryLoop(1)
-      expect(sendMinidump).toBeCalledTimes(0)
+      expect(sendMinidump).toHaveBeenCalledTimes(0)
 
       // connect the network
       emitter.emit('MetadataUpdate', { section: 'device', values: { online: true } }, null)
 
       // check that we've started delivering minidumps
       await runDeliveryLoop(1)
-      expect(sendMinidump).toBeCalledTimes(1)
+      expect(sendMinidump).toHaveBeenCalledTimes(1)
     })
 
     it('should stop delivery when disconnected', async () => {
@@ -307,14 +306,14 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
       // ensure that the first minidump is delivered
       await runDeliveryLoop(1)
-      expect(sendMinidump).toBeCalledTimes(1)
+      expect(sendMinidump).toHaveBeenCalledTimes(1)
 
       // disconnect the network
       emitter.emit('MetadataUpdate', { section: 'device', values: { online: false } }, null)
 
       // check that no more minidumps are delivered
       await runDeliveryLoop(2)
-      expect(sendMinidump).toBeCalledTimes(1)
+      expect(sendMinidump).toHaveBeenCalledTimes(1)
     })
   })
 })

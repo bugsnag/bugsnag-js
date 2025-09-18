@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import _Tracker from '../tracker'
 import plugin from '../session'
 import { Session } from '@bugsnag/core'
