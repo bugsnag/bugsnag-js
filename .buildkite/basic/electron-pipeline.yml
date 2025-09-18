@@ -15,9 +15,10 @@ steps:
       matrix:
         setup:
           electron_version:
-            - "^37.0.0" # Latest Version
+            - "^38.0.0" # Latest Version
+            - "^37.0.0" # EOL 2026-Jan-13
             - "^36.0.0" # EOL 2025-Oct-28
-            - "^35.0.0" # EOL 2025-Sep-02
+            - "^34.0.0" # EOL 2025-Jun-24
           node_version:
             - "22"
       commands:
