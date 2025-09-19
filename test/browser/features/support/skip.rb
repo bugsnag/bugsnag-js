@@ -30,21 +30,10 @@ Before do |scenario|
             browser = $1
             version = $2.to_i
             if Maze.config.browser.start_with?("#{browser}_")
-                browser_version = Maze.config.browser.sub("#{browser}_", "").to_i
-                if browser_version < version
+                browser_version = Maze.config.browser.sub("#{browser}_", "")
+                compare_version = browser_version == 'latest' ? Float::INFINITY : browser_version.to_i
+                if compare_version < version
                     skip_this_scenario("Skipping scenario: Not supported on #{browser} versions before #{version}")
-                end
-            end
-        end
-        
-        # Handle @skip_after_browser_version tags (e.g., @skip_after_chrome_90)
-        if tag.match(/^@skip_after_(chrome|edge|firefox|ie|ios|safari)_(\d+)$/)
-            browser = $1
-            version = $2.to_i
-            if Maze.config.browser.start_with?("#{browser}_")
-                browser_version = Maze.config.browser.sub("#{browser}_", "").to_i
-                if browser_version > version
-                    skip_this_scenario("Skipping scenario: Not supported on #{browser} versions after #{version}")
                 end
             end
         end
