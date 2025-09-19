@@ -1,4 +1,4 @@
-import plugin from '../'
+import plugin from '../src/path-normaliser'
 import { Client, Event } from '@bugsnag/core'
 
 describe('plugin: stackframe path normaliser', () => {

@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/plugin-strip-project-root",
   "version": "8.4.0",
-  "main": "strip-project-root.js",
+  "main": "dist/strip-project-root.js",
+  "types": "dist/types/strip-project-root.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/strip-project-root.d.ts",
+      "default": "./dist/strip-project-root.js",
+      "import": "./dist/strip-project-root.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to remove common project root paths from stacktraces",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,11 +20,20 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
     "@bugsnag/path-normalizer": "^8.4.0"
+      },
+  "devDependencies": {
+    "@bugsnag/core": "^8.4.0"
+  },
+    "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*",
+    "test:types": "tsc -p tsconfig.json"
   }
 }

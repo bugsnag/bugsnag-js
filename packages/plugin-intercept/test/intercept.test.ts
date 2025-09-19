@@ -1,5 +1,5 @@
 import { Client } from '@bugsnag/core'
-import plugin from '../'
+import plugin from '../src/intercept'
 import fs from 'fs'
 
 // mock an async resource
