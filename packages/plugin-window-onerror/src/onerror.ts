@@ -65,7 +65,11 @@ export default (win = window, component = 'window onerror'): Plugin => ({
         client._notify(event)
       }
 
-      if (typeof prevOnError === 'function') prevOnError.apply(win, [messageOrEvent, url, lineNo, charNo, error])
+      if (typeof prevOnError === 'function') {
+        try { 
+          prevOnError.apply(win, [messageOrEvent, url, lineNo, charNo, error])
+         } catch (e) {}
+      }
     }
 
     win.onerror = onerror

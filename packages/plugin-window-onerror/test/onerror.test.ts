@@ -269,5 +269,25 @@ describe('plugin: window onerror', () => {
       // call onerror as it would be when `throw 'hello' is run`
       window.onerror(...args)
     })
+
+    it('tolerates errors in a previously installed window.onerror', function () {
+      window.onerror = () => { throw new Error('derp!') }
+
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin(window)] })
+      const payloads: EventDeliveryPayload[] = []
+      client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
+
+      const evt = { type: 'error', detail: 'something bad happened' } as unknown as Event
+
+      expect(() => { window.onerror(evt) }).not.toThrow()
+
+      expect(payloads.length).toBe(1)
+      const event = payloads[0].events[0].toJSON()
+      expect(event.severity).toBe('error')
+      expect(event.unhandled).toBe(true)
+      expect(event.exceptions[0].errorClass).toBe('Event: error')
+      expect(event.exceptions[0].message).toBe('something bad happened')
+      expect(event.severityReason).toEqual({ type: 'unhandledException' })
+    })
   })
 })
