@@ -45,47 +45,48 @@ steps:
             - exit_status: "*"
               limit: 1
 
-      #
-      # BrowserStack non-https tests
-      #
-      - label: ":browserstack: {{matrix}} non-https tests"
-        matrix:
-          # - ios_11 - Skipped pending PLAT-14437
-          - safari_16
-        depends_on: "browser-maze-runner-bs"
-        timeout_in_minutes: 30
-        plugins:
-          docker-compose#v4.12.0:
-            pull: browser-maze-runner-bs
-            run: browser-maze-runner-bs
-            use-aliases: true
-            command:
-              - "--farm=bs"
-              - "--browser={{matrix}}"
-          artifacts#v1.5.0:
-            upload:
-              - "./test/browser/maze_output/failed/**/*"
-          test-collector#v1.10.2:
-            files: "reports/TEST-*.xml"
-            format: "junit"
-            branch: "^main|next$$"
-            api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
-        concurrency: 2
-        concurrency_group: "browserstack"
-        concurrency_method: eager
+      # #
+      # # BrowserStack non-https tests
+      # #
+      # - label: ":browserstack: {{matrix}} non-https tests"
+      #   matrix:
+      #     # - ios_11 - Skipped pending PLAT-14437
+      #     - safari_16
+      #   depends_on: "browser-maze-runner-bs"
+      #   timeout_in_minutes: 30
+      #   plugins:
+      #     docker-compose#v4.12.0:
+      #       pull: browser-maze-runner-bs
+      #       run: browser-maze-runner-bs
+      #       use-aliases: true
+      #       command:
+      #         - "--farm=bs"
+      #         - "--browser={{matrix}}"
+      #     artifacts#v1.5.0:
+      #       upload:
+      #         - "./test/browser/maze_output/failed/**/*"
+      #     test-collector#v1.10.2:
+      #       files: "reports/TEST-*.xml"
+      #       format: "junit"
+      #       branch: "^main|next$$"
+      #       api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
+      #   concurrency: 2
+      #   concurrency_group: "browserstack"
+      #   concurrency_method: eager
 
       #
       # BrowserStack https tests
       #
       - label: ":browserstack: {{matrix}} tests"
         matrix:
-          - edge_17
-          - safari_10
-          - ios_15
-          - android_8
-          - chrome_43
-          - chrome_72
-          - firefox_78
+          - ie_9
+          # - edge_17
+          # - safari_10
+          # - ios_15
+          # - android_8
+          # - chrome_43
+          # - chrome_72
+          # - firefox_78
         depends_on: "browser-maze-runner-bs"
         timeout_in_minutes: 30
         plugins:
@@ -109,40 +110,39 @@ steps:
         concurrency_group: "browserstack"
         concurrency_method: eager
 
-
-      #
-      # BitBar tests
-      #
-      - label: ":bitbar: {{matrix}} Browser tests (US hub)"
-        matrix:
-          - firefox_latest
-          - chrome_latest
-          - edge_latest
-        depends_on: "browser-maze-runner-bb"
-        timeout_in_minutes: 30
-        plugins:
-          docker-compose#v4.12.0:
-            pull: browser-maze-runner-bb
-            run: browser-maze-runner-bb
-            service-ports: true
-            use-aliases: true
-            command:
-              - "--https"
-              - "--farm=bb"
-              - "--browser={{matrix}}"
-              - "--no-tunnel"
-              - "--aws-public-ip"
-          artifacts#v1.5.0:
-            upload:
-              - "./test/browser/maze_output/failed/**/*"
-          test-collector#v1.10.2:
-            files: "reports/TEST-*.xml"
-            format: "junit"
-            branch: "^main|next$$"
-            api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
-        concurrency: 25
-        concurrency_group: "bitbar"
-        concurrency_method: eager
+      # #
+      # # BitBar tests
+      # #
+      # - label: ":bitbar: {{matrix}} Browser tests (US hub)"
+      #   matrix:
+      #     - firefox_latest
+      #     - chrome_latest
+      #     - edge_latest
+      #   depends_on: "browser-maze-runner-bb"
+      #   timeout_in_minutes: 30
+      #   plugins:
+      #     docker-compose#v4.12.0:
+      #       pull: browser-maze-runner-bb
+      #       run: browser-maze-runner-bb
+      #       service-ports: true
+      #       use-aliases: true
+      #       command:
+      #         - "--https"
+      #         - "--farm=bb"
+      #         - "--browser={{matrix}}"
+      #         - "--no-tunnel"
+      #         - "--aws-public-ip"
+      #     artifacts#v1.5.0:
+      #       upload:
+      #         - "./test/browser/maze_output/failed/**/*"
+      #     test-collector#v1.10.2:
+      #       files: "reports/TEST-*.xml"
+      #       format: "junit"
+      #       branch: "^main|next$$"
+      #       api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
+      #   concurrency: 25
+      #   concurrency_group: "bitbar"
+      #   concurrency_method: eager
 
       - label: ":bitbar: ie_11 Browser tests"
         depends_on: "browser-maze-runner-bb"
