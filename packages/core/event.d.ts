@@ -27,6 +27,7 @@ export default class EventWithInternals extends Event {
   _handledState: HandledState
   _correlation?: { spanId: string, traceId: string }
   _session?: Session
+  _groupingDiscriminator?: string | null
   toJSON(): {
     payloadVersion: '4'
     exceptions: Array<Error & { message: Error['errorMessage'] }>
@@ -43,6 +44,7 @@ export default class EventWithInternals extends Event {
     context: string | undefined
     correlation: { spanId: string, traceId: string } | undefined
     groupingHash: string | undefined
+    groupingDiscriminator: string | undefined
     metaData: { [key: string]: any }
     user: User
     session: Session
