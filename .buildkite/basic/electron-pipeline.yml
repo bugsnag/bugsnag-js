@@ -15,13 +15,21 @@ steps:
       matrix:
         setup:
           electron_version:
-            - "^20.0.0"
-            - "^24.0.0"
-            - "^26.0.0"
-            - "^28.0.0"
-            - "^30.0.0"
+            - "^38.0.0" # Latest Version
+            - "^37.0.0" # EOL 2026-Jan-13
+            - "^36.0.0" # EOL 2025-Oct-28
           node_version:
-            - "18"
+            - "22"
+        adjustments:
+          - with:
+              electron_version: "^34.0.0" # EOL 2025-Jun-24
+              node_version: "20"
+          - with:
+              electron_version: "^32.0.0" # EOL 2025-Mar-04
+              node_version: "20"
+          - with:
+              electron_version: "^30.0.0" # EOL 2024-Oct-15
+              node_version: "20"
       commands:
         - echo "Running on Node `node -v`"
         - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
