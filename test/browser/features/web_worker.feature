@@ -1,8 +1,5 @@
-# browsers that do not support web workers
-@skip_ie_8 @skip_ie_9
-
 # browsers that currently throw errors in our test fixtures 
-@skip_ie_10 @skip_ie_11 @skip_chrome_43 @skip_edge_17 @skip_safari_10 @skip_before_ios_12
+@skip_ie_11 @skip_chrome_43 @skip_edge_17 @skip_safari_10 @skip_before_ios_12
 
 Feature: worker notifier
 
