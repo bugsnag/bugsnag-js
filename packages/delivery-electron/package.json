@@ -21,8 +21,10 @@
     "@bugsnag/electron-network-status": "^8.4.0",
     "@bugsnag/plugin-electron-client-state-manager": "^8.4.0"
   },
+  "dependencies": {
+    "@bugsnag/json-payload": "^8.4.0"
+  },
   "peerDependencies": {
-    "@bugsnag/core": "^8.0.0",
     "@bugsnag/electron-network-status": "^8.0.0"
   }
 }

@@ -1,5 +1,5 @@
 import clientStateUpdatesPlugin from '../client-state-updates'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 const Notifier = {
   name: 'Bugsnag Electron Test',
