@@ -1,5 +1,5 @@
 import plugin from '../'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 // use the promise polyfill that RN uses, otherwise the unhandled rejections in
 // this test go to node's process#unhandledRejection event
