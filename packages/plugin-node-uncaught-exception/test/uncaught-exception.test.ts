@@ -1,7 +1,5 @@
-import Client from '@bugsnag/core/client'
-import { schema } from '@bugsnag/core/config'
+import { Client, Event, schema } from '@bugsnag/core'
 import plugin from '../'
-import EventWithInternals from '@bugsnag/core/event'
 
 describe('plugin: node uncaught exception handler', () => {
   it('should listen to the process#uncaughtException event', () => {
@@ -36,7 +34,7 @@ describe('plugin: node uncaught exception handler', () => {
   it('should call the configured onUncaughtException callback', done => {
     const c = new Client({
       apiKey: 'api_key',
-      onUncaughtException: (err: Error, event: EventWithInternals) => {
+      onUncaughtException: (err: Error, event: Event) => {
         expect(err.message).toBe('never gonna catch me')
         expect(event.errors[0].errorMessage).toBe('never gonna catch me')
         expect(event._handledState.unhandled).toBe(true)
@@ -48,6 +46,7 @@ describe('plugin: node uncaught exception handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
+      // @ts-expect-error
       onUncaughtException: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -58,13 +57,13 @@ describe('plugin: node uncaught exception handler', () => {
       sendEvent: (payload, cb) => cb(),
       sendSession: (payload, cb) => cb()
     }))
-    process.listeners('uncaughtException')[0](new Error('never gonna catch me'))
+    process.listeners('uncaughtException')[0](new Error('never gonna catch me'), 'uncaughtException')
   })
 
   it('should tolerate delivery errors', done => {
     const c = new Client({
       apiKey: 'api_key',
-      onUncaughtException: (err: Error, event: EventWithInternals) => {
+      onUncaughtException: (err: Error, event: Event) => {
         expect(err.message).toBe('never gonna catch me')
         expect(event.errors[0].errorMessage).toBe('never gonna catch me')
         expect(event._handledState.unhandled).toBe(true)
@@ -76,6 +75,7 @@ describe('plugin: node uncaught exception handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
+      // @ts-expect-error
       onUncaughtException: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -86,6 +86,6 @@ describe('plugin: node uncaught exception handler', () => {
       sendEvent: (payload, cb) => cb(new Error('failed')),
       sendSession: (payload, cb) => cb()
     }))
-    process.listeners('uncaughtException')[0](new Error('never gonna catch me'))
+    process.listeners('uncaughtException')[0](new Error('never gonna catch me'), 'uncaughtException')
   })
 })

@@ -1,5 +1,4 @@
-import Client, { Delivery } from '@bugsnag/core/client'
-import Event from '@bugsnag/core/event'
+import { Client, Event, Delivery } from '@bugsnag/core'
 import plugin from '../'
 
 describe('plugin: electron process info', () => {
