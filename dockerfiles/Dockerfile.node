@@ -1,21 +1,25 @@
 # CI test image for unit/lint/type tests
-FROM node:18-alpine@sha256:974afb6cbc0314dc6502b14243b8a39fbb2d04d975e9059dd066be3e274fbb25 as node-feature-builder
+FROM node:18-alpine@sha256:974afb6cbc0314dc6502b14243b8a39fbb2d04d975e9059dd066be3e274fbb25 AS node-feature-builder
 
 RUN apk add --update bash python3 make gcc g++ musl-dev xvfb-run curl
 
 WORKDIR /app
 
 COPY package*.json ./
-COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
+COPY babel.config.js lerna.json eslint.config.mjs jest.config.js tsconfig.json ./
 COPY jest ./jest
 ADD min_packages.tar .
+COPY .rollup ./.rollup
 COPY bin ./bin
 COPY packages ./packages
 
 RUN npm ci
+
 RUN npm run build
 
+RUN npm pack --verbose packages/core/
 RUN npm pack --verbose packages/node/
+RUN npm pack --verbose packages/path-normalizer/
 RUN npm pack --verbose packages/plugin-express/
 RUN npm pack --verbose packages/plugin-koa/
 RUN npm pack --verbose packages/plugin-restify/
@@ -24,7 +28,6 @@ RUN npm pack --verbose packages/plugin-hono/
 # The maze-runner node tests
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v10-cli as node-maze-runner
 WORKDIR /app/
-COPY packages/node/ .
 COPY test/node/features test/node/features
 COPY --from=node-feature-builder /app/*.tgz ./
 RUN for d in test/node/features/fixtures/*/; do cp /app/*.tgz "$d"; done
