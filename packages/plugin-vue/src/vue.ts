@@ -1,9 +1,12 @@
-module.exports = (app, client) => {
+import { Client } from '@bugsnag/core'
+import { ComponentPublicInstance, VueConstructor, VueErrorHandler } from './types'
+
+export default (app: VueConstructor, client: Client) => {
   const prev = app.config.errorHandler
 
-  const handler = (err, vm, info) => {
+  const handler: VueErrorHandler = (err, vm, info) => {
     const handledState = { severity: 'error', unhandled: true, severityReason: { type: 'unhandledException' } }
-    const event = client.Event.create(err, true, handledState, 'vue error handler', 1)
+    const event = client.Event.create(err as Error, true, handledState, 'vue error handler', 1)
 
     // In Vue 3.4+, the info param is a link to the Vue error docs in prod, so we need to extract the error code from it
     // https://github.com/vuejs/core/pull/9165/commits/c261beab2c0a26e401f2c3d5eae2e4c41de6fe4d
@@ -12,20 +15,20 @@ module.exports = (app, client) => {
 
     event.addMetadata('vue', {
       errorInfo,
-      component: vm ? formatComponentName(vm, true) : undefined,
+      component: vm ? formatComponentName(vm) : undefined,
       props: (vm && vm.$options) ? vm.$options.propsData : undefined
     })
 
     client._notify(event)
     if (typeof console !== 'undefined' && typeof console.error === 'function') console.error(err)
 
-    if (typeof prev === 'function') prev.call(this, err, vm, info)
+    if (typeof prev === 'function') prev(err, vm, info)
   }
 
   app.config.errorHandler = handler
 }
 
-function formatComponentName (vm) {
+function formatComponentName (vm: ComponentPublicInstance) {
   if (vm.$parent === null) return 'App'
   return (vm.$options && vm.$options.name) ? vm.$options.name : 'Anonymous'
 }

@@ -1,5 +1,5 @@
 import BugsnagVuePlugin from '../src'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 describe('bugsnag vue', () => {
   beforeAll(() => {

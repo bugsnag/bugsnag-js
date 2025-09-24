@@ -1,4 +1,4 @@
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import stateManager from '@bugsnag/plugin-electron-client-state-manager'
 import EventEmitter from 'events'
 import NetworkStatus from '../network-status'

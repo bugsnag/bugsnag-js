@@ -1,5 +1,4 @@
 import { FirstPlugin, LastPlugin } from '../internal-callback-marker'
-import InternalClient from '@bugsnag/core/client'
 import { Plugin, Client } from '@bugsnag/core'
 
 describe('@bugsnag/plugin-internal-callback-marker', () => {
@@ -30,7 +29,7 @@ describe('@bugsnag/plugin-internal-callback-marker', () => {
       }
     ]
 
-    const client = new InternalClient({
+    const client = new Client({
       apiKey: '123',
       onError: externalOnErrorViaConfig,
       plugins: externalPlugins
