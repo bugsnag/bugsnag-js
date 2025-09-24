@@ -1,4 +1,4 @@
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import plugin from '../'
 
 describe('plugin: react native event sync', () => {
