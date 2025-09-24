@@ -1,6 +1,7 @@
 const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s?(x)`
 
 const project = (displayName, packageNames, config = {}) => ({
+  resolver: '<rootDir>/jest/node-exports-resolver',
   roots: ['<rootDir>/packages'],
   displayName,
   testMatch: packageNames.map(testsForPackage),
@@ -26,6 +27,7 @@ module.exports = {
   ],
   projects: [
     project('core', ['core']),
+    project('utilities', ['derecursify', 'json-payload']),
     project('web workers', ['web-worker'], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),

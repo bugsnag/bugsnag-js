@@ -1,11 +1,11 @@
 import ErrorStackParser from 'error-stack-parser'
-import Event from '../event'
+import Event from '../src/event'
 
 jest.mock('stack-generator', () => ({
   backtrace: () => [{}, {}]
 }))
 
-describe('@bugsnag/core/event', () => {
+describe('Event', () => {
   describe('constructor', () => {
     it('sets default handledState', () => {
       const err = new Error('noooooo')
