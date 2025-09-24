@@ -1,7 +1,5 @@
-import Client from '@bugsnag/core/client'
-import { schema } from '@bugsnag/core/config'
+import { Client, Event, schema } from '@bugsnag/core'
 import plugin from '../'
-import EventWithInternals from '@bugsnag/core/event'
 
 describe('plugin: node unhandled rejection handler', () => {
   it('should listen to the process#unhandledRejection event', () => {
@@ -36,7 +34,7 @@ describe('plugin: node unhandled rejection handler', () => {
   it('should call the configured onUnhandledRejection callback', done => {
     const c = new Client({
       apiKey: 'api_key',
-      onUnhandledRejection: (err: Error, event: EventWithInternals) => {
+      onUnhandledRejection: (err: Error, event: Event) => {
         expect(err.message).toBe('never gonna catch me')
         expect(event.errors[0].errorMessage).toBe('never gonna catch me')
         expect(event._handledState.unhandled).toBe(true)
@@ -48,6 +46,7 @@ describe('plugin: node unhandled rejection handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
+      // @ts-expect-error
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -65,7 +64,7 @@ describe('plugin: node unhandled rejection handler', () => {
     const c = new Client({
       apiKey: 'api_key',
       reportUnhandledPromiseRejectionsAsHandled: true,
-      onUnhandledRejection: (err: Error, event: EventWithInternals) => {
+      onUnhandledRejection: (err: Error, event: Event) => {
         expect(err.message).toBe('never gonna catch me')
         expect(event._handledState.unhandled).toBe(false)
         expect(event._handledState.severity).toBe('error')
@@ -76,6 +75,7 @@ describe('plugin: node unhandled rejection handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
+      // @ts-expect-error
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -92,7 +92,7 @@ describe('plugin: node unhandled rejection handler', () => {
   it('should tolerate delivery errors', done => {
     const c = new Client({
       apiKey: 'api_key',
-      onUnhandledRejection: (err: Error, event: EventWithInternals) => {
+      onUnhandledRejection: (err: Error, event: Event) => {
         expect(err.message).toBe('never gonna catch me')
         expect(event.errors[0].errorMessage).toBe('never gonna catch me')
         expect(event._handledState.unhandled).toBe(true)
@@ -104,6 +104,7 @@ describe('plugin: node unhandled rejection handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
+      // @ts-expect-error
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',

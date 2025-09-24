@@ -1,6 +1,7 @@
-const bugsnagInFlight = require('@bugsnag/in-flight')
-const BugsnagPluginBrowserSession = require('@bugsnag/plugin-browser-session')
-const LambdaTimeoutApproaching = require('./lambda-timeout-approaching')
+import { Client, Config, Plugin } from "@bugsnag/core"
+import bugsnagInFlight from '@bugsnag/in-flight'
+import BugsnagPluginBrowserSession from '@bugsnag/plugin-browser-session'
+import LambdaTimeoutApproaching from './lambda-timeout-approaching'
 
 // JS timers use a signed 32 bit integer for the millisecond parameter. SAM's
 // "local invoke" has a bug that means it exceeds this amount, resulting in
@@ -8,9 +9,30 @@ const LambdaTimeoutApproaching = require('./lambda-timeout-approaching')
 const MAX_TIMER_VALUE = Math.pow(2, 31) - 1
 
 const SERVER_PLUGIN_NAMES = ['express', 'koa', 'restify', 'hono']
-const isServerPluginLoaded = client => SERVER_PLUGIN_NAMES.some(name => client.getPlugin(name))
+const isServerPluginLoaded = (client: Client<Config>) => SERVER_PLUGIN_NAMES.some(name => client.getPlugin(name))
 
-const BugsnagPluginAwsLambda = {
+type AsyncHandler = (event: any, context: any) => Promise<any>
+type CallbackHandler = (event: any, context: any, callback: (err?: Error|string|null, response?: any) => void) => void
+
+export type BugsnagPluginAwsLambdaHandler = (handler: AsyncHandler|CallbackHandler) => AsyncHandler
+
+export interface BugsnagPluginAwsLambdaConfiguration {
+  flushTimeoutMs?: number
+  lambdaTimeoutNotifyMs?: number
+}
+
+export interface BugsnagPluginAwsLambdaResult {
+  createHandler(configuration?: BugsnagPluginAwsLambdaConfiguration): BugsnagPluginAwsLambdaHandler
+}
+
+// add a new call signature for the getPlugin() method that types the plugin result
+declare module '@bugsnag/core' {
+  interface Client {
+    getPlugin(id: 'awsLambda'): BugsnagPluginAwsLambdaResult | undefined
+  }
+}
+
+const BugsnagPluginAwsLambda: Plugin = {
   name: 'awsLambda',
 
   load (client) {
@@ -62,7 +84,7 @@ const BugsnagPluginAwsLambda = {
   }
 }
 
-function wrapHandler (client, flushTimeoutMs, lambdaTimeoutNotifyMs, handler) {
+function wrapHandler (client: Client<Config>, flushTimeoutMs: number, lambdaTimeoutNotifyMs: number, handler: AsyncHandler | CallbackHandler): AsyncHandler {
   let _handler = handler
 
   if (handler.length > 2) {
@@ -114,7 +136,7 @@ function wrapHandler (client, flushTimeoutMs, lambdaTimeoutNotifyMs, handler) {
     }
 
     try {
-      return await _handler(event, context)
+      return await (_handler as AsyncHandler)(event, context)
     } catch (err) {
       if (client._config.autoDetectErrors && client._config.enabledErrorTypes.unhandledExceptions) {
         const handledState = {
@@ -123,8 +145,7 @@ function wrapHandler (client, flushTimeoutMs, lambdaTimeoutNotifyMs, handler) {
           severityReason: { type: 'unhandledException' }
         }
 
-        const event = client.Event.create(err, true, handledState, 'aws lambda plugin', 1)
-
+        const event = client.Event.create(err as Error, true, handledState, 'aws lambda plugin', 1)
         client._notify(event)
       }
 
@@ -137,14 +158,14 @@ function wrapHandler (client, flushTimeoutMs, lambdaTimeoutNotifyMs, handler) {
       try {
         await bugsnagInFlight.flush(flushTimeoutMs)
       } catch (err) {
-        client._logger.error(`Delivery may be unsuccessful: ${err.message}`)
+        client._logger.error(`Delivery may be unsuccessful: ${(err as Error).message}`)
       }
     }
   }
 }
 
 // Convert a handler that uses callbacks to an async handler
-function promisifyHandler (handler) {
+function promisifyHandler (handler: CallbackHandler): AsyncHandler {
   return function (event, context) {
     return new Promise(function (resolve, reject) {
       const result = handler(event, context, function (err, response) {
@@ -166,13 +187,14 @@ function promisifyHandler (handler) {
   }
 }
 
-function isPromise (value) {
-  return (typeof value === 'object' || typeof value === 'function') &&
-    typeof value.then === 'function' &&
+function isObject (value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value)
+}
+
+function isPromise (value: unknown): value is Promise<unknown> {
+  return isObject(value) &&
+    typeof value.then === 'function' && 
     typeof value.catch === 'function'
 }
 
-module.exports = BugsnagPluginAwsLambda
-
-// add a default export for ESM modules without interop
-module.exports.default = module.exports
+export default BugsnagPluginAwsLambda
