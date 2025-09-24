@@ -1,5 +1,5 @@
 import stateManager from '../client-state-manager'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import { User } from '@bugsnag/core'
 
 const Notifier = {
