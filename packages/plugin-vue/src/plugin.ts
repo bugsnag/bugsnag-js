@@ -1,8 +1,20 @@
-const installVue2 = require('./vue2')
-const installVue = require('./vue')
+import installVue2 from './vue2'
+import installVue from './vue'
+import { Client } from '@bugsnag/core'
+import { VueApp } from './types'
 
-module.exports = class BugsnagPluginVue {
-  constructor (...args) {
+declare global {
+  interface Window {
+    Vue: VueApp
+  }
+}
+
+export default class BugsnagPluginVue {
+  public readonly name: string;
+  private readonly lazy: boolean;
+  private readonly Vue?: VueApp
+
+  constructor (...args: any[]) {
     // Fetch Vue from the window object, if it exists
     const globalVue = typeof window !== 'undefined' && window.Vue
 
@@ -15,7 +27,7 @@ module.exports = class BugsnagPluginVue {
     }
   }
 
-  load (client) {
+  load (client: Client) {
     if (this.Vue && this.Vue.config) {
       installVue2(this.Vue, client)
       return {
@@ -23,17 +35,14 @@ module.exports = class BugsnagPluginVue {
       }
     }
     return {
-      install: (app) => {
+      install: (app: VueApp) => {
         if (!app) client._logger.error(new Error('@bugsnag/plugin-vue reference to Vue `app` was undefined'))
         installVue(app, client)
       },
-      installVueErrorHandler: Vue => {
+      installVueErrorHandler: (Vue: VueApp) => {
         if (!Vue) client._logger.error(new Error('@bugsnag/plugin-vue reference to `Vue` was undefined'))
         installVue2(Vue, client)
       }
     }
   }
 }
-
-// add a default export for ESM modules without interop
-module.exports.default = module.exports
