@@ -1,7 +1,5 @@
-import Client from '@bugsnag/core/client'
 import plugin from '../src/koa'
-import { EventPayload } from '@bugsnag/core'
-import Event from '@bugsnag/core/event'
+import { Client, Event } from '@bugsnag/core'
 
 const noop = () => {}
 const id = <T>(a: T) => a
@@ -43,6 +41,7 @@ describe('plugin: koa', () => {
 
       client._sessionDelegate = { startSession, pauseSession, resumeSession }
       client._logger = logger()
+      // @ts-expect-error
       client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('koa')
@@ -63,6 +62,7 @@ describe('plugin: koa', () => {
       expect(resumeSession).not.toHaveBeenCalled()
       expect(context.bugsnag).toStrictEqual(expect.any(Client))
       expect(context.bugsnag).not.toBe(client)
+      // @ts-expect-error
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
     })
 
@@ -71,7 +71,7 @@ describe('plugin: koa', () => {
       client._sessionDelegate = { startSession: id, pauseSession: noop, resumeSession: id }
       client._logger = logger()
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload, cb: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           cb(null, payload.events[0])
         },
@@ -106,12 +106,14 @@ describe('plugin: koa', () => {
         },
         ip: '1.2.3.4'
       } as any
+      // @ts-expect-error
       client._clientContext = { run: jest.fn() }
 
       const next = jest.fn()
 
       await middleware.requestHandler(context, next)
 
+      // @ts-expect-error
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       const event: Event = await new Promise(resolve => {
@@ -157,12 +159,13 @@ describe('plugin: koa', () => {
       client._sessionDelegate = { startSession: id, pauseSession: noop, resumeSession: id }
       client._logger = logger()
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload, cb: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           cb(null, payload.events[0])
         },
         sendSession: noop
       }))
+      // @ts-expect-error
       client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('koa')
@@ -181,6 +184,7 @@ describe('plugin: koa', () => {
 
       await middleware.requestHandler(context, next)
 
+      // @ts-expect-error
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       const event: Event = await new Promise(resolve => {
@@ -222,6 +226,7 @@ describe('plugin: koa', () => {
 
       client._sessionDelegate = { startSession, pauseSession, resumeSession }
       client._logger = logger()
+      // @ts-expect-error
       client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('koa')
@@ -240,6 +245,7 @@ describe('plugin: koa', () => {
       expect(startSession).not.toHaveBeenCalled()
       expect(pauseSession).not.toHaveBeenCalled()
       expect(resumeSession).not.toHaveBeenCalled()
+      // @ts-expect-error
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       // the Client should be cloned to ensure any manually started sessions
@@ -267,7 +273,7 @@ describe('plugin: koa', () => {
       const events: Event[] = []
 
       client2._setDelivery(() => ({
-        sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload, cb: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           events.push(payload.events[0] as Event)
         },
@@ -303,7 +309,7 @@ describe('plugin: koa', () => {
       const events: Event[] = []
 
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload, cb: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           events.push(payload.events[0] as Event)
         },

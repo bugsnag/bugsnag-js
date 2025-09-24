@@ -1,4 +1,4 @@
-const { getStack, maybeUseFallbackStack } = require('@bugsnag/core/lib/node-fallback-stack')
+const { nodeFallbackStack } = require('@bugsnag/core')
 
 module.exports = {
   name: 'intercept',
@@ -10,12 +10,12 @@ module.exports = {
       }
 
       // capture a stacktrace in case a resulting error has nothing
-      const fallbackStack = getStack()
+      const fallbackStack = nodeFallbackStack.getStack()
 
       return (err, ...data) => {
         if (err) {
           // check if the stacktrace has no context, if so, if so append the frames we created earlier
-          if (err.stack) maybeUseFallbackStack(err, fallbackStack)
+          if (err.stack) nodeFallbackStack.maybeUseFallbackStack(err, fallbackStack)
           const event = client.Event.create(err, true, {
             severity: 'warning',
             unhandled: false,
@@ -24,7 +24,7 @@ module.exports = {
           client._notify(event, onError)
           return
         }
-        cb(...data) // eslint-disable-line
+        cb(...data)  
       }
     }
 
