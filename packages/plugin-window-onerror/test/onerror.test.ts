@@ -1,7 +1,7 @@
 
-import plugin from '../'
+import plugin from '../src/onerror'
 
-import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 type EnhancedWindow = Window & typeof globalThis & { onerror: OnErrorEventHandlerNonNull }
 

@@ -1,6 +1,7 @@
-import plugin from '../'
+/* eslint-disable jest/no-commented-out-tests */
+import plugin from '../src/unhandled-rejection'
 
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 describe('plugin: unhandled rejection', () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import plugin from '../'
 
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import { Config } from '@bugsnag/core'
 
 class XMLHttpRequest {

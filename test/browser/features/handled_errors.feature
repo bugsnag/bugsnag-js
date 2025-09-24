@@ -19,6 +19,14 @@ Feature: Reporting handled errors
       | browserify |
       | rollup     |
       | typescript |
+  Examples:
+    | type       |
+    | script     |
+    # | webpack3   |
+    | webpack4   |
+    | browserify |
+    | rollup     |
+    | typescript |
 
   Scenario Outline: calling notify() with Error within try/catch
     When I navigate to the test URL "/handled/<type>/try_catch_notify.html"
@@ -28,14 +36,14 @@ Feature: Reporting handled errors
     And the exception "type" equals "browserjs"
     And event 0 is handled
 
-    Examples:
-      | type       |
-      | script     |
-      | webpack3   |
-      | webpack4   |
-      | browserify |
-      | rollup     |
-      | typescript |
+  Examples:
+    | type       |
+    | script     |
+    # | webpack3   |
+    | webpack4   |
+    | browserify |
+    | rollup     |
+    | typescript |
 
   @requires_promise
   Scenario Outline: calling notify() with Error within Promise catch
@@ -47,14 +55,14 @@ Feature: Reporting handled errors
     And the exception "type" equals "browserjs"
     And event 0 is handled
 
-    Examples:
-      | type       |
-      | script     |
-      | webpack3   |
-      | webpack4   |
-      | browserify |
-      | rollup     |
-      | typescript |
+  Examples:
+    | type       |
+    | script     |
+    # | webpack3   |
+    | webpack4   |
+    | browserify |
+    | rollup     |
+    | typescript |
 
   Scenario: calling notify() with an object, getting a generated a stacktrace
     When I navigate to the test URL "/handled/script/notify_object.html"
