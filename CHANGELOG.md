@@ -17,6 +17,10 @@
 
 - (plugin-window-onerror) Guard against errors when trying to call previous handler [#2551](https://github.com/bugsnag/bugsnag-js/pull/2551)
 
+### Dependencies
+
+Update bugsnag-cocoa to [v6.34.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.34.0) [#2571](https://github.com/bugsnag/bugsnag-js/pull/2571)
+
 ## [8.5.0] - 2025-09-01
 
 ### Added
