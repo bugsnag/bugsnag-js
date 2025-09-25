@@ -94,6 +94,7 @@ const takeEventSnapshot = (client) => ({
   app: { ...client._app },
   breadcrumbs: client._breadcrumbs.slice(),
   context: client._context,
+  groupingDiscriminator: client._groupingDiscriminator,
   device: { ...client._device },
   metadata: { ...client._metadata },
   featureFlags: featureFlagDelegate.toEventApi(client._features),

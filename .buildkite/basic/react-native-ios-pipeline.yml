@@ -83,6 +83,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
@@ -121,6 +124,9 @@ steps:
         retry:
           manual:
             permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager

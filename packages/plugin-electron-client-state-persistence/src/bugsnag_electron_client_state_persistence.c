@@ -43,6 +43,7 @@ static const char *const key_app = "app";
 static const char *const key_breadcrumbs = "breadcrumbs";
 static const char *const key_context = "context";
 static const char *const key_device = "device";
+static const char *const key_grouping_discriminator = "groupingDiscriminator";
 static const char *const key_metadata = "metadata";
 static const char *const key_feature_flags = "featureFlags";
 static const char *const key_session = "session";
@@ -213,6 +214,24 @@ BECSP_STATUS becsp_set_context(const char *context) {
     json_object_set_string(obj, key_context, context);
   } else {
     json_object_remove(obj, key_context);
+  }
+
+  serialize_data();
+  context_unlock();
+  return BECSP_STATUS_SUCCESS;
+}
+
+BECSP_STATUS becsp_set_grouping_discriminator(const char *grouping_discriminator) {
+  if (!g_context.data) {
+    return BECSP_STATUS_NOT_INSTALLED;
+  }
+  context_lock();
+
+  JSON_Object *obj = json_value_get_object(g_context.data);
+  if (grouping_discriminator) {
+    json_object_set_string(obj, key_grouping_discriminator, grouping_discriminator);
+  } else {
+    json_object_remove(obj, key_grouping_discriminator);
   }
 
   serialize_data();

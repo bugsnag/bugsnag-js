@@ -50,6 +50,10 @@ declare class Client {
   public getContext(): string | undefined;
   public setContext(c: string): void;
 
+  // grouping discriminator
+  public getGroupingDiscriminator(): string | undefined;
+  public setGroupingDiscriminator(groupingDiscriminator: string | undefined): string | undefined;
+
   // user
   public getUser(): User;
   public setUser(id?: string | null, email?: string | null, name?: string | null): void;
