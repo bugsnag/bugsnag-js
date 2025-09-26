@@ -1,0 +1,26 @@
+name: Sync main to next
+on:
+  push:
+    branches: [main]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync main to next
+        uses: bugsnag/github-action-branch-sync@v1
+        with:
+          source-branch: main
+          target-branch: next
+          labels: automation
+          reviewers: ${{ secrets.AUTOMATION_REVIEWERS }}
+          team-reviewers: ${{ secrets.AUTOMATION_TEAM_REVIEWERS }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
