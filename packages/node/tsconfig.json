@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["jest", "node"],
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "bugsnag-packages.d.ts"]
 }

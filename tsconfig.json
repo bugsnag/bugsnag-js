@@ -1,37 +1,6 @@
 {
   "compilerOptions": {
     /* Basic Options */
-<<<<<<< HEAD
-    "target": "es2018",
-    "module": "commonjs",
-    "lib": ["dom", "es2018"],
-    "allowJs": true,
-    "jsx": "preserve",
-    "noEmit": true,
-
-    /* Strict type-safety checks */
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noImplicitReturns": false,
-
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-
-    /* Module Resolution */
-    "moduleResolution": "node",
-    "baseUrl": "./",
-
-    /* Types */
-    "types": ["jest", "node"],
-
-    /* Interop */
-    "esModuleInterop": true,
-
-    /* Tooling support */
-    "resolveJsonModule": true,
-    "isolatedModules": true
-=======
     "target": "es5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */
     "module": "es2015",                       /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
     "moduleResolution": "bundler",
@@ -43,54 +12,15 @@
     "baseUrl": "./",                          /* Base directory to resolve non-absolute module names. */
     "types": ["jest"],                        /* Type declaration files to be included in compilation. */
     "esModuleInterop": true                   /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
->>>>>>> 3a1e1d652 (refactor core package)
   },
 
   "include": [
-<<<<<<< HEAD
     "packages/*/src",
     "packages/**/*.ts",
     "packages/**/*.tsx"
-=======
-    "packages/core",
-    "packages/delivery-node",
-    "packages/delivery-react-native",
-    "packages/in-flight",
-    "packages/plugin-aws-lambda",
-    "packages/plugin-contextualize",
-    "packages/plugin-navigation-breadcrumbs",
-    "packages/plugin-server-session",
-    "packages/plugin-react",
-    "packages/plugin-vue",
-    "packages/plugin-express",
-    "packages/plugin-koa",
-    "packages/plugin-restify",
-    "packages/node",
-    "packages/plugin-strip-project-root",
-    "packages/plugin-interaction-breadcrumbs",
-    "packages/plugin-intercept",
-    "packages/plugin-node-unhandled-rejection",
-    "packages/plugin-node-in-project",
-    "packages/plugin-node-device",
-    "packages/plugin-node-surrounding-code",
-    "packages/plugin-node-uncaught-exception",
-    "packages/browser"
->>>>>>> 3a1e1d652 (refactor core package)
   ],
 
   "exclude": [
-<<<<<<< HEAD
-    "node_modules",
-    "dist",
-
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "test",
-    "packages/**/test",
-
-    "packages/react-native/src/NativeBugsnag.ts"
-=======
     "packages/**/dist"
->>>>>>> 3a1e1d652 (refactor core package)
   ]
 }

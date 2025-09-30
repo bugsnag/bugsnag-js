@@ -39,7 +39,8 @@ module.exports = [
       }),
       commonjs(),
       typescript({
-        declaration: false
+        declaration: false,
+        tsconfig: './tsconfig.json'
       })
     ],
     external: ['path']

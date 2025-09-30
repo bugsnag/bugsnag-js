@@ -1,9 +1,4 @@
 module.exports = api => {
-<<<<<<< HEAD
-=======
-  // NB: This function can be called without an api argument
-
->>>>>>> 3a1e1d652 (refactor core package)
   const presets = []
   const plugins = []
   const overrides = []
@@ -11,12 +6,9 @@ module.exports = api => {
   if (api && api.env('test')) {
     presets.push(['@babel/preset-env', {targets: {node: 'current'}}])
     presets.push('@babel/preset-typescript')
-<<<<<<< HEAD
     plugins.push(['@babel/plugin-transform-class-properties', { loose: true }])
     plugins.push('@babel/plugin-transform-modules-commonjs')
     plugins.push('@babel/plugin-transform-optional-chaining')
-=======
->>>>>>> 3a1e1d652 (refactor core package)
     overrides.push({
       test: /node_modules[\\/]react-native[\\/]/,
       presets: ['module:metro-react-native-babel-preset']
@@ -51,7 +43,6 @@ module.exports = api => {
     )
   }
 
-<<<<<<< HEAD
   plugins.push(
     ['@babel/plugin-transform-arrow-functions'],
     ['@babel/plugin-transform-block-scoping'],
@@ -67,8 +58,6 @@ module.exports = api => {
     ['@babel/plugin-transform-object-rest-spread', { loose: true }]
   )
 
-=======
->>>>>>> 3a1e1d652 (refactor core package)
   if (api && !api.env('test')) {
     api.cache(false)
   }
