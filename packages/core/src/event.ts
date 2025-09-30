@@ -1,7 +1,6 @@
 import { App, Device, FeatureFlag, Logger, Request, Stackframe, Thread, User, BugsnagError, NotifiableError } from "./common"
 
 import ErrorStackParser from 'error-stack-parser'
-// @ts-expect-error no types
 import StackGenerator from 'stack-generator'
 import hasStack from './lib/has-stack'
 
@@ -21,6 +20,7 @@ export default class Event {
   public apiKey: string | undefined
   public context: string | undefined
   public groupingHash: string | undefined
+
   public severity: string
   public unhandled: boolean
 
@@ -38,6 +38,7 @@ export default class Event {
 
   public _user: User
   private _correlation?: { spanId?: string, traceId: string }
+  private _groupingDiscriminator: string | null | undefined
   public _session?: Session
 
   // default value for stacktrace.type
@@ -105,7 +106,7 @@ export default class Event {
     return this._groupingDiscriminator
   }
 
-  setGroupingDiscriminator (value) {
+  setGroupingDiscriminator (value?: string | null) {
     const previousValue = this._groupingDiscriminator
     if (typeof value === 'string' || value === null || value === undefined) this._groupingDiscriminator = value
     return previousValue
@@ -175,7 +176,7 @@ static getStacktrace = function (error: Error, errorFramesToSkip: number, backtr
   if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
   // error wasn't provided or didn't have a stacktrace so try to walk the callstack
   try {
-    return StackGenerator.backtrace().filter((frame: StackTraceJsStyleStackframe) =>
+    return StackGenerator.backtrace({ maxStackSize: 10 }).filter((frame) =>
       (frame.functionName || '').indexOf('StackGenerator$$') === -1
     ).slice(1 + backtraceFramesToSkip)
   } catch (e) {
@@ -185,7 +186,7 @@ static getStacktrace = function (error: Error, errorFramesToSkip: number, backtr
 
 static create = function (maybeError: NotifiableError, tolerateNonErrors: boolean, handledState: HandledState | undefined, component: string, errorFramesToSkip = 0, logger?: Logger) {
   const [error, internalFrames] = normaliseError(maybeError, tolerateNonErrors, component, logger)
-  let event
+  let event: Event
   try {
     const stacktrace = Event.getStacktrace(
       error,

@@ -1,4 +1,4 @@
-import { Client, Config, Logger, Plugin } from '@bugsnag/core'
+import type { Client, Config, Logger, Plugin } from '@bugsnag/core'
 
 const BREADCRUMB_TYPE = 'request'
 
@@ -106,15 +106,15 @@ export default (_ignoredUrls = [], win: GlobalWithFetchAndXHR = window): Plugin 
         }
         if (status >= 400) {
           // contacted server but got an error response
-          internalClient.leaveBreadcrumb('XMLHttpRequest failed', metadata, BREADCRUMB_TYPE)
+          client.leaveBreadcrumb('XMLHttpRequest failed', metadata, BREADCRUMB_TYPE)
         } else {
-          internalClient.leaveBreadcrumb('XMLHttpRequest succeeded', metadata, BREADCRUMB_TYPE)
+          client.leaveBreadcrumb('XMLHttpRequest succeeded', metadata, BREADCRUMB_TYPE)
         }
       }
 
       function handleXHRError (method: string, url: string, duration: number) {
         if (url === undefined) {
-          internalClient._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
+          client._logger.warn('The request URL is no longer present on this XMLHttpRequest. A breadcrumb cannot be left for this request.')
           return
         }
 
@@ -124,7 +124,7 @@ export default (_ignoredUrls = [], win: GlobalWithFetchAndXHR = window): Plugin 
         }
 
         // failed to contact server
-        internalClient.leaveBreadcrumb('XMLHttpRequest error', {
+        client.leaveBreadcrumb('XMLHttpRequest error', {
           method: String(method),
           url: String(url),
           duration: duration
@@ -197,14 +197,14 @@ export default (_ignoredUrls = [], win: GlobalWithFetchAndXHR = window): Plugin 
         }
         if (response.status >= 400) {
           // when the request comes back with a 4xx or 5xx status it does not reject the fetch promise,
-          internalClient.leaveBreadcrumb('fetch() failed', metadata, BREADCRUMB_TYPE)
+          client.leaveBreadcrumb('fetch() failed', metadata, BREADCRUMB_TYPE)
         } else {
-          internalClient.leaveBreadcrumb('fetch() succeeded', metadata, BREADCRUMB_TYPE)
+          client.leaveBreadcrumb('fetch() succeeded', metadata, BREADCRUMB_TYPE)
         }
       }
 
       const handleFetchError = (method: string, url: string, duration: number) => {
-        internalClient.leaveBreadcrumb('fetch() error', { method, url, duration: duration }, BREADCRUMB_TYPE)
+        client.leaveBreadcrumb('fetch() error', { method, url, duration: duration }, BREADCRUMB_TYPE)
       }
     }
   }

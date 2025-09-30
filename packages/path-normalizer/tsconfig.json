@@ -1,8 +1,14 @@
 {
-  "extends": "../../tsconfig.json",
   "include": ["."],
   "compilerOptions": {
+    "target": "es5",
+    "module": "es2015",
+    "moduleResolution": "node",
     "lib": ["es2017"],
-    "types": ["node"]
+    "allowJs": true,
+    "noEmit": true,
+    "strict": true,
+    "types": ["node"],
+    "esModuleInterop": true
   }
 }
