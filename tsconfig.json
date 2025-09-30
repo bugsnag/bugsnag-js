@@ -3,7 +3,7 @@
     /* Basic Options */
     "target": "es5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */
     "module": "es2015",                       /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "lib": [ "dom", "esnext" ],               /* Specify library files to be included in the compilation. */
     "allowJs": true,                          /* Allow javascript files to be compiled. */
     "jsx": "preserve",                        /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
@@ -18,6 +18,7 @@
     "packages/delivery-node",
     "packages/delivery-react-native",
     "packages/in-flight",
+    "packages/node",
     "packages/plugin-aws-lambda",
     "packages/plugin-contextualize",
     "packages/plugin-navigation-breadcrumbs",
@@ -27,7 +28,6 @@
     "packages/plugin-express",
     "packages/plugin-koa",
     "packages/plugin-restify",
-    "packages/node",
     "packages/plugin-strip-project-root",
     "packages/plugin-interaction-breadcrumbs",
     "packages/plugin-intercept",
@@ -35,8 +35,7 @@
     "packages/plugin-node-in-project",
     "packages/plugin-node-device",
     "packages/plugin-node-surrounding-code",
-    "packages/plugin-node-uncaught-exception",
-    "packages/browser"
+    "packages/plugin-node-uncaught-exception"
   ],
   "exclude": [
     "packages/**/dist"
