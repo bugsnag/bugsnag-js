@@ -22,11 +22,11 @@ type NativeClientEvent = Pick<Event,
 | 'groupingHash'
 | 'apiKey'
 > & {
-  severityReason: EventWithInternals['_handledState']['severityReason']
-  user: EventWithInternals['_user']
-  metadata: EventWithInternals['_metadata']
-  correlation: EventWithInternals['_correlation']
-  groupingDiscriminator: EventWithInternals['_groupingDiscriminator']
+  severityReason: Event['_handledState']['severityReason']
+  user: Event['_user']
+  metadata: Event['_metadata']
+  correlation: Event['_correlation']
+  groupingDiscriminator: Event['_groupingDiscriminator']
   nativeStack: NativeStackIOS | NativeStackAndroid
 }
 

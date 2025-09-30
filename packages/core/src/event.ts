@@ -172,7 +172,7 @@ export default class Event {
   }
 
   // Helpers
-static getStacktrace = function (error: Error, errorFramesToSkip: number, backtraceFramesToSkip: number) {
+static getStacktrace = function (error: Error, errorFramesToSkip: number, backtraceFramesToSkip: number): any[] {
   if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
   // error wasn't provided or didn't have a stacktrace so try to walk the callstack
   try {

@@ -1,6 +1,15 @@
 import { Client, Event, EventDeliveryPayload } from '@bugsnag/core'
 import plugin from '../src/hono'
 
+// Extend the Client type to include _clientContext for testing
+declare module '@bugsnag/core' {
+  interface Client {
+    _clientContext?: {
+      run: (client: Client, fn: () => void) => void
+    }
+  }
+}
+
 jest.mock('../src/load-connection-info', () => {
   return jest.fn().mockResolvedValueOnce({
     remote: { address: '1.2.3.4', addressType: 'v4', port: '1234' }
