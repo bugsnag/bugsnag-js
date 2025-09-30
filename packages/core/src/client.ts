@@ -169,7 +169,7 @@ export default class Client<T extends Config = Config> {
   }
 
   _configure (opts: T, internalPlugins: Plugin<T>[]) {
-    const schema = internalPlugins.reduce((schema, plugin) => {
+    const schema: Record<string, any> = internalPlugins.reduce((schema, plugin) => {
       if (plugin && plugin.configSchema) return Object.assign({}, schema, plugin.configSchema)
       return schema
     }, this._schema)
@@ -181,15 +181,15 @@ export default class Client<T extends Config = Config> {
 
     // accumulate configuration and error messages
     const { errors, config } = (Object.keys(schema) as (keyof T)[]).reduce((accum: {errors: Record<any, any>, config: Record<any, any>}, key: keyof typeof opts) => {
-      const defaultValue = schema[key].defaultValue(opts[key])
+      const defaultValue = schema[key as string].defaultValue(opts[key])
 
       if (opts[key] !== undefined) {
-        const valid = schema[key].validate(opts[key])
+        const valid = schema[key as string].validate(opts[key])
         if (!valid) {
-          accum.errors[key] = schema[key].message
+          accum.errors[key] = schema[key as string].message
           accum.config[key] = defaultValue
         } else {
-          if (schema[key].allowPartialObject) {
+          if (schema[key as string].allowPartialObject) {
             accum.config[key] = Object.assign(defaultValue, opts[key])
           } else {
             accum.config[key] = opts[key]
