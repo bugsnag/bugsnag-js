@@ -26,6 +26,7 @@ type NativeClientEvent = Pick<Event,
   user: Event['_user']
   metadata: Event['_metadata']
   correlation: Event['_correlation']
+  groupingDiscriminator: Event['_groupingDiscriminator']
   nativeStack: NativeStackIOS | NativeStackAndroid
 }
 

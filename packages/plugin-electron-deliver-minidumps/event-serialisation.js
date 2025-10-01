@@ -7,6 +7,7 @@ const supportedProperties = [
   'device',
   'featureFlags',
   'groupingHash',
+  'groupingDiscriminator',
   'metaData',
   'request',
   'session',
@@ -94,6 +95,10 @@ function deserialiseEvent (json, minidumpPath) {
 
   if (hasValueForProperty(json, 'context')) {
     event.context = json.context
+  }
+
+  if (hasValueForProperty(json, 'groupingDiscriminator')) {
+    event.groupingDiscriminator = json.groupingDiscriminator
   }
 
   if (hasValueForProperty(json, 'device')) {

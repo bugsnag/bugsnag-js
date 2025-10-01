@@ -22,6 +22,13 @@ module.exports = {
       return ret
     }
 
+    const origSetGroupingDiscriminator = client.setGroupingDiscriminator
+    client.setGroupingDiscriminator = (...args) => {
+      const ret = origSetGroupingDiscriminator.call(client, ...args)
+      emitter.emit('GroupingDiscriminatorUpdate', client.getGroupingDiscriminator())
+      return ret
+    }
+
     const origAddMetadata = client.addMetadata
     client.addMetadata = (...args) => {
       const ret = origAddMetadata.call(client, ...args)
@@ -73,12 +80,15 @@ module.exports = {
     }
 
     // handle a bulk update of initial values from a new renderer
-    const bulkUpdate = ({ user, context, metadata, features }) => {
+    const bulkUpdate = ({ user, context, metadata, features, groupingDiscriminator }) => {
       if (user) {
         client.setUser(user.id, user.email, user.name)
       }
       if (context) {
         client.setContext(context)
+      }
+      if (groupingDiscriminator) {
+        client.setGroupingDiscriminator(groupingDiscriminator)
       }
       if (metadata) {
         for (const section in metadata) {

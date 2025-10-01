@@ -25,6 +25,14 @@ const BugsnagIpcRenderer = {
     return safeInvoke(false, 'setContext', context)
   },
 
+  getGroupingDiscriminator () {
+    return safeInvoke(true, 'getGroupingDiscriminator')
+  },
+
+  setGroupingDiscriminator (groupingDiscriminator) {
+    return safeInvoke(false, 'setGroupingDiscriminator', groupingDiscriminator)
+  },
+
   addMetadata (...args) {
     return safeInvoke(false, 'addMetadata', ...args)
   },

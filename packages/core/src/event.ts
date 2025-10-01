@@ -35,6 +35,7 @@ export default class Event {
   public _metadata: { [key: string]: any }
   public _features: (FeatureFlag | null)[]
   public _featuresIndex: { [key: string]: number }
+  public _groupingDiscriminator: string | null | undefined
 
   public _user: User
   private _correlation?: { spanId?: string, traceId: string }
@@ -71,6 +72,7 @@ export default class Event {
     this._user = {}
     this._session = undefined
     this._correlation = undefined
+    this._groupingDiscriminator = undefined
 
     this.errors = [
       createBugsnagError(errorClass, errorMessage, Event.__type, stacktrace)
@@ -98,6 +100,16 @@ export default class Event {
     if (typeof traceId === 'string') {
       this._correlation = { traceId, ...typeof spanId === 'string' ? { spanId } : { } }
     }
+  }
+
+  getGroupingDiscriminator () {
+    return this._groupingDiscriminator
+  }
+
+  setGroupingDiscriminator (value: string | null | undefined) {
+    const previousValue = this._groupingDiscriminator
+    if (typeof value === 'string' || value === null || value === undefined) this._groupingDiscriminator = value
+    return previousValue
   }
 
   getMetadata (section: string, key?: string) {
@@ -150,6 +162,7 @@ export default class Event {
       breadcrumbs: this.breadcrumbs,
       context: this.context,
       groupingHash: this.groupingHash,
+      groupingDiscriminator: this._groupingDiscriminator,
       metaData: this._metadata,
       user: this._user,
       session: this._session,

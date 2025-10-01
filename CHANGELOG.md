@@ -1,6 +1,12 @@
 # Changelog
 
-## [Unreleased]
+## [8.6.0] - 2025-09-25
+
+### Added
+
+- Add additional grouping discriminator property to events [#2544](https://github.com/bugsnag/bugsnag-js/pull/2544)
+- (react-native) Handle additional grouping discriminator [#2557](https://github.com/bugsnag/bugsnag-js/pull/2557)
+- (electron) Handle additional grouping discriminator [#2561](https://github.com/bugsnag/bugsnag-js/pull/2561)
 
 ### Changed
 
@@ -10,6 +16,10 @@
 ### Fixed
 
 - (plugin-window-onerror) Guard against errors when trying to call previous handler [#2551](https://github.com/bugsnag/bugsnag-js/pull/2551)
+
+### Dependencies
+
+Update bugsnag-cocoa to [v6.34.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.34.0) [#2571](https://github.com/bugsnag/bugsnag-js/pull/2571)
 
 ## [8.5.0] - 2025-09-01
 

@@ -252,3 +252,11 @@ Then('the event has no feature flags', async () => {
   expect(payloads[0].events).toHaveLength(1)
   expect(payloads[0].events[0]).toHaveProperty('featureFlags', [])
 })
+
+Then('the event {string} equals {string}', async (field, expected) => {
+  const payloads = readPayloads(global.server.uploadsForType('event'))
+
+  expect(payloads).toHaveLength(1)
+  expect(payloads[0].events).toHaveLength(1)
+  expect(payloads[0].events[0]).toHaveProperty(field, expected)
+})

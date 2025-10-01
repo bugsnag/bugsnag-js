@@ -40,6 +40,7 @@ const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtur
 
 const INTERNAL_DEPENDENCIES = [
   '@bugsnag/react-native',
+  '@bugsnag/derecursify',
   '@bugsnag/plugin-react-navigation',
   '@bugsnag/plugin-react-native-navigation'
 ]

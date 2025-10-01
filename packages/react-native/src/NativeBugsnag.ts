@@ -42,6 +42,8 @@ export interface Spec extends TurboModule {
   clearFeatureFlag(name: string): void
 
   clearFeatureFlags(): void
+
+  updateGroupingDiscriminator(groupingDiscriminator: string | undefined | null): void
 }
 
  

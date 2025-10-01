@@ -100,6 +100,7 @@ module.exports = class BugsnagIpcMain {
         type: this.client._config.appType
       }
       event.context = event.context || this.client._context
+      event.groupingDiscriminator = event.groupingDiscriminator || this.client._groupingDiscriminator
       event._metadata = { ...event._metadata, ...this.client._metadata }
       featureFlagDelegate.merge(event._features, this.client._features, event._featuresIndex)
       event._user = { ...event._user, ...this.client._user }
@@ -112,8 +113,8 @@ module.exports = class BugsnagIpcMain {
         if (!shouldSend) return resolve({ shouldSend: false })
 
         // extract just the properties we want from the event
-        const { app, breadcrumbs, context, device, _metadata, _features, _user } = event
-        resolve({ app, breadcrumbs, context, device, metadata: _metadata, features: _features, user: _user })
+        const { app, breadcrumbs, context, device, _metadata, _features, _user, groupingDiscriminator } = event
+        resolve({ app, breadcrumbs, context, device, metadata: _metadata, features: _features, user: _user, groupingDiscriminator })
       })
     })
   }
@@ -156,6 +157,8 @@ module.exports = class BugsnagIpcMain {
       ['update', this.update.bind(this)],
       ['getContext', this.client.getContext.bind(this.client)],
       ['setContext', this.client.setContext.bind(this.client)],
+      ['getGroupingDiscriminator', this.client.getGroupingDiscriminator.bind(this.client)],
+      ['setGroupingDiscriminator', this.client.setGroupingDiscriminator.bind(this.client)],
       ['addMetadata', this.client.addMetadata.bind(this.client)],
       ['clearMetadata', this.client.clearMetadata.bind(this.client)],
       ['getMetadata', this.client.getMetadata.bind(this.client)],

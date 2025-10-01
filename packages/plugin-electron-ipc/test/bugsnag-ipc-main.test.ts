@@ -54,6 +54,23 @@ describe('BugsnagIpcMain', () => {
       expect(event.returnValue).toEqual('today')
     })
 
+    it('works for updating grouping discriminator', () => {
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      client.setGroupingDiscriminator = jest.fn()
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      bugsnagIpcMain.handle({}, 'setGroupingDiscriminator', JSON.stringify('grouping-discriminator'))
+      expect(client.setGroupingDiscriminator).toHaveBeenCalledWith('grouping-discriminator')
+    })
+
+    it('returns the current grouping discriminator', () => {
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      client.setGroupingDiscriminator('current-grouping-discriminator')
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const event = { returnValue: undefined }
+      bugsnagIpcMain.handleSync(event, 'getGroupingDiscriminator')
+      expect(event.returnValue).toEqual('current-grouping-discriminator')
+    })
+
     it('works for updating user', () => {
       const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.setUser = jest.fn()
@@ -274,6 +291,7 @@ describe('BugsnagIpcMain', () => {
 
       client.leaveBreadcrumb('hi')
       client.setContext('ctx')
+      client.setGroupingDiscriminator('grouping-discriminator')
       client.setUser('123', 'jim@jim.com', 'Jim')
       client.addFeatureFlags([
         { name: 'flag1' },
@@ -299,6 +317,7 @@ describe('BugsnagIpcMain', () => {
         },
         breadcrumbs: client._breadcrumbs,
         context: 'ctx',
+        groupingDiscriminator: 'grouping-discriminator',
         device: { id: '123' },
         metadata: {
           app: { testingMode: 'unit' },

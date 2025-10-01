@@ -50,7 +50,7 @@ steps:
       #
       - label: ":browserstack: {{matrix}} non-https tests"
         matrix:
-          # - ios_11 Skipped pending PLAT-14437
+          - ios_12
           - safari_16
         depends_on: "browser-maze-runner-bs"
         timeout_in_minutes: 30

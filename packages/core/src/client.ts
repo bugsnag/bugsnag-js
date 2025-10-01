@@ -26,6 +26,7 @@ export default class Client<T extends Config = Config> {
   public _metadata: { [key: string]: any }
   public _featuresIndex: { [key: string]: number }
   public _features: Array<FeatureFlag | null>
+  public _groupingDiscriminator?: string | null
 
   private _context: string | undefined
 
@@ -71,6 +72,7 @@ export default class Client<T extends Config = Config> {
     this._features = []
     this._context = undefined
     this._user = {}
+    this._groupingDiscriminator = undefined
 
     // callbacks:
     //  e: onError
@@ -153,6 +155,17 @@ export default class Client<T extends Config = Config> {
     this._context = c
   }
 
+  getGroupingDiscriminator () {
+    return this._groupingDiscriminator
+  }
+
+  setGroupingDiscriminator (value: string | null | undefined) {
+    const previousValue = this._groupingDiscriminator
+    if (typeof value === 'string' || value === null || value === undefined) this._groupingDiscriminator = value
+    return previousValue
+  }
+
+  
   _configure (opts: T, internalPlugins: Plugin<T>[]) {
     const schema = internalPlugins.reduce((schema, plugin) => {
       if (plugin && plugin.configSchema) return Object.assign({}, schema, plugin.configSchema)
@@ -350,6 +363,7 @@ export default class Client<T extends Config = Config> {
     event._user = Object.assign({}, event._user, this._user)
     event.breadcrumbs = this._breadcrumbs.slice()
     featureFlagDelegate.merge(event._features, this._features, event._featuresIndex)
+    event.setGroupingDiscriminator(this._groupingDiscriminator)
 
     // exit early if events should not be sent on the current releaseStage
     if (this._config.enabledReleaseStages !== null && this._config.enabledReleaseStages.indexOf(this._config.releaseStage) === -1) {

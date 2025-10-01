@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-window-onerror",
-  "version": "8.4.0",
+  "version": "8.6.0",
   "main": "dist/onerror.js",
   "types": "dist/types/onerror.d.ts",
   "exports": {
@@ -25,7 +25,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.4.0"
+    "@bugsnag/core": "^8.6.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"

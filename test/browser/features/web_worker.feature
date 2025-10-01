@@ -44,7 +44,8 @@ Feature: worker notifier
     And I wait to receive a session
     Then the session is a valid browser payload for the session tracking API
 
-  @skip_safari_16
+  # Not supported on Safari https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Integrity-Policy#browser_compatibility
+  @skip_safari_16 @skip_ios_12
   Scenario: Integrity headers are set when setPayloadChecksums is true
     When I navigate to the test URL "/web_worker/integrity"
     And I wait to receive an error

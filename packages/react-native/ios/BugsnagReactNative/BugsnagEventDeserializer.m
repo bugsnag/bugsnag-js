@@ -30,6 +30,7 @@
                                                     session:nil /* set by -[BugsnagClient notifyInternal:block:] */];
     event.context = payload[@"context"];
     event.groupingHash = payload[@"groupingHash"];
+    event.groupingDiscriminator = payload[@"groupingDiscriminator"];
 
     [event setCorrelationTraceId:correlation[@"traceId"] spanId:correlation[@"spanId"]];
 
