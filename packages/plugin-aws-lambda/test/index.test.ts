@@ -1,11 +1,10 @@
 import util from 'util'
 import BugsnagPluginAwsLambda from '../src/'
-import Client, { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
+import { Client, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 
 const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryPayload[], config = {}) => {
   const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginAwsLambda], ...config })
 
-  // @ts-ignore the following property is not defined on the public Event interface
   client.Event.__type = 'nodejs'
 
   // a flush failure won't throw as we don't want to crash apps if delivery takes

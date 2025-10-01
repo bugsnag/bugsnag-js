@@ -1,7 +1,14 @@
-import Client from '@bugsnag/core/client'
+import { Client, Event, EventDeliveryPayload } from '@bugsnag/core'
 import plugin from '../src/hono'
-import { EventPayload } from '@bugsnag/core'
-import Event from '@bugsnag/core/event'
+
+// Extend the Client type to include _clientContext for testing
+declare module '@bugsnag/core' {
+  interface Client {
+    _clientContext?: {
+      run: (client: Client, fn: () => void) => void
+    }
+  }
+}
 
 jest.mock('../src/load-connection-info', () => {
   return jest.fn().mockResolvedValueOnce({
@@ -77,7 +84,7 @@ describe('plugin: hono', () => {
       client._sessionDelegate = { startSession: id, pauseSession: noop, resumeSession: id }
       client._logger = logger()
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, c: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload: EventDeliveryPayload, c: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           c(null, payload.events[0])
         },
@@ -147,7 +154,7 @@ describe('plugin: hono', () => {
       client._sessionDelegate = { startSession: id, pauseSession: noop, resumeSession: id }
       client._logger = logger()
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, c: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload: EventDeliveryPayload, c: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           c(null, payload.events[0])
         },
@@ -259,7 +266,7 @@ describe('plugin: hono', () => {
       const events: Event[] = []
 
       client2._setDelivery(() => ({
-        sendEvent (payload: EventPayload, c: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload: EventDeliveryPayload, c: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           events.push(payload.events[0] as Event)
         },
@@ -296,7 +303,7 @@ describe('plugin: hono', () => {
       const events: Event[] = []
 
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, c: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload: EventDeliveryPayload, c: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           events.push(payload.events[0] as Event)
         },

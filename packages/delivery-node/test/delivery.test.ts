@@ -1,8 +1,7 @@
 import delivery from '../'
 import http from 'http'
-import { Client } from '@bugsnag/core'
-import { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
-import { AddressInfo } from 'net'
+import type { Client, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
+import type { AddressInfo } from 'net'
 
 interface Request {
   url?: string

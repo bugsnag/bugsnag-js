@@ -34,7 +34,7 @@ const compareExact = (expected, actual, path) => {
 
 /* Assert value is an expected type */
 const compareType = (expected, actual, path) => {
-  // eslint-disable-next-line valid-typeof
+   
   if (typeof actual !== expected) {
     return [{ path, expected, actual, message: `Expected an item of '${expected}' type` }]
   }

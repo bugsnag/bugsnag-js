@@ -1,5 +1,5 @@
 const { schema } = require('./common')
-const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
+const { stringWithLength } = require('@bugsnag/core')
 
 const ALLOWED_IN_RENDERER = [
   // a list of config keys that are allowed to be supplied to the renderer client
