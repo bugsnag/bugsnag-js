@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-hono",
-  "version": "8.4.0",
+  "version": "8.6.0",
   "main": "src/hono.js",
   "types": "types/bugsnag-hono.d.ts",
   "description": "@bugsnag/js error handling middleware for Hono web servers",
@@ -22,7 +22,7 @@
     "@bugsnag/core": "^8.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.4.0",
+    "@bugsnag/core": "^8.6.0",
     "hono": "^4.6.3",
     "typescript": "^5.2.2"
   },
