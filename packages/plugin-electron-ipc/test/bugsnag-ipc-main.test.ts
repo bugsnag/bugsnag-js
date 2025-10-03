@@ -311,7 +311,8 @@ describe('BugsnagIpcMain', () => {
           releaseStage: 'production',
           name: 'testApp',
           type: 'test',
-          version: undefined
+          version: undefined,
+          codeBundleId: undefined
         },
         breadcrumbs: client._breadcrumbs,
         context: 'ctx',
@@ -332,6 +333,35 @@ describe('BugsnagIpcMain', () => {
           email: 'jim@jim.com',
           name: 'Jim'
         }
+      })
+    })
+
+    it('should include codeBundleId in app object when configured', async () => {
+      const schema = {
+        codeBundleId: {
+          defaultValue: () => undefined,
+          message: 'should be a string',
+          validate: (val: unknown) => (val === undefined || typeof val === 'string')
+        },
+        releaseStage: {
+          defaultValue: () => 'production',
+          message: 'should be a string',
+          validate: (val: unknown) => typeof val === 'string'
+        }
+      }
+      const client = new Client({
+        apiKey: '123',
+        codeBundleId: 'test-bundle-456'
+      }, schema, [mockClientStateManagerPlugin], Notifier)
+
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const payloadInfo = await bugsnagIpcMain.getPayloadInfo()
+
+      expect(payloadInfo.app).toEqual({
+        releaseStage: 'production',
+        version: undefined,
+        type: undefined,
+        codeBundleId: 'test-bundle-456'
       })
     })
 

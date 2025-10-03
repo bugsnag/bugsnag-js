@@ -26,6 +26,7 @@ interface MainConfig extends Config {
   projectRoot?: string
   launchDurationMillis?: number
   sendCode?: boolean
+  codeBundleId?: string
 }
 
 // a renderer is only allowed a subset of properties from Config

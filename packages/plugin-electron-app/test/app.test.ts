@@ -13,6 +13,7 @@ const makeExpectedSessionApp = (customisations = {}) => ({
   releaseStage: 'production',
   type: undefined,
   version: '1.2.3',
+  codeBundleId: undefined,
   ...customisations
 })
 
@@ -179,6 +180,19 @@ describe('plugin: electron app info', () => {
 
     const session = await sendSession()
     expect(session.app).toEqual(makeExpectedSessionApp())
+  })
+
+  it('reports app.codeBundleId when configured', async () => {
+    const config = { codeBundleId: 'test-bundle-123' }
+
+    const { sendEvent, sendSession } = makeClient({ config })
+
+    const event = await sendEvent()
+    expect(event.app).toEqual(makeExpectedEventApp({ codeBundleId: 'test-bundle-123' }))
+    expect(event.getMetadata('app')).toEqual(makeExpectedMetadataApp())
+
+    const session = await sendSession()
+    expect(session.app).toEqual(makeExpectedSessionApp({ codeBundleId: 'test-bundle-123' }))
   })
 
   it('tracks focus and blur events for inForeground', async () => {
@@ -801,6 +815,11 @@ const schema = {
     }),
     allowPartialObject: true,
     validate: value => true
+  },
+  codeBundleId: {
+    defaultValue: () => undefined,
+    message: 'should be a string',
+    validate: val => (val === undefined || typeof val === 'string')
   }
 }
 

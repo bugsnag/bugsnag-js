@@ -106,7 +106,8 @@ module.exports = (NativeClient, process, electronApp, BrowserWindow, filestore, 
       isLaunching: true,
       releaseStage: client._config.releaseStage,
       type: client._config.appType || osToAppType.get(process.platform),
-      version: client._config.appVersion
+      version: client._config.appVersion,
+      codeBundleId: client._config.codeBundleId
     })
 
     client.addMetadata('app', {
