@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Add `codeBundleId` config option to main process  [#2577](https://github.com/bugsnag/bugsnag-js/pull/2577)
+
 ## [8.6.0] - 2025-09-25
 
 ### Added
