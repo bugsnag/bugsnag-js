@@ -41,6 +41,18 @@ Given('I launch an app with configuration:', launchConfig, (data) => {
     setup[key] = config
   })
 
+  // If no explicit renderer_config was provided, check if the bugsnag config file has a renderer export
+  if (setup.renderer_config === '{}' && setup.bugsnag !== 'default') {
+    try {
+      const configModule = require(`../../../fixtures/app/src/configs/${setup.bugsnag}.js`)
+      if (typeof configModule.renderer === 'function') {
+        setup.renderer_config = JSON.stringify(configModule.renderer())
+      }
+    } catch (e) {
+      // If the config file doesn't exist or doesn't have a renderer export, use the default
+    }
+  }
+
   return global.automator.start({
     BUGSNAG_CONFIG: setup.bugsnag,
     BUGSNAG_PRELOAD: setup.preload,

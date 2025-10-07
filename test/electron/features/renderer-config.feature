@@ -38,3 +38,15 @@ Feature: Setting config options in renderers
             | clear-user  | { "user": { "id": "3", "name": "Bugs Nag", "email": "bugs.nag@bugsnag.com" } } |
             | clear-context  | { "context": "renderer context" } |
             | clear-metadata  | { "metadata": { "renderer": { "key": "value" } } } |
+
+    Scenario: Different codeBundleId values in main and renderer processes
+        Given I launch an app with configuration:
+            | bugsnag | mixed-codebundleid |
+        And I click "renderer-notify"
+        Then the total requests received by the server matches:
+            | events  | 1        |
+        Then the headers of every event request contains:
+            | Bugsnag-API-Key   | 6425093c6530f554a9897d2d7d38e248 |
+            | Content-Type      | application/json                 |
+            | Bugsnag-Integrity | {BODY_SHA1}                      |
+        Then the contents of an event request matches "renderer/config/mixed-codebundleid.json"
