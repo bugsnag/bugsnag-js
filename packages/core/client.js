@@ -14,8 +14,8 @@ const runSyncCallbacks = require('./lib/sync-callback-runner')
 const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
 const { add, clear, merge } = require('./lib/feature-flag-delegate')
 const HUB_PREFIX = '00000'
-const HUB_NOTIFY = 'https://notify.insighthub.smartbear.com'
-const HUB_SESSION = 'https://sessions.insighthub.smartbear.com'
+const HUB_NOTIFY = 'https://notify.bugsnag.smartbear.com'
+const HUB_SESSION = 'https://sessions.bugsnag.smartbear.com'
 
 const noop = () => { }
 
