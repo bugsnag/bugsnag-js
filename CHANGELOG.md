@@ -6,6 +6,10 @@
 
 - Add `codeBundleId` config option to main process  [#2577](https://github.com/bugsnag/bugsnag-js/pull/2577)
 
+### Changed
+
+- Amend default AWS instance URL to `bugsnag.smartbear.com` [#2584](https://github.com/bugsnag/bugsnag-js/pull/2584)
+
 ## [8.6.0] - 2025-09-25
 
 ### Added
