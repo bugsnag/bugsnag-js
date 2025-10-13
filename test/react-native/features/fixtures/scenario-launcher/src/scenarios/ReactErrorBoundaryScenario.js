@@ -1,6 +1,7 @@
-import Bugsnag from '@bugsnag/react-native'
-import { Text, View } from 'react-native'
 import Scenario from './Scenario'
+import Bugsnag from '@bugsnag/react-native'
+import * as React from 'react'
+import { Text, View } from 'react-native'
 
 export class ReactErrorBoundaryScenario extends Scenario {
   constructor (_configuration, jsConfig) {
