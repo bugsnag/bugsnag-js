@@ -6,6 +6,12 @@ import Scenario from './Scenario'
 export class ReactNativeErrorBoundaryScenario extends Scenario {
   constructor (_configuration, jsConfig) {
     super()
+    jsConfig.autoTrackSessions = false
+    jsConfig.autoDetectErrors = true
+    jsConfig.enabledErrorTypes = {
+      unhandledExceptions: true,
+      unhandledRejections: true
+    }
   }
 
   view () {
