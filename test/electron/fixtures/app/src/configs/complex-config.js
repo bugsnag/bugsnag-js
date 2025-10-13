@@ -2,6 +2,7 @@ module.exports = () => {
   return {
     appType: 'complicated',
     appVersion: '2.0.83-beta3',
+    codeBundleId: '2.0.83-beta3-r456',
     context: 'shopping cart',
     user: {
       id: '3',

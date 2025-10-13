@@ -35,6 +35,11 @@ module.exports.schema = {
     validate: value => value === null || stringWithLength(value),
     message: 'should be string'
   },
+  codeBundleId: {
+    defaultValue: () => undefined,
+    message: 'should be a string',
+    validate: val => (val === undefined || stringWithLength(val))
+  },
   releaseStage: {
     ...schema.releaseStage,
     defaultValue: () => app.isPackaged ? 'production' : 'development'

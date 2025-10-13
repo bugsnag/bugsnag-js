@@ -1,5 +1,15 @@
 # Changelog
 
+## [8.7.0] - 2025-10-13
+
+### Added
+
+- (electron) Add `codeBundleId` config option to main process  [#2577](https://github.com/bugsnag/bugsnag-js/pull/2577)
+
+### Changed
+
+- Update bugsnag-cocoa to [v6.34.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.34.0) [#2571](https://github.com/bugsnag/bugsnag-js/pull/2571)
+
 ## [8.6.0] - 2025-09-25
 
 ### Added

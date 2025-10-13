@@ -22,7 +22,7 @@ if (!process.env.RCT_NEW_ARCH_ENABLED || (process.env.RCT_NEW_ARCH_ENABLED !== '
   process.exit(1)
 }
 
-const notifierVersion = process.env.NOTIFIER_VERSION || common.getCommitId()
+const notifierVersion = process.env.NOTIFIER_VERSION || common.determineVersion()
 
 const reactNativeVersion = process.env.RN_VERSION
 const ROOT_DIR = resolve(__dirname, '../')
