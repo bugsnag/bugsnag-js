@@ -3,13 +3,13 @@ import * as React from 'react'
 import { Text, View } from 'react-native'
 import Scenario from './Scenario'
 
-export class ReactErrorBoundaryScenario extends Scenario {
+export class ReactNativeErrorBoundaryScenario extends Scenario {
   constructor (_configuration, jsConfig) {
     super()
   }
 
   view () {
-    const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary()
+    const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)
 
     return (
       <ErrorBoundary FallbackComponent={ErrorView}>

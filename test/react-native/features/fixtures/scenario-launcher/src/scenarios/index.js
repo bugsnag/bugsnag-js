@@ -79,7 +79,7 @@ export { ReactNavigationBreadcrumbsEnabledScenario } from './ReactNavigationBrea
 export { ReactNavigationBreadcrumbsDisabledScenario } from './ReactNavigationBreadcrumbsDisabledScenario'
 
 // react-native-error-boundary.feature
-export { ReactErrorBoundaryScenario } from './ReactErrorBoundaryScenario'
+export { ReactNativeErrorBoundaryScenario } from './ReactNativeErrorBoundaryScenario'
 
 // react-native-navigation.feature
 export { ReactNativeNavigationBreadcrumbsEnabledScenario } from './ReactNativeNavigationBreadcrumbsEnabledScenario'
