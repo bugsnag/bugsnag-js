@@ -1,7 +1,7 @@
-import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
 import { Text, View } from 'react-native'
+import Scenario from './Scenario'
 
 export class ReactErrorBoundaryScenario extends Scenario {
   constructor (_configuration, jsConfig) {
@@ -32,13 +32,22 @@ function ErrorView () {
 }
 
 function MainView () {
+  const [shouldThrow, setShouldThrow] = React.useState(false)
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setShouldThrow(true)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (shouldThrow) {
+    throw new Error('borked')
+  }
+
   return (
     <View>
-      <Text>Hello world {text()}</Text>
+      <Text>Hello world</Text>
     </View>
   )
-}
-
-const text = function () {
-  throw new Error('borked')
 }
