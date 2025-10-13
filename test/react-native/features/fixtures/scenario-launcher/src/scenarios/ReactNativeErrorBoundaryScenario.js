@@ -25,7 +25,7 @@ export class ReactNativeErrorBoundaryScenario extends Scenario {
   }
 
   run () {
-    // The error is thrown during render
+    setTimeout(() => {}, 2000)
   }
 }
 
