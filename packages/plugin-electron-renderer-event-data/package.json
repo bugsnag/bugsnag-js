@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-renderer-event-data",
-  "version": "8.6.0",
+  "version": "8.7.0",
   "main": "renderer-event-data.js",
   "description": "@bugsnag/electron plugin to get fully populated event data in renderer callbacks",
   "homepage": "https://www.bugsnag.com/",
