@@ -5,12 +5,11 @@ import Scenario from './Scenario'
 export class ReactErrorBoundaryScenario extends Scenario {
   constructor (_configuration, jsConfig) {
     super()
-    // React plugin is automatically included in React Native
   }
 
   view () {
     const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary()
-    
+
     return (
       <ErrorBoundary FallbackComponent={ErrorView}>
         <MainView />
@@ -39,6 +38,6 @@ function MainView () {
   )
 }
 
-const text = function () { 
-  throw new Error('borked') 
+const text = function () {
+  throw new Error('borked')
 }
