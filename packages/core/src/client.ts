@@ -206,7 +206,7 @@ export default class Client<T extends Config = Config> {
       // warn about an apikey that is not of the expected format
       if (!/^[0-9a-f]{32}$/i.test(config.apiKey)) errors.apiKey = 'should be a string of 32 hexadecimal characters'
 
-      if (opts.endpoints === undefined && config.apiKey.startsWith(HUB_PREFIX)) {
+      if (opts.endpoints === undefined && config.apiKey.indexOf(HUB_PREFIX) === 0) {
         config.endpoints = {
           notify: HUB_NOTIFY,
           sessions: HUB_SESSION

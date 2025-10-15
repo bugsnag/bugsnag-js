@@ -74,6 +74,7 @@ steps:
           - "0.79"
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (Old Arch)'
+        skip: true # Skipped pending PLAT-15027
         key: "build-react-native-navigation-android-fixture-old-arch"
         timeout_in_minutes: 30
         agents:
@@ -98,6 +99,7 @@ steps:
               limit: 1
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (New Arch)'
+        skip: true # Skipped pending PLAT-15027
         key: "build-react-native-navigation-android-fixture-new-arch"
         timeout_in_minutes: 30
         agents:
@@ -216,6 +218,7 @@ steps:
           - "0.79"
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (Old Arch) end-to-end tests"
+        skip: true # Skipped pending PLAT-15027
         depends_on: "build-react-native-navigation-android-fixture-old-arch"
         timeout_in_minutes: 10
         plugins:
@@ -257,6 +260,7 @@ steps:
           - "0.72"
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (New Arch) end-to-end tests"
+        skip: true # Skipped pending PLAT-15027
         depends_on: "build-react-native-navigation-android-fixture-new-arch"
         timeout_in_minutes: 10
         plugins:

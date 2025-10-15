@@ -97,7 +97,8 @@ module.exports = class BugsnagIpcMain {
         ...event.app,
         releaseStage: this.client._config.releaseStage,
         version: this.client._config.appVersion,
-        type: this.client._config.appType
+        type: this.client._config.appType,
+        codeBundleId: this.client._config.codeBundleId
       }
       event.context = event.context || this.client._context
       event.groupingDiscriminator = event.groupingDiscriminator || this.client._groupingDiscriminator
