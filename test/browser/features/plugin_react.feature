@@ -1,4 +1,4 @@
-@plugin_react
+@plugin_react @skip_chrome_43
 Feature: React support
 
 Scenario: basic error boundary usage

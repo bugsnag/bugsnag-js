@@ -1,9 +1,6 @@
 const electron = require('electron')
 
-const Client = require('@bugsnag/core/client')
-const Event = require('@bugsnag/core/event')
-const Breadcrumb = require('@bugsnag/core/breadcrumb')
-const Session = require('@bugsnag/core/session')
+const { Breadcrumb, Client, Event, Session } = require('@bugsnag/core')
 const {
   plugin: PluginClientStatePersistence,
   NativeClient
@@ -32,7 +29,7 @@ const createMainClient = (opts) => {
   // Normalise the project root upfront so renderers have a fully resolved path
   // The renderers can't do this themselves as they cannot access the 'path' module
   if (opts.projectRoot) {
-    const normalizePath = require('@bugsnag/core/lib/path-normalizer')
+    const normalizePath = require('@bugsnag/path-normalizer')
     opts.projectRoot = normalizePath(opts.projectRoot)
   }
 

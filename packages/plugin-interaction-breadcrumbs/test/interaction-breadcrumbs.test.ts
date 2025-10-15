@@ -1,7 +1,6 @@
-import plugin from '../'
+import plugin from '../src/interaction-breadcrumbs'
 
-import Client from '@bugsnag/core/client'
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { Breadcrumb, Client } from '@bugsnag/core'
 
 const lotsOfWhitespace = ' '.repeat(100000)
 const lotsOfText = 'a'.repeat(100000)
@@ -54,8 +53,6 @@ describe('plugin: interaction breadcrumbs', () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
 
-    // TODO: targetSelector should be 'BUTTON.button' but for some reason seems to be ' > HTML:nth-child(2) > BODY:nth-child(2) > DIV > BUTTON.button'
-    // SEE PLAT-12831
     expect(c._breadcrumbs).toStrictEqual([
       new Breadcrumb(
         'UI click',

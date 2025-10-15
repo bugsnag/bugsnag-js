@@ -37,6 +37,7 @@
     "@bugsnag/delivery-electron": "^8.6.0",
     "@bugsnag/electron-filestore": "^8.0.0",
     "@bugsnag/electron-network-status": "^8.6.0",
+    "@bugsnag/path-normalizer": "^8.4.0",
     "@bugsnag/plugin-console-breadcrumbs": "^8.6.0",
     "@bugsnag/plugin-electron-app": "^8.7.0",
     "@bugsnag/plugin-electron-app-breadcrumbs": "^8.6.0",

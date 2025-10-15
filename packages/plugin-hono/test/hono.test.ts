@@ -1,7 +1,6 @@
-import Client from '@bugsnag/core/client'
 import plugin from '../src/hono'
-import { EventPayload } from '@bugsnag/core'
-import Event from '@bugsnag/core/event'
+import { Client } from '@bugsnag/core'
+import type { EventDeliveryPayload, Event } from '@bugsnag/core'
 
 jest.mock('../src/load-connection-info', () => {
   return jest.fn().mockResolvedValueOnce({
@@ -49,6 +48,7 @@ describe('plugin: hono', () => {
 
       client._sessionDelegate = { startSession, pauseSession, resumeSession }
       client._logger = logger()
+      // @ts-expect-error _clientContext is not part of the public API
       client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('hono')
@@ -69,6 +69,7 @@ describe('plugin: hono', () => {
       expect(resumeSession).not.toHaveBeenCalled()
       expect(context.bugsnag).toStrictEqual(expect.any(Client))
       expect(context.bugsnag).not.toBe(client)
+      // @ts-expect-error _clientContext is not part of the public API
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
     })
 
@@ -77,7 +78,7 @@ describe('plugin: hono', () => {
       client._sessionDelegate = { startSession: id, pauseSession: noop, resumeSession: id }
       client._logger = logger()
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, c: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload: EventDeliveryPayload, c: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           c(null, payload.events[0])
         },
@@ -99,6 +100,7 @@ describe('plugin: hono', () => {
         res: {},
         env: { outgoing: { req: { httpVersion: '1.1' } } }
       } as any
+      // @ts-expect-error _clientContext is not part of the public API
       client._clientContext = { run: jest.fn() }
       context.req.parseBody = jest.fn().mockReturnValue('the request body')
       context.req.header = jest.fn().mockReturnValue({ referer: '/abc' })
@@ -109,6 +111,7 @@ describe('plugin: hono', () => {
 
       await middleware.requestHandler(context, next)
 
+      // @ts-expect-error _clientContext is not part of the public API
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       const event: Event = await new Promise(resolve => {
@@ -147,7 +150,7 @@ describe('plugin: hono', () => {
       client._sessionDelegate = { startSession: id, pauseSession: noop, resumeSession: id }
       client._logger = logger()
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, c: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload: EventDeliveryPayload, c: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           c(null, payload.events[0])
         },
@@ -169,6 +172,7 @@ describe('plugin: hono', () => {
         res: {},
         env: { outgoing: { req: { httpVersion: '1.1' } } }
       } as any
+      // @ts-expect-error _clientContext is not part of the public API
       client._clientContext = { run: jest.fn() }
       context.req.parseBody = jest.fn().mockReturnValue('the request body')
       context.req.header = jest.fn().mockReturnValue({ referer: '/abc' })
@@ -179,6 +183,7 @@ describe('plugin: hono', () => {
 
       await middleware.requestHandler(context, next)
 
+      // @ts-expect-error _clientContext is not part of the public API
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       const event: Event = await new Promise(resolve => {
@@ -215,6 +220,7 @@ describe('plugin: hono', () => {
 
       client._sessionDelegate = { startSession, pauseSession, resumeSession }
       client._logger = logger()
+      // @ts-expect-error _clientContext is not part of the public API
       client._clientContext = { run: jest.fn() }
 
       const middleware = client.getPlugin('hono')
@@ -233,6 +239,7 @@ describe('plugin: hono', () => {
       expect(startSession).not.toHaveBeenCalled()
       expect(pauseSession).not.toHaveBeenCalled()
       expect(resumeSession).not.toHaveBeenCalled()
+      // @ts-expect-error _clientContext is not part of the public API
       expect(client._clientContext.run).toHaveBeenCalledWith(expect.any(Client), next)
 
       // the Client should be cloned to ensure any manually started sessions
@@ -259,7 +266,7 @@ describe('plugin: hono', () => {
       const events: Event[] = []
 
       client2._setDelivery(() => ({
-        sendEvent (payload: EventPayload, c: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload: EventDeliveryPayload, c: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           events.push(payload.events[0] as Event)
         },
@@ -296,7 +303,7 @@ describe('plugin: hono', () => {
       const events: Event[] = []
 
       client._setDelivery(() => ({
-        sendEvent (payload: EventPayload, c: (err: Error|null, obj: unknown) => void) {
+        sendEvent (payload: EventDeliveryPayload, c: (err: Error|null, obj: unknown) => void) {
           expect(payload.events).toHaveLength(1)
           events.push(payload.events[0] as Event)
         },

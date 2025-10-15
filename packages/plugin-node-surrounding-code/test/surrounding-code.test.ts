@@ -2,9 +2,7 @@
 import fs from 'fs'
 import plugin from '../'
 import { join } from 'path'
-import Event from '@bugsnag/core/event'
-import Client from '@bugsnag/core/client'
-import { schema as defaultSchema } from '@bugsnag/core/config'
+import { Client, Event, schema as defaultSchema } from '@bugsnag/core'
 
 let createReadStreamCount = 0
 const originalReadStream = fs.createReadStream
@@ -62,6 +60,7 @@ describe('plugin: node surrounding code', () => {
       { apiKey: 'api_key', projectRoot: __dirname },
       {
         ...defaultSchema,
+        // @ts-expect-error
         projectRoot: {
           defaultValue: () => null,
           validate: () => true,

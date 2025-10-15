@@ -13,6 +13,9 @@
         "access": "public"
     },
     "license": "MIT",
+    "dependencies": {
+        "@bugsnag/json-payload": "^8.4.0"
+    },
     "devDependencies": {
         "@bugsnag/core": "^8.6.0"
     },

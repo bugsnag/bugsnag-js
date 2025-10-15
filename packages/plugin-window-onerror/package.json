@@ -1,7 +1,15 @@
 {
   "name": "@bugsnag/plugin-window-onerror",
   "version": "8.6.0",
-  "main": "onerror.js",
+  "main": "dist/onerror.js",
+  "types": "dist/types/onerror.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/onerror.d.ts",
+      "default": "./dist/onerror.js",
+      "import": "./dist/onerror.mjs"
+    }
+  },
   "description": "@bugsnag/js plugin to report unhandled exceptions in browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,7 +20,7 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -21,5 +29,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:npm",
+    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "clean": "rm -rf dist/*"
   }
 }
