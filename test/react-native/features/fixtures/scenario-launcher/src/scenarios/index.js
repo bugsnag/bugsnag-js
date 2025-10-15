@@ -78,6 +78,9 @@ export { NativeFeatureFlagsScenario } from './NativeFeatureFlagsScenario'
 export { ReactNavigationBreadcrumbsEnabledScenario } from './ReactNavigationBreadcrumbsEnabledScenario'
 export { ReactNavigationBreadcrumbsDisabledScenario } from './ReactNavigationBreadcrumbsDisabledScenario'
 
+// react-native-error-boundary.feature
+export { ReactNativeErrorBoundaryScenario } from './ReactNativeErrorBoundaryScenario'
+
 // react-native-navigation.feature
 export { ReactNativeNavigationBreadcrumbsEnabledScenario } from './ReactNativeNavigationBreadcrumbsEnabledScenario'
 export { ReactNativeNavigationBreadcrumbsDisabledScenario } from './ReactNativeNavigationBreadcrumbsDisabledScenario'
