@@ -96,6 +96,7 @@
     "test:electron": "xvfb-maybe --auto-servernum -- cucumber-js test/electron/features --retry 3 --retry-tag-filter @flaky"
   },
   "overrides": {
+    "@inquirer/figures": "1.0.13",
     "@jest-runner/electron": {
       "form-data": "^3.0.3"
     },
