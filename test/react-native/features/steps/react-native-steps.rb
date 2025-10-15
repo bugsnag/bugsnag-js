@@ -129,6 +129,10 @@ Then('the following sets are present in the current {word} payloads:') do |reque
     payload_hash
   end
   expected_values.each do |expected_data|
+    # For test data, if the value is the string 'nil', it represents an absent field.
+    expected_data.each do |field_path, expected_value|
+      expected_data[field_path] = nil if expected_value == 'nil'
+    end
     Maze.check.true(payload_values.include?(expected_data),
                     "#{expected_data} was not found in any of the current payloads")
   end

@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browser",
-  "version": "8.4.0",
+  "version": "8.6.0",
   "main": "dist/index-cjs.cjs",
   "types": "dist/types/index-es.d.ts",
   "browser": "./dist/bugsnag.js",
@@ -34,29 +34,29 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-xml-http-request": "^8.4.0",
-    "@bugsnag/plugin-app-duration": "^8.4.0",
-    "@bugsnag/plugin-browser-context": "^8.4.0",
-    "@bugsnag/plugin-browser-device": "^8.4.0",
-    "@bugsnag/plugin-browser-request": "^8.4.0",
-    "@bugsnag/plugin-browser-session": "^8.4.0",
-    "@bugsnag/plugin-client-ip": "^8.4.0",
-    "@bugsnag/plugin-console-breadcrumbs": "^8.4.0",
-    "@bugsnag/plugin-inline-script-content": "^8.4.0",
-    "@bugsnag/plugin-interaction-breadcrumbs": "^8.4.0",
-    "@bugsnag/plugin-navigation-breadcrumbs": "^8.4.0",
-    "@bugsnag/plugin-network-breadcrumbs": "^8.4.0",
-    "@bugsnag/plugin-simple-throttle": "^8.4.0",
-    "@bugsnag/plugin-strip-query-string": "^8.4.0",
-    "@bugsnag/plugin-window-onerror": "^8.4.0",
-    "@bugsnag/plugin-window-unhandled-rejection": "^8.4.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.2",
-    "@rollup/plugin-terser": "^0.4.4"
+    "@rollup/plugin-terser": "^0.4.4",
+    "@bugsnag/delivery-xml-http-request": "^8.6.0",
+    "@bugsnag/plugin-app-duration": "^8.6.0",
+    "@bugsnag/plugin-browser-context": "^8.6.0",
+    "@bugsnag/plugin-browser-device": "^8.6.0",
+    "@bugsnag/plugin-browser-request": "^8.6.0",
+    "@bugsnag/plugin-browser-session": "^8.6.0",
+    "@bugsnag/plugin-client-ip": "^8.6.0",
+    "@bugsnag/plugin-console-breadcrumbs": "^8.6.0",
+    "@bugsnag/plugin-inline-script-content": "^8.6.0",
+    "@bugsnag/plugin-interaction-breadcrumbs": "^8.6.0",
+    "@bugsnag/plugin-navigation-breadcrumbs": "^8.6.0",
+    "@bugsnag/plugin-network-breadcrumbs": "^8.6.0",
+    "@bugsnag/plugin-simple-throttle": "^8.6.0",
+    "@bugsnag/plugin-strip-query-string": "^8.6.0",
+    "@bugsnag/plugin-window-onerror": "^8.6.0",
+    "@bugsnag/plugin-window-unhandled-rejection": "^8.6.0"
   },
   "dependencies": {
-    "@bugsnag/core": "^8.4.0"
+    "@bugsnag/core": "^8.6.0"
   }
 }

@@ -36,6 +36,16 @@ describe('BugsnagIpcRenderer', () => {
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'setContext', JSON.stringify('ctx'))
   })
 
+  it('should call ipcRenderer correctly for getGroupingDiscriminator', () => {
+    BugsnagIpcRenderer.getGroupingDiscriminator()
+    expect(electron.ipcRenderer.sendSync).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN_SYNC, 'getGroupingDiscriminator')
+  })
+
+  it('should call ipcRenderer correctly for setGroupingDiscriminator', async () => {
+    await BugsnagIpcRenderer.setGroupingDiscriminator('ctx')
+    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'setGroupingDiscriminator', JSON.stringify('ctx'))
+  })
+
   it('should call ipcRenderer correctly for getUser', () => {
     BugsnagIpcRenderer.getUser()
     expect(electron.ipcRenderer.sendSync).toHaveBeenCalledWith(
@@ -145,5 +155,37 @@ describe('BugsnagIpcRenderer', () => {
     const event = { fakeEvent: true }
     await BugsnagIpcRenderer.dispatch(event)
     expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'dispatch', JSON.stringify(event))
+  })
+
+  it('should receive main process codeBundleId via getPayloadInfo but not use it when renderer has no codeBundleId', async () => {
+    // Mock the electron.ipcRenderer.invoke to return payload info with main's codeBundleId
+    const mockPayloadInfo = {
+      app: {
+        releaseStage: 'production',
+        version: '1.0.0',
+        type: 'electron',
+        codeBundleId: 'main-bundle-abc123'
+      },
+      breadcrumbs: [],
+      context: null,
+      device: {},
+      metadata: {},
+      features: [],
+      user: {},
+      groupingDiscriminator: null
+    };
+
+    (electron.ipcRenderer.invoke as jest.Mock).mockResolvedValueOnce(mockPayloadInfo)
+
+    // Verify that getPayloadInfo returns the main's codeBundleId
+    const result = await BugsnagIpcRenderer.getPayloadInfo()
+
+    expect(electron.ipcRenderer.invoke).toHaveBeenCalledWith(CHANNEL_RENDERER_TO_MAIN, 'getPayloadInfo')
+    expect(result.app.codeBundleId).toBe('main-bundle-abc123')
+
+    // Note: This test verifies the IPC transport mechanism works correctly.
+    // The actual isolation behavior (preventing main's codeBundleId from being used
+    // when renderer has no codeBundleId) is enforced by the renderer-event-data plugin
+    // which explicitly sets codeBundleId from the renderer's own config.
   })
 })

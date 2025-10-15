@@ -54,6 +54,23 @@ describe('BugsnagIpcMain', () => {
       expect(event.returnValue).toEqual('today')
     })
 
+    it('works for updating grouping discriminator', () => {
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      client.setGroupingDiscriminator = jest.fn()
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      bugsnagIpcMain.handle({}, 'setGroupingDiscriminator', JSON.stringify('grouping-discriminator'))
+      expect(client.setGroupingDiscriminator).toHaveBeenCalledWith('grouping-discriminator')
+    })
+
+    it('returns the current grouping discriminator', () => {
+      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      client.setGroupingDiscriminator('current-grouping-discriminator')
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const event = { returnValue: undefined }
+      bugsnagIpcMain.handleSync(event, 'getGroupingDiscriminator')
+      expect(event.returnValue).toEqual('current-grouping-discriminator')
+    })
+
     it('works for updating user', () => {
       const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.setUser = jest.fn()
@@ -274,6 +291,7 @@ describe('BugsnagIpcMain', () => {
 
       client.leaveBreadcrumb('hi')
       client.setContext('ctx')
+      client.setGroupingDiscriminator('grouping-discriminator')
       client.setUser('123', 'jim@jim.com', 'Jim')
       client.addFeatureFlags([
         { name: 'flag1' },
@@ -295,10 +313,12 @@ describe('BugsnagIpcMain', () => {
           releaseStage: 'production',
           name: 'testApp',
           type: 'test',
-          version: undefined
+          version: undefined,
+          codeBundleId: undefined
         },
         breadcrumbs: client._breadcrumbs,
         context: 'ctx',
+        groupingDiscriminator: 'grouping-discriminator',
         device: { id: '123' },
         metadata: {
           app: { testingMode: 'unit' },
@@ -315,6 +335,35 @@ describe('BugsnagIpcMain', () => {
           email: 'jim@jim.com',
           name: 'Jim'
         }
+      })
+    })
+
+    it('should include codeBundleId in app object when configured', async () => {
+      const schema = {
+        codeBundleId: {
+          defaultValue: () => undefined,
+          message: 'should be a string',
+          validate: (val: unknown) => (val === undefined || typeof val === 'string')
+        },
+        releaseStage: {
+          defaultValue: () => 'production',
+          message: 'should be a string',
+          validate: (val: unknown) => typeof val === 'string'
+        }
+      }
+      const client = new Client({
+        apiKey: '123',
+        codeBundleId: 'test-bundle-456'
+      }, schema, [mockClientStateManagerPlugin], Notifier)
+
+      const bugsnagIpcMain = new BugsnagIpcMain(client)
+      const payloadInfo = await bugsnagIpcMain.getPayloadInfo()
+
+      expect(payloadInfo.app).toEqual({
+        releaseStage: 'production',
+        version: undefined,
+        type: undefined,
+        codeBundleId: 'test-bundle-456'
       })
     })
 

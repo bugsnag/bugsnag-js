@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-strip-project-root",
-  "version": "8.4.0",
+  "version": "8.6.0",
   "main": "strip-project-root.js",
   "description": "@bugsnag/js plugin to remove common project root paths from stacktraces",
   "homepage": "https://www.bugsnag.com/",
@@ -18,5 +18,8 @@
   "license": "MIT",
   "dependencies": {
     "@bugsnag/path-normalizer": "^8.4.0"
+  },
+  "devDependencies": {
+    "@bugsnag/core": "^8.6.0"
   }
 }

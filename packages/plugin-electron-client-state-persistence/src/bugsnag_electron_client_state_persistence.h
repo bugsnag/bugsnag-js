@@ -69,6 +69,13 @@ BECSP_STATUS becsp_add_breadcrumb(const char *val);
 BECSP_STATUS becsp_set_context(const char *context);
 
 /**
+ * Set the grouping discriminator
+ *
+ * @param grouping_discriminator the new grouping discriminator value or NULL to unset
+ */
+BECSP_STATUS becsp_set_grouping_discriminator(const char *grouping_discriminator);
+
+/**
  * Set event user
  *
  * @param val JSON-serialized user value

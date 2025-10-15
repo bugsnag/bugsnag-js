@@ -8,6 +8,7 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
         app,
         breadcrumbs,
         context,
+        groupingDiscriminator,
         device,
         metadata,
         features,
@@ -18,6 +19,7 @@ module.exports = (BugsnagIpcRenderer = window.__bugsnag_ipc__) => ({
       if (shouldSend === false) return false
 
       event.context = event.context || context || getDefaultContext()
+      event._groupingDiscriminator = event._groupingDiscriminator || groupingDiscriminator
       event.breadcrumbs = breadcrumbs
       event.app = { ...event.app, ...app, codeBundleId: client._config.codeBundleId }
       event.device = { ...event.device, ...device }

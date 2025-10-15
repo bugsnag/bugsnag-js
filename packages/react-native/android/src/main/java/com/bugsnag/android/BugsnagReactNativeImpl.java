@@ -23,6 +23,7 @@ class BugsnagReactNativeImpl {
   static final String MODULE_NAME = "BugsnagReactNative";
 
   private static final String UPDATE_CONTEXT = "ContextUpdate";
+  private static final String UPDATE_GROUPING_DISCRIMINATOR = "GroupingDiscriminatorUpdate";
   private static final String UPDATE_USER = "UserUpdate";
   private static final String UPDATE_METADATA = "MetadataUpdate";
   private static final String ADD_FEATURE_FLAG = "AddFeatureFlag";
@@ -85,6 +86,7 @@ class BugsnagReactNativeImpl {
 
     switch (event.getType()) {
       case UPDATE_CONTEXT:
+      case UPDATE_GROUPING_DISCRIMINATOR:
         map.putString(DATA_KEY, (String) event.getData());
         break;
       case UPDATE_USER:
@@ -158,6 +160,14 @@ class BugsnagReactNativeImpl {
       plugin.updateContext(context);
     } catch (Throwable exc) {
       logFailure("updateContext", exc);
+    }
+  }
+
+  void updateGroupingDiscriminator(@Nullable String groupingDiscriminator) {
+    try {
+      plugin.updateGroupingDiscriminator(groupingDiscriminator);
+    } catch (Throwable exc) {
+      logFailure("updateGroupingDiscriminator", exc);
     }
   }
 

@@ -2,8 +2,7 @@
 Feature: Compatibility with strict mode
 
 Scenario: notifier does not error in strict mode
-  When I navigate to the test URL "/strict_mode/script/a.html"
-  And the test should run in this browser
+  When I navigate to the test URL "/strict_mode/script/notifier-does-not-error.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "InvalidError"

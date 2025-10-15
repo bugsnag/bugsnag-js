@@ -1,15 +1,36 @@
 # Changelog
 
-## [Unreleased]
+## [8.7.0] - 2025-10-13
+
+### Added
+
+- (electron) Add `codeBundleId` config option to main process  [#2577](https://github.com/bugsnag/bugsnag-js/pull/2577)
+
+### Changed
+
+- Update bugsnag-cocoa to [v6.34.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.34.0) [#2571](https://github.com/bugsnag/bugsnag-js/pull/2571)
+
+## [8.6.0] - 2025-09-25
+
+### Added
+
+- Add additional grouping discriminator property to events [#2544](https://github.com/bugsnag/bugsnag-js/pull/2544)
+- (react-native) Handle additional grouping discriminator [#2557](https://github.com/bugsnag/bugsnag-js/pull/2557)
+- (electron) Handle additional grouping discriminator [#2561](https://github.com/bugsnag/bugsnag-js/pull/2561)
 
 ### Changed
 
 - Update bugsnag-cocoa to [v6.33.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.33.1) [#2552](https://github.com/bugsnag/bugsnag-js/pull/2552)
 - Update bugsnag-android to [v6.18.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.18.0) [#2556](https://github.com/bugsnag/bugsnag-js/pull/2556)
+- (core): Change `startsWith()` to `indexOf() === 0` to support older browsers [#2568](https://github.com/bugsnag/bugsnag-js/pull/2568)
 
 ### Fixed
 
 - (plugin-window-onerror) Guard against errors when trying to call previous handler [#2551](https://github.com/bugsnag/bugsnag-js/pull/2551)
+
+### Dependencies
+
+Update bugsnag-cocoa to [v6.34.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.34.0) [#2571](https://github.com/bugsnag/bugsnag-js/pull/2571)
 
 ## [8.5.0] - 2025-09-01
 

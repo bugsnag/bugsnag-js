@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/delivery-react-native",
-  "version": "8.4.0",
+  "version": "8.6.0",
   "main": "dist/delivery.js",
   "description": "@bugsnag/js delivery mechanism for React Native",
   "homepage": "https://www.bugsnag.com/",
@@ -19,11 +19,10 @@
   },
   "author": "Bugsnag",
   "license": "MIT",
-  "devDependencies": {
-    "@bugsnag/core": "^8.4.0",
+  "dependencies": {
     "@bugsnag/derecursify": "^8.4.0"
   },
-  "peerDependencies": {
-    "@bugsnag/core": "^8.0.0"
+  "devDependencies": {
+    "@bugsnag/core": "^8.6.0"
   }
 }
