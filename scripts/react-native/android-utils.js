@@ -6,7 +6,16 @@ module.exports = {
     // set android:usesCleartextTraffic="true" in AndroidManifest.xml
     const androidManifestPath = `${fixtureDir}/android/app/src/main/AndroidManifest.xml`
     let androidManifestContents = fs.readFileSync(androidManifestPath, 'utf8')
-    androidManifestContents = androidManifestContents.replace('<application', '<application android:usesCleartextTraffic="true"')
+
+    // RN 0.82+ uses a manifest placeholder that's autoconfigured by the RN gradle plugin
+    // eslint-disable-next-line no-template-curly-in-string
+    if (androidManifestContents.includes('${usesCleartextTraffic}')) {
+      // eslint-disable-next-line no-template-curly-in-string
+      androidManifestContents = androidManifestContents.replace('${usesCleartextTraffic}', 'true')
+    } else {
+      androidManifestContents = androidManifestContents.replace('<application', '<application android:usesCleartextTraffic="true"')
+    }
+
     fs.writeFileSync(androidManifestPath, androidManifestContents)
 
     // enable/disable the new architecture in gradle.properties
