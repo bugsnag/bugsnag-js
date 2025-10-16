@@ -12,10 +12,10 @@ steps:
         key: "build-react-native-android-fixture-old-arch-full"
         timeout_in_minutes: 15
         agents:
-          queue: macos-node-18
+          queue: macos-15
         env:
           JAVA_VERSION: "{{matrix.java}}"
-          NODE_VERSION: "18"
+          NODE_VERSION: "{{matrix.node}}"
           RN_VERSION: "{{matrix.reactnative}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
@@ -31,16 +31,21 @@ steps:
               - "0.74"
               - "0.76"
               - "0.78"
-              - "0.79"
+              - "0.80"
+              - "0.81"
             java:
               - "17"
+            node:
+              - "22"
           adjustments:
             - with:
                 reactnative: "0.68"
                 java: "11"
+                node: "18"
             - with:
                 reactnative: "0.69"
                 java: "11"
+                node: "18"
         retry:
           automatic:
             - exit_status: "*"
@@ -50,10 +55,10 @@ steps:
         key: "build-react-native-android-fixture-new-arch-full"
         timeout_in_minutes: 15
         agents:
-          queue: macos-node-18
+          queue: macos-15
         env:
           JAVA_VERSION: "17"
-          NODE_VERSION: "18"
+          NODE_VERSION: "22"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"
@@ -71,7 +76,8 @@ steps:
           - "0.74"
           - "0.76"
           - "0.78"
-          - "0.79"
+          - "0.80"
+          - "0.81"
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (Old Arch)'
         skip: true # Skipped pending PLAT-15027
@@ -169,7 +175,8 @@ steps:
           - "0.74"
           - "0.76"
           - "0.78"
-          - "0.79"
+          - "0.80"
+          - "0.81"
 
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
@@ -215,7 +222,8 @@ steps:
           - "0.74"
           - "0.76"
           - "0.78"
-          - "0.79"
+          - "0.80"
+          - "0.81"
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (Old Arch) end-to-end tests"
         skip: true # Skipped pending PLAT-15027
