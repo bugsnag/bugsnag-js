@@ -1,6 +1,4 @@
-import Client from '@bugsnag/core/client'
-import { schema as defaultSchema } from '@bugsnag/core/config'
-import { Event, Session, SessionPayload, EventPayload, Plugin } from '@bugsnag/core'
+import { Client, schema as defaultSchema, Event, Session, SessionPayload, Plugin, SessionDelegate } from '@bugsnag/core'
 
 interface ClientTestHelpers {
   client: Client
@@ -26,7 +24,7 @@ export function makeClientForPlugin ({
   let lastSession: SessionPayload
 
   client._setDelivery(() => ({
-    sendEvent (payload: EventPayload, cb: (err: Error|null, obj: unknown) => void) {
+    sendEvent (payload, cb: (err: Error|null, obj: unknown) => void) {
       expect(payload.events).toHaveLength(1)
       cb(null, payload.events[0])
     },
@@ -36,7 +34,7 @@ export function makeClientForPlugin ({
     }
   }))
 
-  client._sessionDelegate = {
+  client._sessionDelegate = ({
     startSession (client: Client, session: Session) {
       client._delivery.sendSession(session, () => {})
     },
@@ -44,7 +42,7 @@ export function makeClientForPlugin ({
     },
     pauseSession () {
     }
-  }
+  } as unknown as SessionDelegate)
 
   const sendEvent = async () => new Promise((resolve, reject) => {
     // @ts-expect-error - we don't have Client internals to correctly type this

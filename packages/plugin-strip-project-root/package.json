@@ -16,10 +16,10 @@
   ],
   "author": "Bugsnag",
   "license": "MIT",
+  "dependencies": {
+    "@bugsnag/path-normalizer": "^8.4.0"
+  },
   "devDependencies": {
     "@bugsnag/core": "^8.6.0"
-  },
-  "peerDependencies": {
-    "@bugsnag/core": "^8.0.0"
   }
 }

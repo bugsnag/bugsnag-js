@@ -1,22 +1,23 @@
-import Bugsnag, { Client, Config } from '..'
+import { Client, Breadcrumb, Event, Session } from '@bugsnag/core'
+import type { Config } from '@bugsnag/core'
 
 // the client's constructor isn't public in TS so this drops down to JS to create one for the tests
 function createClient (opts: Config): Client {
-  const c = new (Bugsnag.Client as any)(opts, undefined, [], { name: 'Type Tests', version: 'nope', url: 'https://github.com/bugsnag/bugsnag-js' })
+  const c = new Client(opts, undefined, [], { name: 'Type Tests', version: 'nope', url: 'https://github.com/bugsnag/bugsnag-js' })
   c._setDelivery(() => ({
     sendSession: (p: any, cb: () => void): void => { cb() },
     sendEvent: (p: any, cb: () => void): void => { cb() }
   }))
-  c._sessionDelegate = { startSession: () => c, pauseSession: () => {}, resumeSession: () => {} }
-  return (c as Bugsnag.Client)
+  c._sessionDelegate = { startSession: () => c, pauseSession: () => {}, resumeSession: () => c }
+  return c
 }
 
 describe('Type definitions', () => {
   it('has all the classes matching the types available at runtime', () => {
-    expect(Bugsnag.Client).toBeDefined()
-    expect(Bugsnag.Breadcrumb).toBeDefined()
-    expect(Bugsnag.Event).toBeDefined()
-    expect(Bugsnag.Session).toBeDefined()
+    expect(Client).toBeDefined()
+    expect(Breadcrumb).toBeDefined()
+    expect(Event).toBeDefined()
+    expect(Session).toBeDefined()
     const client = createClient({ apiKey: 'API_KEY' })
     expect(client.Breadcrumb).toBeDefined()
     expect(client.Event).toBeDefined()
@@ -45,7 +46,8 @@ describe('Type definitions', () => {
   // eslint-disable-next-line jest/expect-expect
   it('works for reporting sessions', () => {
     const client = createClient({ apiKey: 'API_KEY' })
-    const sessionClient = client.startSession()
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const sessionClient = client.startSession()!
     sessionClient.notify(new Error('oh'))
     client.pauseSession()
     client.resumeSession()

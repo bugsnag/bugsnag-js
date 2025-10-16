@@ -1,18 +1,17 @@
-import Client from '../client'
-import Event from '../event'
-import Session from '../session'
-import breadcrumbTypes from '../lib/breadcrumb-types'
-import { BreadcrumbType } from '../types/common'
+import Client from '../src/client'
+import Event from '../src/event'
+import Session from '../src/session'
+import { BreadcrumbType, BREADCRUMB_TYPES } from '../src/common'
 
 const noop = () => {}
 const id = <T>(a: T) => a
 
-describe('@bugsnag/core/client', () => {
+describe('Client', () => {
   describe('constructor', () => {
     it('can handle bad input', () => {
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       expect(() => new Client()).toThrow()
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       expect(() => new Client('foo')).toThrow()
     })
   })
@@ -21,7 +20,7 @@ describe('@bugsnag/core/client', () => {
     it('handles bad/good input', () => {
       expect(() => {
         // no opts supplied
-        // @ts-ignore
+        // @ts-expect-error - testing with unexpected arguments
         const client = new Client({})
         expect(client).toBe(client)
       }).toThrow()
@@ -168,7 +167,6 @@ describe('@bugsnag/core/client', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
 
       const session = new Session()
-      // @ts-ignore
       client._session = session
 
       client._setDelivery(client => ({
@@ -351,6 +349,7 @@ describe('@bugsnag/core/client', () => {
       client.notify({ name: 'some message' })
       // @ts-ignore
       client.notify(1)
+      // @ts-ignore
       client.notify('errrororor')
       // @ts-ignore
       client.notify('str1', 'str2')
@@ -458,7 +457,7 @@ describe('@bugsnag/core/client', () => {
 
       client.notify(new Error('111'), () => {}, (err, event) => {
         expect(err).toBeTruthy()
-        expect(err.message).toBe('flerp')
+        expect(err?.message).toBe('flerp')
         expect(event).toBeTruthy()
         expect(event.errors[0].errorMessage).toBe('111')
 
@@ -633,32 +632,32 @@ describe('@bugsnag/core/client', () => {
   })
 
   describe('_isBreadcrumbTypeEnabled()', () => {
-    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes is not configured', (type) => {
+    it.each(BREADCRUMB_TYPES)('returns true for "%s" when enabledBreadcrumbTypes is not configured', (type) => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
 
       expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
     })
 
-    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes=null', (type) => {
+    it.each(BREADCRUMB_TYPES)('returns true for "%s" when enabledBreadcrumbTypes=null', (type) => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: null })
 
       expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
     })
 
-    it.each(breadcrumbTypes)('returns false for "%s" when enabledBreadcrumbTypes=[]', (type) => {
+    it.each(BREADCRUMB_TYPES)('returns false for "%s" when enabledBreadcrumbTypes=[]', (type) => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: [] })
 
       expect(client._isBreadcrumbTypeEnabled(type)).toBe(false)
     })
 
-    it.each(breadcrumbTypes)('returns true for "%s" when enabledBreadcrumbTypes only contains it', (type) => {
+    it.each(BREADCRUMB_TYPES)('returns true for "%s" when enabledBreadcrumbTypes only contains it', (type) => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledBreadcrumbTypes: [type as BreadcrumbType] })
 
       expect(client._isBreadcrumbTypeEnabled(type)).toBe(true)
     })
 
-    it.each(breadcrumbTypes)('returns false for "%s" when enabledBreadcrumbTypes does not contain it', (type) => {
-      const enabledBreadcrumbTypes = breadcrumbTypes.filter(enabledType => enabledType !== type)
+    it.each(BREADCRUMB_TYPES)('returns false for "%s" when enabledBreadcrumbTypes does not contain it', (type) => {
+      const enabledBreadcrumbTypes = BREADCRUMB_TYPES.filter(enabledType => enabledType !== type)
 
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
@@ -705,7 +704,8 @@ describe('@bugsnag/core/client', () => {
           done()
         }
       }))
-      const sessionClient = client.startSession()
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const sessionClient = client.startSession()!
       sessionClient.notify(new Error('broke'))
       sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
       sessionClient.notify(new Error('broke'))
