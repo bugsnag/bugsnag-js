@@ -57,10 +57,10 @@ let reactNativeSafeAreaContextVersion = '4.14.0'
 
 // RN 0.77 requires react-native-screens 4.6.0, which in turn requires react navigation v7
 if (parseFloat(reactNativeVersion) >= 0.77) {
-  reactNavigationVersion = '7.1.14'
-  reactNavigationNativeStackVersion = '7.3.21'
-  reactNativeScreensVersion = '4.11.1'
-  reactNativeSafeAreaContextVersion = '5.5.1'
+  reactNavigationVersion = '7.1.18'
+  reactNavigationNativeStackVersion = '7.3.28'
+  reactNativeScreensVersion = '4.17.1'
+  reactNativeSafeAreaContextVersion = '5.6.1'
 } else if (parseFloat(reactNativeVersion) <= 0.69) {
   reactNativeScreensVersion = '3.14.0'
   reactNativeSafeAreaContextVersion = '4.3.4'
