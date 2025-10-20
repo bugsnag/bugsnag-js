@@ -5,6 +5,8 @@ import Scenario from './Scenario'
 
 const onError = (event) => {
   // callback will only run for errors caught by boundary
+  event.addMetadata('errorBoundary', 'caughtByErrorBoundary', true)
+  event.addMetadata('errorBoundary', 'handlerType', 'react-native-error-boundary')
 }
 
 export class ReactNativeErrorBoundaryScenario extends Scenario {

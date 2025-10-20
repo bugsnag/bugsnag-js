@@ -1,7 +1,6 @@
-@react_error_boundary
-Feature: React Error Boundary support
+Feature: ReactNative ErrorBoundary support
 
-Scenario: basic error boundary usage
+Scenario: ErrorBoundary component reports errors
   When I run "ReactNativeErrorBoundaryScenario"
   And I relaunch the app after a crash
   And I configure Bugsnag for "ReactNativeErrorBoundaryScenario"
@@ -9,3 +8,5 @@ Scenario: basic error boundary usage
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "borked"
   And the event "metaData.react.componentStack" is not null
+  And the event "metaData.errorBoundary.caughtByErrorBoundary" equals true
+  And the event "metaData.errorBoundary.handlerType" equals "react-native-error-boundary"
