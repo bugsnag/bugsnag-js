@@ -8,5 +8,5 @@ Scenario: ErrorBoundary component reports errors
   And the exception "errorClass" equals "Error"
   And the exception "message" equals "borked"
   And the event "metaData.react.componentStack" is not null
-  And the event "metaData.errorBoundary.caughtByErrorBoundary" equals true
+  And the event "metaData.errorBoundary.caughtByErrorBoundary" is true
   And the event "metaData.errorBoundary.handlerType" equals "react-native-error-boundary"
