@@ -1,3 +1,0 @@
-[submodule "packages/react-native/ios/vendor/bugsnag-cocoa"]
-	path = packages/react-native/ios/vendor/bugsnag-cocoa
-	url = https://github.com/bugsnag/bugsnag-cocoa.git

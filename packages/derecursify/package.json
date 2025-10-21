@@ -5,7 +5,6 @@
   "main": "dist/derecursify.js",
   "module": "dist/derecursify.js",
   "types": "dist/derecursify.d.ts",
-  "private": true,
   "exports": {
     ".": {
       "types": "./dist/derecursify.d.ts",
