@@ -22,7 +22,6 @@
     "@bugsnag/core": "^8.2.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.6.0",
-    "@types/express": "4.17.13"
+    "@bugsnag/core": "^8.6.0"
   }
 }
