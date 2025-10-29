@@ -6,16 +6,16 @@ const Client = require('../client')
  *  Constants – keep tests self-contained
  * ------------------------------------------------------------------------ */
 const HUB_PREFIX = '00000'
-const HUB_NOTIFY = 'https://notify.insighthub.smartbear.com'
-const HUB_SESSION = 'https://sessions.insighthub.smartbear.com'
+const HUB_NOTIFY = 'https://notify.bugsnag.smartbear.com'
+const HUB_SESSION = 'https://sessions.bugsnag.smartbear.com'
 const BUGSNAG_NOTIFY = 'https://notify.bugsnag.com'
 const BUGSNAG_SESSION = 'https://sessions.bugsnag.com'
 const HUB_KEY = `${HUB_PREFIX}abcdef0123456789abcdef012345`
 const NORMAL_KEY = 'abcdef0123456789abcdef0123456789'
 
 describe('endpoint selection', () => {
-  describe('Client → automatic InsightHub switch', () => {
-    it('swaps to InsightHub urls when apiKey starts with 00000', () => {
+  describe('Client → automatic BugSnag switch', () => {
+    it('swaps to BugSnag urls when apiKey starts with 00000', () => {
       const client = new Client({ apiKey: HUB_KEY })
       expect(client._config.endpoints).toEqual({
         notify: HUB_NOTIFY,
