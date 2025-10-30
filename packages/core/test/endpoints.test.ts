@@ -5,25 +5,25 @@ const Client = require('../client')
 /* --------------------------------------------------------------------------
  *  Constants – keep tests self-contained
  * ------------------------------------------------------------------------ */
-const HUB_PREFIX = '00000'
-const HUB_NOTIFY = 'https://notify.bugsnag.smartbear.com'
-const HUB_SESSION = 'https://sessions.bugsnag.smartbear.com'
+const SECONDARY_ENDPOINT_API_KEY_PREFIX = '00000'
+const SECONDARY_NOTIFY = 'https://notify.bugsnag.smartbear.com'
+const SECONDARY_SESSION = 'https://sessions.bugsnag.smartbear.com'
 const BUGSNAG_NOTIFY = 'https://notify.bugsnag.com'
 const BUGSNAG_SESSION = 'https://sessions.bugsnag.com'
-const HUB_KEY = `${HUB_PREFIX}abcdef0123456789abcdef012345`
+const PREFIXED_KEY = `${SECONDARY_ENDPOINT_API_KEY_PREFIX}abcdef0123456789abcdef012345`
 const NORMAL_KEY = 'abcdef0123456789abcdef0123456789'
 
 describe('endpoint selection', () => {
   describe('Client → automatic BugSnag switch', () => {
-    it('swaps to BugSnag urls when apiKey starts with 00000', () => {
-      const client = new Client({ apiKey: HUB_KEY })
+    it('swaps to secondary urls when apiKey starts with 00000', () => {
+      const client = new Client({ apiKey: PREFIXED_KEY })
       expect(client._config.endpoints).toEqual({
-        notify: HUB_NOTIFY,
-        sessions: HUB_SESSION
+        notify: SECONDARY_NOTIFY,
+        sessions: SECONDARY_SESSION
       })
     })
 
-    it('keeps Bugsnag urls otherwise', () => {
+    it('keeps default urls otherwise', () => {
       const client = new Client({ apiKey: NORMAL_KEY })
       expect(client._config.endpoints).toEqual({
         notify: BUGSNAG_NOTIFY,
@@ -33,7 +33,7 @@ describe('endpoint selection', () => {
 
     it('does **not** switch if custom endpoints are supplied', () => {
       const custom = { notify: 'https://n.example.com', sessions: 'https://s.example.com' }
-      const client = new Client({ apiKey: HUB_KEY, endpoints: custom })
+      const client = new Client({ apiKey: PREFIXED_KEY, endpoints: custom })
       expect(client._config.endpoints).toBe(custom)
     })
   })

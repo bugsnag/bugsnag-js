@@ -13,7 +13,7 @@ const metadataDelegate = require('./lib/metadata-delegate')
 const runSyncCallbacks = require('./lib/sync-callback-runner')
 const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
 const { add, clear, merge } = require('./lib/feature-flag-delegate')
-const API_KEY_PREFIX = '00000'
+const SECONDARY_ENDPOINT_API_KEY_PREFIX = '00000'
 const SECONDARY_NOTIFY_ENDPOINT = 'https://notify.bugsnag.smartbear.com'
 const SECONDARY_SESSIONS_ENDPOINT = 'https://sessions.bugsnag.smartbear.com'
 
@@ -169,7 +169,7 @@ class Client {
       // warn about an apikey that is not of the expected format
       if (!/^[0-9a-f]{32}$/i.test(config.apiKey)) errors.apiKey = 'should be a string of 32 hexadecimal characters'
 
-      if (opts.endpoints === undefined && config.apiKey.indexOf(API_KEY_PREFIX) === 0) {
+      if (opts.endpoints === undefined && config.apiKey.indexOf(SECONDARY_ENDPOINT_API_KEY_PREFIX) === 0) {
         config.endpoints = {
           notify: SECONDARY_NOTIFY_ENDPOINT,
           sessions: SECONDARY_SESSIONS_ENDPOINT
