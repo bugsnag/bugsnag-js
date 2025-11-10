@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependencies
+
+Update bugsnag-cocoa to [v6.34.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.34.1) [#2609](https://github.com/bugsnag/bugsnag-js/pull/2609)
+
 ## [8.7.0] - 2025-10-13
 
 ### Added
