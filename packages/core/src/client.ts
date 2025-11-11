@@ -9,9 +9,9 @@ import featureFlagDelegate from './lib/feature-flag-delegate'
 
 import { BreadcrumbType, BREADCRUMB_TYPES, Config, Delivery, FeatureFlag, LoggerConfig, NotifiableError, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
 
-const HUB_PREFIX = '00000'
-const HUB_NOTIFY = 'https://notify.insighthub.smartbear.com'
-const HUB_SESSION = 'https://sessions.insighthub.smartbear.com'
+const SECONDARY_ENDPOINT_API_KEY_PREFIX = '00000'
+const SECONDARY_NOTIFY_ENDPOINT = 'https://notify.bugsnag.smartbear.com'
+const SECONDARY_SESSIONS_ENDPOINT = 'https://sessions.bugsnag.smartbear.com'
 
 const noop = () => {}
 export default class Client<T extends Config = Config> {
@@ -206,10 +206,10 @@ export default class Client<T extends Config = Config> {
       // warn about an apikey that is not of the expected format
       if (!/^[0-9a-f]{32}$/i.test(config.apiKey)) errors.apiKey = 'should be a string of 32 hexadecimal characters'
 
-      if (opts.endpoints === undefined && config.apiKey.indexOf(HUB_PREFIX) === 0) {
+      if (opts.endpoints === undefined && config.apiKey.indexOf(SECONDARY_ENDPOINT_API_KEY_PREFIX) === 0) {
         config.endpoints = {
-          notify: HUB_NOTIFY,
-          sessions: HUB_SESSION
+          notify: SECONDARY_NOTIFY_ENDPOINT,
+          sessions: SECONDARY_SESSIONS_ENDPOINT
         }
       }
     }

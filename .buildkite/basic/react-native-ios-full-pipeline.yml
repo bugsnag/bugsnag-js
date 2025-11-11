@@ -9,14 +9,14 @@ steps:
       #
       # Test fixtures
       #
-      - label: ':mac: Build RN {{matrix}} test fixture ipa (Old Arch)'
+      - label: ':mac: Build RN {{matrix.reactnative}} test fixture ipa (Old Arch)'
         key: "build-react-native-ios-fixture-old-arch-full"
         timeout_in_minutes: 30
         agents:
           queue: "macos-15"
         env:
-          NODE_VERSION: "18"
-          RN_VERSION: "{{matrix}}"
+          NODE_VERSION: "{{matrix.node}}"
+          RN_VERSION: "{{matrix.reactnative}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_IOS: "true"
           XCODE_VERSION: "16.2.0"
@@ -26,13 +26,23 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.68"
-          - "0.69"
-          - "0.72"
-          - "0.74"
-          - "0.76"
-          - "0.78"
-          - "0.79"
+          setup:
+            reactnative:
+              - "0.72"
+              - "0.74"
+              - "0.76"
+              - "0.78"
+              - "0.80"
+              - "0.81"
+            node:
+              - "22"
+          adjustments:
+            - with:
+                reactnative: "0.68"
+                node: "18"
+            - with:
+                reactnative: "0.69"
+                node: "18"
         retry:
           automatic:
             - exit_status: "*"
@@ -44,7 +54,7 @@ steps:
         agents:
           queue: "macos-15"
         env:
-          NODE_VERSION: "18"
+          NODE_VERSION: "22"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"
@@ -59,7 +69,8 @@ steps:
           - "0.74"
           - "0.76"
           - "0.78"
-          - "0.79"
+          - "0.80"
+          - "0.81"
         retry:
           automatic:
             - exit_status: "*"
@@ -161,7 +172,8 @@ steps:
           - "0.74"
           - "0.76"
           - "0.78"
-          - "0.79"
+          - "0.80"
+          - "0.81"
 
       - label: ":bitbar: :mac: RN {{matrix}} iOS (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch-full"
@@ -203,7 +215,8 @@ steps:
           - "0.74"
           - "0.76"
           - "0.78"
-          - "0.79"
+          - "0.80"
+          - "0.81"
 
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't currently support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821

@@ -9,6 +9,7 @@
 ### Changed
 
 - Update bugsnag-cocoa to [v6.34.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.34.0) [#2571](https://github.com/bugsnag/bugsnag-js/pull/2571)
+- Amend secondary default notify and sessions endpoints to `bugsnag.smartbear.com` [#2584](https://github.com/bugsnag/bugsnag-js/pull/2584)
 
 ## [8.6.0] - 2025-09-25
 
