@@ -5,7 +5,7 @@ p {
 }
 
 .App {
-  background-color: #fafafa;
+  background-color: #e0dfe3;
   text-align: center;
   min-height: 100vh;
 }
@@ -13,6 +13,7 @@ p {
 .App-logo {
   height: 20vmin;
   pointer-events: none;
+  padding-bottom: 5%;
 }
 
 

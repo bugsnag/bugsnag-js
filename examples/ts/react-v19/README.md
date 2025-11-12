@@ -1,46 +1,36 @@
-# Getting Started with Create React App
+# React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is an example project showing how to use `@bugsnag/js` with a React project.
 
-## Available Scripts
+This project was bootstrapped with [`create-react-app`](https://github.com/facebook/create-react-app).
 
-In the project directory, you can run:
+## Usage
 
-### `npm start`
+Clone the repo and `cd` into the directory of this example:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+git clone git@github.com:bugsnag/bugsnag-js.git --recursive
+cd bugsnag-js/examples/ts/react-v19
+```
+Take a look at[`src/App.tsx`](src/index.js) to see how to setup Bugsnag once for your application and how the `ErrorBoundary` is used and to see how the errors are triggered
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### With docker
 
-### `npm test`
+The project includes a `Dockerfile`. If you're familiar with docker, this is the easiest way to start the example. Otherwise, skip ahead to the [without docker](#without-docker) section.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+docker build -t bugsnag-js-example-react . && \
+docker run -p 5000:5000 -it bugsnag-js-example-react
+```
 
-### `npm run build`
+__Note__: remember to replace `YOUR_API_KEY` in `src/lib/bugsnag.js` with your own!
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Without docker
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Ensure you have a version of Node.js >=4 on your machine.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+npm install
+npm run serve
+```
+__Note__: remember to replace `YOUR_API_KEY` in `src/index.js` with your own!

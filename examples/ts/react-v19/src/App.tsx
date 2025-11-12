@@ -8,8 +8,8 @@ import BugsnagPluginReact from "@bugsnag/plugin-react";
 
 // Initialize Bugsnag
 Bugsnag.start({
-  apiKey: "b41bf3d543e903d17300f591c4843c44",
-  appVersion: "1.3.0", // Update with your app version
+  apiKey: "your_api_key_here",
+  appVersion: "1.0.0", // Update with your app version
   releaseStage: "dev", // Set the release stage
   plugins: [new BugsnagPluginReact()],
   onError: (event: any) => {
@@ -25,6 +25,7 @@ function App() {
   // Component that will crash during render
   const CrashingComponent = () => {
     if (shouldCrash) {
+      Bugsnag.leaveBreadcrumb("CrashingComponent is about to crash");
       // This will cause a render error
       throw new Error("Intentional render error for Bugsnag testing");
     }
@@ -77,16 +78,6 @@ function App() {
           Test handled error
         </Button>
         <Button onClick={() => setShouldCrash(true)}>Test render error</Button>
-        <Button
-          onClick={() => {
-            // Simulate an unhandled rejected promise
-            Promise.reject(
-              new Error("Test unhandled rejected promise for Bugsnag")
-            );
-          }}
-        >
-          Test rejected promise error
-        </Button>
       </div>
       <CrashingComponent />
     </div>
