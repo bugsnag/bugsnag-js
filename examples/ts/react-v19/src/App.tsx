@@ -2,13 +2,13 @@ import React from "react";
 import logo from "./bugsnag.png";
 import BugSnagSmartBearLogo from "./bugsnag-small.png";
 import "./App.css";
-import Button from "./components/Button";
 import Bugsnag from "@bugsnag/js";
 import BugsnagPluginReact from "@bugsnag/plugin-react";
+import ErrorActionButtons from "./components/ErrorActionButtons";
 
 // Initialize Bugsnag
 Bugsnag.start({
-  apiKey: "your_api_key_here",
+  apiKey: "your-api-key-here", // Replace with your Bugsnag API key
   appVersion: "1.0.0", // Update with your app version
   releaseStage: "dev", // Set the release stage
   plugins: [new BugsnagPluginReact()],
@@ -18,9 +18,29 @@ Bugsnag.start({
   },
 });
 
+const ErrorBoundary = Bugsnag.getPlugin("react")!.createErrorBoundary(React);
+
 function App() {
-  const [state, setState] = React.useState({ yeah: true });
   const [shouldCrash, setShouldCrash] = React.useState(false);
+
+  const ErrorFallback: React.FC<{
+    error: Error;
+    clearError: () => void;
+  }> = ({ error, clearError }) => (
+    <div className="Error-fallback">
+      <p>Something went wrong while rendering the crash demo component.</p>
+      <pre className="Error-fallback__message">{error.message}</pre>
+      <button
+        type="button"
+        onClick={() => {
+          setShouldCrash(false);
+          clearError();
+        }}
+      >
+        Try again
+      </button>
+    </div>
+  );
 
   // Component that will crash during render
   const CrashingComponent = () => {
@@ -56,30 +76,10 @@ function App() {
           React integration documentation
         </a>
       </header>
-      <div className="Bad-buttons">
-        <Button
-          onClick={() => {
-            // Simulate an error for testing
-            throw new Error("Test unhandled error for Bugsnag");
-          }}
-        >
-          Test unhandled error
-        </Button>
-        <Button
-          onClick={() => {
-            // Simulate a handled error for testing
-            try {
-              throw new Error("Test handled error for Bugsnag");
-            } catch (error: any) {
-              Bugsnag.notify(error);
-            }
-          }}
-        >
-          Test handled error
-        </Button>
-        <Button onClick={() => setShouldCrash(true)}>Test render error</Button>
-      </div>
-      <CrashingComponent />
+      <ErrorActionButtons onTriggerRenderError={() => setShouldCrash(true)} />
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <CrashingComponent />
+      </ErrorBoundary>
     </div>
   );
 }
