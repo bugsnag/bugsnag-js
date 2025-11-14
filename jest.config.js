@@ -90,7 +90,8 @@ module.exports = {
       'plugin-node-in-project',
       'plugin-node-device',
       'plugin-node-surrounding-code',
-      'plugin-node-uncaught-exception'
+      'plugin-node-uncaught-exception',
+      'plugin-cloudflare-workers'
     ], {
       testEnvironment: 'node'
     }),
