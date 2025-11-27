@@ -18,7 +18,35 @@ steps:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"
-          XCODE_VERSION: "16.3.0"
+          XCODE_VERSION: "16.2.0"
+        artifact_paths:
+          - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
+        commands:
+          - "bundle install"
+          - "node scripts/generate-react-native-fixture.js"
+        matrix:
+          - "0.72"
+          - "0.74"
+          - "0.76"
+          - "0.78"
+          - "0.80"
+          - "0.81"
+          - "0.82"
+        retry:
+          automatic:
+            - exit_status: "*"
+              limit: 1
+
+      - label: ':mac: Build RN {{matrix}} test fixture ipa'
+        key: "build-react-native-ios-fixture-new-arch-2"
+        timeout_in_minutes: 60
+        agents:
+          queue: "macos-15-2"
+        env:
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "1"
+          BUILD_IOS: "true"
+          XCODE_VERSION: "16.2.0"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
