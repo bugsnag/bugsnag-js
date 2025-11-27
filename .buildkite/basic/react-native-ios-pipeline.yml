@@ -41,7 +41,7 @@ steps:
         key: "build-react-native-ios-fixture-new-arch-2"
         timeout_in_minutes: 60
         agents:
-          queue: "macos-15-2"
+          queue: "macos-15-1"
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
