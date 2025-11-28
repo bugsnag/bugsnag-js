@@ -22,6 +22,8 @@ steps:
             - "^30.0.0"
           node_version:
             - "18"
+      artifact_paths:
+        - "test/.cucumber-failures/**/*"
       commands:
         - echo "Running on Node `node -v`"
         - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
