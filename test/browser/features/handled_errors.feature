@@ -2,7 +2,7 @@
 Feature: Reporting handled errors
 
 Scenario Outline: calling notify() with Error
-  When I navigate to the test URL "/handled/<type>/a.html"
+  When I navigate to the test URL "/handled/<type>/notify_new_error.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
@@ -21,7 +21,7 @@ Scenario Outline: calling notify() with Error
     | typescript |
 
 Scenario Outline: calling notify() with Error within try/catch
-  When I navigate to the test URL "/handled/<type>/b.html"
+  When I navigate to the test URL "/handled/<type>/try_catch_notify.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception matches the "handled" values for the current browser

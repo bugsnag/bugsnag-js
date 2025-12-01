@@ -3,7 +3,7 @@ const webpack = require('webpack')
 const es3ifyPlugin = require('es3ify-webpack-plugin')
 
 module.exports = {
-  entry: { a: './src/a.js', b: './src/b.js', c: './src/c.js' },
+  entry: { a: './src/notify_new_error.js', b: './src/b.js', c: './src/c.js' },
   devtool: 'sourcemap',
   output: {
     path: path.resolve(__dirname, 'dist'),
