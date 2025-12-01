@@ -38,7 +38,7 @@ Scenario Outline: calling notify() with Error within try/catch
     | typescript |
 
 Scenario Outline: calling notify() with Error within Promise catch
-  When I navigate to the test URL "/handled/<type>/c.html"
+  When I navigate to the test URL "/handled/<type>/promise_catch.html"
   And the test should run in this browser
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API

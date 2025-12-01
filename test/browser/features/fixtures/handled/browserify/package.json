@@ -2,7 +2,7 @@
   "name": "bugsnag-js-fixtures-handled-browserify",
   "private": true,
   "scripts": {
-    "build": "browserify -o dist/notify_new_error.js src/notify_new_error.js && browserify -o dist/try_catch_notify.js src/try_catch_notify.js && browserify -o dist/c.js src/c.js"
+    "build": "browserify -o dist/notify_new_error.js src/notify_new_error.js && browserify -o dist/try_catch_notify.js src/try_catch_notify.js && browserify -o dist/promise_catch.js src/promise_catch.js"
   },
   "dependencies": {
     "browserify": "^16.2.2"

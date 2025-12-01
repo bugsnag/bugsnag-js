@@ -2,7 +2,7 @@
   "name": "bugsnag-js-fixtures-handled-typescript",
   "private": true,
   "scripts": {
-    "build": "browserify src/notify_new_error.ts -p [ tsify ] -o dist/notify_new_error.js && browserify src/try_catch_notify.ts -p [ tsify ] -o dist/try_catch_notify.js && browserify src/c.ts -p [ tsify ] -o dist/c.js"
+    "build": "browserify src/notify_new_error.ts -p [ tsify ] -o dist/notify_new_error.js && browserify src/try_catch_notify.ts -p [ tsify ] -o dist/try_catch_notify.js && browserify src/promise_catch.ts -p [ tsify ] -o dist/promise_catch.js"
   },
   "dependencies": {
     "browserify": "^16.2.2",
