@@ -6,9 +6,9 @@ import { apiKey, endpoints, plugins } from './lib/config'
 Bugsnag.start({ apiKey, endpoints, plugins })
 
 function App () {
-    useEffect(() => {
-        fetch("/reflect?status=404")
-    }, [])
+  useEffect(() => {
+    fetch("/reflect?status=404")
+  }, [])
 
   return (
     <div>
