@@ -3,7 +3,11 @@ const webpack = require('webpack')
 const es3ifyPlugin = require('es3ify-webpack-plugin')
 
 module.exports = {
-  entry: { a: './src/notify_new_error.js', b: './src/try_catch_notify.js', c: './src/promise_catch.js' },
+  entry: {
+    notify_new_error: './src/notify_new_error.js',
+    try_catch_notify: './src/try_catch_notify.js',
+    promise_catch: './src/promise_catch.js'
+  },
   devtool: 'sourcemap',
   output: {
     path: path.resolve(__dirname, 'dist'),

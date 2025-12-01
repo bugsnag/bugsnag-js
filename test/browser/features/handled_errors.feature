@@ -69,7 +69,7 @@ Scenario: calling notify() with an object, getting a generated a stacktrace
   And event 0 is handled
 
 Scenario: calling notify() with a string, getting a generated stacktrace
-  When I navigate to the test URL "/handled/script/notify_script.html"
+  When I navigate to the test URL "/handled/script/notify_string.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
