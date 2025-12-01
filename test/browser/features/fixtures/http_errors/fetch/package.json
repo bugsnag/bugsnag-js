@@ -2,7 +2,7 @@
   "name": "bugsnag-js-fixtures-http-errors-fetch",
   "private": true,
   "scripts": {
-    "build": "tsc && webpack"
+    "build": "webpack"
   },
   "dependencies": {
     "@babel/core": "^7.18.10",
