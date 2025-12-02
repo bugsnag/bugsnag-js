@@ -2,7 +2,7 @@
 Feature: Reporting handled errors
 
 Scenario Outline: calling notify() with Error
-  When I navigate to the test URL "/handled/<type>/a.html"
+  When I navigate to the test URL "/handled/<type>/notify_new_error.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
@@ -21,7 +21,7 @@ Scenario Outline: calling notify() with Error
     | typescript |
 
 Scenario Outline: calling notify() with Error within try/catch
-  When I navigate to the test URL "/handled/<type>/b.html"
+  When I navigate to the test URL "/handled/<type>/try_catch_notify.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception matches the "handled" values for the current browser
@@ -38,7 +38,7 @@ Scenario Outline: calling notify() with Error within try/catch
     | typescript |
 
 Scenario Outline: calling notify() with Error within Promise catch
-  When I navigate to the test URL "/handled/<type>/c.html"
+  When I navigate to the test URL "/handled/<type>/promise_catch.html"
   And the test should run in this browser
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
@@ -57,7 +57,7 @@ Scenario Outline: calling notify() with Error within Promise catch
     | typescript |
 
 Scenario: calling notify() with an object, getting a generated a stacktrace
-  When I navigate to the test URL "/handled/script/d.html"
+  When I navigate to the test URL "/handled/script/notify_object.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Errr"
@@ -69,7 +69,7 @@ Scenario: calling notify() with an object, getting a generated a stacktrace
   And event 0 is handled
 
 Scenario: calling notify() with a string, getting a generated stacktrace
-  When I navigate to the test URL "/handled/script/e.html"
+  When I navigate to the test URL "/handled/script/notify_string.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
@@ -81,7 +81,7 @@ Scenario: calling notify() with a string, getting a generated stacktrace
   And event 0 is handled
 
 Scenario: calling window.client.notify() with an object, getting a generated stacktrace
-  When I navigate to the test URL "/handled/script/f.html"
+  When I navigate to the test URL "/handled/script/client_notify_object.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
@@ -95,7 +95,7 @@ Scenario: calling window.client.notify() with an object, getting a generated sta
   And event 0 is handled
 
 Scenario: calling window.client.notify() with a string, getting a generated stacktrace
-  When I navigate to the test URL "/handled/script/g.html"
+  When I navigate to the test URL "/handled/script/client_notify_string.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
@@ -109,7 +109,7 @@ Scenario: calling window.client.notify() with a string, getting a generated stac
   And event 0 is handled
 
 Scenario: overridden handled state in a callback
-  When I navigate to the test URL "/handled/script/h.html"
+  When I navigate to the test URL "/handled/script/callback_override.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "message" ends with "hello"
