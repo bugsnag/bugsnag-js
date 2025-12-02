@@ -74,39 +74,6 @@ module.exports = (config = {}) => {
   }
 
   /**
-   * Convert Headers object to plain object
-   * @param {Headers} headers - Headers object
-   * @returns {Object} Plain object with lowercase keys
-   */
-  const headersToObject = (headers) => {
-    const obj = {}
-    if (headers && headers.forEach) {
-      headers.forEach((value, key) => {
-        obj[key.toLowerCase()] = value
-      })
-    }
-    return obj
-  }
-
-  /**
-   * Normalize headers object to lowercase keys
-   * @param {Object} headers - Headers object
-   * @returns {Object} Normalized headers
-   */
-  const normalizeHeaders = (headers) => {
-    if (!headers) return {}
-    if (headers instanceof Headers) return headersToObject(headers)
-    if (typeof headers === 'object') {
-      const normalized = {}
-      Object.keys(headers).forEach(key => {
-        normalized[key.toLowerCase()] = headers[key]
-      })
-      return normalized
-    }
-    return {}
-  }
-
-  /**
    * Extract domain from URL
    * @param {string} url - URL string
    * @returns {string} Domain
@@ -133,15 +100,7 @@ module.exports = (config = {}) => {
 
       // Wrap fetch
       global.fetch = async function wrappedFetch (input, init = {}) {
-        const startTime = Date.now()
-        let response
-
-        try {
-          response = await originalFetch.call(this, input, init)
-        } catch (error) {
-          // Network errors are already handled by other error handlers
-          throw error
-        }
+        const response = await originalFetch.call(this, input, init)
 
         // Check if we should capture this status code
         if (!shouldCaptureStatusCode(response.status)) {
@@ -179,7 +138,7 @@ module.exports = (config = {}) => {
         const requestObj = {
           url,
           httpMethod: method,
-          headers: normalizeHeaders(init.headers),
+          headers: init.headers,
           params: parseQueryParams(url),
           body: requestBody,
           bodyLength: requestBodyLength
@@ -187,7 +146,7 @@ module.exports = (config = {}) => {
 
         const responseObj = {
           statusCode: response.status,
-          headers: normalizeHeaders(response.headers),
+          headers: response.headers,
           body: responseBody,
           bodyLength: responseBodyLength
         }
