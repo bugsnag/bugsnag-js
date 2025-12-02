@@ -52,7 +52,7 @@ Scenario: parsing stacks correctly with "@" in filename
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "message" ends with "at in filename"
-  And the "file" of stack frame 0 ends with "unhandled/script/@dist/g.js"
+  And the "file" of stack frame 0 ends with "unhandled/script/@dist/at_filename.js"
   And event 0 is unhandled
 
 Scenario: overridden handled state in a callback
