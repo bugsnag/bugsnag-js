@@ -21,7 +21,7 @@ Feature: Inline script detection
     And the event "metaData.script" is null
 
   Scenario: inline script detected after location change
-    When I navigate to the test URL "/navigation/script/load_before_script.html"
+    When I navigate to the test URL "/navigation/script/navigation.html"
     And the test should run in this browser
     Then I wait to receive an error
     And the error is a valid browser payload for the error reporting API
