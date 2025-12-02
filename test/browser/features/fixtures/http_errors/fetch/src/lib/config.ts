@@ -7,6 +7,8 @@ function getQueryParam (key: string): string {
 
 export const apiKey = getQueryParam('API_KEY')
 
+export const REFLECT_ENDPOINT = getQueryParam('REFLECT')
+
 export const endpoints = {
   notify: getQueryParam('NOTIFY'),
   sessions: getQueryParam('SESSIONS')

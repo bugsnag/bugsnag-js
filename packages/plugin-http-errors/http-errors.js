@@ -186,7 +186,7 @@ module.exports = (config = {}) => {
         }
 
         const responseObj = {
-          status: response.status,
+          statusCode: response.status,
           headers: normalizeHeaders(response.headers),
           body: responseBody,
           bodyLength: responseBodyLength
@@ -195,7 +195,7 @@ module.exports = (config = {}) => {
         // Call onHttpError callback if provided
         if (onHttpError) {
           const result = onHttpError({ request: requestObj, response: responseObj })
-          
+
           // If onHttpError returns false, don't capture
           if (result === false) {
             return response
@@ -203,30 +203,28 @@ module.exports = (config = {}) => {
         }
 
         // Create error and notify
-        const error = new Error(`${responseObj.status}: ${requestObj.url}`)
+        const error = new Error(`${responseObj.statusCode}: ${requestObj.url}`)
         error.name = 'HTTPError'
 
-        client.notify(error, (event) => {
-          // Set context for grouping
-          event.context = `${method} ${domain}`
+        const handledState = {
+          severity: 'error',
+          unhandled: true,
+          severityReason: { type: 'httpError' }
+        }
 
-          // Set error details
-          event.errors[0].errorClass = 'HTTPError'
-          event.errors[0].errorMessage = `${responseObj.status}: ${requestObj.url}`
+        const event = client.Event.create(
+          error,
+          true,
+          handledState,
+          'http errors plugin',
+          0
+        )
 
-          // Add request metadata (using potentially modified values)
-          event.addMetadata('request', requestObj)
+        event.request = requestObj
+        event.response = responseObj
+        event.context = `${method} ${domain}`
 
-          // Add response metadata (using potentially modified values)
-          event.addMetadata('response', {
-            statusCode: responseObj.status,
-            headers: responseObj.headers,
-            body: responseObj.body,
-            bodyLength: responseObj.bodyLength
-          })
-
-          return true
-        })
+        client._notify(event)
 
         return response
       }
