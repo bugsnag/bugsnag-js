@@ -1,29 +1,13 @@
-import { Plugin } from '@bugsnag/core'
+import { Plugin, Request, Response } from '@bugsnag/core'
 
 export interface HttpErrorRange {
   min: number
   max: number
 }
 
-export interface HttpRequest {
-  url: string
-  httpMethod: string
-  headers: Record<string, string>
-  params: Record<string, string>
-  body: string
-  bodyLength: number
-}
-
-export interface HttpResponse {
-  status: number
-  headers: Record<string, string>
-  body: string
-  bodyLength: number
-}
-
 export interface HttpErrorCallbackInfo {
-  request: HttpRequest
-  response: HttpResponse
+  request: Request
+  response: Response
 }
 
 export interface BugsnagPluginHttpErrorsConfiguration {

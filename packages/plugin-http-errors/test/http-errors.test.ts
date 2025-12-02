@@ -79,11 +79,18 @@ describe('plugin-http-errors', () => {
             await new Promise(resolve => setTimeout(resolve, 10))
 
             expect(notifyCallbacks.length).toBe(1)
-            const event = notifyCallbacks[0]
-            
-            expect(event.errors[0].errorClass).toBe('HTTPError')
-            expect(event.errors[0].errorMessage).toBe('404: https://example.com/api/users')
+            const event = notifyCallbacks[0].toJSON()
+
+            expect(event.exceptions[0].errorClass).toBe('HTTPError')
+            expect(event.exceptions[0].errorMessage).toBe('404: https://example.com/api/users')
             expect(event.context).toBe('GET example.com')
+            expect(event.severity).toBe('error')
+            expect(event.unhandled).toBe(true)
+            expect(event.severityReason.type).toBe('httpError')
+            expect(event.request.url).toBe('https://example.com/api/users')
+            expect(event.request.httpMethod).toBe('GET')
+            expect(event.response.statusCode).toBe(404)
+            expect(event.response.headers['content-type']).toBe('application/json')
         })
 
         it('should not capture 2xx successful responses', async () => {
@@ -288,10 +295,10 @@ describe('plugin-http-errors', () => {
             await new Promise(resolve => setTimeout(resolve, 10))
 
             expect(notifyCallbacks.length).toBe(1)
-            const event = notifyCallbacks[0]
-            const responseMetadata = event.getMetadata('response')
+            const event = notifyCallbacks[0].toJSON()
+            const responseMetadata = event.response
             
-            expect(responseMetadata.body.length).toBeLessThanOrEqual(50)
+            expect(responseMetadata.body?.length).toBeLessThanOrEqual(50)
             expect(responseMetadata.bodyLength).toBe(100)
         })
 
@@ -324,8 +331,8 @@ describe('plugin-http-errors', () => {
             await new Promise(resolve => setTimeout(resolve, 10))
 
             expect(notifyCallbacks.length).toBe(1)
-            const event = notifyCallbacks[0]
-            const responseMetadata = event.getMetadata('response')
+            const event = notifyCallbacks[0].toJSON()
+            const responseMetadata = event.response
             
             expect(responseMetadata.body).toBe(smallBody)
             expect(responseMetadata.bodyLength).toBe(smallBody.length)
@@ -359,10 +366,10 @@ describe('plugin-http-errors', () => {
             await new Promise(resolve => setTimeout(resolve, 10))
 
             expect(notifyCallbacks.length).toBe(1)
-            const event = notifyCallbacks[0]
-            const responseMetadata = event.getMetadata('response')
+            const event = notifyCallbacks[0].toJSON()
+            const responseMetadata = event.response
             
-            expect(responseMetadata.body.length).toBeLessThanOrEqual(20000)
+            expect(responseMetadata.body?.length).toBeLessThanOrEqual(20000)
             expect(responseMetadata.bodyLength).toBe(25000)
         })
     })
@@ -400,8 +407,8 @@ describe('plugin-http-errors', () => {
             await new Promise(resolve => setTimeout(resolve, 10))
 
             expect(notifyCallbacks.length).toBe(1)
-            const event = notifyCallbacks[0]
-            const requestMetadata = event.getMetadata('request')
+            const event = notifyCallbacks[0].toJSON()
+            const requestMetadata = event.request
             
             expect(requestMetadata.body.length).toBeLessThanOrEqual(50)
             expect(requestMetadata.bodyLength).toBe(100)
@@ -439,7 +446,7 @@ describe('plugin-http-errors', () => {
 
             expect(notifyCallbacks.length).toBe(1)
             const event = notifyCallbacks[0]
-            const requestMetadata = event.getMetadata('request')
+            const requestMetadata = event.request
             
             expect(requestMetadata.body.length).toBeLessThanOrEqual(5000)
             expect(requestMetadata.bodyLength).toBe(10000)
@@ -480,7 +487,7 @@ describe('plugin-http-errors', () => {
             expect(callArg.request).toBeDefined()
             expect(callArg.request.url).toBe('https://example.com/api/users')
             expect(callArg.response).toBeDefined()
-            expect(callArg.response.status).toBe(404)
+            expect(callArg.response.statusCode).toBe(404)
         })
 
         it('should prevent event creation when onHttpError returns false', async () => {
@@ -490,7 +497,7 @@ describe('plugin-http-errors', () => {
                 httpErrorCodes: { min: 400, max: 499 },
                 onHttpError: ({ request }) => {
                     // Filter out requests with PII
-                    if (request.url.includes('PII')) return false
+                    if (request.url?.includes('PII')) return false
                     return true
                 }
             })
@@ -537,7 +544,7 @@ describe('plugin-http-errors', () => {
                 onHttpError: ({ request, response }) => {
                     // Redact sensitive information
                     request.url = '[REDACTED]'
-                    response.status = 418
+                    response.statusCode = 418
                     return true
                 }
             })
@@ -562,9 +569,9 @@ describe('plugin-http-errors', () => {
             await new Promise(resolve => setTimeout(resolve, 10))
 
             expect(notifyCallbacks.length).toBe(1)
-            const event = notifyCallbacks[0]
-            const requestMetadata = event.getMetadata('request')
-            const responseMetadata = event.getMetadata('response')
+            const event = notifyCallbacks[0].toJSON()
+            const requestMetadata = event.request
+            const responseMetadata = event.response
             
             expect(requestMetadata.url).toBe('[REDACTED]')
             expect(responseMetadata.statusCode).toBe(418)
@@ -577,7 +584,7 @@ describe('plugin-http-errors', () => {
                 httpErrorCodes: [{ min: 400, max: 599 }],
                 onHttpError: ({ response }) => {
                     // Only handle 5xx errors
-                    if (response.status < 500 || response.status > 599) return false
+                    if (response.statusCode < 500 || response.statusCode > 599) return false
                     return true
                 }
             })
@@ -613,7 +620,7 @@ describe('plugin-http-errors', () => {
             await new Promise(resolve => setTimeout(resolve, 10))
 
             expect(notifyCallbacks.length).toBe(1)
-            expect(notifyCallbacks[0].getMetadata('response', 'statusCode')).toBe(500)
+            expect(notifyCallbacks[0].response.statusCode).toBe(500)
         })
     })
 
@@ -715,13 +722,13 @@ describe('plugin-http-errors', () => {
             await new Promise(resolve => setTimeout(resolve, 10))
 
             expect(notifyCallbacks.length).toBe(1)
-            const event = notifyCallbacks[0]
-            const requestMetadata = event.getMetadata('request')
+            const event = notifyCallbacks[0].toJSON()
+            const requestMetadata = event.request
             
             expect(requestMetadata.url).toBe('https://example.com/api/users?page=1&limit=10')
             expect(requestMetadata.httpMethod).toBe('POST')
             expect(requestMetadata.headers).toBeDefined()
-            expect(requestMetadata.headers['content-type']).toBe('application/json')
+            expect(requestMetadata.headers?.['content-type']).toBe('application/json')
             expect(requestMetadata.params).toBeDefined()
             expect(requestMetadata.params.page).toBe('1')
             expect(requestMetadata.params.limit).toBe('10')
@@ -762,7 +769,7 @@ describe('plugin-http-errors', () => {
 
             expect(notifyCallbacks.length).toBe(1)
             const event = notifyCallbacks[0]
-            const responseMetadata = event.getMetadata('response')
+            const responseMetadata = event.response
             
             expect(responseMetadata.statusCode).toBe(400)
             expect(responseMetadata.headers).toBeDefined()
@@ -804,7 +811,7 @@ describe('plugin-http-errors', () => {
 
             expect(notifyCallbacks.length).toBe(methods.length)
             methods.forEach((method, index) => {
-                const requestMetadata = notifyCallbacks[index].getMetadata('request')
+                const requestMetadata = notifyCallbacks[index].request
                 expect(requestMetadata.httpMethod).toBe(method)
                 expect(notifyCallbacks[index].context).toBe(`${method} example.com`)
             })
@@ -869,8 +876,8 @@ describe('plugin-http-errors', () => {
             await new Promise(resolve => setTimeout(resolve, 10))
 
             expect(notifyCallbacks.length).toBe(1)
-            const event = notifyCallbacks[0]
-            const requestMetadata = event.getMetadata('request')
+            const event = notifyCallbacks[0].toJSON()
+            const requestMetadata = event.request
             expect(requestMetadata.params).toEqual({})
         })
     })
