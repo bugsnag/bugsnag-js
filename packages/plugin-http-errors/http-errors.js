@@ -121,19 +121,6 @@ module.exports = (config = {}) => {
           requestBody = truncate(bodyStr, maxRequestSize)
         }
 
-        // Clone response to read body without consuming it
-        const responseClone = response.clone ? response.clone() : response
-        let responseBody = ''
-        let responseBodyLength = 0
-
-        try {
-          const fullResponseBody = await responseClone.text()
-          responseBodyLength = fullResponseBody.length
-          responseBody = truncate(fullResponseBody, maxResponseSize)
-        } catch (e) {
-          client._logger.warn('Failed to read response body', e)
-        }
-
         // Create request and response objects for callback
         const requestObj = {
           url,
@@ -146,9 +133,7 @@ module.exports = (config = {}) => {
 
         const responseObj = {
           statusCode: response.status,
-          headers: response.headers,
-          body: responseBody,
-          bodyLength: responseBodyLength
+          headers: response.headers
         }
 
         // Call onHttpError callback if provided
