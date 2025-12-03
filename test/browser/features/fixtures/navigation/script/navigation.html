@@ -14,13 +14,6 @@
     </script>
   </head>
   <body>
-    <pre id="bugsnag-test-should-run">PENDING</pre>
-    <script>
-      var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = typeof history.pushState === 'function'
-        ? 'YES'
-        : 'NO'
-    </script>
     <script>
       window.history.pushState({}, '', '/234235')
       throw new Error('history')

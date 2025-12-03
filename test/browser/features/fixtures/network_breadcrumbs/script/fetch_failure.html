@@ -17,16 +17,9 @@
       fetch("i_dont_exist.html").then(function () {
         Bugsnag.notify(new Error("This error should have network breadcrumbs attached"))
       })
-    
+
     </script>
   </head>
   <body>
-    <pre id="bugsnag-test-should-run">PENDING</pre>
-    <script>
-      var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = 'fetch' in window
-        ? 'YES'
-        : 'NO'
-    </script>
   </body>
 </html>

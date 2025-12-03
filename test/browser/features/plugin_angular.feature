@@ -4,13 +4,15 @@
 @skip_safari_10 @skip_before_ios_12
 Feature: Angular support
 
-Scenario Outline: basic error handler usage
-  When I navigate to the test URL "/plugin_angular/angular_<version>/dist/index.html"
-  And the test should run in this browser
-  Then I wait to receive an error
-  And the error is a valid browser payload for the error reporting API
-  And the error payload field "events.0.device.runtimeVersions.angular" is not null
-  Examples:
-    | version |
-    | 12      |
-    | 17      |
+  @requires_promise
+  @requires_set
+  @requires_array_from
+  Scenario Outline: basic error handler usage
+    When I navigate to the test URL "/plugin_angular/angular_<version>/dist/index.html"
+    Then I wait to receive an error
+    And the error is a valid browser payload for the error reporting API
+    And the error payload field "events.0.device.runtimeVersions.angular" is not null
+    Examples:
+      | version |
+      | 12      |
+      | 17      |
