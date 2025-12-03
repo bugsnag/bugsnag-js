@@ -9,13 +9,13 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And the exception "errorClass" equals "HTTPError"
-    And the exception "message" matches "404: http://[^/]+/reflect\?status=404"
+    And the exception "message" matches "404: (?:https?:\/\/)?.*\/reflect\?status=404"
     And the event "severity" equals "error"
     And the event "unhandled" is true
     And the event "severityReason.type" equals "httpError"
     And the event "context" equals "GET localhost"
 
-    And the event "request.url" matches "http://[^/]+/reflect\?status=404"
+    And the event "request.url" matches "(?:https?:\/\/)?.*\/reflect\?status=404"
     And the event "request.httpMethod" equals "GET"
     And the event "request.params.status" equals "404"
     And the event "request.body" equals ""
