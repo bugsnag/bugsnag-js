@@ -13,15 +13,16 @@ class Browser
     if @name == "android"
       @name = "chrome"
       @version = Float::INFINITY
-    end
-    @name = "safari" if @name == "ios"
+    else
+      @name = "safari" if @name == "ios"
 
-    # Assume we're running the latest version if there is no version present.
-    @version = if version.nil? || version == "latest"
-                 Float::INFINITY
-               else
-                 Integer(version)
-               end
+      # Assume we're running the latest version if there is no version present.
+      @version = if version.nil? || version == "latest"
+                   Float::INFINITY
+                 else
+                   Integer(version)
+                 end
+    end
   end
 
   # https://caniuse.com/wf-array-from
