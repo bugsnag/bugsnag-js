@@ -3,6 +3,8 @@ require 'yaml'
 # Provides information on browser support for features needed in the e2e tests.
 # Source: caniuse.com
 class Browser
+  attr_reader :name
+
   def initialize(browser_spec)
     # e.g. "chrome_61", "edge_latest", "chrome"
     @name, version = browser_spec.split("_")
@@ -10,13 +12,13 @@ class Browser
     # Assume Android runs the latest Chrome and iOS/Safari versions match.
     if @name == "android"
       @name = "chrome"
-      @version = Integer::MAX
+      @version = Float::INFINITY
     end
     @name = "safari" if @name == "ios"
 
     # Assume we're running the latest version if there is no version present.
     @version = if version.nil? || version == "latest"
-                 Integer::Max
+                 Float::INFINITY
                else
                  Integer(version)
                end

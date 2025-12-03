@@ -19,9 +19,9 @@ Scenario: setting enabledErrorTypes.unhandledExceptions option to false
   And the exception "message" equals "manual notify does work"
   And the exception "type" equals "browserjs"
 
+@requires_promise
 Scenario: setting enabledErrorTypes.unhandledRejections option to false
   When I navigate to the test URL "/auto_detect_errors/script/unhandled_rejections_false.html"
-  And the test should run in this browser
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the event "unhandled" is false
