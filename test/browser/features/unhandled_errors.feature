@@ -2,7 +2,7 @@
 Feature: Reporting unhandled errors
 
 Scenario: syntax errors
-  When I navigate to the test URL "/unhandled/script/a.html"
+  When I navigate to the test URL "/unhandled/script/syntax_error.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_syntax" values for the current browser
@@ -10,14 +10,14 @@ Scenario: syntax errors
   And event 0 is unhandled
 
 Scenario: thrown errors
-  When I navigate to the test URL "/unhandled/script/b.html"
+  When I navigate to the test URL "/unhandled/script/thrown.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_thrown" values for the current browser
   And event 0 is unhandled
 
 Scenario: unhandled promise rejections
-  When I navigate to the test URL "/unhandled/script/c.html"
+  When I navigate to the test URL "/unhandled/script/promise_rejection.html"
   And the test should run in this browser
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
@@ -26,21 +26,21 @@ Scenario: unhandled promise rejections
   And event 0 is unhandled
 
 Scenario: undefined function invocation
-  When I navigate to the test URL "/unhandled/script/d.html"
+  When I navigate to the test URL "/unhandled/script/undefined_function.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_undefined_function" values for the current browser
   And event 0 is unhandled
 
 Scenario: decoding malformed URI component
-  When I navigate to the test URL "/unhandled/script/e.html"
+  When I navigate to the test URL "/unhandled/script/malformed_uri.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception matches the "unhandled_malformed_uri" values for the current browser
   And event 0 is unhandled
 
 Scenario: detecting unhandled promise rejections with bluebird
-  When I navigate to the test URL "/unhandled/script/f.html"
+  When I navigate to the test URL "/unhandled/script/bluebird.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "errorClass" equals "Error"
@@ -48,15 +48,15 @@ Scenario: detecting unhandled promise rejections with bluebird
   And event 0 is unhandled
 
 Scenario: parsing stacks correctly with "@" in filename
-  When I navigate to the test URL "/unhandled/script/g.html"
+  When I navigate to the test URL "/unhandled/script/at_filename.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "message" ends with "at in filename"
-  And the "file" of stack frame 0 ends with "unhandled/script/@dist/g.js"
+  And the "file" of stack frame 0 ends with "unhandled/script/@dist/at_filename.js"
   And event 0 is unhandled
 
 Scenario: overridden handled state in a callback
-  When I navigate to the test URL "/unhandled/script/h.html"
+  When I navigate to the test URL "/unhandled/script/override_unhandled.html"
   Then I wait to receive an error
   And the error is a valid browser payload for the error reporting API
   And the exception "message" equals "hello"
