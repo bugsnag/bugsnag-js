@@ -1,4 +1,4 @@
-import Client from '@bugsnag/core/client'
+import Client, { Delivery } from '@bugsnag/core/client'
 import createPlugin from '..'
 import Event from '@bugsnag/core/event'
 
@@ -13,13 +13,17 @@ const createMockResponse = (options: any) => {
     statusText: options.statusText || 'OK',
     url: options.url || '',
     headers: options.headers || new Headers(),
-    text: options.text || (async () => ''),
-    clone: function () {
-      return { ...this }
-    }
+    text: options.text || (async () => '')
   }
   return response
 }
+
+const createMockDelivery = (notifyCallbacks: Event[]) => (): Delivery => ({
+  sendEvent: (payload) => {
+    notifyCallbacks.push(payload.events[0])
+  },
+  sendSession: () => {}
+})
 
 describe('plugin-http-errors', () => {
   let mockFetch: jest.Mock
@@ -57,12 +61,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       mockFetch.mockResolvedValue(createMockResponse({
         ok: false,
@@ -101,12 +100,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       mockFetch.mockResolvedValue({
         ok: true,
@@ -131,12 +125,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       mockFetch.mockResolvedValue({
         ok: false,
@@ -163,12 +152,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       // Test 404 (in range)
       mockFetch.mockResolvedValueOnce({
@@ -232,12 +216,7 @@ describe('plugin-http-errors', () => {
       const plugin = createPlugin() // No config
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       // Test 404
       mockFetch.mockResolvedValueOnce({
@@ -265,115 +244,6 @@ describe('plugin-http-errors', () => {
     })
   })
 
-  describe('config.maxResponseSize', () => {
-    it('should truncate response body when it exceeds maxResponseSize', async () => {
-      const notifyCallbacks: Event[] = []
-
-      const plugin = createPlugin({
-        httpErrorCodes: { min: 400, max: 499 },
-        maxResponseSize: 50
-      })
-
-      const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
-
-      const largeBody = 'A'.repeat(100)
-      mockFetch.mockResolvedValue({
-        ok: false,
-        status: 404,
-        url: 'https://example.com/api/users',
-        headers: new Headers({ 'content-type': 'text/plain' }),
-        text: async () => largeBody
-      })
-
-      await fetch('https://example.com/api/users')
-      await new Promise(resolve => setTimeout(resolve, 10))
-
-      expect(notifyCallbacks.length).toBe(1)
-      const event = notifyCallbacks[0].toJSON()
-      const responseMetadata = event.response
-
-      expect(responseMetadata.body?.length).toBeLessThanOrEqual(50)
-      expect(responseMetadata.bodyLength).toBe(100)
-    })
-
-    it('should include full response body when under maxResponseSize', async () => {
-      const notifyCallbacks: Event[] = []
-
-      const plugin = createPlugin({
-        httpErrorCodes: { min: 400, max: 499 },
-        maxResponseSize: 100
-      })
-
-      const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
-
-      const smallBody = '{"error": "Not found"}'
-      mockFetch.mockResolvedValue({
-        ok: false,
-        status: 404,
-        url: 'https://example.com/api/users',
-        headers: new Headers({ 'content-type': 'application/json' }),
-        text: async () => smallBody
-      })
-
-      await fetch('https://example.com/api/users')
-      await new Promise(resolve => setTimeout(resolve, 10))
-
-      expect(notifyCallbacks.length).toBe(1)
-      const event = notifyCallbacks[0].toJSON()
-      const responseMetadata = event.response
-
-      expect(responseMetadata.body).toBe(smallBody)
-      expect(responseMetadata.bodyLength).toBe(smallBody.length)
-    })
-
-    it('should use default maxResponseSize of 20000 when not specified', async () => {
-      const notifyCallbacks: Event[] = []
-
-      const plugin = createPlugin({
-        httpErrorCodes: { min: 400, max: 499 }
-      })
-
-      const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
-
-      const largeBody = 'B'.repeat(25000)
-      mockFetch.mockResolvedValue({
-        ok: false,
-        status: 404,
-        url: 'https://example.com/api/users',
-        headers: new Headers(),
-        text: async () => largeBody
-      })
-
-      await fetch('https://example.com/api/users')
-      await new Promise(resolve => setTimeout(resolve, 10))
-
-      expect(notifyCallbacks.length).toBe(1)
-      const event = notifyCallbacks[0].toJSON()
-      const responseMetadata = event.response
-
-      expect(responseMetadata.body?.length).toBeLessThanOrEqual(20000)
-      expect(responseMetadata.bodyLength).toBe(25000)
-    })
-  })
-
   describe('config.maxRequestSize', () => {
     it('should truncate request body when it exceeds maxRequestSize', async () => {
       const notifyCallbacks: Event[] = []
@@ -384,12 +254,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       const largeRequestBody = 'C'.repeat(100)
       mockFetch.mockResolvedValue({
@@ -422,12 +287,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       const largeRequestBody = 'D'.repeat(10000)
       mockFetch.mockResolvedValue({
@@ -464,12 +324,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       mockFetch.mockResolvedValue({
         ok: false,
@@ -503,12 +358,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       // Request with PII - should be filtered
       mockFetch.mockResolvedValueOnce({
@@ -550,12 +400,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       mockFetch.mockResolvedValue({
         ok: false,
@@ -590,12 +435,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       // Test 4xx - should be filtered
       mockFetch.mockResolvedValueOnce({
@@ -633,12 +473,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       mockFetch.mockResolvedValue({
         ok: false,
@@ -668,12 +503,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       mockFetch.mockResolvedValue({
         ok: false,
@@ -699,12 +529,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       mockFetch.mockResolvedValue({
         ok: false,
@@ -716,24 +541,23 @@ describe('plugin-http-errors', () => {
 
       await fetch('https://example.com/api/users?page=1&limit=10', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer token' },
+        headers: new Headers({ 'Content-Type': 'application/json', Authorization: 'Bearer token' }),
         body: JSON.stringify({ name: 'John' })
       })
       await new Promise(resolve => setTimeout(resolve, 10))
 
       expect(notifyCallbacks.length).toBe(1)
       const event = notifyCallbacks[0].toJSON()
-      const requestMetadata = event.request
 
-      expect(requestMetadata.url).toBe('https://example.com/api/users?page=1&limit=10')
-      expect(requestMetadata.httpMethod).toBe('POST')
-      expect(requestMetadata.headers).toBeDefined()
-      expect(requestMetadata.headers?.['content-type']).toBe('application/json')
-      expect(requestMetadata.params).toBeDefined()
-      expect(requestMetadata.params.page).toBe('1')
-      expect(requestMetadata.params.limit).toBe('10')
-      expect(requestMetadata.body).toBeDefined()
-      expect(requestMetadata.bodyLength).toBeDefined()
+      expect(event.request.url).toBe('https://example.com/api/users?page=1&limit=10')
+      expect(event.request.httpMethod).toBe('POST')
+      expect(event.request.headers).toBeDefined()
+      expect(event.request.headers?.['content-type']).toBe('application/json')
+      expect(event.request.params).toBeDefined()
+      expect(event.request.params.page).toBe('1')
+      expect(event.request.params.limit).toBe('10')
+      expect(event.request.body).toBeDefined()
+      expect(event.request.bodyLength).toBeDefined()
     })
 
     it('should populate response metadata with all fields', async () => {
@@ -744,14 +568,8 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
-      const responseBody = '{"error": "Invalid input"}'
       mockFetch.mockResolvedValue({
         ok: false,
         status: 400,
@@ -760,23 +578,18 @@ describe('plugin-http-errors', () => {
         headers: new Headers({
           'content-type': 'application/json',
           'x-request-id': '12345'
-        }),
-        text: async () => responseBody
+        })
       })
 
       await fetch('https://example.com/api/users')
-      await new Promise(resolve => setTimeout(resolve, 10))
 
       expect(notifyCallbacks.length).toBe(1)
-      const event = notifyCallbacks[0]
-      const responseMetadata = event.response
+      const event = notifyCallbacks[0].toJSON()
 
-      expect(responseMetadata.statusCode).toBe(400)
-      expect(responseMetadata.headers).toBeDefined()
-      expect(responseMetadata.headers['content-type']).toBe('application/json')
-      expect(responseMetadata.headers['x-request-id']).toBe('12345')
-      expect(responseMetadata.body).toBe(responseBody)
-      expect(responseMetadata.bodyLength).toBe(responseBody.length)
+      expect(event.response.statusCode).toBe(400)
+      expect(event.response.headers).toBeDefined()
+      expect(event.response.headers['content-type']).toBe('application/json')
+      expect(event.response.headers['x-request-id']).toBe('12345')
     })
 
     it('should handle requests with different HTTP methods', async () => {
@@ -787,12 +600,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       const methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 
@@ -825,12 +633,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       mockFetch.mockResolvedValue({
         ok: false,
@@ -857,12 +660,7 @@ describe('plugin-http-errors', () => {
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
-      client._setDelivery(() => ({
-        sendEvent: (payload) => {
-          notifyCallbacks.push(payload.events[0])
-        },
-        sendSession: () => {}
-      }))
+      client._setDelivery(createMockDelivery(notifyCallbacks))
 
       mockFetch.mockResolvedValue({
         ok: false,

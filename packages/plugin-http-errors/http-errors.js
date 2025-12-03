@@ -4,7 +4,6 @@
  */
 
 const DEFAULT_HTTP_ERROR_CODES = [{ min: 400, max: 599 }]
-const DEFAULT_MAX_RESPONSE_SIZE = 20000
 const DEFAULT_MAX_REQUEST_SIZE = 5000
 
 /**
@@ -19,7 +18,6 @@ const DEFAULT_MAX_REQUEST_SIZE = 5000
 module.exports = (config = {}) => {
   const {
     httpErrorCodes = DEFAULT_HTTP_ERROR_CODES,
-    maxResponseSize = DEFAULT_MAX_RESPONSE_SIZE,
     maxRequestSize = DEFAULT_MAX_REQUEST_SIZE,
     onHttpError
   } = config
@@ -74,6 +72,27 @@ module.exports = (config = {}) => {
   }
 
   /**
+   * Convert Headers object to plain object
+   * @param {Headers} headers - Headers object
+   * @returns {Object} Plain object with header key-value pairs
+   */
+  const headersToObject = (headers) => {
+    if (!headers) return {}
+
+    const obj = {}
+    if (headers.entries) {
+      for (const [key, value] of headers.entries()) {
+        obj[key] = value
+      }
+    } else if (headers.forEach) {
+      headers.forEach((value, key) => {
+        obj[key] = value
+      })
+    }
+    return obj
+  }
+
+  /**
    * Extract domain from URL
    * @param {string} url - URL string
    * @returns {string} Domain
@@ -125,7 +144,7 @@ module.exports = (config = {}) => {
         const requestObj = {
           url,
           httpMethod: method,
-          headers: init.headers,
+          headers: headersToObject(init.headers),
           params: parseQueryParams(url),
           body: requestBody,
           bodyLength: requestBodyLength
@@ -133,7 +152,7 @@ module.exports = (config = {}) => {
 
         const responseObj = {
           statusCode: response.status,
-          headers: response.headers
+          headers: headersToObject(response.headers)
         }
 
         // Call onHttpError callback if provided
