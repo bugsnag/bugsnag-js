@@ -111,7 +111,7 @@ steps:
       #
       # BitBar tests
       #
-      - label: ":bitbar: {{matrix}} Browser tests (US hub)"
+      - label: ":bitbar: {{matrix}} Browser tests (EU hub)"
         matrix:
           - firefox_latest
           - chrome_latest
@@ -142,7 +142,7 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
 
-      - label: ":bitbar: ie_11 Browser tests"
+      - label: ":bitbar: ie_11 Browser tests (EU hub)"
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
         plugins:
