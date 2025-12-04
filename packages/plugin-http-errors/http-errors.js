@@ -100,7 +100,7 @@ module.exports = (config = {}) => {
   const extractDomain = (url) => {
     try {
       const urlObj = new URL(url)
-      return urlObj.hostname
+      return urlObj.host
     } catch (e) {
       return 'unknown'
     }

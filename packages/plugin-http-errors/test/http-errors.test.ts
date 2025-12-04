@@ -648,7 +648,7 @@ describe('plugin-http-errors', () => {
 
       expect(notifyCallbacks.length).toBe(1)
       const event = notifyCallbacks[0]
-      expect(event.context).toBe('GET example.com')
+      expect(event.context).toBe('GET example.com:8080')
       expect(event.errors[0].errorMessage).toBe('404: https://example.com:8080/api/users')
     })
 
