@@ -14,13 +14,6 @@
     </script>
   </head>
   <body>
-    <pre id="bugsnag-test-should-run">PENDING</pre>
-    <script>
-      var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = (typeof Promise !== 'undefined' && 'onunhandledrejection' in window)
-        ? 'YES'
-        : 'NO'
-    </script>
     <script>
       Promise.reject(new Error('broken promises'))
     </script>

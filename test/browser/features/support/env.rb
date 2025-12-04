@@ -47,9 +47,11 @@ ERRORS.keys.each do |browser|
     skip_this_scenario if Maze.config.browser == browser
   end
 end
+
 BeforeAll do
   Maze.config.receive_no_requests_wait = 15
   Maze.config.enforce_bugsnag_integrity = false
+  $browser = Browser.new(Maze.config.browser)
 end
 
 at_exit do

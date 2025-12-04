@@ -5,13 +5,6 @@
     <script src="/docs/node_modules/@bugsnag/browser/dist/bugsnag.min.js"></script>
   </head>
   <body>
-    <pre id="bugsnag-test-should-run">PENDING</pre>
-    <script>
-      var el = document.getElementById('bugsnag-test-should-run')
-      el.textContent = el.innerText = typeof Promise !== 'undefined'
-        ? 'YES'
-        : 'NO'
-    </script>
     <script src="dist/promise_catch.js"></script>
   </body>
 </html>
