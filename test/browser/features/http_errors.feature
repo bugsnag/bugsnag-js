@@ -8,14 +8,18 @@ Feature: HTTP Errors
     And I wait to receive an error
     Then the error is a valid browser payload for the error reporting API
 
+    And I define "expected.context" as "GET <browser.hostname>"
+    And I define "expected.exception.message" as "404: <browser.url>/reflect?status=404"
+    And I define "expected.request.url" as "<browser.url>/reflect?status=404"
+
     And the exception "errorClass" equals "HTTPError"
-    And the exception "message" matches "404: (?:https?:\/\/)?.*\/reflect\?status=404"
+    And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
     And the event "severity" equals "error"
     And the event "unhandled" is true
     And the event "severityReason.type" equals "httpError"
-    And the event "context" equals "GET localhost"
+    And the error payload field "events.0.context" equals the stored value "expected.context"
 
-    And the event "request.url" matches "(?:https?:\/\/)?.*\/reflect\?status=404"
+    And the error payload field "events.0.request.url" equals the stored value "expected.request.url"
     And the event "request.httpMethod" equals "GET"
     And the event "request.params.status" equals "404"
     And the event "request.body" equals ""
