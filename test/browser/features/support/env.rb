@@ -51,6 +51,7 @@ end
 BeforeAll do
   Maze.config.receive_no_requests_wait = 15
   Maze.config.enforce_bugsnag_integrity = false
+  Maze.config.reset_on_navigation_failure = true
   $browser = Browser.new(Maze.config.browser)
 end
 
