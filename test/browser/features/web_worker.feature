@@ -1,8 +1,5 @@
-# browsers that do not support web workers
-@skip_ie_8 @skip_ie_9
-
-# browsers that currently throw errors in our test fixtures 
-@skip_ie_10 @skip_ie_11 @skip_chrome_43 @skip_edge_17 @skip_safari_10 @skip_before_ios_12
+# browsers that currently throw errors in our test fixtures
+@skip_ie_11 @skip_chrome_43 @skip_edge_17 @skip_safari_10
 
 Feature: worker notifier
 
@@ -17,7 +14,7 @@ Feature: worker notifier
   Scenario: config.autoDetectErrors defaults to false
     Given I navigate to the test URL "/web_worker/worker_auto_detect_errors/default"
     Then I should receive no errors
- 
+
   Scenario: setting config.autoDetectErrors option to true
     Given I navigate to the test URL "/web_worker/worker_auto_detect_errors/enabled"
     And I wait to receive an error
@@ -48,7 +45,7 @@ Feature: worker notifier
     Then the session is a valid browser payload for the session tracking API
 
   # Not supported on Safari https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Integrity-Policy#browser_compatibility
-  @skip_safari_16 @skip_ios_12
+  @skip_safari_16
   Scenario: Integrity headers are set when setPayloadChecksums is true
     When I navigate to the test URL "/web_worker/integrity"
     And I wait to receive an error

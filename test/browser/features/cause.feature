@@ -1,4 +1,4 @@
-@skip_ie_8 @skip_ie_9 @skip_ie_10 @skip_ie_11 @skip_firefox_30 @skip_safari_6
+@skip_ie_11
 Feature: Error.cause
 
   @requires_error_cause
