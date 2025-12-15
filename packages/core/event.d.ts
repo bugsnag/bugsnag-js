@@ -1,4 +1,4 @@
-import { App, Device, Event, Request, Breadcrumb, User, Session, FeatureFlag } from './types'
+import { App, Device, Event, Request, Response, Breadcrumb, User, Session, FeatureFlag } from './types'
 import { Error } from './types/event'
 
 interface HandledState {
@@ -40,6 +40,7 @@ export default class EventWithInternals extends Event {
     app: App
     device: Device
     request: Request
+    response: Response
     breadcrumbs: Breadcrumb[]
     context: string | undefined
     correlation: { spanId: string, traceId: string } | undefined
