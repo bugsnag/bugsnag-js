@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+(plugin-server-session) Delay session tracker initialization until first use [#2642](https://github.com/bugsnag/bugsnag-js/pull/2642)
+
 ### Dependencies
 
 Update bugsnag-cocoa to [6.34.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/6.34.1) [#2606](https://github.com/bugsnag/bugsnag-js/pull/2606)
