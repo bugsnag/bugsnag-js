@@ -4,10 +4,41 @@ const BugsnagPluginBrowserSession = require('@bugsnag/plugin-browser-session')
 const SERVER_PLUGIN_NAMES = ['express', 'koa', 'restify', 'hono']
 const isServerPluginLoaded = client => SERVER_PLUGIN_NAMES.some(name => client.getPlugin(name))
 
+const extractRequestInfo = (request) => {
+  if (!request) return {}
+
+  const url = new URL(request.url)
+
+  const info = {
+    url: request.url,
+    path: url.pathname,
+    httpMethod: request.method,
+    headers: Object.fromEntries(request.headers),
+    query: url.searchParams.size > 0 ? Object.fromEntries(url.searchParams) : undefined,
+    clientIp: request.headers.get('Cf-Connecting-IP') || request.headers.get('X-Forwarded-For') || undefined
+  }
+
+  return info
+}
+
+const getRequestAndMetadataFromReq = (request) => {
+  const requestInfo = extractRequestInfo(request)
+
+  return {
+    metadata: requestInfo,
+    request: {
+      clientIp: requestInfo.clientIp,
+      headers: requestInfo.headers,
+      httpMethod: requestInfo.httpMethod,
+      url: requestInfo.url
+    }
+  }
+}
+
 const BugsnagPluginCloudflareWorkers = {
   name: 'cloudflareWorkers',
 
-  load(client) {
+  load (client) {
     bugsnagInFlight.trackInFlight(client)
     client._loadPlugin(BugsnagPluginBrowserSession)
 
@@ -19,37 +50,23 @@ const BugsnagPluginCloudflareWorkers = {
     }
 
     return {
-      createHandler({ flushTimeoutMs = 2000 } = {}) {
+      createHandler ({ flushTimeoutMs = 2000 } = {}) {
         return wrapHandler.bind(null, client, flushTimeoutMs)
       }
     }
   }
 }
 
-function wrapHandler(client, flushTimeoutMs, handler) {
+function wrapHandler (client, flushTimeoutMs, handler) {
   return async function (request, env, ctx) {
-    // Add request metadata
-    if (request) {
-      client.addMetadata('Cloudflare Workers request', {
-        url: request.url,
-        method: request.method,
-        headers: Object.fromEntries(request.headers.entries())
-      })
-    }
-
-    // Add environment metadata if available
-    if (env) {
-      // Only include serializable properties from env
-      const envMetadata = {}
-      for (const key in env) {
-        const value = env[key]
-        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-          envMetadata[key] = value
-        }
-      }
-      if (Object.keys(envMetadata).length > 0) {
-        client.addMetadata('Cloudflare Workers environment', envMetadata)
-      }
+    // Add request metadata via onError callback so server plugins can override
+    // Only add metadata if no server plugin is loaded
+    if (!isServerPluginLoaded(client)) {
+      client.addOnError((event) => {
+        const { metadata, request: requestData } = getRequestAndMetadataFromReq(request)
+        event.request = { ...event.request, ...requestData }
+        event.addMetadata('request', metadata)
+      }, true)
     }
 
     // Track sessions if autoTrackSessions is enabled and no server plugin is loaded
