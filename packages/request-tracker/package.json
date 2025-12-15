@@ -1,0 +1,30 @@
+{
+  "name": "@bugsnag/request-tracker",
+  "version": "8.0.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "description": "Shared HTTP request tracking for Bugsnag JavaScript plugins",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "scripts": {
+    "test": "npm run test:unit",
+    "test:unit": "jest --testPathPattern=test/unit"
+  },
+  "dependencies": {
+    "@bugsnag/core": "^8.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  }
+}
