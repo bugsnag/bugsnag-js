@@ -15,7 +15,7 @@ const DEFAULT_MAX_REQUEST_SIZE = 5000
  * @param {Function} config.onHttpError - Callback for intercepting HTTP errors
  * @returns {Object} Bugsnag plugin
  */
-module.exports = (config = {}) => {
+module.exports = (config = {}, global = window) => {
   const {
     httpErrorCodes = DEFAULT_HTTP_ERROR_CODES,
     maxRequestSize = DEFAULT_MAX_REQUEST_SIZE,
@@ -106,36 +106,57 @@ module.exports = (config = {}) => {
     }
   }
 
-  return {
+  let restoreFunctions = []
+  const plugin = {
     name: 'httpErrors',
     load: (client) => {
-      // Store original fetch
-      const originalFetch = global.fetch
+      // Try to get existing request tracker
+      let requestTrackerPlugin = client.getPlugin('requestTracker')
 
-      if (!originalFetch) {
-        client._logger.warn('fetch is not available, HTTP errors plugin will not work')
-        return
+      // Auto-load request tracker if not present
+      if (!requestTrackerPlugin) {
+        try {
+          const { createRequestTrackerPlugin } = require('@bugsnag/request-tracker')
+          const trackerPlugin = createRequestTrackerPlugin([], global)
+          client._loadPlugin(trackerPlugin)
+          requestTrackerPlugin = client.getPlugin('requestTracker')
+        } catch (error) {
+          client._logger.warn('Failed to auto-load request tracker, using direct fetch patching:', error.message)
+        }
       }
 
-      // Wrap fetch
-      global.fetch = async function wrappedFetch (input, init = {}) {
-        const response = await originalFetch.call(this, input, init)
+      // Use shared request tracker if available
+      if (requestTrackerPlugin) {
+        const { fetchTracker } = requestTrackerPlugin
 
+        if (fetchTracker) {
+          restoreFunctions.push(fetchTracker._restore)
+          fetchTracker.onStart((startContext) => {
+            return {
+              onRequestEnd: (endContext) => {
+                handleHttpError(startContext, endContext)
+              }
+            }
+          })
+        }
+      }
+
+      function handleHttpError (startContext, endContext) {
         // Check if we should capture this status code
-        if (!shouldCaptureStatusCode(response.status)) {
-          return response
+        if (!shouldCaptureStatusCode(endContext.status)) {
+          return
         }
 
         // Extract request information
-        const url = typeof input === 'string' ? input : input.url
-        const method = (init.method || 'GET').toUpperCase()
+        const url = startContext.url
+        const method = startContext.method
         const domain = extractDomain(url)
 
         // Extract request body
         let requestBody = ''
         let requestBodyLength = 0
-        if (init.body) {
-          const bodyStr = typeof init.body === 'string' ? init.body : String(init.body)
+        if (startContext.init && startContext.init.body) {
+          const bodyStr = typeof startContext.init.body === 'string' ? startContext.init.body : String(startContext.init.body)
           requestBodyLength = bodyStr.length
           requestBody = truncate(bodyStr, maxRequestSize)
         }
@@ -144,15 +165,15 @@ module.exports = (config = {}) => {
         const requestObj = {
           url,
           httpMethod: method,
-          headers: headersToObject(init.headers),
+          headers: headersToObject(startContext.init && startContext.init.headers),
           params: parseQueryParams(url),
           body: requestBody,
           bodyLength: requestBodyLength
         }
 
         const responseObj = {
-          statusCode: response.status,
-          headers: headersToObject(response.headers)
+          statusCode: endContext.status,
+          headers: headersToObject(endContext.response && endContext.response.headers)
         }
 
         // Call onHttpError callback if provided
@@ -161,7 +182,7 @@ module.exports = (config = {}) => {
 
           // If onHttpError returns false, don't capture
           if (result === false) {
-            return response
+            return
           }
         }
 
@@ -188,12 +209,16 @@ module.exports = (config = {}) => {
         event.context = `${method} ${domain}`
 
         client._notify(event)
-
-        return response
       }
     }
   }
-}
 
-// add a default export for ESM modules without interop
-module.exports.default = module.exports
+  if (process.env.NODE_ENV !== 'production') {
+    plugin.destroy = () => {
+      restoreFunctions.forEach(fn => fn())
+      restoreFunctions = []
+    }
+  }
+
+  return plugin
+}
