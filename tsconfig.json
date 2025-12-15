@@ -96,7 +96,8 @@
     "packages/plugin-node-uncaught-exception",
     "packages/plugin-console-breadcrumbs",
     "packages/plugin-browser-session",
-    "packages/browser"
+    "packages/browser",
+    "packages/request-tracker"
   ],
   "exclude": [
     "packages/react-native/src/NativeBugsnag.ts"
