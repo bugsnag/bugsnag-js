@@ -12,12 +12,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "*.js"
+  ],
   "author": "Bugsnag",
   "license": "MIT",
-  "scripts": {
-    "test": "npm run test:unit",
-    "test:unit": "jest --testPathPattern=test/unit"
-  },
   "dependencies": {
     "@bugsnag/core": "^8.0.0"
   }
