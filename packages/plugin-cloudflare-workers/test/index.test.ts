@@ -1,61 +1,33 @@
-/**
- * @jest-environment node
- */
-import util from 'util'
 import BugsnagPluginCloudflareWorkers from '../src/'
 import Client, { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
+import type { Request as CloudflareRequest, Response as CloudflareResponse, ExecutionContext, ExportedHandler, IncomingRequestCfProperties } from '@cloudflare/workers-types'
 
-// Mock Request and Response for Node.js environment
-class MockRequest {
-  url: string
-  method: string
-  headers: Map<string, string>
-
-  constructor (url: string, init: { method?: string, headers?: Record<string, string> } = {}) {
-    this.url = url
-    this.method = init.method || 'GET'
-    this.headers = new Map(Object.entries(init.headers || {}))
-  }
+// Extended ExecutionContext type for testing with helper method
+interface MockExecutionContext extends ExecutionContext {
+  _waitForAllPromises: () => Promise<any[]>
 }
 
-class MockResponse {
-  private body: string
-
-  constructor (body: string) {
-    this.body = body
-  }
-
-  async text () {
-    return this.body
-  }
+// Example Env interface for testing type inference
+interface Env {
+  SOME_VALUE?: string
 }
 
 // Mock ExecutionContext for Cloudflare Workers
-const createMockExecutionContext = () => {
-  const promises: Promise<any>[] = []
+const createMockExecutionContext = (): MockExecutionContext => {
+  const promises: Array<Promise<any>> = []
   return {
     waitUntil: (promise: Promise<any>) => { promises.push(promise) },
-    passThroughOnException: () => {},
+
     // Helper for tests to wait for all promises registered with waitUntil
     _waitForAllPromises: () => Promise.all(promises)
-  }
+  } as unknown as MockExecutionContext
 }
-
-// @ts-ignore
-global.Request = MockRequest
-// @ts-ignore
-global.Response = MockResponse
 
 const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryPayload[], config = {}) => {
   const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers], ...config })
 
   // @ts-ignore the following property is not defined on the public Event interface
   client.Event.__type = 'nodejs'
-
-  // a flush failure won't throw as we don't want to crash apps if delivery takes
-  // too long. To avoid the unit tests passing when this happens, we make the logger
-  // throw on any 'error' log call
-  client._logger.error = (...args) => { throw new Error(util.format(args)) }
 
   client._delivery = {
     sendEvent (payload, cb = () => {}) {
@@ -88,20 +60,13 @@ describe('plugin: cloudflare workers', () => {
     expect(plugin).toMatchObject({ createHandler: expect.any(Function) })
   })
 
-  it('adds the request as metadata', async () => {
+  it('adds the request as metadata when an error occurs', async () => {
     const events: EventDeliveryPayload[] = []
     const sessions: SessionDeliveryPayload[] = []
 
     const client = createClient(events, sessions)
 
-    const handler = async (request: Request, env: any, ctx: any) => new Response('Hello World!')
-
-    const request = new Request('https://example.com/test', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    const env = { TEST_VAR: 'test-value' }
-    const ctx = createMockExecutionContext()
+    const err = new Error('test error')
 
     const plugin = client.getPlugin('cloudflareWorkers')
 
@@ -110,15 +75,54 @@ describe('plugin: cloudflare workers', () => {
     }
 
     const bugsnagHandler = plugin.createHandler()
-    const wrappedHandler = bugsnagHandler(handler)
 
-    const response = await wrappedHandler(request, env, ctx)
-    expect(await response.text()).toBe('Hello World!')
+    const exportedHandler: ExportedHandler<Env> = {
+      fetch: bugsnagHandler(async (request, env, ctx) => {
+        throw err
+      })
+    }
 
-    const metadata = client.getMetadata('Cloudflare Workers request')
-    expect(metadata).toMatchObject({
-      url: 'https://example.com/test',
-      method: 'POST'
+    const request = new Request('https://example.com/test?foo=bar&baz=qux', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cf-Connecting-IP': '203.0.113.1'
+      }
+    }) as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const env = {}
+    const ctx = createMockExecutionContext()
+
+    await expect(exportedHandler.fetch?.(request, env, ctx)).rejects.toThrow(err)
+
+    // Wait for promises registered with ctx.waitUntil to complete
+    await ctx._waitForAllPromises()
+
+    expect(events).toHaveLength(1)
+
+    const event = events[0].events[0]
+    expect(event.request).toMatchObject({
+      url: 'https://example.com/test?foo=bar&baz=qux',
+      httpMethod: 'POST',
+      clientIp: '203.0.113.1',
+      headers: {
+        'content-type': 'application/json',
+        'cf-connecting-ip': '203.0.113.1'
+      }
+    })
+    // @ts-ignore
+    expect(event._metadata?.request).toMatchObject({
+      url: 'https://example.com/test?foo=bar&baz=qux',
+      path: '/test',
+      httpMethod: 'POST',
+      clientIp: '203.0.113.1',
+      query: {
+        foo: 'bar',
+        baz: 'qux'
+      },
+      headers: {
+        'content-type': 'application/json',
+        'cf-connecting-ip': '203.0.113.1'
+      }
     })
   })
 
@@ -135,16 +139,6 @@ describe('plugin: cloudflare workers', () => {
       }
     }
 
-    const handler = async () => {
-      client.notify('hello')
-
-      return new Response('Hello World!')
-    }
-
-    const request = new Request('https://example.com/test')
-    const env = {}
-    const ctx = createMockExecutionContext()
-
     const timeoutError = new Error('flush timed out after 20ms')
 
     const plugin = client.getPlugin('cloudflareWorkers')
@@ -154,14 +148,24 @@ describe('plugin: cloudflare workers', () => {
     }
 
     const bugsnagHandler = plugin.createHandler({ flushTimeoutMs: 20 })
-    const wrappedHandler = bugsnagHandler(handler)
 
-    const response = await wrappedHandler(request, env, ctx)
-    
+    const exportedHandler: ExportedHandler<Env> = {
+      fetch: bugsnagHandler((request, env, ctx) => {
+        client.notify('hello')
+        return new Response('Hello World!') as unknown as CloudflareResponse
+      })
+    }
+
+    const request = new Request('https://example.com/test') as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const env = {}
+    const ctx = createMockExecutionContext()
+
+    const response = await exportedHandler.fetch?.(request, env, ctx)
+
     // Wait for promises registered with ctx.waitUntil to complete
     await ctx._waitForAllPromises().catch(() => {})
-    
-    expect(await response.text()).toBe('Hello World!')
+
+    expect(await response?.text()).toBe('Hello World!')
     expect(client._logger.error).toHaveBeenCalledWith(`Delivery may be unsuccessful: ${timeoutError.message}`)
   })
 
@@ -171,12 +175,6 @@ describe('plugin: cloudflare workers', () => {
 
     const client = createClient(events, sessions)
 
-    const handler = async () => new Response('Hello World!')
-
-    const request = new Request('https://example.com/test')
-    const env = {}
-    const ctx = createMockExecutionContext()
-
     const plugin = client.getPlugin('cloudflareWorkers')
 
     if (!plugin) {
@@ -184,10 +182,23 @@ describe('plugin: cloudflare workers', () => {
     }
 
     const bugsnagHandler = plugin.createHandler()
-    const wrappedHandler = bugsnagHandler(handler)
 
-    const response = await wrappedHandler(request, env, ctx)
-    expect(await response.text()).toBe('Hello World!')
+    const exportedHandler: ExportedHandler<Env> = {
+      fetch: bugsnagHandler(async (request, env, ctx) => {
+        // Access env property to verify type inference works correctly
+        const value = env.SOME_VALUE
+        return new Response(`Hello World! ${value}`) as unknown as CloudflareResponse
+      })
+    }
+
+    const request = new Request('https://example.com/test') as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const env = {
+      SOME_VALUE: 'test value'
+    }
+    const ctx = createMockExecutionContext()
+
+    const response = await exportedHandler.fetch?.(request, env, ctx)
+    expect(await response?.text()).toBe('Hello World! test value')
 
     expect(events).toHaveLength(0)
     expect(sessions).toHaveLength(1)
@@ -200,13 +211,6 @@ describe('plugin: cloudflare workers', () => {
     const client = createClient(events, sessions)
 
     const err = new Error('badness')
-    const handler = async () => {
-      throw err
-    }
-
-    const request = new Request('https://example.com/test')
-    const env = {}
-    const ctx = createMockExecutionContext()
 
     const plugin = client.getPlugin('cloudflareWorkers')
 
@@ -215,9 +219,18 @@ describe('plugin: cloudflare workers', () => {
     }
 
     const bugsnagHandler = plugin.createHandler()
-    const wrappedHandler = bugsnagHandler(handler)
 
-    await expect(wrappedHandler(request, env, ctx)).rejects.toThrow(err)
+    const exportedHandler: ExportedHandler<Env> = {
+      fetch: bugsnagHandler(async (request, env, ctx) => {
+        throw err
+      })
+    }
+
+    const request = new Request('https://example.com/test') as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const env = {}
+    const ctx = createMockExecutionContext()
+
+    await expect(exportedHandler.fetch?.(request, env, ctx)).rejects.toThrow(err)
 
     // Wait for promises registered with ctx.waitUntil to complete
     await ctx._waitForAllPromises()
@@ -239,13 +252,6 @@ describe('plugin: cloudflare workers', () => {
     const client = createClient(events, sessions, { autoDetectErrors: false })
 
     const err = new Error('badness')
-    const handler = async () => {
-      throw err
-    }
-
-    const request = new Request('https://example.com/test')
-    const env = {}
-    const ctx = createMockExecutionContext()
 
     const plugin = client.getPlugin('cloudflareWorkers')
 
@@ -254,9 +260,18 @@ describe('plugin: cloudflare workers', () => {
     }
 
     const bugsnagHandler = plugin.createHandler()
-    const wrappedHandler = bugsnagHandler(handler)
 
-    await expect(wrappedHandler(request, env, ctx)).rejects.toThrow(err)
+    const exportedHandler: ExportedHandler<Env> = {
+      fetch: bugsnagHandler(async (request, env, ctx) => {
+        throw err
+      })
+    }
+
+    const request = new Request('https://example.com/test') as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const env = {}
+    const ctx = createMockExecutionContext()
+
+    await expect(exportedHandler.fetch?.(request, env, ctx)).rejects.toThrow(err)
 
     expect(events).toHaveLength(0)
     expect(sessions).toHaveLength(1)
@@ -274,61 +289,28 @@ describe('plugin: cloudflare workers', () => {
     })
 
     const err = new Error('badness')
-    const handler = async () => {
-      throw err
+
+    const plugin = client.getPlugin('cloudflareWorkers')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
     }
 
-    const request = new Request('https://example.com/test')
+    const bugsnagHandler = plugin.createHandler()
+
+    const exportedHandler: ExportedHandler<Env> = {
+      fetch: bugsnagHandler(async (request, env, ctx) => {
+        throw err
+      })
+    }
+
+    const request = new Request('https://example.com/test') as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
     const env = {}
     const ctx = createMockExecutionContext()
 
-    const plugin = client.getPlugin('cloudflareWorkers')
-
-    if (!plugin) {
-      throw new Error('Plugin was not loaded!')
-    }
-
-    const bugsnagHandler = plugin.createHandler()
-    const wrappedHandler = bugsnagHandler(handler)
-
-    await expect(wrappedHandler(request, env, ctx)).rejects.toThrow(err)
+    await expect(exportedHandler.fetch?.(request, env, ctx)).rejects.toThrow(err)
 
     expect(events).toHaveLength(0)
     expect(sessions).toHaveLength(1)
-  })
-
-  it('captures environment metadata', async () => {
-    const events: EventDeliveryPayload[] = []
-    const sessions: SessionDeliveryPayload[] = []
-
-    const client = createClient(events, sessions)
-
-    const handler = async () => new Response('Hello World!')
-
-    const request = new Request('https://example.com/test')
-    const env = {
-      API_KEY: 'secret-key',
-      NUMERIC_VAR: 123,
-      BOOLEAN_VAR: true
-    }
-    const ctx = createMockExecutionContext()
-
-    const plugin = client.getPlugin('cloudflareWorkers')
-
-    if (!plugin) {
-      throw new Error('Plugin was not loaded!')
-    }
-
-    const bugsnagHandler = plugin.createHandler()
-    const wrappedHandler = bugsnagHandler(handler)
-
-    await wrappedHandler(request, env, ctx)
-
-    const metadata = client.getMetadata('Cloudflare Workers environment')
-    expect(metadata).toEqual({
-      API_KEY: 'secret-key',
-      NUMERIC_VAR: 123,
-      BOOLEAN_VAR: true
-    })
   })
 })

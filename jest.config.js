@@ -90,8 +90,7 @@ module.exports = {
       'plugin-node-in-project',
       'plugin-node-device',
       'plugin-node-surrounding-code',
-      'plugin-node-uncaught-exception',
-      'plugin-cloudflare-workers'
+      'plugin-node-uncaught-exception'
     ], {
       testEnvironment: 'node'
     }),
@@ -132,6 +131,10 @@ module.exports = {
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures']
     }),
-    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' })
+    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' }),
+    project('cloudflare-workers', ['plugin-cloudflare-workers'], {
+      testEnvironment: 'node',
+      setupFilesAfterEnv: ['<rootDir>/packages/plugin-cloudflare-workers/test/setup.ts']
+    })
   ]
 }
