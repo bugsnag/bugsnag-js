@@ -7,7 +7,21 @@ Bugsnag.start({ apiKey, endpoints, plugins })
 
 function App () {
   useEffect(() => {
-    fetch(`${REFLECT_ENDPOINT}?status=404`)
+    const params = new URLSearchParams(window.location.search)
+    const type = params.get('request') === 'xhr' ? 'xhr' : 'fetch'
+
+    switch(type) {
+      case 'xhr':
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', `${REFLECT_ENDPOINT}?status=404`)
+        xhr.send()
+        break
+      case 'fetch':
+      default:
+        fetch(`${REFLECT_ENDPOINT}?status=404`)
+        break
+    }
+
   }, [])
 
   return (
