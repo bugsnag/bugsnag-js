@@ -1,6 +1,7 @@
 import Client, { Delivery } from '@bugsnag/core/client'
 import createPlugin from '..'
 import Event from '@bugsnag/core/event'
+import { Plugin } from '@bugsnag/core'
 
 // Mock fetch globally
 const originalFetch = global.fetch
@@ -27,6 +28,7 @@ const createMockDelivery = (notifyCallbacks: Event[]) => (): Delivery => ({
 
 describe('plugin-http-errors', () => {
   let mockFetch: jest.Mock
+  let plugin: Plugin
 
   beforeEach(() => {
     mockFetch = jest.fn()
@@ -36,17 +38,18 @@ describe('plugin-http-errors', () => {
   afterEach(() => {
     global.fetch = originalFetch
     jest.clearAllMocks()
+    plugin.destroy?.()
   })
 
   describe('plugin configuration', () => {
     it('should export a plugin with name and load function', () => {
-      const plugin = createPlugin()
+      plugin = createPlugin()
       expect(plugin.name).toBe('httpErrors')
       expect(typeof plugin.load).toBe('function')
     })
 
     it('should load without configuration', () => {
-      const plugin = createPlugin()
+      plugin = createPlugin()
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
       expect(client).toBeDefined()
     })
@@ -56,7 +59,7 @@ describe('plugin-http-errors', () => {
     it('should capture 4xx errors when configured with single range', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
@@ -95,7 +98,7 @@ describe('plugin-http-errors', () => {
     it('should not capture 2xx successful responses', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
@@ -120,7 +123,7 @@ describe('plugin-http-errors', () => {
     it('should not capture 5xx errors when configured for 4xx only', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
@@ -147,7 +150,7 @@ describe('plugin-http-errors', () => {
     it('should capture errors matching any range or specific code', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: [{ min: 400, max: 499 }, 500, 503]
       })
 
@@ -213,7 +216,7 @@ describe('plugin-http-errors', () => {
     it('should capture all 4xx and 5xx errors by default', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin() // No config
+      plugin = createPlugin() // No config
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
       client._setDelivery(createMockDelivery(notifyCallbacks))
@@ -248,7 +251,7 @@ describe('plugin-http-errors', () => {
     it('should truncate request body when it exceeds maxRequestSize', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 },
         maxRequestSize: 50
       })
@@ -282,7 +285,7 @@ describe('plugin-http-errors', () => {
     it('should use default maxRequestSize of 5000 when not specified', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
@@ -318,7 +321,7 @@ describe('plugin-http-errors', () => {
       const onHttpError = jest.fn()
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 },
         onHttpError
       })
@@ -348,7 +351,7 @@ describe('plugin-http-errors', () => {
     it('should prevent event creation when onHttpError returns false', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 },
         onHttpError: ({ request }) => {
           // Filter out requests with PII
@@ -389,7 +392,7 @@ describe('plugin-http-errors', () => {
     it('should allow onHttpError to modify request and response', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 },
         onHttpError: ({ request, response }) => {
           // Redact sensitive information
@@ -425,7 +428,7 @@ describe('plugin-http-errors', () => {
     it('should filter errors by status code in onHttpError', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: [{ min: 400, max: 599 }],
         onHttpError: ({ response }) => {
           // Only handle 5xx errors
@@ -468,7 +471,7 @@ describe('plugin-http-errors', () => {
     it('should populate event.errors with correct structure', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
@@ -498,7 +501,7 @@ describe('plugin-http-errors', () => {
     it('should set event.context to method and domain', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
@@ -524,7 +527,7 @@ describe('plugin-http-errors', () => {
     it('should populate request metadata with all fields', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
@@ -563,7 +566,7 @@ describe('plugin-http-errors', () => {
     it('should populate response metadata with all fields', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
@@ -595,7 +598,7 @@ describe('plugin-http-errors', () => {
     it('should handle requests with different HTTP methods', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
@@ -628,7 +631,7 @@ describe('plugin-http-errors', () => {
     it('should handle URLs with ports', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
@@ -655,7 +658,7 @@ describe('plugin-http-errors', () => {
     it('should handle requests without query parameters', async () => {
       const notifyCallbacks: Event[] = []
 
-      const plugin = createPlugin({
+      plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 }
       })
 
