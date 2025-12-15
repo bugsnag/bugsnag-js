@@ -5,7 +5,6 @@
 class RequestTracker {
   constructor () {
     this.callbacks = []
-    this._isActive = false
   }
 
   /**
@@ -57,25 +56,10 @@ class RequestTracker {
   }
 
   /**
-   * Mark tracker as active (used by tracker factories)
-   */
-  _setActive () {
-    this._isActive = true
-  }
-
-  /**
-   * Check if tracker has been activated
-   */
-  isActive () {
-    return this._isActive
-  }
-
-  /**
    * Reset tracker (for testing)
    */
   _reset () {
     this.callbacks = []
-    this._isActive = false
   }
 }
 

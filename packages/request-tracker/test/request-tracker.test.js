@@ -356,11 +356,6 @@ describe('@bugsnag/request-tracker', () => {
       }).not.toThrow()
     })
 
-    it('should mark tracker as active', () => {
-      const tracker = createXhrTracker(mockGlobalWithXHR)
-      expect(tracker.isActive()).toBe(true)
-    })
-
     it('should include restore function in development', () => {
       const originalEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'development'

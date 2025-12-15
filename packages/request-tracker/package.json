@@ -20,11 +20,5 @@
   },
   "dependencies": {
     "@bugsnag/core": "^8.0.0"
-  },
-  "devDependencies": {
-    "jest": "^29.0.0"
-  },
-  "jest": {
-    "testEnvironment": "jsdom"
   }
 }
