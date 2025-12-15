@@ -81,7 +81,6 @@ function createXhrTracker (global, options = {}) {
 
     // Store tracker and mark as active
     global.__bugsnag_xhr_tracker__ = tracker
-    tracker._setActive()
 
     // Restore function for development
     if (process.env.NODE_ENV !== 'production') {

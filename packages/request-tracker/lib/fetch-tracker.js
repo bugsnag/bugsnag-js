@@ -75,7 +75,6 @@ function createFetchTracker (global, options = {}) {
 
     // Store tracker and mark as active
     global.__bugsnag_fetch_tracker__ = tracker
-    tracker._setActive()
 
     // Restore function for development
     if (process.env.NODE_ENV !== 'production') {
