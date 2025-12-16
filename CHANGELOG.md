@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+(plugin-cloudflare-workers): Add initial support for Cloudflare Workers [#2643](https://github.com/bugsnag/bugsnag-js/pull/2643)
+
 ### Fixed
 
 (plugin-server-session) Delay session tracker initialization until first use [#2642](https://github.com/bugsnag/bugsnag-js/pull/2642)
