@@ -40,6 +40,12 @@ const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryP
     }
   }
 
+  // Mock _clientContext.run to execute the callback immediately
+  // This simulates AsyncLocalStorage behavior for testing
+  client._clientContext = {
+    run: jest.fn((requestClient, callback) => callback())
+  }
+
   return client
 }
 
@@ -97,6 +103,13 @@ describe('plugin: cloudflare workers', () => {
     // Wait for promises registered with ctx.waitUntil to complete
     await ctx._waitForAllPromises()
 
+    // Verify _clientContext.run was called with a cloned client
+    expect(client._clientContext.run).toHaveBeenCalledTimes(1)
+    expect(client._clientContext.run).toHaveBeenCalledWith(
+      expect.any(Client),
+      expect.any(Function)
+    )
+
     expect(events).toHaveLength(1)
 
     const event = events[0].events[0]
@@ -137,6 +150,11 @@ describe('plugin: cloudflare workers', () => {
       sendSession (payload, cb = () => {}) {
         setTimeout(cb, 250)
       }
+    }
+
+    // Mock _clientContext.run to execute the callback immediately
+    client._clientContext = {
+      run: jest.fn((requestClient, callback) => callback())
     }
 
     const timeoutError = new Error('flush timed out after 20ms')
@@ -200,6 +218,13 @@ describe('plugin: cloudflare workers', () => {
     const response = await exportedHandler.fetch?.(request, env, ctx)
     expect(await response?.text()).toBe('Hello World! test value')
 
+    // Verify _clientContext.run was called
+    expect(client._clientContext.run).toHaveBeenCalledTimes(1)
+    expect(client._clientContext.run).toHaveBeenCalledWith(
+      expect.any(Client),
+      expect.any(Function)
+    )
+
     expect(events).toHaveLength(0)
     expect(sessions).toHaveLength(1)
   })
@@ -234,6 +259,9 @@ describe('plugin: cloudflare workers', () => {
 
     // Wait for promises registered with ctx.waitUntil to complete
     await ctx._waitForAllPromises()
+
+    // Verify _clientContext.run was called
+    expect(client._clientContext.run).toHaveBeenCalledTimes(1)
 
     expect(events).toHaveLength(1)
 
@@ -312,5 +340,52 @@ describe('plugin: cloudflare workers', () => {
 
     expect(events).toHaveLength(0)
     expect(sessions).toHaveLength(1)
+  })
+
+  it('clones the client for each request to avoid callback accumulation', async () => {
+    const events: EventDeliveryPayload[] = []
+    const sessions: SessionDeliveryPayload[] = []
+
+    const client = createClient(events, sessions)
+
+    const plugin = client.getPlugin('cloudflareWorkers')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+
+    const exportedHandler: ExportedHandler<Env> = {
+      fetch: bugsnagHandler(async (request, env, ctx) => {
+        return new Response('OK') as unknown as CloudflareResponse
+      })
+    }
+
+    const request1 = new Request('https://example.com/request1') as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const request2 = new Request('https://example.com/request2') as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const env = {}
+    const ctx1 = createMockExecutionContext()
+    const ctx2 = createMockExecutionContext()
+
+    // Make two requests
+    await exportedHandler.fetch?.(request1, env, ctx1)
+    await exportedHandler.fetch?.(request2, env, ctx2)
+
+    // Verify _clientContext.run was called twice with different cloned clients
+    expect(client._clientContext.run).toHaveBeenCalledTimes(2)
+
+    const firstCallClient = (client._clientContext.run as jest.Mock).mock.calls[0][0]
+    const secondCallClient = (client._clientContext.run as jest.Mock).mock.calls[1][0]
+
+    // Both should be Client instances but different instances
+    expect(firstCallClient).toBeInstanceOf(Client)
+    expect(secondCallClient).toBeInstanceOf(Client)
+    expect(firstCallClient).not.toBe(secondCallClient)
+    expect(firstCallClient).not.toBe(client)
+    expect(secondCallClient).not.toBe(client)
+
+    // Both requests should have started sessions
+    expect(sessions).toHaveLength(2)
   })
 })
