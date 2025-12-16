@@ -165,12 +165,12 @@ describe('plugin-http-errors', () => {
       expect(event.response.bodyLength).toBe(xhr.responseText.length)
     })
 
-    it('should truncate XHR response body when it exceeds maxResponseSize', async () => {
+    it('should truncate XHR response body when it exceeds maxRequestSize', async () => {
       const notifyCallbacks: Event[] = []
 
       plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 },
-        maxResponseSize: 20
+        maxRequestSize: 20
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
@@ -179,7 +179,7 @@ describe('plugin-http-errors', () => {
       // Create and configure XHR with large response body
       const xhr = new XMLHttpRequest() as any
       const largeResponseBody = 'A'.repeat(100)
-      xhr.status = 500
+      xhr.status = 404
       xhr.statusText = 'Internal Server Error'
       xhr.responseURL = 'https://api.example.com/error'
       xhr.response = largeResponseBody
@@ -188,6 +188,7 @@ describe('plugin-http-errors', () => {
       xhr.open('GET', 'https://api.example.com/error')
       xhr.send()
 
+      // Wait for async processing
       await new Promise(resolve => setTimeout(resolve, 20))
 
       expect(notifyCallbacks.length).toBe(1)

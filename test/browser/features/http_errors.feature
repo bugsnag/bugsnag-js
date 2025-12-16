@@ -27,8 +27,10 @@ Feature: HTTP Errors
 
     And the event "response.statusCode" equals 404
     And the event "response.headers.content-length" equals "37"
-    # response.body is not reported for fetch requests
-    # response.bodyLength is not reported for fetch requests
+    
+    # Response body is not captured for fetch requests
+    And the event "response.body" is null
+    And the event "response.bodyLength" is null
 
   Scenario: XML HTTP Request
     When I navigate to the test URL "/http_errors?request=xhr"
@@ -54,6 +56,6 @@ Feature: HTTP Errors
 
     And the event "response.statusCode" equals 404
     And the event "response.headers.content-length" equals "37"
-    And the event "response.body" equals ""
+    And the event "response.body" equals "Returned status 404 after waiting  ms"
     And the event "response.bodyLength" equals 37
    
