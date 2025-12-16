@@ -178,28 +178,43 @@ module.exports = (config = {}, global = window) => {
         // Extract request body
         let requestBody = ''
         let requestBodyLength = 0
-        if (startContext && startContext.body) {
-          const bodyStr = typeof startContext.body === 'string' ? startContext.body : String(startContext.body)
-          requestBodyLength = bodyStr.length
+        const initialBody = startContext.init?.body || startContext.body
+        if (initialBody) {
+          const bodyStr = String(initialBody)
           requestBody = truncate(bodyStr, maxRequestSize)
+          requestBodyLength = bodyStr.length
+        }
+
+        // Extract response body
+        let responseBody
+        let responseBodyLength
+        if (endContext.xhr && endContext.xhr.responseText) {
+          responseBody = truncate(endContext.xhr.responseText, maxRequestSize)
+          responseBodyLength = endContext.xhr.responseText.length
+        }
+
+        // Extract response headers
+        let responseHeaders = {}
+        if (endContext.response && endContext.response.headers) {
+          responseHeaders = headersToObject(endContext.response.headers)
+        } else if (endContext.xhr && typeof endContext.xhr.getAllResponseHeaders === 'function') {
+          responseHeaders = responseHeadersToObject(endContext.xhr.getAllResponseHeaders())
         }
 
         // Create request and response objects for callback
         const requestObj = {
           url,
           httpMethod: method,
-          headers: headersToObject(startContext && startContext.xhr && startContext.xhr._requestHeaders),
+          headers: headersToObject(startContext.xhr?._requestHeaders || startContext.init?.headers),
           params: parseQueryParams(url),
           body: requestBody,
           bodyLength: requestBodyLength
         }
-
-        const responseHeaders = endContext.xhr.getAllResponseHeaders()
         const responseObj = {
           statusCode: endContext.status,
-          headers: responseHeadersToObject(responseHeaders),
-          body: endContext.xhr.responseText,
-          bodyLength: endContext.xhr.responseText ? endContext.xhr.responseText.length : 0
+          headers: responseHeaders,
+          body: responseBody,
+          bodyLength: responseBodyLength
         }
 
         // Call onHttpError callback if provided
