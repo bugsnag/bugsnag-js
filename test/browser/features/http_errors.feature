@@ -54,6 +54,6 @@ Feature: HTTP Errors
 
     And the event "response.statusCode" equals 404
     And the event "response.headers.content-length" equals "37"
-    # And the event "response.body" equals ""
-    # And the event "response.bodyLength" equals 37
+    And the event "response.body" equals ""
+    And the event "response.bodyLength" equals 37
    
