@@ -318,6 +318,21 @@ services:
       - BUGSNAG_SESSIONS_ENDPOINT
     restart: "no"
 
+  cloudflare-worker:
+    build:
+      context: cloudflare-worker
+      args:
+        - NODE_VERSION
+    environment:
+      - BUGSNAG_API_KEY
+      - BUGSNAG_NOTIFY_ENDPOINT
+      - BUGSNAG_SESSIONS_ENDPOINT
+    networks:
+      default:
+        aliases:
+          - cloudflare-worker
+    restart: "no"
+
 networks:
   default:
     external: true

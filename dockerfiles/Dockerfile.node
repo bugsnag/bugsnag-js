@@ -20,6 +20,7 @@ RUN npm pack --verbose packages/plugin-express/
 RUN npm pack --verbose packages/plugin-koa/
 RUN npm pack --verbose packages/plugin-restify/
 RUN npm pack --verbose packages/plugin-hono/
+RUN npm pack --verbose packages/plugin-cloudflare-workers/
 
 # The maze-runner node tests
 FROM 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v10-cli as node-maze-runner
