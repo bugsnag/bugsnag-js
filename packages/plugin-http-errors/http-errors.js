@@ -71,6 +71,19 @@ module.exports = (config = {}, global = window) => {
     }
   }
 
+  const responseHeadersToObject = (headersString) => {
+    if (!headersString) return {}
+    const arr = headersString.trim().split(/[\r\n]+/)
+    const headerMap = {}
+    arr.forEach((line) => {
+      const parts = line.split(': ')
+      const header = parts.shift()
+      const value = parts.join(': ')
+      headerMap[header] = value
+    })
+    return headerMap
+  }
+
   /**
    * Convert Headers object to plain object
    * @param {Headers} headers - Headers object
@@ -127,11 +140,21 @@ module.exports = (config = {}, global = window) => {
 
       // Use shared request tracker if available
       if (requestTrackerPlugin) {
-        const { fetchTracker } = requestTrackerPlugin
+        const { fetchTracker, xhrTracker } = requestTrackerPlugin
 
         if (fetchTracker) {
           restoreFunctions.push(fetchTracker._restore)
           fetchTracker.onStart((startContext) => {
+            return {
+              onRequestEnd: (endContext) => {
+                handleHttpError(startContext, endContext)
+              }
+            }
+          })
+        }
+        if (xhrTracker) {
+          restoreFunctions.push(xhrTracker._restore)
+          xhrTracker.onStart((startContext) => {
             return {
               onRequestEnd: (endContext) => {
                 handleHttpError(startContext, endContext)
@@ -155,8 +178,8 @@ module.exports = (config = {}, global = window) => {
         // Extract request body
         let requestBody = ''
         let requestBodyLength = 0
-        if (startContext.init && startContext.init.body) {
-          const bodyStr = typeof startContext.init.body === 'string' ? startContext.init.body : String(startContext.init.body)
+        if (startContext && startContext.body) {
+          const bodyStr = typeof startContext.body === 'string' ? startContext.body : String(startContext.body)
           requestBodyLength = bodyStr.length
           requestBody = truncate(bodyStr, maxRequestSize)
         }
@@ -165,15 +188,18 @@ module.exports = (config = {}, global = window) => {
         const requestObj = {
           url,
           httpMethod: method,
-          headers: headersToObject(startContext.init && startContext.init.headers),
+          headers: headersToObject(startContext && startContext.xhr && startContext.xhr._requestHeaders),
           params: parseQueryParams(url),
           body: requestBody,
           bodyLength: requestBodyLength
         }
 
+        const responseHeaders = endContext.xhr.getAllResponseHeaders()
         const responseObj = {
           statusCode: endContext.status,
-          headers: headersToObject(endContext.response && endContext.response.headers)
+          headers: responseHeadersToObject(responseHeaders),
+          body: endContext.xhr.responseText,
+          bodyLength: endContext.xhr.responseText ? endContext.xhr.responseText.length : 0
         }
 
         // Call onHttpError callback if provided
