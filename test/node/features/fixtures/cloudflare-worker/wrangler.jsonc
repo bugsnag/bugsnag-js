@@ -14,7 +14,11 @@
 		"BUGSNAG_API_KEY": "placeholder-api-key",
 		"BUGSNAG_NOTIFY_ENDPOINT": "placeholder-notify-endpoint",
 		"BUGSNAG_SESSIONS_ENDPOINT": "placeholder-sessions-endpoint"
-	}
+	},
+	"dev": {
+    "port": 8080,
+    "local_protocol": "http"
+  }
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

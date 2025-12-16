@@ -6,7 +6,7 @@ Background:
   And I store the notify endpoint in the environment variable "BUGSNAG_NOTIFY_ENDPOINT"
   And I store the sessions endpoint in the environment variable "BUGSNAG_SESSIONS_ENDPOINT"
   And I start the service "cloudflare-worker"
-  And I wait for the host "cloudflare-worker" to open port "8787"
+  And I wait for the host "cloudflare-worker" to open port "8080"
 
 Scenario: A handled error
   Then I open the URL "http://cloudflare-worker/handled" and get a 200 response with body "Hello World!"
