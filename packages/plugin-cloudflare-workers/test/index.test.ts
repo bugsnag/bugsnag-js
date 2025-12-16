@@ -23,8 +23,8 @@ const createMockExecutionContext = (): MockExecutionContext => {
   } as unknown as MockExecutionContext
 }
 
-const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryPayload[], config = {}) => {
-  const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers], ...config })
+const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryPayload[], config = {}, additionalPlugins: any[] = []) => {
+  const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers, ...additionalPlugins], ...config })
 
   // @ts-ignore the following property is not defined on the public Event interface
   client.Event.__type = 'nodejs'
@@ -38,6 +38,12 @@ const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryP
       sessions.push(payload)
       cb()
     }
+  }
+
+  // Mock _clientContext.run to execute the callback immediately
+  // This simulates AsyncLocalStorage behavior for testing
+  client._clientContext = {
+    run: jest.fn((requestClient, callback) => callback())
   }
 
   return client
@@ -97,6 +103,13 @@ describe('plugin: cloudflare workers', () => {
     // Wait for promises registered with ctx.waitUntil to complete
     await ctx._waitForAllPromises()
 
+    // Verify _clientContext.run was called with a cloned client
+    expect(client._clientContext.run).toHaveBeenCalledTimes(1)
+    expect(client._clientContext.run).toHaveBeenCalledWith(
+      expect.any(Client),
+      expect.any(Function)
+    )
+
     expect(events).toHaveLength(1)
 
     const event = events[0].events[0]
@@ -137,6 +150,11 @@ describe('plugin: cloudflare workers', () => {
       sendSession (payload, cb = () => {}) {
         setTimeout(cb, 250)
       }
+    }
+
+    // Mock _clientContext.run to execute the callback immediately
+    client._clientContext = {
+      run: jest.fn((requestClient, callback) => callback())
     }
 
     const timeoutError = new Error('flush timed out after 20ms')
@@ -200,6 +218,13 @@ describe('plugin: cloudflare workers', () => {
     const response = await exportedHandler.fetch?.(request, env, ctx)
     expect(await response?.text()).toBe('Hello World! test value')
 
+    // Verify _clientContext.run was called
+    expect(client._clientContext.run).toHaveBeenCalledTimes(1)
+    expect(client._clientContext.run).toHaveBeenCalledWith(
+      expect.any(Client),
+      expect.any(Function)
+    )
+
     expect(events).toHaveLength(0)
     expect(sessions).toHaveLength(1)
   })
@@ -234,6 +259,9 @@ describe('plugin: cloudflare workers', () => {
 
     // Wait for promises registered with ctx.waitUntil to complete
     await ctx._waitForAllPromises()
+
+    // Verify _clientContext.run was called
+    expect(client._clientContext.run).toHaveBeenCalledTimes(1)
 
     expect(events).toHaveLength(1)
 
@@ -312,5 +340,164 @@ describe('plugin: cloudflare workers', () => {
 
     expect(events).toHaveLength(0)
     expect(sessions).toHaveLength(1)
+  })
+
+  it('clones the client for each request to avoid callback accumulation', async () => {
+    const events: EventDeliveryPayload[] = []
+    const sessions: SessionDeliveryPayload[] = []
+
+    const client = createClient(events, sessions)
+
+    const plugin = client.getPlugin('cloudflareWorkers')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+
+    const exportedHandler: ExportedHandler<Env> = {
+      fetch: bugsnagHandler(async (request, env, ctx) => {
+        throw new Error('Test error')
+      })
+    }
+
+    const request1 = new Request('https://example.com/request1?param1=value1', {
+      method: 'GET',
+      headers: {
+        'X-Custom-Header': 'request1'
+      }
+    }) as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const request2 = new Request('https://example.com/request2?param2=value2', {
+      method: 'POST',
+      headers: {
+        'X-Custom-Header': 'request2'
+      }
+    }) as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const env = {}
+    const ctx1 = createMockExecutionContext()
+    const ctx2 = createMockExecutionContext()
+
+    // Make two requests (both will throw errors)
+    await expect(exportedHandler.fetch?.(request1, env, ctx1)).rejects.toThrow('Test error')
+    await expect(exportedHandler.fetch?.(request2, env, ctx2)).rejects.toThrow('Test error')
+
+    // Wait for promises registered with ctx.waitUntil to complete
+    await ctx1._waitForAllPromises()
+    await ctx2._waitForAllPromises()
+
+    // Verify _clientContext.run was called twice with different cloned clients
+    expect(client._clientContext.run).toHaveBeenCalledTimes(2)
+
+    const firstCallClient = (client._clientContext.run as jest.Mock).mock.calls[0][0]
+    const secondCallClient = (client._clientContext.run as jest.Mock).mock.calls[1][0]
+
+    // Both should be Client instances but different instances
+    expect(firstCallClient).toBeInstanceOf(Client)
+    expect(secondCallClient).toBeInstanceOf(Client)
+    expect(firstCallClient).not.toBe(secondCallClient)
+    expect(firstCallClient).not.toBe(client)
+    expect(secondCallClient).not.toBe(client)
+
+    // Both requests should have started sessions
+    expect(sessions).toHaveLength(2)
+
+    // Verify two events were sent
+    expect(events).toHaveLength(2)
+
+    // Verify first event has correct request metadata
+    const event1 = events[0].events[0]
+    expect(event1.request).toMatchObject({
+      url: 'https://example.com/request1?param1=value1',
+      httpMethod: 'GET',
+      headers: expect.objectContaining({
+        'x-custom-header': 'request1'
+      })
+    })
+    // @ts-ignore
+    expect(event1._metadata?.request).toMatchObject({
+      url: 'https://example.com/request1?param1=value1',
+      path: '/request1',
+      httpMethod: 'GET',
+      query: {
+        param1: 'value1'
+      },
+      headers: expect.objectContaining({
+        'x-custom-header': 'request1'
+      })
+    })
+
+    // Verify second event has correct request metadata
+    const event2 = events[1].events[0]
+    expect(event2.request).toMatchObject({
+      url: 'https://example.com/request2?param2=value2',
+      httpMethod: 'POST',
+      headers: expect.objectContaining({
+        'x-custom-header': 'request2'
+      })
+    })
+    // @ts-ignore
+    expect(event2._metadata?.request).toMatchObject({
+      url: 'https://example.com/request2?param2=value2',
+      path: '/request2',
+      httpMethod: 'POST',
+      query: {
+        param2: 'value2'
+      },
+      headers: expect.objectContaining({
+        'x-custom-header': 'request2'
+      })
+    })
+  })
+
+  it('resets app duration plugin between requests', async () => {
+    const events: EventDeliveryPayload[] = []
+    const sessions: SessionDeliveryPayload[] = []
+
+    // Mock the app duration plugin
+    const mockReset = jest.fn()
+    const mockAppDurationPlugin = {
+      name: 'appDuration',
+      load: () => ({
+        reset: mockReset
+      })
+    }
+
+    const client = createClient(events, sessions, {}, [mockAppDurationPlugin])
+
+    const plugin = client.getPlugin('cloudflareWorkers')
+
+    if (!plugin) {
+      throw new Error('Plugin was not loaded!')
+    }
+
+    const bugsnagHandler = plugin.createHandler()
+
+    const exportedHandler: ExportedHandler<Env> = {
+      fetch: bugsnagHandler(async (request, env, ctx) => {
+        return new Response('OK') as unknown as CloudflareResponse
+      })
+    }
+
+    const request1 = new Request('https://example.com/request1') as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const request2 = new Request('https://example.com/request2') as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const request3 = new Request('https://example.com/request3') as unknown as CloudflareRequest<unknown, IncomingRequestCfProperties<unknown>>
+    const env = {}
+    const ctx1 = createMockExecutionContext()
+    const ctx2 = createMockExecutionContext()
+    const ctx3 = createMockExecutionContext()
+
+    // Make three requests
+    await exportedHandler.fetch?.(request1, env, ctx1)
+    await exportedHandler.fetch?.(request2, env, ctx2)
+    await exportedHandler.fetch?.(request3, env, ctx3)
+
+    // Wait for all promises to complete
+    await ctx1._waitForAllPromises()
+    await ctx2._waitForAllPromises()
+    await ctx3._waitForAllPromises()
+
+    // Verify reset was called for each request
+    expect(mockReset).toHaveBeenCalledTimes(3)
   })
 })
