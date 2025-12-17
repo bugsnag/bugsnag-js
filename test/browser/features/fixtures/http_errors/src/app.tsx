@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import React, { useEffect } from 'react'
 import { apiKey, endpoints, plugins, REFLECT_ENDPOINT } from './lib/config'
 
-Bugsnag.start({ apiKey, endpoints, plugins, redactedKeys: ['token'] })
+Bugsnag.start({ apiKey, endpoints, plugins, redactedKeys: ['token', 'userId'] })
 
 function App () {
   useEffect(() => {
@@ -13,12 +13,13 @@ function App () {
     switch(type) {
       case 'xhr':
         const xhr = new XMLHttpRequest()
-        xhr.open('GET', `${REFLECT_ENDPOINT}?status=404&token=12345`)
+        xhr.open('GET', `${REFLECT_ENDPOINT}?status=404&userId=12345`)
+        xhr.setRequestHeader('token', 'super-secret-token')
         xhr.send()
         break
       case 'fetch':
       default:
-        fetch(`${REFLECT_ENDPOINT}?status=404&token=12345`)
+        fetch(`${REFLECT_ENDPOINT}?status=404&userId=12345`, { headers: { token: 'super-secret-token' }})
         break
     }
 
@@ -26,7 +27,7 @@ function App () {
 
   return (
     <div>
-      <p>HTTP Errors - fetch</p>
+      <p>HTTP Errors</p>
     </div>
   )
 }
