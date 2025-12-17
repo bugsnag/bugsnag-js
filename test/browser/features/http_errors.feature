@@ -1,4 +1,4 @@
-@http_errors
+@http_errors @requires_set
 Feature: HTTP Errors
 
   HTTP errors plugin reports network request failures, including those made using fetch, and xml http requests.
