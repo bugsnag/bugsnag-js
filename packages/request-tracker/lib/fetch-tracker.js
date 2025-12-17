@@ -1,3 +1,4 @@
+const headersToObject = require('./headers-to-object')
 const RequestTracker = require('./request-tracker')
 
 /**
@@ -39,6 +40,16 @@ function createFetchTracker (global, options = {}) {
         method = 'GET'
       }
 
+      let requestHeaders = {}
+      if (options && options.headers) {
+        // eslint-disable-next-line no-undef
+        if (options.headers instanceof Headers) {
+          requestHeaders = headersToObject(options.headers)
+        } else if (typeof options.headers === 'object') {
+          requestHeaders = options.headers
+        }
+      }
+
       const startTime = Date.now()
       const context = {
         url: String(url),
@@ -46,7 +57,8 @@ function createFetchTracker (global, options = {}) {
         startTime,
         type: 'fetch',
         input: urlOrRequest,
-        init: options
+        headers: requestHeaders,
+        body: options.body
       }
 
       const { onRequestEnd } = tracker.start(context)

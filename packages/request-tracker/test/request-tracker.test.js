@@ -146,6 +146,55 @@ describe('@bugsnag/request-tracker', () => {
         type: 'fetch'
       }))
     })
+
+    it('should report headers from fetch options', async () => {
+      const mockResponse = { status: 200 }
+      mockGlobal.fetch = jest.fn().mockResolvedValue(mockResponse)
+
+      const tracker = createFetchTracker(mockGlobal)
+      const callback = jest.fn().mockReturnValue({ onRequestEnd: jest.fn() })
+      tracker.onStart(callback)
+
+      const headers = { 'x-token': 'super-secret-token' }
+      await mockGlobal.fetch('https://example.com', { method: 'POST', headers })
+
+      expect(callback).toHaveBeenCalledTimes(1)
+      expect(callback).toHaveBeenCalledWith(expect.objectContaining({
+        url: 'https://example.com',
+        method: 'POST',
+        type: 'fetch',
+        headers: headers
+      }))
+
+      callback.mockClear()
+
+      // eslint-disable-next-line no-undef
+      const headersObj = new Headers()
+      headersObj.set('x-token', 'super-secret-token')
+      await mockGlobal.fetch('https://example.com', { method: 'POST', headers: headersObj })
+
+      expect(callback).toHaveBeenCalledTimes(1)
+      expect(callback).toHaveBeenCalledWith(expect.objectContaining({
+        url: 'https://example.com',
+        method: 'POST',
+        type: 'fetch',
+        headers: headersObj
+      }))
+
+      callback.mockClear()
+
+      // eslint-disable-next-line no-undef
+      const request = new Request('https://example.com', { method: 'POST', headers })
+      await mockGlobal.fetch(request)
+
+      expect(callback).toHaveBeenCalledTimes(1)
+      expect(callback).toHaveBeenCalledWith(expect.objectContaining({
+        url: 'https://example.com',
+        method: 'POST',
+        type: 'fetch',
+        headers: headers
+      }))
+    })
   })
 
   describe('createXhrTracker', () => {
