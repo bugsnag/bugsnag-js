@@ -5,11 +5,12 @@
 	"scripts": {
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",
-		"start": "wrangler dev --var BUGSNAG_API_KEY:$BUGSNAG_API_KEY --var BUGSNAG_NOTIFY_ENDPOINT:$BUGSNAG_NOTIFY_ENDPOINT --var BUGSNAG_SESSIONS_ENDPOINT:$BUGSNAG_SESSIONS_ENDPOINT",
+		"start": "wrangler dev --inspector-port 0 --show-interactive-dev-session false --live-reload false --local --log-level debug --var BUGSNAG_API_KEY:$BUGSNAG_API_KEY --var BUGSNAG_NOTIFY_ENDPOINT:$BUGSNAG_NOTIFY_ENDPOINT --var BUGSNAG_SESSIONS_ENDPOINT:$BUGSNAG_SESSIONS_ENDPOINT",
 		"cf-typegen": "wrangler types"
 	},
 	"devDependencies": {
 		"@types/node": "^25.0.2",
+		"selflare": "^1.1.2",
 		"typescript": "^5.5.2",
 		"wrangler": "^4.54.0"
 	}
