@@ -3,6 +3,7 @@ Feature: HTTP Errors
 
   HTTP errors plugin reports network request failures, including those made using fetch, and xml http requests.
 
+  @requires_fetch
   Scenario: Fetch request
     When I navigate to the test URL "/http_errors?request=fetch"
     And I wait to receive an error
@@ -33,6 +34,7 @@ Feature: HTTP Errors
     And the event "response.body" is null
     And the event "response.bodyLength" is null
 
+  @requires_xml_http_request
   Scenario: XML HTTP Request
     When I navigate to the test URL "/http_errors?request=xhr"
     And I wait to receive an error
