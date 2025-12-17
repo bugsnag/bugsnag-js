@@ -86,98 +86,99 @@ module.exports = (config = {}, global = window) => {
           return
         }
 
-        // Extract request information
-        const url = startContext.url
-        const method = startContext.method
-        const domain = extractDomain(url)
+        // console.log({ startContext, endContext })
 
-        // Redact query parameters in URL
-        const redactedUrl = redactQueryParameters(url, redactedKeys)
-        const redactedQueryParams = parseQueryParams(redactedUrl)
+        try {
+          // Extract request information
+          const url = startContext.url
+          const method = startContext.method
+          const domain = extractDomain(url)
 
-        // Extract request headers
-        let requestHeaders = {}
-        if (startContext.xhr && startContext.xhr._requestHeaders) {
-          requestHeaders = headersToObject(startContext.xhr._requestHeaders)
-        } else if (startContext.init && startContext.init.headers) {
-          requestHeaders = headersToObject(startContext.init.headers)
-        }
+          // Redact query parameters in URL
+          const redactedUrl = redactQueryParameters(url, redactedKeys)
+          const redactedQueryParams = parseQueryParams(redactedUrl)
 
-        // Extract request body
-        let requestBody = ''
-        let requestBodyLength = 0
-        const initialBody = startContext.init ? startContext.init.body : startContext.body
-        if (initialBody) {
-          const bodyStr = String(initialBody)
-          requestBody = truncate(bodyStr, maxRequestSize)
-          requestBodyLength = bodyStr.length
-        }
+          // Extract request headers
+          const requestHeaders = startContext.headers || {}
 
-        // Extract response headers
-        let responseHeaders = {}
-        if (endContext.response && endContext.response.headers) {
-          responseHeaders = headersToObject(endContext.response.headers)
-        } else if (endContext.xhr && typeof endContext.xhr.getAllResponseHeaders === 'function') {
-          responseHeaders = xhrResponseHeadersToObject(endContext.xhr.getAllResponseHeaders())
-        }
-
-        // Extract response body - XHR only
-        let responseBody
-        let responseBodyLength
-        if (endContext.xhr && endContext.xhr.responseText) {
-          responseBody = truncate(endContext.xhr.responseText, maxRequestSize)
-          responseBodyLength = endContext.xhr.responseText.length
-        }
-
-        // Create request and response objects for callback
-        const requestObj = {
-          url: redactedUrl,
-          httpMethod: method,
-          headers: redactValues(requestHeaders, redactedKeys),
-          params: redactedQueryParams,
-          body: requestBody,
-          bodyLength: requestBodyLength
-        }
-        const responseObj = {
-          statusCode: endContext.status,
-          headers: redactValues(responseHeaders, redactedKeys),
-          body: responseBody,
-          bodyLength: responseBodyLength
-        }
-
-        // Call onHttpError callback if provided
-        if (onHttpError) {
-          const result = onHttpError({ request: requestObj, response: responseObj })
-
-          // If onHttpError returns false, don't capture
-          if (result === false) {
-            return
+          // Extract request body
+          let requestBody = ''
+          let requestBodyLength = 0
+          const initialBody = startContext.body
+          if (initialBody) {
+            const bodyStr = String(initialBody)
+            requestBody = truncate(initialBody, maxRequestSize)
+            requestBodyLength = bodyStr.length // Report the original length before truncating
           }
+
+          // Extract response headers
+          let responseHeaders = {}
+          if (endContext.headers) {
+            responseHeaders = xhrResponseHeadersToObject(endContext.headers) // XHR case
+          } else if (endContext.response && endContext.response.headers) {
+            responseHeaders = headersToObject(endContext.response.headers) // Fetch case
+          }
+
+          // Extract response body - XHR only
+          let responseBody
+          let responseBodyLength
+          if (endContext.xhr && endContext.xhr.responseText) {
+            responseBody = truncate(endContext.xhr.responseText, maxRequestSize)
+            responseBodyLength = endContext.xhr.responseText.length
+          }
+
+          // Create request and response objects for callback
+          const requestObj = {
+            url: redactedUrl,
+            httpMethod: method,
+            headers: redactValues(requestHeaders, redactedKeys),
+            params: redactedQueryParams,
+            body: requestBody,
+            bodyLength: requestBodyLength
+          }
+          const responseObj = {
+            statusCode: endContext.status,
+            headers: redactValues(responseHeaders, redactedKeys),
+            body: responseBody,
+            bodyLength: responseBodyLength
+          }
+
+          // Call onHttpError callback if provided
+          if (onHttpError) {
+            const result = onHttpError({ request: requestObj, response: responseObj })
+
+            // If onHttpError returns false, don't capture
+            if (result === false) {
+              return
+            }
+          }
+
+          // Create error and notify
+          const error = new Error(`${responseObj.statusCode}: ${requestObj.url}`)
+          error.name = 'HTTPError'
+
+          const handledState = {
+            severity: 'error',
+            unhandled: true,
+            severityReason: { type: 'httpError' }
+          }
+
+          const event = client.Event.create(
+            error,
+            true,
+            handledState,
+            'http errors plugin',
+            0
+          )
+
+          event.request = requestObj
+          event.response = responseObj
+          event.context = `${method} ${domain}`
+
+          client._notify(event)
+        } catch (err) {
+          client._logger.error('Failed to process HTTP error:', err.message)
         }
-
-        // Create error and notify
-        const error = new Error(`${responseObj.statusCode}: ${requestObj.url}`)
-        error.name = 'HTTPError'
-
-        const handledState = {
-          severity: 'error',
-          unhandled: true,
-          severityReason: { type: 'httpError' }
-        }
-
-        const event = client.Event.create(
-          error,
-          true,
-          handledState,
-          'http errors plugin',
-          0
-        )
-
-        event.request = requestObj
-        event.response = responseObj
-        event.context = `${method} ${domain}`
-
-        client._notify(event)
       }
     }
   }
