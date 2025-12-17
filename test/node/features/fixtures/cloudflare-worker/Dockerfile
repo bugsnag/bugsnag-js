@@ -1,5 +1,5 @@
 ARG NODE_VERSION=12
-FROM node:$NODE_VERSION-alpine
+FROM --platform=linux/amd64 node:$NODE_VERSION-bookworm
 
 WORKDIR /app
 
