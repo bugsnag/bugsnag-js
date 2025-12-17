@@ -1,10 +1,10 @@
-ARG NODE_VERSION=22
+ARG NODE_VERSION=12
 FROM --platform=linux/amd64 node:$NODE_VERSION AS builder
 
-COPY ./zscaler-root-ca.crt* /usr/local/share/ca-certificates/
-RUN if [ -f /usr/local/share/ca-certificates/zscaler-root-ca.crt ]; then cat /usr/local/share/ca-certificates/zscaler-root-ca.crt >> /etc/ssl/certs/ca-certificates.crt; fi
+# COPY ./zscaler-root-ca.crt* /usr/local/share/ca-certificates/
+# RUN if [ -f /usr/local/share/ca-certificates/zscaler-root-ca.crt ]; then cat /usr/local/share/ca-certificates/zscaler-root-ca.crt >> /etc/ssl/certs/ca-certificates.crt; fi
 
-ENV NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/zscaler-root-ca.crt
+# ENV NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/zscaler-root-ca.crt
 
 WORKDIR /app
 
