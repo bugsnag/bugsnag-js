@@ -13,7 +13,8 @@
     "access": "public"
   },
   "files": [
-    "*.js",
+    "http-errors.js",
+    "lib",
     "types"
   ],
   "author": "Bugsnag",

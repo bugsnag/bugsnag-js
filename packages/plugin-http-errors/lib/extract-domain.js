@@ -3,7 +3,7 @@
    * @param {string} url - URL string
    * @returns {string} Domain
    */
-export const extractDomain = (url) => {
+module.exports = function (url) {
   try {
     const urlObj = new URL(url)
     return urlObj.host
@@ -11,5 +11,3 @@ export const extractDomain = (url) => {
     return 'unknown'
   }
 }
-
-module.exports = extractDomain

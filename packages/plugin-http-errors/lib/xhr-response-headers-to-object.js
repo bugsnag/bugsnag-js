@@ -1,4 +1,4 @@
-const xhrResponseHeadersToObject = (headersString) => {
+module.exports = function (headersString) {
   if (!headersString) return {}
   const arr = headersString.trim().split(/[\r\n]+/)
   const headerMap = {}
@@ -10,5 +10,3 @@ const xhrResponseHeadersToObject = (headersString) => {
   })
   return headerMap
 }
-
-module.exports = xhrResponseHeadersToObject

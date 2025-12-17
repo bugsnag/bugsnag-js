@@ -4,7 +4,7 @@
    * @param {number} statusCode - HTTP status code
    * @returns {boolean} True if should be captured
    */
-const shouldCaptureStatusCode = (codes, statusCode) => {
+module.exports = function (codes, statusCode) {
   return codes.some(code => {
     if (typeof code === 'number') {
       return code === statusCode
@@ -15,5 +15,3 @@ const shouldCaptureStatusCode = (codes, statusCode) => {
     return false
   })
 }
-
-module.exports = shouldCaptureStatusCode
