@@ -682,4 +682,72 @@ describe('plugin-http-errors', () => {
       expect(requestMetadata.params).toEqual({})
     })
   })
+
+  describe('redacted keys', () => {
+    it('should redact specified headers in request and response', async () => {
+      const notifyCallbacks: Event[] = []
+
+      plugin = createPlugin({
+        httpErrorCodes: { min: 400, max: 499 }
+      })
+
+      const client = new Client({ apiKey: 'api_key', plugins: [plugin], redactedKeys: ['authorization'] })
+      client._setDelivery(createMockDelivery(notifyCallbacks))
+
+      mockFetch.mockResolvedValue({
+        ok: false,
+        status: 404,
+        url: 'https://example.com/api/users',
+        headers: new Headers({
+          'content-type': 'application/json',
+          authorization: 'Bearer secret-token'
+        }),
+        text: async () => 'Not found'
+      })
+
+      await fetch('https://example.com/api/users', {
+        headers: new Headers({
+          authorization: 'Bearer secret-token'
+        })
+      })
+      await new Promise(resolve => setTimeout(resolve, 10))
+
+      expect(notifyCallbacks.length).toBe(1)
+      const event = notifyCallbacks[0].toJSON()
+      const requestHeaders = event.request.headers
+      const responseHeaders = event.response.headers
+
+      expect(requestHeaders?.authorization).toBe('[REDACTED]')
+      expect(responseHeaders.authorization).toBe('[REDACTED]')
+    })
+
+    it('should redact specified query parameters', async () => {
+      const notifyCallbacks: Event[] = []
+
+      plugin = createPlugin({
+        httpErrorCodes: { min: 400, max: 499 }
+      })
+
+      const client = new Client({ apiKey: 'api_key', plugins: [plugin], redactedKeys: ['token'] })
+      client._setDelivery(createMockDelivery(notifyCallbacks))
+
+      mockFetch.mockResolvedValue({
+        ok: false,
+        status: 404,
+        url: 'https://example.com/api/users?token=secret-token&userId=123',
+        headers: new Headers(),
+        text: async () => 'Not found'
+      })
+
+      await fetch('https://example.com/api/users?token=secret-token&userId=123')
+      await new Promise(resolve => setTimeout(resolve, 10))
+
+      expect(notifyCallbacks.length).toBe(1)
+      const event = notifyCallbacks[0].toJSON()
+      const params = event.request.params
+
+      expect(params.token).toBe('[REDACTED]')
+      expect(params.userId).toBe('123')
+    })
+  })
 })

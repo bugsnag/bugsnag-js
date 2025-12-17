@@ -11,22 +11,9 @@ const createMockDelivery = (notifyCallbacks: Event[]) => (): Delivery => ({
 })
 
 describe('plugin-http-errors', () => {
-//   let mockFetch: jest.Mock
-  let plugin: Plugin
-
-  beforeEach(() => {
-    // mockFetch = jest.fn()
-    // global.fetch = mockFetch
-  })
-
-  afterEach(() => {
-    // global.fetch = originalFetch
-    jest.clearAllMocks()
-    plugin.destroy?.()
-  })
-
   describe('XMLHttpRequest support', () => {
     let originalXMLHttpRequest: typeof XMLHttpRequest
+    let plugin: Plugin
 
     class MockXMLHttpRequest {
       _listeners: { load: Array<() => void>, error: Array<() => void>, loadend: Array<() => void> }
@@ -108,6 +95,7 @@ describe('plugin-http-errors', () => {
 
     afterEach(() => {
       global.XMLHttpRequest = originalXMLHttpRequest
+      plugin.destroy?.()
     })
 
     it('should capture XHR errors with response body and body length', async () => {

@@ -3,7 +3,7 @@
    * @param {Headers} headers - Headers object
    * @returns {Object} Plain object with header key-value pairs
    */
-const headersToObject = (headers) => {
+module.exports = function (headers) {
   if (!headers) return {}
 
   const obj = {}
@@ -18,5 +18,3 @@ const headersToObject = (headers) => {
   }
   return obj
 }
-
-module.exports = headersToObject

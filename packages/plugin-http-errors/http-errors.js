@@ -9,6 +9,7 @@ const parseQueryParams = require('./lib/parse-query-params')
 const shouldCaptureStatusCode = require('./lib/should-capture-status-code')
 const truncate = require('./lib/truncate')
 const xhrResponseHeadersToObject = require('./lib/xhr-response-headers-to-object')
+const redactValues = require('./lib/redact-values')
 
 const DEFAULT_HTTP_ERROR_CODES = [{ min: 400, max: 599 }]
 const DEFAULT_MAX_REQUEST_SIZE = 5000
@@ -38,6 +39,7 @@ module.exports = (config = {}, global = window) => {
     load: (client) => {
       // Try to get existing request tracker
       let requestTrackerPlugin = client.getPlugin('requestTracker')
+      const redactedKeys = client._config.redactedKeys || []
 
       // Auto-load request tracker if not present
       if (!requestTrackerPlugin) {
@@ -88,22 +90,22 @@ module.exports = (config = {}, global = window) => {
         const method = startContext.method
         const domain = extractDomain(url)
 
+        // Extract request headers
+        let requestHeaders = {}
+        if (startContext.xhr && startContext.xhr._requestHeaders) {
+          requestHeaders = headersToObject(startContext.xhr._requestHeaders)
+        } else if (startContext.init && startContext.init.headers) {
+          requestHeaders = headersToObject(startContext.init.headers)
+        }
+
         // Extract request body
         let requestBody = ''
         let requestBodyLength = 0
-        const initialBody = startContext.init?.body || startContext.body
+        const initialBody = startContext.init ? startContext.init.body : startContext.body
         if (initialBody) {
           const bodyStr = String(initialBody)
           requestBody = truncate(bodyStr, maxRequestSize)
           requestBodyLength = bodyStr.length
-        }
-
-        // Extract response body
-        let responseBody
-        let responseBodyLength
-        if (endContext.xhr && endContext.xhr.responseText) {
-          responseBody = truncate(endContext.xhr.responseText, maxRequestSize)
-          responseBodyLength = endContext.xhr.responseText.length
         }
 
         // Extract response headers
@@ -114,18 +116,26 @@ module.exports = (config = {}, global = window) => {
           responseHeaders = xhrResponseHeadersToObject(endContext.xhr.getAllResponseHeaders())
         }
 
+        // Extract response body - XHR only
+        let responseBody
+        let responseBodyLength
+        if (endContext.xhr && endContext.xhr.responseText) {
+          responseBody = truncate(endContext.xhr.responseText, maxRequestSize)
+          responseBodyLength = endContext.xhr.responseText.length
+        }
+
         // Create request and response objects for callback
         const requestObj = {
           url,
           httpMethod: method,
-          headers: headersToObject(startContext.xhr?._requestHeaders || startContext.init?.headers),
-          params: parseQueryParams(url),
+          headers: redactValues(requestHeaders, redactedKeys),
+          params: redactValues(parseQueryParams(url), redactedKeys),
           body: requestBody,
           bodyLength: requestBodyLength
         }
         const responseObj = {
           statusCode: endContext.status,
-          headers: responseHeaders,
+          headers: redactValues(responseHeaders, redactedKeys),
           body: responseBody,
           bodyLength: responseBodyLength
         }

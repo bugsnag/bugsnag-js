@@ -3,7 +3,7 @@
    * @param {string} url - URL string
    * @returns {Object} Parsed query parameters
    */
-const parseQueryParams = (url) => {
+module.exports = function (url) {
   try {
     const urlObj = new URL(url)
     const params = {}
@@ -15,5 +15,3 @@ const parseQueryParams = (url) => {
     return {}
   }
 }
-
-module.exports = parseQueryParams
