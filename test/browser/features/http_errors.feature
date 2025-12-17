@@ -9,8 +9,8 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And I define "expected.context" as "GET <browser.hostname>"
-    And I define "expected.exception.message" as "404: <browser.url>/reflect?status=404"
-    And I define "expected.request.url" as "<browser.url>/reflect?status=404"
+    And I define "expected.exception.message" as "404: <browser.url>/reflect?status=404&userId=[REDACTED]"
+    And I define "expected.request.url" as "<browser.url>/reflect?status=404&userId=[REDACTED]"
 
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
@@ -22,7 +22,7 @@ Feature: HTTP Errors
     And the error payload field "events.0.request.url" equals the stored value "expected.request.url"
     And the event "request.httpMethod" equals "GET"
     And the event "request.params.status" equals "404"
-    And the event "request.params.token" equals "[REDACTED]"
+    And the event "request.params.userId" equals "[REDACTED]"
     And the event "request.body" equals ""
     And the event "request.bodyLength" equals 0
 
@@ -39,8 +39,8 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And I define "expected.context" as "GET <browser.hostname>"
-    And I define "expected.exception.message" as "404: <browser.url>/reflect?status=404"
-    And I define "expected.request.url" as "<browser.url>/reflect?status=404"
+    And I define "expected.exception.message" as "404: <browser.url>/reflect?status=404&userId=[REDACTED]"
+    And I define "expected.request.url" as "<browser.url>/reflect?status=404&userId=[REDACTED]"
 
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
@@ -52,7 +52,7 @@ Feature: HTTP Errors
     And the error payload field "events.0.request.url" equals the stored value "expected.request.url"
     And the event "request.httpMethod" equals "GET"
     And the event "request.params.status" equals "404"
-    And the event "request.params.token" equals "[REDACTED]"
+    And the event "request.params.userId" equals "[REDACTED]"
     And the event "request.body" equals ""
     And the event "request.bodyLength" equals 0
 

@@ -210,5 +210,36 @@ describe('plugin-http-errors', () => {
       // since they don't have status codes, but let's verify the behavior
       expect(notifyCallbacks.length).toBe(0)
     })
+
+    it('should redact specified headers and query parameters in XHR URLs', async () => {
+      const notifyCallbacks: Event[] = []
+
+      plugin = createPlugin({
+        httpErrorCodes: { min: 400, max: 499 }
+      })
+
+      const client = new Client({ apiKey: 'api_key', plugins: [plugin], redactedKeys: ['token', 'userId'] })
+      client._setDelivery(createMockDelivery(notifyCallbacks))
+
+      const xhr = new XMLHttpRequest() as any
+      xhr.status = 403
+      xhr.statusText = 'Forbidden'
+      xhr.response = 'Forbidden'
+      xhr.responseText = 'Forbidden'
+      xhr.setRequestHeader('token', 'super-secret-token')
+
+      xhr.open('GET', 'https://api.example.com/data?userId=42')
+      xhr.send()
+
+      await new Promise(resolve => setTimeout(resolve, 20))
+
+      expect(notifyCallbacks.length).toBe(1)
+      const event = notifyCallbacks[0].toJSON()
+
+      // Verify that sensitive query parameters are redacted
+      expect(event.request.url).toBe('https://api.example.com/data?userId=[REDACTED]')
+      expect(event.request.params).toEqual({ userId: '[REDACTED]' })
+      expect(event.request.headers?.['token']).toBe('[REDACTED]')
+    })
   })
 })

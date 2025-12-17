@@ -10,6 +10,7 @@ const shouldCaptureStatusCode = require('./lib/should-capture-status-code')
 const truncate = require('./lib/truncate')
 const xhrResponseHeadersToObject = require('./lib/xhr-response-headers-to-object')
 const redactValues = require('./lib/redact-values')
+const redactQueryParameters = require('./lib/redact-query-parameters')
 
 const DEFAULT_HTTP_ERROR_CODES = [{ min: 400, max: 599 }]
 const DEFAULT_MAX_REQUEST_SIZE = 5000
@@ -90,6 +91,10 @@ module.exports = (config = {}, global = window) => {
         const method = startContext.method
         const domain = extractDomain(url)
 
+        // Redact query parameters in URL
+        const redactedUrl = redactQueryParameters(url, redactedKeys)
+        const redactedQueryParams = parseQueryParams(redactedUrl)
+
         // Extract request headers
         let requestHeaders = {}
         if (startContext.xhr && startContext.xhr._requestHeaders) {
@@ -126,10 +131,10 @@ module.exports = (config = {}, global = window) => {
 
         // Create request and response objects for callback
         const requestObj = {
-          url,
+          url: redactedUrl,
           httpMethod: method,
           headers: redactValues(requestHeaders, redactedKeys),
-          params: redactValues(parseQueryParams(url), redactedKeys),
+          params: redactedQueryParams,
           body: requestBody,
           bodyLength: requestBodyLength
         }
