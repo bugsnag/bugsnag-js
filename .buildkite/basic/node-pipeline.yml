@@ -17,6 +17,7 @@ steps:
               build:
                 - node-maze-runner
               image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+              no-cache: true
               cache-from:
                 - node-maze-runner:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-node-${BRANCH_NAME}
               push:
