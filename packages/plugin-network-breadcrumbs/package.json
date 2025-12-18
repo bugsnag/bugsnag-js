@@ -19,6 +19,9 @@
   "devDependencies": {
     "@bugsnag/core": "^8.6.0"
   },
+  "dependencies": {
+    "@bugsnag/request-tracker": "^8.0.0"
+  },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
   }
