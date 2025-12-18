@@ -13,7 +13,8 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "*.js",
+    "lib/"
   ],
   "author": "Bugsnag",
   "license": "MIT",
