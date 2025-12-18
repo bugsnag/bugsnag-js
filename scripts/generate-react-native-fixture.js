@@ -39,7 +39,8 @@ const fixtureDir = resolve(ROOT_DIR, fixturePath, reactNativeVersion)
 const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtures/replacements/')
 
 const INTERNAL_DEPENDENCIES = [
-  '@bugsnag/react-native'
+  '@bugsnag/react-native',
+  '@bugsnag/request-tracker'
 ]
 
 // make sure we install a compatible versions of peer dependencies
