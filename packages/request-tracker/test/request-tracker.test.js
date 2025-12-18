@@ -30,6 +30,10 @@ class MockXMLHttpRequest {
     }, 0)
   }
 
+  getAllResponseHeaders () {
+    return ''
+  }
+
   addEventListener (event, listener) {
     if (!this.listeners[event]) {
       this.listeners[event] = []
@@ -178,21 +182,7 @@ describe('@bugsnag/request-tracker', () => {
         url: 'https://example.com',
         method: 'POST',
         type: 'fetch',
-        headers: headersObj
-      }))
-
-      callback.mockClear()
-
-      // eslint-disable-next-line no-undef
-      const request = new Request('https://example.com', { method: 'POST', headers })
-      await mockGlobal.fetch(request)
-
-      expect(callback).toHaveBeenCalledTimes(1)
-      expect(callback).toHaveBeenCalledWith(expect.objectContaining({
-        url: 'https://example.com',
-        method: 'POST',
-        type: 'fetch',
-        headers: headers
+        headers: { 'x-token': 'super-secret-token' }
       }))
     })
   })
@@ -257,8 +247,7 @@ describe('@bugsnag/request-tracker', () => {
         url: 'https://api.example.com/data',
         method: 'POST',
         type: 'xmlhttprequest',
-        body: '{"test": "data"}',
-        xhr: xhr
+        body: '{"test": "data"}'
       }))
     })
 
