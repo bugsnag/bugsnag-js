@@ -72,7 +72,7 @@ function createXhrTracker (global, options = {}) {
             status: this.status,
             state: 'success',
             headers: getResponseHeaders(),
-            xhr: this
+            body: this.responseText
           })
         }
 
@@ -81,7 +81,7 @@ function createXhrTracker (global, options = {}) {
             endTime: Date.now(),
             state: 'error',
             headers: getResponseHeaders(),
-            xhr: this
+            body: this.responseText
           })
         }
 
