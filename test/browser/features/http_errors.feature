@@ -30,7 +30,6 @@ Feature: HTTP Errors
 
     And the event "response.statusCode" equals 404
     And the event "response.headers.content-length" equals "37"
-    
     # Response body is not captured for fetch requests
     And the event "response.body" is null
     And the event "response.bodyLength" is null
