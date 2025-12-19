@@ -93,42 +93,38 @@ module.exports = (config = {}, global = window) => {
           const redactedUrl = redactQueryParameters(url, redactedKeys)
           const redactedQueryParams = parseQueryParams(redactedUrl)
 
-          // Extract request headers
-          const requestHeaders = startContext.headers || {}
+          // Redact request and response headers
+          const requestHeaders = redactValues(startContext.headers || {}, redactedKeys)
+          const responseHeaders = redactValues(endContext.headers || {}, redactedKeys)
 
-          // Extract request body
-          let requestBody = ''
-          let requestBodyLength = 0
-          const initialBody = startContext.body
-          if (initialBody) {
-            const bodyStr = String(initialBody)
-            requestBody = truncate(initialBody, maxRequestSize)
-            requestBodyLength = bodyStr.length // Report the original length before truncating
+          // Truncate request body
+          let requestBody
+          let requestBodyLength
+          if (startContext.body) {
+            requestBody = truncate(startContext.body, maxRequestSize)
+            requestBodyLength = startContext.body.length // Report the original length before truncating
           }
 
-          // Extract response headers
-          const responseHeaders = endContext.headers || {}
-
-          // Extract response body - XHR only
+          // Truncate response body - XHR only
           let responseBody
           let responseBodyLength
-          if (endContext.xhr && endContext.xhr.responseText) {
-            responseBody = truncate(endContext.xhr.responseText, maxRequestSize)
-            responseBodyLength = endContext.xhr.responseText.length
+          if (endContext.body) {
+            responseBody = truncate(endContext.body, maxRequestSize)
+            responseBodyLength = endContext.body.length // Report the original length before truncating
           }
 
           // Create request and response objects for callback
           const requestObj = {
             url: redactedUrl,
             httpMethod: method,
-            headers: redactValues(requestHeaders, redactedKeys),
+            headers: requestHeaders,
             params: redactedQueryParams,
             body: requestBody,
             bodyLength: requestBodyLength
           }
           const responseObj = {
             statusCode: endContext.status,
-            headers: redactValues(responseHeaders, redactedKeys),
+            headers: responseHeaders,
             body: responseBody,
             bodyLength: responseBodyLength
           }

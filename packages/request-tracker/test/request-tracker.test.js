@@ -268,7 +268,8 @@ describe('@bugsnag/request-tracker', () => {
         endTime: expect.any(Number),
         status: 200,
         state: 'success',
-        xhr: xhr
+        headers: {},
+        body: undefined
       }))
     })
 
@@ -288,7 +289,8 @@ describe('@bugsnag/request-tracker', () => {
       expect(onRequestEnd).toHaveBeenCalledWith(expect.objectContaining({
         endTime: expect.any(Number),
         state: 'error',
-        xhr: xhr
+        headers: {},
+        body: undefined
       }))
     })
 
