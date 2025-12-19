@@ -46,10 +46,10 @@ module.exports = (_ignoredUrls = [], win = window) => {
 
               const request = startContext.type === 'fetch' ? 'fetch()' : 'XMLHttpRequest'
 
-              if (response.status >= 400) {
+              if (response.state === 'error') {
+                client.leaveBreadcrumb(`${request} error`, { method: startContext.method, url: startContext.url, duration }, BREADCRUMB_TYPE)
+              } else if (response.status >= 400) {
                 client.leaveBreadcrumb(`${request} failed`, metadata, BREADCRUMB_TYPE)
-              } else if (response.state === 'error') {
-                client.leaveBreadcrumb(`${request} error`, metadata, BREADCRUMB_TYPE)
               } else {
                 client.leaveBreadcrumb(`${request} succeeded`, metadata, BREADCRUMB_TYPE)
               }
