@@ -3,9 +3,9 @@ steps:
   - group: ":cloudflare: Cloudflare Worker Tests"
     steps:
     - label: ":cloudflare: Cloudflare Worker tests"
-      timeout_in_minutes: 40
+      timeout_in_minutes: 15
       agents:
-        queue: macos-15
+        queue: macos-15-isolated
       env:
         NODE_VERSION: "22"
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"

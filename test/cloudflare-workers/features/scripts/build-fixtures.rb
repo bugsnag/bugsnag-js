@@ -2,7 +2,7 @@
 
 require "fileutils"
 
-# Allow specifying a specic fixture to build by passing it's name as an argument
+# Allow specifying a specific fixture to build by passing it's name as an argument
 # e.g. ./build-fixtures simple-app
 SPECIFIC_FIXTURE = ARGV.first
 

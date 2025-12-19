@@ -1,5 +1,5 @@
 BeforeAll do
-  success = system(File.realpath("#{__dir__}/../scripts/build-fixtures"))
+  success = system(File.realpath("#{__dir__}/../scripts/build-fixtures.rb"))
 
   unless success
     puts "Unable to build fixtures!"
