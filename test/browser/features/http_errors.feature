@@ -64,4 +64,3 @@ Feature: HTTP Errors
     And the event "response.headers.content-length" equals "37"
     And the event "response.body" equals "Returned status 404 after waiting  ms"
     And the event "response.bodyLength" equals 37
-   
