@@ -1,3 +1,9 @@
+
+/**
+ * Converts an XHR header string to an object
+ * @param {string} headersString
+ * @returns {Object}
+ */
 module.exports = function (headersString) {
   if (!headersString) return {}
   const arr = headersString.trim().split(/[\r\n]+/)

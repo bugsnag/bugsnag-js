@@ -4,11 +4,10 @@
  */
 
 const extractDomain = require('./lib/extract-domain')
-const headersToObject = require('./lib/headers-to-object')
+// const headersToObject = require('./lib/headers-to-object')
 const parseQueryParams = require('./lib/parse-query-params')
 const shouldCaptureStatusCode = require('./lib/should-capture-status-code')
 const truncate = require('./lib/truncate')
-const xhrResponseHeadersToObject = require('./lib/xhr-response-headers-to-object')
 const redactValues = require('./lib/redact-values')
 const redactQueryParameters = require('./lib/redact-query-parameters')
 
@@ -82,11 +81,7 @@ module.exports = (config = {}, global = window) => {
 
       function handleHttpError (startContext, endContext) {
         // Check if we should capture this status code
-        if (!shouldCaptureStatusCode(normalizedStatusCodes, endContext.status)) {
-          return
-        }
-
-        // console.log({ startContext, endContext })
+        if (!shouldCaptureStatusCode(normalizedStatusCodes, endContext.status)) return
 
         try {
           // Extract request information
@@ -112,12 +107,7 @@ module.exports = (config = {}, global = window) => {
           }
 
           // Extract response headers
-          let responseHeaders = {}
-          if (endContext.headers) {
-            responseHeaders = xhrResponseHeadersToObject(endContext.headers) // XHR case
-          } else if (endContext.response && endContext.response.headers) {
-            responseHeaders = headersToObject(endContext.response.headers) // Fetch case
-          }
+          const responseHeaders = endContext.headers || {}
 
           // Extract response body - XHR only
           let responseBody

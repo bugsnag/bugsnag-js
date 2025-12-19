@@ -70,6 +70,7 @@ function createFetchTracker (global, options = {}) {
             endTime: Date.now(),
             status: response.status,
             state: 'success',
+            headers: headersToObject(response.headers),
             response
           })
           return response

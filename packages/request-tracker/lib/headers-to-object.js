@@ -7,7 +7,7 @@ module.exports = function (headers) {
   if (!headers) return {}
 
   const obj = {}
-  if (headers.entries) {
+  if (typeof headers.entries === 'function') {
     for (const [key, value] of headers.entries()) {
       obj[key] = value
     }
