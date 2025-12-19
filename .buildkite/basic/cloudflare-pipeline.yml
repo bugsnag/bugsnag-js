@@ -1,0 +1,16 @@
+steps:
+
+  - group: ":cloudflare: Cloudflare Worker Tests"
+    steps:
+    - label: ":cloudflare: Cloudflare Worker tests"
+      timeout_in_minutes: 15
+      agents:
+        queue: macos-15-isolated
+      env:
+        NODE_VERSION: "22"
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        VERBOSE: "1"
+      commands:
+        - "cd test/cloudflare-workers"
+        - "bundle install"
+        - "bundle exec maze-runner"
