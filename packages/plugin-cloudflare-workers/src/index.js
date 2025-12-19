@@ -1,5 +1,6 @@
 const bugsnagInFlight = require('@bugsnag/in-flight')
 const BugsnagPluginBrowserSession = require('@bugsnag/plugin-browser-session')
+const clone = require('@bugsnag/core/lib/clone-client')
 
 const SERVER_PLUGIN_NAMES = ['express', 'koa', 'restify', 'hono']
 const isServerPluginLoaded = client => SERVER_PLUGIN_NAMES.some(name => client.getPlugin(name))
@@ -42,13 +43,6 @@ const BugsnagPluginCloudflareWorkers = {
     bugsnagInFlight.trackInFlight(client)
     client._loadPlugin(BugsnagPluginBrowserSession)
 
-    // Reset the app duration between invocations, if the plugin is loaded
-    const appDurationPlugin = client.getPlugin('appDuration')
-
-    if (appDurationPlugin) {
-      appDurationPlugin.reset()
-    }
-
     return {
       createHandler ({ flushTimeoutMs = 2000 } = {}) {
         return wrapHandler.bind(null, client, flushTimeoutMs)
@@ -59,54 +53,65 @@ const BugsnagPluginCloudflareWorkers = {
 
 function wrapHandler (client, flushTimeoutMs, handler) {
   return async function (request, env, ctx) {
-    // Add request metadata via onError callback so server plugins can override
-    // Only add metadata if no server plugin is loaded
+    // Reset the app duration between invocations, if the plugin is loaded
+    const appDurationPlugin = client.getPlugin('appDuration')
+
+    if (appDurationPlugin) {
+      appDurationPlugin.reset()
+    }
+
+    // clone the client to be scoped to this request.
+    const requestClient = clone(client)
+
+    // only start a session and add request metadata if no server plugin is loaded,
+    // as those plugins will handle this themselves
     if (!isServerPluginLoaded(client)) {
-      client.addOnError((event) => {
+      if (requestClient._config.autoTrackSessions) {
+        requestClient.startSession()
+      }
+
+      requestClient.addOnError((event) => {
         const { metadata, request: requestData } = getRequestAndMetadataFromReq(request)
         event.request = { ...event.request, ...requestData }
         event.addMetadata('request', metadata)
       }, true)
     }
 
-    // Track sessions if autoTrackSessions is enabled and no server plugin is loaded
-    if (client._config.autoTrackSessions && !isServerPluginLoaded(client)) {
-      client.startSession()
-    }
+    return client._clientContext.run(requestClient, async () => {
+      try {
+        return await handler(request, env, ctx)
+      } catch (err) {
+        if (requestClient._config.autoDetectErrors && requestClient._config.enabledErrorTypes.unhandledExceptions) {
+          const handledState = {
+            severity: 'error',
+            unhandled: true,
+            severityReason: { type: 'unhandledException' }
+          }
 
-    try {
-      return await handler(request, env, ctx)
-    } catch (err) {
-      if (client._config.autoDetectErrors && client._config.enabledErrorTypes.unhandledExceptions) {
-        const handledState = {
-          severity: 'error',
-          unhandled: true,
-          severityReason: { type: 'unhandledException' }
+          const event = requestClient.Event.create(err, true, handledState, 'cloudflare workers plugin', 1)
+
+          requestClient._notify(event)
         }
 
-        const event = client.Event.create(err, true, handledState, 'cloudflare workers plugin', 1)
-
-        client._notify(event)
-      }
-
-      throw err
-    } finally {
-      // Use ctx.waitUntil to ensure flush completes even after response is returned
-      // This is critical for Cloudflare Workers as they can terminate immediately
-      if (ctx && typeof ctx.waitUntil === 'function') {
-        ctx.waitUntil(
-          bugsnagInFlight.flush(flushTimeoutMs).catch(err => {
-            client._logger.error(`Delivery may be unsuccessful: ${err.message}`)
-          })
-        )
-      } else {
-        try {
-          await bugsnagInFlight.flush(flushTimeoutMs)
-        } catch (err) {
-          client._logger.error(`Delivery may be unsuccessful: ${err.message}`)
+        throw err
+      } finally {
+        // use ctx.waitUntil to ensure flush completes even after response is returned
+        // this is critical for Cloudflare Workers as they can terminate immediately
+        if (ctx && typeof ctx.waitUntil === 'function') {
+          ctx.waitUntil(
+            bugsnagInFlight.flush(flushTimeoutMs).catch(err => {
+              requestClient._logger.error(`Delivery may be unsuccessful: ${err.message}`)
+            })
+          )
+        } else {
+          try {
+            await bugsnagInFlight.flush(flushTimeoutMs)
+          } catch (err) {
+            requestClient._logger.error(`Delivery may be unsuccessful: ${err.message}`)
+          }
         }
       }
-    }
+    })
   }
 }
 
