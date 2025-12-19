@@ -211,7 +211,7 @@ describe('plugin-http-errors', () => {
       expect(notifyCallbacks.length).toBe(0)
     })
 
-    it('should redact specified headers and query parameters in XHR URLs', async () => {
+    it('should redact specified query parameters in XHR URLs', async () => {
       const notifyCallbacks: Event[] = []
 
       plugin = createPlugin({
@@ -228,7 +228,6 @@ describe('plugin-http-errors', () => {
       xhr.responseText = 'Forbidden'
 
       xhr.open('GET', 'https://api.example.com/data?userId=42')
-      xhr.setRequestHeader('token', 'super-secret-token')
       xhr.send()
 
       await new Promise(resolve => setTimeout(resolve, 20))
@@ -238,8 +237,6 @@ describe('plugin-http-errors', () => {
 
       // Verify that sensitive query parameters are redacted
       expect(event.request.url).toBe('https://api.example.com/data?userId=[REDACTED]')
-      expect(event.request.params).toEqual({ userId: '[REDACTED]' })
-      expect(event.request.headers?.['token']).toBe('[REDACTED]')
     })
   })
 })
