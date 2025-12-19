@@ -4,12 +4,10 @@
  */
 
 const extractDomain = require('./lib/extract-domain')
-// const headersToObject = require('./lib/headers-to-object')
 const parseQueryParams = require('./lib/parse-query-params')
+const redactQueryParameters = require('./lib/redact-query-parameters')
 const shouldCaptureStatusCode = require('./lib/should-capture-status-code')
 const truncate = require('./lib/truncate')
-const redactValues = require('./lib/redact-values')
-const redactQueryParameters = require('./lib/redact-query-parameters')
 
 const DEFAULT_HTTP_ERROR_CODES = [{ min: 400, max: 599 }]
 const DEFAULT_MAX_REQUEST_SIZE = 5000
@@ -39,7 +37,6 @@ module.exports = (config = {}, global = window) => {
     load: (client) => {
       // Try to get existing request tracker
       let requestTrackerPlugin = client.getPlugin('requestTracker')
-      const redactedKeys = client._config.redactedKeys || []
 
       // Auto-load request tracker if not present
       if (!requestTrackerPlugin) {
@@ -86,47 +83,24 @@ module.exports = (config = {}, global = window) => {
         try {
           // Extract request information
           const url = startContext.url
+          const requestParams = parseQueryParams(url)
           const method = startContext.method
           const domain = extractDomain(url)
 
-          // Redact query parameters in URL
-          const redactedUrl = redactQueryParameters(url, redactedKeys)
-          const redactedQueryParams = parseQueryParams(redactedUrl)
-
-          // Redact request and response headers
-          const requestHeaders = redactValues(startContext.headers || {}, redactedKeys)
-          const responseHeaders = redactValues(endContext.headers || {}, redactedKeys)
-
-          // Truncate request body
-          let requestBody
-          let requestBodyLength
-          if (startContext.body) {
-            requestBody = truncate(startContext.body, maxRequestSize)
-            requestBodyLength = startContext.body.length // Report the original length before truncating
-          }
-
-          // Truncate response body - XHR only
-          let responseBody
-          let responseBodyLength
-          if (endContext.body) {
-            responseBody = truncate(endContext.body, maxRequestSize)
-            responseBodyLength = endContext.body.length // Report the original length before truncating
-          }
-
           // Create request and response objects for callback
           const requestObj = {
-            url: redactedUrl,
-            httpMethod: method,
-            headers: requestHeaders,
-            params: redactedQueryParams,
-            body: requestBody,
-            bodyLength: requestBodyLength
+            url: startContext.url,
+            httpMethod: startContext.method,
+            headers: startContext.headers,
+            params: requestParams,
+            body: startContext.body,
+            bodyLength: startContext.body ? startContext.body.length : undefined
           }
           const responseObj = {
             statusCode: endContext.status,
-            headers: responseHeaders,
-            body: responseBody,
-            bodyLength: responseBodyLength
+            headers: endContext.headers,
+            body: endContext.body,
+            bodyLength: endContext.body ? endContext.body.length : undefined
           }
 
           // Call onHttpError callback if provided
@@ -137,6 +111,21 @@ module.exports = (config = {}, global = window) => {
             if (result === false) {
               return
             }
+          }
+
+          // Truncate request body
+          if (requestObj.body) {
+            requestObj.body = truncate(requestObj.body, maxRequestSize)
+          }
+
+          // Truncate response body - XHR only
+          if (responseObj.body) {
+            responseObj.body = truncate(responseObj.body, maxRequestSize)
+          }
+
+          // Strip query parameters from URL
+          if (requestObj.url !== '[REDACTED]') {
+            requestObj.url = redactQueryParameters(requestObj.url, client._config.redactedKeys)
           }
 
           // Create error and notify
