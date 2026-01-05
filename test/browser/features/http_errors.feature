@@ -86,6 +86,7 @@ Feature: HTTP Errors
     And the error payload field "events.0.request.url" equals the stored value "expected.request.url"
     And the event "request.httpMethod" equals "GET"
     And the event "request.headers.X-Token" equals "[REDACTED]"
+    And the event "request.headers.X-Test-Value" equals "one-two-three-four"
     And the event "request.params.status" equals "404"
     And the event "request.params.userId" equals "[REDACTED]"
     And the event "request.body" is null

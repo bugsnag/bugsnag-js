@@ -35,7 +35,7 @@ function createXhrTracker (global, options = {}) {
         const requestData = trackedRequests.get(this)
         if (requestData) {
           requestData.headers = requestData.headers || {}
-          requestData.headers[String(header)] = String(value)
+          requestData.headers[String(header)] = (requestData.headers[String(header)] || '') + String(value)
         }
       }
       originalSetRequestHeader.apply(this, arguments)
