@@ -50,7 +50,8 @@ module.exports = {
       'plugin-inline-script-content',
       'plugin-simple-throttle',
       'plugin-console-breadcrumbs',
-      'plugin-browser-session'
+      'plugin-browser-session',
+      'plugin-http-errors'
     ], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),

@@ -3,6 +3,7 @@ import {
   App,
   Device,
   Request,
+  Response,
   Logger,
   User,
   Thread,
@@ -23,6 +24,7 @@ declare class Event {
   public app: App
   public device: Device
   public request: Request
+  public response: Response
 
   public errors: Error[];
   public breadcrumbs: Breadcrumb[]

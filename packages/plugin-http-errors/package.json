@@ -1,0 +1,28 @@
+{
+  "name": "@bugsnag/plugin-http-errors",
+  "version": "8.6.0",
+  "main": "http-errors.js",
+  "types": "types/bugsnag-plugin-http-errors.d.ts",
+  "description": "@bugsnag/js plugin for HTTP error handling",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "http-errors.js",
+    "lib",
+    "types"
+  ],
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@bugsnag/core": "^8.6.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^8.0.0"
+  }
+}

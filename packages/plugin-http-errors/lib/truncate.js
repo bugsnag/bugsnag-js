@@ -1,0 +1,10 @@
+/**
+   * Truncate string to max length
+   * @param {string} str - String to truncate
+   * @param {number} maxLength - Maximum length
+   * @returns {string} Truncated string
+   */
+module.exports = function (str, maxLength) {
+  if (!str || str.length <= maxLength) return str
+  return str.substring(0, maxLength)
+}

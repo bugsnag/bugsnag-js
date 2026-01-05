@@ -121,7 +121,7 @@ async function buildNotifiers (notifier) {
 async function packNotifiers (notifier) {
   const notifiers = notifier
     ? [ notifier ]
-    : [ 'js', 'browser', 'node', 'web-worker', 'plugin-angular', 'plugin-react', 'plugin-vue' ]
+    : [ 'js', 'browser', 'node', 'web-worker', 'plugin-angular', 'plugin-react', 'plugin-vue', 'plugin-http-errors' ]
   for (const n of notifiers) {
     let packageLocation = `packages/${n}/`
     if (n === 'plugin-angular') packageLocation += 'dist/'
@@ -131,7 +131,7 @@ async function packNotifiers (notifier) {
 
 async function installNotifiers (notifier) {
   trace('install notifiers')
-  if (notifier && ![ 'browser', 'plugin-vue', 'plugin-react', 'web-worker' ].includes(notifier)) return
+  if (notifier && ![ 'browser', 'plugin-vue', 'plugin-react', 'web-worker', 'plugin-http-errors' ].includes(notifier)) return
   await ex(`npm`, [
     `install`,
     `--no-package-lock`,
@@ -144,7 +144,8 @@ async function installNotifiers (notifier) {
       `../../../../bugsnag-browser-${require('../packages/browser/package.json').version}.tgz`,
       `../../../../bugsnag-web-worker-${require('../packages/web-worker/package.json').version}.tgz`,
       `../../../../bugsnag-plugin-react-${require('../packages/plugin-react/package.json').version}.tgz`,
-      `../../../../bugsnag-plugin-vue-${require('../packages/plugin-vue/package.json').version}.tgz`
+      `../../../../bugsnag-plugin-vue-${require('../packages/plugin-vue/package.json').version}.tgz`,
+      `../../../../bugsnag-plugin-http-errors-${require('../packages/plugin-http-errors/package.json').version}.tgz`
     ]
   ), {
     cwd: `${__dirname}/../test/browser/features/fixtures`

@@ -1,4 +1,5 @@
 const RequestTracker = require('./request-tracker')
+const xhrHeaderStringToObject = require('./xhr-header-string-to-object')
 
 /**
  * Create XHR request tracker with singleton pattern
@@ -18,6 +19,7 @@ function createXhrTracker (global, options = {}) {
 
     const originalOpen = global.XMLHttpRequest.prototype.open
     const originalSend = global.XMLHttpRequest.prototype.send
+    const originalSetRequestHeader = global.XMLHttpRequest.prototype.setRequestHeader
 
     global.XMLHttpRequest.prototype.open = function open (method, url) {
       // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
@@ -25,6 +27,18 @@ function createXhrTracker (global, options = {}) {
         trackedRequests.set(this, { method: String(method), url: String(url) })
       }
       originalOpen.apply(this, arguments)
+    }
+
+    global.XMLHttpRequest.prototype.setRequestHeader = function setRequestHeader (header, value) {
+      // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
+      if (this) {
+        const requestData = trackedRequests.get(this)
+        if (requestData) {
+          requestData.headers = requestData.headers || {}
+          requestData.headers[String(header)] = (requestData.headers[String(header)] || '') + String(value)
+        }
+      }
+      originalSetRequestHeader.apply(this, arguments)
     }
 
     global.XMLHttpRequest.prototype.send = function send (body) {
@@ -45,17 +59,20 @@ function createXhrTracker (global, options = {}) {
           startTime,
           type: 'xmlhttprequest',
           body,
-          xhr: this
+          headers: requestData.headers
         }
 
         const { onRequestEnd } = tracker.start(context)
+
+        const getResponseHeaders = () => xhrHeaderStringToObject(this.getAllResponseHeaders())
 
         const handleLoad = () => {
           onRequestEnd({
             endTime: Date.now(),
             status: this.status,
             state: 'success',
-            xhr: this
+            headers: getResponseHeaders(),
+            body: this.responseText
           })
         }
 
@@ -63,7 +80,8 @@ function createXhrTracker (global, options = {}) {
           onRequestEnd({
             endTime: Date.now(),
             state: 'error',
-            xhr: this
+            headers: getResponseHeaders(),
+            body: this.responseText
           })
         }
 
