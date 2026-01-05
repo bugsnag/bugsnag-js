@@ -9,6 +9,8 @@ function xhrGet () {
   const xhr = new XMLHttpRequest()
   xhr.open('GET', `${REFLECT_ENDPOINT}?status=404&userId=12345`)
   xhr.setRequestHeader('X-Token', 'super-secret-token')
+  xhr.setRequestHeader('X-Test-Value', 'one-two')
+  xhr.setRequestHeader('X-Test-Value', '-three-four')
   xhr.send()
 }
 
