@@ -58,7 +58,7 @@ function createFetchTracker (global, options = {}) {
         type: 'fetch',
         input: urlOrRequest,
         headers: requestHeaders,
-        body: options.body
+        body: options ? options.body : undefined
       }
 
       const { onRequestEnd } = tracker.start(context)
