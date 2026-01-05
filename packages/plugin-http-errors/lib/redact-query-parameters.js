@@ -2,9 +2,10 @@ const redactValues = require('./redact-values')
 
 function isAbsoluteURL (url) {
   try {
-    URL.parse ? URL.parse(url) : new URL(url)
+    // eslint-disable-next-line no-new
+    new URL(url)
     return true
-  } catch {
+  } catch (e) {
     return false
   }
 }
