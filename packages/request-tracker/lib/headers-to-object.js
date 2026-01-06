@@ -8,8 +8,13 @@ module.exports = function (headers) {
 
   const obj = {}
   if (typeof headers.entries === 'function') {
-    for (const [key, value] of headers.entries()) {
+    var iterator = headers.entries()
+    var entry = iterator.next()
+    while (!entry.done) {
+      var key = entry.value[0]
+      var value = entry.value[1]
       obj[key] = value
+      entry = iterator.next()
     }
   } else if (headers.forEach) {
     headers.forEach((value, key) => {
