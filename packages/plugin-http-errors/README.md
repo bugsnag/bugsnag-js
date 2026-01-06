@@ -14,29 +14,20 @@ yarn add @bugsnag/plugin-http-errors
 
 ```js
 import Bugsnag from '@bugsnag/js'
-import createHttpErrorPlugin from '@bugsnag/plugin-http-errors'
-
-const plugin = createHttpErrorPlugin({
-  httpErrorCodes: [401, { min: 404, max: 499 }], // handle individual error codes or ranges of error codes 
-  maxRequestSize: 5_000, // don't capture requests over 5kb
-  onHttpError: ({ request, response }) => {
-    // Only handle 5xx errors
-    if (response.statusCode < 500 || response.statusCode > 599) return false
-
-    // Exclude specific domains
-    if (request.url.indexOf('redacted.domain.com') === 0) return false
-
-    // Update properties on the reported request and response
-    request.url = '[REDACTED]'
-    response.statusCode = 418
-
-    return true // return value will determine whether the error is reported
-  }
-})
+import BugsnagPluginHttpErrors from '@bugsnag/plugin-http-errors'
 
 Bugsnag.start({
-  apiKey: 'YOUR_API_KEY',
-  plugins: [plugin]
+  apiKey: 'YOUR_API_KEY_HERE',
+  plugins: [BugsnagPluginHttpErrors({
+    httpErrorCodes = [400, 401, { min: 450: max 499 }], // Status codes to report as errors
+    maxRequestSize = 20_000,                            // Truncate the request and response body over this size (in kb) 
+    onHttpError: ({ request, response }) => {
+      request.headers['x-custom-header'] = 'value'      // Modify any request values before sending
+      response.body = 'custom body'                     // Modify any response values before sending
+
+      return false                                      // Don't report this request an as error
+    }
+  })]
 })
 ```
 
