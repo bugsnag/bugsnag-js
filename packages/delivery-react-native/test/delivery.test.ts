@@ -31,9 +31,17 @@ type NativeClientEvent = Pick<EventWithInternals,
   nativeStack: NativeStackIOS | NativeStackAndroid
 }
 
+interface ReactNativeErrorCause {
+  name: string
+  message: string
+  stackSymbols?: NativeStackIOS
+  stackElements?: NativeStackAndroid
+}
+
 class ReactNativeError extends Error {
   nativeStackAndroid?: NativeStackAndroid
   nativeStackIOS?: NativeStackIOS
+  cause?: ReactNativeErrorCause
 }
 
 describe('delivery: react native', () => {
@@ -111,7 +119,8 @@ describe('delivery: react native', () => {
     ]
     c.notify(error, (e) => {}, (err, event) => {
       expect(err).not.toBeTruthy()
-      expect(sent[0].nativeStack).toEqual(error.nativeStackIOS)
+      // @ts-expect-error nativeStack is added by the delivery module
+      expect(sent[0].errors[0].nativeStack).toEqual(error.nativeStackIOS)
       done()
     })
   })
@@ -137,7 +146,96 @@ describe('delivery: react native', () => {
     ]
     c.notify(error, (e) => {}, (err, event) => {
       expect(err).not.toBeTruthy()
-      expect(sent[0].nativeStack).toBe(error.nativeStackAndroid)
+      // @ts-expect-error nativeStack is added by the delivery module
+      expect(sent[0].errors[0].nativeStack).toBe(error.nativeStackAndroid)
+      done()
+    })
+  })
+
+  it('extracts iOS native error cause', done => {
+    const sent: NativeClientEvent[] = []
+    const NativeClient = {
+      dispatchAsync: (event: NativeClientEvent) => {
+        sent.push(event)
+        return new Promise((resolve) => resolve(true))
+      }
+    }
+    const c = new Client({ apiKey: 'api_key' })
+    c._setDelivery(client => delivery(client, NativeClient))
+    const error = new ReactNativeError('oh no')
+    const stackSymbols = [
+      '0   ReactNativeTest                     0x000000010fda7f1b RCTJSErrorFromCodeMessageAndNSError + 79',
+      '1   ReactNativeTest                     0x000000010fd76897 __41-[RCTModuleMethod processMethodSignature]_block_invoke_2.103 + 97',
+      '2   ReactNativeTest                     0x000000010fccd9c3 -[BenCrash asyncReject:rejecter:] + 106',
+      '3   CoreFoundation                      0x00007fff23e44dec __invoking___ + 140',
+      '4   CoreFoundation                      0x00007fff23e41fd1 -[NSInvocation invoke] + 321',
+      '5   CoreFoundation                      0x00007fff23e422a4 -[NSInvocation invokeWithTarget:] + 68',
+      '6   ReactNativeTest                     0x000000010fd76eae -[RCTModuleMethod invokeWithBridge:module:arguments:] + 578',
+      '7   ReactNativeTest                     0x000000010fd79138 _ZN8facebook5reactL11invokeInnerEP9RCTBridgeP13RCTModuleDatajRKN5folly7dynamicE + 246'
+    ]
+
+    error.cause = {
+      name: 'NativeiOSException',
+      message: 'Native iOS error occurred',
+      stackSymbols
+    }
+
+    c.notify(error, (e) => {}, (err, event) => {
+      expect(err).not.toBeTruthy()
+      expect(sent[0].errors[0].errorMessage).toEqual(error.message)
+      // @ts-expect-error nativeStack is added by the delivery module
+      expect(sent[0].errors[0].nativeStack).toBeUndefined()
+
+      expect(sent[0].errors[1].errorMessage).toBeDefined()
+      expect(sent[0].errors[1].errorMessage).toEqual(error.cause?.message)
+      expect(sent[0].errors[1].errorClass).toBeDefined()
+      expect(sent[0].errors[1].errorClass).toEqual(error.cause?.name)
+
+      // @ts-expect-error nativeStack is added by the delivery module
+      expect(sent[0].errors[1].nativeStack).toEqual(error.cause.stackSymbols)
+      done()
+    })
+  })
+
+  it('extracts Android native error cause', done => {
+    const sent: NativeClientEvent[] = []
+    const NativeClient = {
+      dispatchAsync: (event: NativeClientEvent) => {
+        sent.push(event)
+        return new Promise((resolve) => resolve(true))
+      }
+    }
+    const c = new Client({ apiKey: 'api_key' })
+    c._setDelivery(client => delivery(client, NativeClient))
+    const error = new ReactNativeError('oh no')
+    const stackElements = [
+      {
+        class: 'com.testing.Blah',
+        lineNumber: 101,
+        file: 'app/com.testing.Blah.java',
+        methodName: 'crash()'
+      }
+    ]
+
+    error.cause = {
+      name: 'NativeAndroidException',
+      message: 'Native Android error occurred',
+      stackElements
+    }
+
+    c.notify(error, (e) => {}, (err, event) => {
+      expect(err).not.toBeTruthy()
+      expect(sent[0].errors[0].errorMessage).toEqual(error.message)
+      // @ts-expect-error nativeStack is added by the delivery module
+      expect(sent[0].errors[0].nativeStack).toBeUndefined()
+
+      expect(sent[0].errors[1].errorMessage).toBeDefined()
+      expect(sent[0].errors[1].errorMessage).toEqual(error.cause?.message)
+      expect(sent[0].errors[1].errorClass).toBeDefined()
+      expect(sent[0].errors[1].errorClass).toEqual(error.cause?.name)
+
+      // @ts-expect-error nativeStack is added by the delivery module
+      expect(sent[0].errors[1].nativeStack).toEqual(error.cause.stackElements)
       done()
     })
   })
