@@ -105,6 +105,7 @@ function createXhrTracker (global, options = {}) {
       tracker._restore = () => {
         global.XMLHttpRequest.prototype.open = originalOpen
         global.XMLHttpRequest.prototype.send = originalSend
+        global.XMLHttpRequest.prototype.setRequestHeader = originalSetRequestHeader
         delete global.__bugsnag_xhr_tracker__
       }
     }

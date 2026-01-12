@@ -15,6 +15,6 @@ module.exports = {
   },
   plugins: [
     new es3ifyPlugin(),
-    new UglifyJsPlugin({ sourceMap: true, uglifyOptions: { compress: false, mangle: false, ie8: true } })
+    new UglifyJsPlugin({ sourceMap: true, uglifyOptions: { compress: false, mangle: false } })
   ]
 }
