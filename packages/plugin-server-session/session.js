@@ -5,11 +5,17 @@ const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
 
 module.exports = {
   load: (client) => {
-    const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval)
-    sessionTracker.on('summary', sendSessionSummary(client))
-    sessionTracker.start()
+    let sessionTracker = null
+
     client._sessionDelegate = {
       startSession: (client, session) => {
+        // Lazy initialization: only create and start the tracker on first use
+        if (!sessionTracker) {
+          sessionTracker = new SessionTracker(client._config.sessionSummaryInterval)
+          sessionTracker.on('summary', sendSessionSummary(client))
+          sessionTracker.start()
+        }
+
         client._session = session
         client._pausedSession = null
         sessionTracker.track(client._session)

@@ -132,6 +132,10 @@ module.exports = {
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures']
     }),
-    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' })
+    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' }),
+    project('cloudflare-workers', ['plugin-cloudflare-workers'], {
+      testEnvironment: 'node',
+      setupFilesAfterEnv: ['<rootDir>/packages/plugin-cloudflare-workers/test/setup.ts']
+    })
   ]
 }

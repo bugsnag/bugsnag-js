@@ -40,8 +40,6 @@ const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtur
 
 const INTERNAL_DEPENDENCIES = [
   '@bugsnag/react-native',
-  '@bugsnag/plugin-react-navigation',
-  '@bugsnag/plugin-react-native-navigation',
   '@bugsnag/request-tracker'
 ]
 
@@ -51,20 +49,69 @@ const PEER_DEPENDENCIES = [
   `react-native-file-access@${reactNativeFileAccessVersion}`
 ]
 
-let reactNavigationVersion = '6.1.18'
-let reactNavigationNativeStackVersion = '6.11.0'
-let reactNativeScreensVersion = '3.35.0'
-let reactNativeSafeAreaContextVersion = '4.14.0'
+// react-native-screens new-arch support:
+// library version   react-native version
+// 4.19.0+           0.81.0+
+// 4.14.0+           0.79.0+
+// 4.5.0+            0.77.0+
+// 4.0.0+            0.76.0+
+// 3.33.0+           0.75.0+
+// 3.32.0+           0.74.0+
+// 3.28.0+           0.73.0+
+// 3.21.0+           0.72.0+
+// 3.19.0+           0.71.0+
+// 3.18.0+           0.70.0+
+// 3.14.0+           0.69.0+
 
-// RN 0.77 requires react-native-screens 4.6.0, which in turn requires react navigation v7
-if (parseFloat(reactNativeVersion) >= 0.77) {
-  reactNavigationVersion = '7.1.18'
-  reactNavigationNativeStackVersion = '7.3.28'
-  reactNativeScreensVersion = '4.17.1'
-  reactNativeSafeAreaContextVersion = '5.6.1'
-} else if (parseFloat(reactNativeVersion) <= 0.69) {
-  reactNativeScreensVersion = '3.14.0'
-  reactNativeSafeAreaContextVersion = '4.3.4'
+// default to the latest versions - update here when new versions are released or new RN versions come out
+let reactNavigationVersion = '^7.0.0'
+let reactNavigationNativeStackVersion = '^7.0.0'
+let reactNativeSafeAreaContextVersion = '^5.0.0'
+let reactNativeScreensVersion = '~4.19.0'
+
+// Adjust versions based on React Native version
+const rnVersion = parseFloat(reactNativeVersion)
+switch (true) {
+  case rnVersion >= 0.81:
+    reactNativeScreensVersion = '~4.19.0'
+    break
+  case rnVersion >= 0.79:
+    reactNativeScreensVersion = '~4.14.0'
+    break
+  case rnVersion >= 0.78:
+    reactNativeScreensVersion = '~4.11.0'
+    break
+  case rnVersion >= 0.76:
+    reactNativeScreensVersion = '~4.0.0'
+    break
+  case rnVersion >= 0.75:
+    reactNavigationVersion = '^6.0.0'
+    reactNavigationNativeStackVersion = '^6.0.0'
+    reactNativeScreensVersion = '~3.33.0'
+    break
+  case rnVersion >= 0.74:
+    reactNavigationVersion = '^6.0.0'
+    reactNavigationNativeStackVersion = '^6.0.0'
+    reactNativeScreensVersion = '~3.32.0'
+    break
+  case rnVersion >= 0.73:
+    reactNavigationVersion = '^6.0.0'
+    reactNavigationNativeStackVersion = '^6.0.0'
+    reactNativeSafeAreaContextVersion = '4.14.0'
+    reactNativeScreensVersion = '~3.28.0'
+    break
+  case rnVersion >= 0.72:
+    reactNavigationVersion = '^6.0.0'
+    reactNavigationNativeStackVersion = '^6.0.0'
+    reactNativeSafeAreaContextVersion = '4.14.0'
+    reactNativeScreensVersion = '~3.21.0'
+    break
+  case rnVersion <= 0.69:
+    reactNavigationVersion = '^6.0.0'
+    reactNavigationNativeStackVersion = '^6.0.0'
+    reactNativeSafeAreaContextVersion = '4.3.4'
+    reactNativeScreensVersion = '~3.14.0'
+    break
 }
 
 const REACT_NAVIGATION_PEER_DEPENDENCIES = [
@@ -77,6 +124,16 @@ const REACT_NAVIGATION_PEER_DEPENDENCIES = [
 const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
   'react-native-navigation@7.41.0' // Issue with 7.42.0
 ]
+
+// add packages and dependencies for react-native-navigation (wix)
+if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
+  INTERNAL_DEPENDENCIES.push('@bugsnag/plugin-react-native-navigation')
+  PEER_DEPENDENCIES.push(...REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES)
+} else if (process.env.REACT_NAVIGATION === 'true' || process.env.REACT_NAVIGATION === '1') {
+  // add packages and dependencies for @react-navigation
+  INTERNAL_DEPENDENCIES.push('@bugsnag/plugin-react-navigation')
+  PEER_DEPENDENCIES.push(...REACT_NAVIGATION_PEER_DEPENDENCIES)
+}
 
 // install and build the packages
 if (!process.env.SKIP_BUILD_PACKAGES) {
@@ -137,14 +194,6 @@ function installFixtureDependencies () {
 
   // pack the scenario launcher
   execFileSync('npm', ['pack', resolve(ROOT_DIR, 'test/react-native/features/fixtures/scenario-launcher'), '--pack-destination', fixtureDir], { cwd: ROOT_DIR, stdio: 'inherit' })
-
-  // add dependencies for react-native-navigation (wix)
-  if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_NAVIGATION === '1') {
-    PEER_DEPENDENCIES.push(...REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES)
-  } else if (!isNewArchEnabled) {
-    // add dependencies for @react-navigation
-    PEER_DEPENDENCIES.push(...REACT_NAVIGATION_PEER_DEPENDENCIES)
-  }
 
   const fixtureDependencyArgs = PEER_DEPENDENCIES.join(' ')
 

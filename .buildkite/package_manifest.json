@@ -147,5 +147,30 @@
         "pipeline": ".buildkite/basic/expo-pipeline.yml",
         "block": ".buildkite/block/expo-pipeline.block.yml",
         "paths": []
+    },
+    {
+        "pipeline": ".buildkite/basic/cloudflare-pipeline.yml",
+        "block": ".buildkite/block/cloudflare-pipeline.block.yml",
+        "paths": [
+            "test/cloudflare-workers",
+            "packages/core",
+            "packages/node",
+            "packages/delivery-node",
+            "packages/plugin-app-duration",
+            "packages/plugin-console-breadcrumbs",
+            "packages/plugin-contextualize",
+            "packages/plugin-intercept",
+            "packages/plugin-node-device",
+            "packages/plugin-node-in-project",
+            "packages/plugin-node-surrounding-code",
+            "packages/plugin-node-uncaught-exception",
+            "packages/plugin-node-unhandled-rejection",
+            "packages/plugin-server-session",
+            "packages/plugin-stackframe-path-normaliser",
+            "packages/plugin-strip-project-root",
+            "packages/plugin-cloudflare-workers",
+            "packages/plugin-browser-session",
+            "packages/in-flight"
+        ]
     }
 ]
