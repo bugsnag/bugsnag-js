@@ -1,5 +1,5 @@
 /**
- * @bugsnag/plugin-http-errors
+ * @bugsnag/plugin-network-instrumentation
  * A plugin to automatically capture and report HTTP errors
  */
 

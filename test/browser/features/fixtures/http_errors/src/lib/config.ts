@@ -1,4 +1,4 @@
-import BugsnagPluginHttpErrors from '@bugsnag/plugin-http-errors'
+import BugsnagPluginNetworkInstrumentation from '@bugsnag/plugin-network-instrumentation'
 
 function getQueryParam (key: string): string {
   const match = window.location.search.match(new RegExp(key + '=([^&]+)'))
@@ -15,5 +15,5 @@ export const endpoints = {
 }
 
 export const plugins = [
-  BugsnagPluginHttpErrors()
+  BugsnagPluginNetworkInstrumentation()
 ]

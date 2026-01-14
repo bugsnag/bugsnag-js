@@ -1,24 +1,24 @@
-# @bugsnag/plugin-http-errors
+# @bugsnag/plugin-network-instrumentation
 
 A [@bugsnag/js](https://github.com/bugsnag/bugsnag-js) plugin for HTTP error handling.
 
 ## Installation
 
 ```sh
-npm install --save @bugsnag/plugin-http-errors
+npm install --save @bugsnag/plugin-network-instrumentation
 # or
-yarn add @bugsnag/plugin-http-errors
+yarn add @bugsnag/plugin-network-instrumentation
 ```
 
 ## Usage
 
 ```js
 import Bugsnag from '@bugsnag/js'
-import BugsnagPluginHttpErrors from '@bugsnag/plugin-http-errors'
+import BugsnagPluginNetworkRequests from '@bugsnag/plugin-network-instrumentation'
 
 Bugsnag.start({
   apiKey: 'YOUR_API_KEY_HERE',
-  plugins: [BugsnagPluginHttpErrors({
+  plugins: [BugsnagPluginNetworkInstrumentation({
     httpErrorCodes = [400, 401, { min: 450: max 499 }], // Status codes to report as errors
     maxRequestSize = 20_000,                            // Truncate the request and response body over this size (in kb) 
     onHttpError: ({ request, response }) => {
