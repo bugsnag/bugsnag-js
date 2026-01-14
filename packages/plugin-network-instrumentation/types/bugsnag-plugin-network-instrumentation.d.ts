@@ -21,12 +21,6 @@ export interface BugsnagPluginHttpErrorsConfiguration {
   httpErrorCodes?: number | HttpErrorRange | Array<number | HttpErrorRange>
 
   /**
-   * Maximum size of the response body to capture (in characters)
-   * @default 20000
-   */
-  maxResponseSize?: number
-
-  /**
    * Maximum size of the request body to capture (in characters)
    * @default 5000
    */

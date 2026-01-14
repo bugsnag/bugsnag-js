@@ -98,7 +98,7 @@
     "packages/plugin-browser-session",
     "packages/browser",
     "packages/request-tracker",
-    "packages/plugin-http-errors"
+    "packages/plugin-network-instrumentation"
   ],
   "exclude": [
     "packages/react-native/src/NativeBugsnag.ts"

@@ -10,7 +10,7 @@ const createMockDelivery = (notifyCallbacks: Event[]) => (): Delivery => ({
   sendSession: () => {}
 })
 
-describe('plugin-http-errors', () => {
+describe('plugin-network-instrumentation', () => {
   describe('XMLHttpRequest support', () => {
     let originalXMLHttpRequest: typeof XMLHttpRequest
     let plugin: Plugin

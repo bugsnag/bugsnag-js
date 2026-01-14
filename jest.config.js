@@ -51,7 +51,7 @@ module.exports = {
       'plugin-simple-throttle',
       'plugin-console-breadcrumbs',
       'plugin-browser-session',
-      'plugin-http-errors'
+      'plugin-network-instrumentation'
     ], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),

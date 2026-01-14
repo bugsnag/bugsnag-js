@@ -26,7 +26,7 @@ const createMockDelivery = (notifyCallbacks: Event[]) => (): Delivery => ({
   sendSession: () => {}
 })
 
-describe('plugin-http-errors', () => {
+describe('plugin-network-instrumentation', () => {
   let mockFetch: jest.Mock
   let plugin: Plugin
 

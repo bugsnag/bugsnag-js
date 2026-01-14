@@ -1,5 +1,5 @@
 {
-  "name": "bugsnag-js-fixtures-http-errors-fetch",
+  "name": "bugsnag-js-fixtures-http-errors",
   "private": true,
   "scripts": {
     "build": "webpack"
