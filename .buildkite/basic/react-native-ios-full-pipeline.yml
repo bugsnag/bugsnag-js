@@ -153,7 +153,6 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
-              - --appium-version=2.5.0
               - --device=IOS_17|IOS_18|IOS_26
               - --fail-fast
               - --no-tunnel
@@ -200,7 +199,6 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix.reactnative}}/output/reactnative.ipa
               - --farm=bb
-              - --appium-version=2.5.0
               - --device=IOS_17|IOS_18|IOS_26
               - --fail-fast
               - --no-tunnel
@@ -255,7 +253,6 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/react-native-navigation/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
-              - --appium-version=2.5.0
               - --device=IOS_17|IOS_18|IOS_26
               - --fail-fast
               - --no-tunnel
@@ -298,7 +295,6 @@ steps:
       #       command:
       #         - --app=/app/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/output/reactnative.ipa
       #         - --farm=bb
-      #         - --appium-version=2.5.0
       #         - --device=IOS_17|IOS_18|IOS_26
       #         - --fail-fast
       #         - --no-tunnel
