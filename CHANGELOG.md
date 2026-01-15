@@ -5,6 +5,7 @@
 ### Added
 
 (plugin-cloudflare-workers): Add initial support for Cloudflare Workers [#2643](https://github.com/bugsnag/bugsnag-js/pull/2643) [#2644](https://github.com/bugsnag/bugsnag-js/pull/2644)
+(plugin-contextualize) Return callback value from contextualize plugin [#2654](https://github.com/bugsnag/bugsnag-js/pull/2654)
 
 ### Fixed
 

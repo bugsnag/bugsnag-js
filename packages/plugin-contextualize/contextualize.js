@@ -17,7 +17,7 @@ module.exports = {
 
       clonedClient.addOnError(onError)
 
-      client._clientContext.run(clonedClient, fn)
+      return client._clientContext.run(clonedClient, fn)
     }
 
     return contextualize
