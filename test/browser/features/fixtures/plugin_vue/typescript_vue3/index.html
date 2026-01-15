@@ -4,25 +4,10 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    <pre id="bugsnag-test-should-run">PENDING</pre>
     <div id="app">
       <p>{{ message }}</p>
       <span>{{ errr() }}</span>
     </div>
-    <script>
-      var el = document.getElementById('bugsnag-test-should-run')
-      var isClassSupported = false
-      var isObjectSpreadSupported = false
-      try {
-        eval('class Foo extends Object {}')
-        isClassSupported = true
-        eval('const a = {}; const b = { ...a }')
-        isObjectSpreadSupported = true
-      } catch (e) {}
-      el.textContent = el.innerText = isClassSupported && isObjectSpreadSupported && typeof Proxy !== 'undefined'
-        ? 'YES'
-        : 'NO'
-    </script>
     <script src="dist/bundle.js"></script>
   </body>
 </html>

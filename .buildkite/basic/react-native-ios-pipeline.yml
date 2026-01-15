@@ -19,6 +19,7 @@ steps:
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"
           XCODE_VERSION: "16.2.0"
+          REACT_NAVIGATION: "true"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
@@ -59,6 +60,7 @@ steps:
         env:
           RCT_NEW_ARCH_ENABLED: "1"
           RN_VERSION: "{{matrix}}"
+          REACT_NAVIGATION: "true"
         retry:
           manual:
             permit_on_passed: true

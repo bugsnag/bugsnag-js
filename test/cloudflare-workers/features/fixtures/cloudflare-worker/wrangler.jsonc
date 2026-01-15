@@ -1,0 +1,18 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cloudflare-worker",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-12-16",
+	"compatibility_flags": [
+    "nodejs_compat"
+  ],
+	"vars": {
+		"BUGSNAG_API_KEY": "placeholder-api-key",
+		"BUGSNAG_NOTIFY_ENDPOINT": "placeholder-notify-endpoint",
+		"BUGSNAG_SESSIONS_ENDPOINT": "placeholder-sessions-endpoint"
+	}
+}

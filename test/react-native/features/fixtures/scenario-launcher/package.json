@@ -2,28 +2,23 @@
   "name": "@bugsnag/react-native-scenarios",
   "version": "1.0.0",
   "description": "Test scenarios for the Bugsnag React Native library",
-  "main": "src/index.js",
+  "main": "index.js",
   "files": [
-    "src",
-    "android",
-    "ios",
-    "BugsnagTestInterface.podspec",
-    "!android/build",
-    "!ios/build"
+    "/android",
+    "/ios",
+    "/lib",
+    "/scenarios/core",
+    "/scenarios/index.js",
+    "/BugsnagTestInterface.podspec"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepack": "node ./scripts/prepare-package.js",
+    "postpack": "node ./scripts/cleanup.js"
   },
   "author": "BugSnag",
   "license": "MIT",
-  "optionalDependencies": {
-    "react-native-navigation": "*"
-  },
   "peerDependencies": {
-    "@bugsnag/plugin-react-navigation": "*",
-    "@bugsnag/plugin-react-native-navigation": "*",
-    "@react-navigation/native": "*",
-    "@react-navigation/native-stack": "*",
     "react": "*",
     "react-native": "*",
     "react-native-file-access": "*"
@@ -31,7 +26,7 @@
   "codegenConfig": {
     "name": "BugsnagTestInterfaceSpec",
     "type": "modules",
-    "jsSrcsDir": "src",
+    "jsSrcsDir": "lib",
     "android": {
       "javaPackageName": "com.reactnative.scenarios"
     }

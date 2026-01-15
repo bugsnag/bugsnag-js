@@ -11,15 +11,15 @@ steps:
         timeout_in_minutes: 20
         plugins:
           - artifacts#v1.5.0:
-              download: min_packages.tar
+              download: "min_packages.tar"
           - docker-compose#v4.12.0:
               build:
-                - browser-maze-runner-bb
-              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+                - "browser-maze-runner-bb"
+              image-repository: "855461928731.dkr.ecr.us-west-1.amazonaws.com/js"
               cache-from:
-                - browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+                - "browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}"
               push:
-                - browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+                - "browser-maze-runner-bb:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}"
         retry:
           automatic:
             - exit_status: "*"
@@ -31,15 +31,15 @@ steps:
         timeout_in_minutes: 20
         plugins:
           - artifacts#v1.5.0:
-              download: min_packages.tar
+              download: "min_packages.tar"
           - docker-compose#v4.12.0:
               build:
-                - browser-maze-runner-bs
-              image-repository: 855461928731.dkr.ecr.us-west-1.amazonaws.com/js
+                - "browser-maze-runner-bs"
+              image-repository: "855461928731.dkr.ecr.us-west-1.amazonaws.com/js"
               cache-from:
-                - browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+                - "browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}"
               push:
-                - browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}
+                - "browser-maze-runner-bs:855461928731.dkr.ecr.us-west-1.amazonaws.com/js:ci-browser-${BRANCH_NAME}"
         retry:
           automatic:
             - exit_status: "*"
@@ -50,16 +50,16 @@ steps:
       #
       - label: ":browserstack: {{matrix}} non-https tests"
         matrix:
-          - ios_11
-          - safari_16
+          - "safari_16"
         depends_on: "browser-maze-runner-bs"
         timeout_in_minutes: 30
         plugins:
           docker-compose#v4.12.0:
-            pull: browser-maze-runner-bs
-            run: browser-maze-runner-bs
+            pull: "browser-maze-runner-bs"
+            run: "browser-maze-runner-bs"
             use-aliases: true
             command:
+              - "--fail-fast"
               - "--farm=bs"
               - "--browser={{matrix}}"
           artifacts#v1.5.0:
@@ -72,28 +72,29 @@ steps:
             api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 2
         concurrency_group: "browserstack"
-        concurrency_method: eager
+        concurrency_method: "eager"
 
       #
       # BrowserStack https tests
       #
       - label: ":browserstack: {{matrix}} tests"
         matrix:
-          - edge_17
-          - safari_10
-          - ios_15
-          - android_9
-          - chrome_43
-          - chrome_72
-          - firefox_78
+          - "edge_17"
+          - "safari_10"
+          - "ios_15"
+          - "android_9"
+          - "chrome_43"
+          - "chrome_72"
+          - "firefox_78"
         depends_on: "browser-maze-runner-bs"
         timeout_in_minutes: 30
         plugins:
           docker-compose#v4.12.0:
-            pull: browser-maze-runner-bs
-            run: browser-maze-runner-bs
+            pull: "browser-maze-runner-bs"
+            run: "browser-maze-runner-bs"
             use-aliases: true
             command:
+              - "--fail-fast"
               - "--https"
               - "--farm=bs"
               - "--browser={{matrix}}"
@@ -107,25 +108,26 @@ steps:
             api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 2
         concurrency_group: "browserstack"
-        concurrency_method: eager
+        concurrency_method: "eager"
 
       #
       # BitBar tests
       #
-      - label: ":bitbar: {{matrix}} Browser tests (US hub)"
+      - label: ":bitbar: {{matrix}} Browser tests (EU hub)"
         matrix:
-          - firefox_latest
-          - chrome_latest
-          - edge_latest
+          - "firefox_latest"
+          - "chrome_latest"
+          - "edge_latest"
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
         plugins:
           docker-compose#v4.12.0:
-            pull: browser-maze-runner-bb
-            run: browser-maze-runner-bb
+            pull: "browser-maze-runner-bb"
+            run: "browser-maze-runner-bb"
             service-ports: true
             use-aliases: true
             command:
+              - "--fail-fast"
               - "--https"
               - "--farm=bb"
               - "--browser={{matrix}}"
@@ -141,19 +143,20 @@ steps:
             api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 25
         concurrency_group: "bitbar"
-        concurrency_method: eager
+        concurrency_method: "eager"
 
-      - label: ":bitbar: ie_11 Browser tests"
-        skip: true
+      - label: ":bitbar: ie_11 Browser tests (EU hub)"
+		skip: true
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
         plugins:
           docker-compose#v4.12.0:
-            pull: browser-maze-runner-bb
-            run: browser-maze-runner-bb
+            pull: "browser-maze-runner-bb"
+            run: "browser-maze-runner-bb"
             service-ports: true
             use-aliases: true
             command:
+              - "--fail-fast"
               - "--farm=bb"
               - "--browser=ie_11"
               - "--no-tunnel"
@@ -168,6 +171,6 @@ steps:
             api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
         concurrency: 25
         concurrency_group: "bitbar"
-        concurrency_method: eager
+        concurrency_method: "eager"
         env:
           HOST: "localhost" # IE11 needs the host set to localhost

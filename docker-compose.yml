@@ -53,6 +53,7 @@ services:
       API_HOST: "${API_HOST:-maze-runner}"
       MAZE_REPEATER_API_KEY: "${MAZE_REPEATER_API_KEY_BROWSER:-}"
       MAZE_HUB_REPEATER_API_KEY: "${MAZE_HUB_REPEATER_API_KEY_BROWSER:-}"
+      MAZE_SELENIUM_SERVER: "https://eu-desktop-hub.bitbar.com/wd/hub"
     env_file:
       - ${DOCKER_ENV_FILE:-test/browser/features/fixtures/null_env}
     networks:
@@ -120,6 +121,7 @@ services:
       BITBAR_ACCESS_KEY:
       HERMES:
       RN_VERSION:
+      REACT_NAVIGATION:
       REACT_NATIVE_NAVIGATION:
       MAZE_REPEATER_API_KEY: "${MAZE_REPEATER_API_KEY_RN:-}"
       MAZE_HUB_REPEATER_API_KEY: "${MAZE_HUB_REPEATER_API_KEY_RN:-}"
