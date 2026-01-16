@@ -18,6 +18,7 @@ BUGSNAG_PACKAGES = [
   "delivery-node",
   "in-flight",
   "js",
+  "json-payload",
   "node",
   "plugin-app-duration",
   "plugin-cloudflare-workers",
