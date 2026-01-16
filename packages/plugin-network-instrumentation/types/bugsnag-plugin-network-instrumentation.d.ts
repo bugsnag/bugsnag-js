@@ -1,5 +1,9 @@
 import { Plugin, Request, Response } from '@bugsnag/core'
 
+/**
+ * Represents a range of HTTP status codes.
+ * Inclusive of minimum and maximum value.
+ */
 export interface HttpErrorRange {
   min: number
   max: number
