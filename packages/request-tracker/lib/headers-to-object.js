@@ -8,11 +8,10 @@ module.exports = function (headers) {
 
   const obj = {}
   if (typeof headers.entries === 'function') {
-    var iterator = headers.entries()
-    var entry = iterator.next()
+    const iterator = headers.entries()
+    let entry = iterator.next()
     while (!entry.done) {
-      var key = entry.value[0]
-      var value = entry.value[1]
+      const [key, value] = entry.value
       obj[key] = value
       entry = iterator.next()
     }

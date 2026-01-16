@@ -1,9 +1,9 @@
 /**
-   * Check if a status code should be captured
-   * @param {number[]} codes - Array of HTTP status codes
-   * @param {number} statusCode - HTTP status code
-   * @returns {boolean} True if should be captured
-   */
+ * Check if a status code should be captured
+ * @param {number[]} codes - Array of HTTP status codes
+ * @param {number} statusCode - HTTP status code
+ * @returns {boolean} True if should be captured
+ */
 module.exports = function (codes, statusCode) {
   return codes.some(code => {
     if (typeof code === 'number') {
