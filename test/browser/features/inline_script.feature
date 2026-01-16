@@ -1,7 +1,7 @@
 Feature: Inline script detection
 
   Scenario: loading Bugsnag before scripts have run
-    When I navigate to the test URL "/inline_script/script/a.html"
+    When I navigate to the test URL "/inline_script/script/load_before_script.html"
     Then I wait to receive an error
     And the error is a valid browser payload for the error reporting API
     And the exception "errorClass" equals "Error"
@@ -11,7 +11,7 @@ Feature: Inline script detection
     And the event "metaData.script" is not null
 
   Scenario: loading Bugsnag after scripts have run
-    When I navigate to the test URL "/inline_script/script/b.html"
+    When I navigate to the test URL "/inline_script/script/load_after_script.html"
     Then I wait to receive an error
     And the error is a valid browser payload for the error reporting API
     And the exception "errorClass" equals "Error"
@@ -20,9 +20,9 @@ Feature: Inline script detection
     And event 0 is handled
     And the event "metaData.script" is null
 
+  @requires_history_management
   Scenario: inline script detected after location change
-    When I navigate to the test URL "/navigation/script/a.html"
-    And the test should run in this browser
+    When I navigate to the test URL "/navigation/script/navigation.html"
     Then I wait to receive an error
     And the error is a valid browser payload for the error reporting API
     And the event "metaData.script.content" matches "throw new Error\('history'\)"

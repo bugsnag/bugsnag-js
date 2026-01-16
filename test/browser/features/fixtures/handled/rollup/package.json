@@ -2,7 +2,7 @@
   "name": "bugsnag-js-fixtures-handled-rollup",
   "private": true,
   "scripts": {
-    "build": "ENTRY_NAME=a rollup -c && ENTRY_NAME=b rollup -c && ENTRY_NAME=c rollup -c"
+    "build": "ENTRY_NAME=notify_new_error rollup -c && ENTRY_NAME=try_catch_notify rollup -c && ENTRY_NAME=promise_catch rollup -c"
   },
   "dependencies": {
     "rollup": "^0.59.0",

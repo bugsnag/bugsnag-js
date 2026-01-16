@@ -15,6 +15,7 @@ steps:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"
+          REACT_NAVIGATION: "true"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/reactnative.apk"
         commands:
@@ -63,6 +64,7 @@ steps:
         env:
           RCT_NEW_ARCH_ENABLED: "1"
           RN_VERSION: "{{matrix}}"
+          REACT_NAVIGATION: "true"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager

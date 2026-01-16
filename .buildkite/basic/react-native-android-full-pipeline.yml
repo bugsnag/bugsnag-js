@@ -19,6 +19,7 @@ steps:
           RN_VERSION: "{{matrix.reactnative}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
+          REACT_NAVIGATION: "true"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/old-arch/**/reactnative.apk"
         commands:
@@ -51,7 +52,7 @@ steps:
             - exit_status: "*"
               limit: 1
 
-      - label: ':android: Build RN {{matrix}} test fixture APK (New Arch)'
+      - label: ':android: Build RN {{matrix.reactnative}} test fixture APK (New Arch)'
         key: "build-react-native-android-fixture-new-arch-full"
         timeout_in_minutes: 15
         agents:
@@ -59,9 +60,10 @@ steps:
         env:
           JAVA_VERSION: "17"
           NODE_VERSION: "22"
-          RN_VERSION: "{{matrix}}"
+          RN_VERSION: "{{matrix.reactnative}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"
+          REACT_NAVIGATION: "{{matrix.reactnavigation}}"
         artifact_paths:
           - "test/react-native/features/fixtures/generated/new-arch/**/reactnative.apk"
         commands:
@@ -72,12 +74,19 @@ steps:
             - exit_status: "*"
               limit: 1
         matrix:
-          - "0.72"
-          - "0.74"
-          - "0.76"
-          - "0.78"
-          - "0.80"
-          - "0.81"
+          setup:
+            reactnative:
+              - "0.74"
+              - "0.76"
+              - "0.78"
+              - "0.80"
+              - "0.81"
+            reactnavigation:
+              - "true"
+          adjustments:
+            - with:
+                reactnative: "0.72"
+                reactnavigation: "false"
 
       - label: ':android: Build react-native-navigation {{matrix}} test fixture APK (Old Arch)'
         skip: true # Skipped pending PLAT-15027
@@ -165,6 +174,7 @@ steps:
         env:
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
+          REACT_NAVIGATION: "true"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
@@ -181,19 +191,19 @@ steps:
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
       # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
-      - label: ":bitbar: :android: RN {{matrix}} Android 12 (New Arch) end-to-end tests"
+      - label: ":bitbar: :android: RN {{matrix.reactnative}} Android 12 (New Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch-full"
         timeout_in_minutes: 30
         plugins:
           artifacts#v1.9.0:
-            download: "test/react-native/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk"
+            download: "test/react-native/features/fixtures/generated/new-arch/{{matrix.reactnative}}/reactnative.apk"
             upload: ./test/react-native/maze_output/**/*
           docker-compose#v4.12.0:
             pull: react-native-maze-runner
             run: react-native-maze-runner
             service-ports: true
             command:
-              - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk
+              - --app=/app/features/fixtures/generated/new-arch/{{matrix.reactnative}}/reactnative.apk
               - --farm=bb
               - --device=ANDROID_12
               - --appium-version=1.22
@@ -213,17 +223,25 @@ steps:
               limit: 2
         env:
           RCT_NEW_ARCH_ENABLED: "1"
-          RN_VERSION: "{{matrix}}"
+          RN_VERSION: "{{matrix.reactnative}}"
+          REACT_NAVIGATION: "{{matrix.reactnavigation}}"
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.72"
-          - "0.74"
-          - "0.76"
-          - "0.78"
-          - "0.80"
-          - "0.81"
+          setup:
+            reactnative:
+              - "0.74"
+              - "0.76"
+              - "0.78"
+              - "0.80"
+              - "0.81"
+            reactnavigation:
+              - "true"
+          adjustments:
+            - with:
+                reactnative: "0.72"
+                reactnavigation: "false"
 
       - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (Old Arch) end-to-end tests"
         skip: true # Skipped pending PLAT-15027

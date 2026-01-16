@@ -1,0 +1,10 @@
+steps:
+  - block: "Trigger Cloudflare Workers pipeline"
+    key: "trigger-cloudflare-pipeline"
+
+  - label: ":pipeline: Upload Cloudflare Workers pipeline"
+    depends_on: "trigger-cloudflare-pipeline"
+    agents:
+      queue: macos
+    timeout_in_minutes: 5
+    command: buildkite-agent pipeline upload .buildkite/basic/cloudflare-pipeline.yml
