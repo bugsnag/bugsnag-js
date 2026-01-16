@@ -11,6 +11,9 @@
       "default": "./dist/derecursify.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "author": "Bugsnag",
   "repository": {
