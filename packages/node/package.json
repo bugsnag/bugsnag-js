@@ -1,13 +1,13 @@
 {
   "name": "@bugsnag/node",
   "version": "8.8.0",
-  "main": "dist/index-cjs.cjs",
-  "types": "dist/types/index-es.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/index-es.d.ts",
-      "import": "./dist/index-es.mjs",
-      "default": "./dist/index-cjs.cjs"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "description": "Bugsnag error reporter for Node.js",
@@ -20,13 +20,12 @@
     "access": "public"
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "scripts": {
-    "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "tsc"
   },
   "author": "Bugsnag",
   "license": "MIT",

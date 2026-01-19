@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.test.json",
   "include": ["."],
   "compilerOptions": {
     "lib": ["es2015", "es2022", "esnext"],

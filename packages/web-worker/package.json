@@ -33,9 +33,9 @@
         "service-worker"
     ],
     "scripts": {
-        "clean": "rm -fr dist && mkdir dist",
-        "build": "npm run clean && npm run build:npm",
-        "build:npm": "rollup --config rollup.config.npm.mjs",
+        "clean": "rm -fr dist",
+        "prebuild": "npm run clean",
+        "build": "tsc",
         "size": "../../bin/size dist/bugsnag.web-worker.min.js",
         "cdn-upload": "../../bin/cdn-upload dist/*"
     },

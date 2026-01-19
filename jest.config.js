@@ -11,6 +11,11 @@ const project = (displayName, packageNames, config = {}) => ({
 const extensions = 'js,jsx,ts,tsx'
 
 module.exports = {
+  globals: {
+    'ts-jest': {
+      tsconfig: '<rootDir>/tsconfig.test.json'
+    }
+  },
   collectCoverageFrom: [
     `**/packages/*/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,

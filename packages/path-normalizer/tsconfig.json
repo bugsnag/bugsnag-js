@@ -1,14 +1,10 @@
 {
-  "include": ["."],
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es5",
-    "module": "es2015",
-    "moduleResolution": "node",
-    "lib": ["es2017"],
-    "allowJs": true,
-    "noEmit": true,
-    "strict": true,
-    "types": ["node"],
-    "esModuleInterop": true
-  }
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "sourceMap": true
+  },
+  "include": ["src/**/*.ts"]
 }

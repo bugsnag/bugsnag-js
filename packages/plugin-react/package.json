@@ -24,9 +24,9 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "tsc"
   },
   "author": "Bugsnag",
   "license": "MIT",

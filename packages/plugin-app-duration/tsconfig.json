@@ -1,8 +1,11 @@
 {
-    "extends": "../../tsconfig.json",
-    "include": ["src/**/*.ts"],
-    "compilerOptions": {
-      "target": "ES2020"
-    }
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "sourceMap": true
+  },
+  "include": ["src/**/*.ts"]
 }
   

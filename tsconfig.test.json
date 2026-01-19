@@ -1,0 +1,34 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["jest"]
+  },
+  "include": [
+    "packages/core",
+    "packages/delivery-node",
+    "packages/delivery-react-native",
+    "packages/in-flight",
+    "packages/node",
+    "packages/plugin-aws-lambda",
+    "packages/plugin-contextualize",
+    "packages/plugin-navigation-breadcrumbs",
+    "packages/plugin-server-session",
+    "packages/plugin-react",
+    "packages/plugin-vue",
+    "packages/plugin-express",
+    "packages/plugin-koa",
+    "packages/plugin-restify",
+    "packages/plugin-strip-project-root",
+    "packages/plugin-interaction-breadcrumbs",
+    "packages/plugin-intercept",
+    "packages/plugin-node-unhandled-rejection",
+    "packages/plugin-node-in-project",
+    "packages/plugin-node-device",
+    "packages/plugin-node-surrounding-code",
+    "packages/plugin-node-uncaught-exception"
+  ],
+  "exclude": [
+    "packages/**/dist"
+  ]
+}

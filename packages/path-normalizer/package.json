@@ -23,7 +23,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "rollup --config rollup.config.js",
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "tsc",
     "test:types": "tsc -p tsconfig.json"
   },
   "author": "Bugsnag",

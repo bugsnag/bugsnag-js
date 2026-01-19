@@ -22,7 +22,8 @@
   },
   "scripts": {
     "clean": "rm -fr dist",
-    "build": "npm run clean && tsc",
+    "prebuild": "npm run clean",
+    "build": "tsc",
     "test:types": "tsc -p tsconfig.json --noEmit"
   },
   "files": ["dist"]
