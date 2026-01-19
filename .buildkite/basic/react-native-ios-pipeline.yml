@@ -31,45 +31,45 @@ steps:
           automatic:
             - exit_status: "*"
               limit: 1
-#      #
-#      # End-to-end tests
-#      #
-#      - label: ":bitbar: :mac: RN {{matrix}} iOS end-to-end tests"
-#        depends_on: "build-react-native-ios-fixture-new-arch"
-#        timeout_in_minutes: 30
-#        plugins:
-#          artifacts#v1.9.0:
-#            download: "test/react-native/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa"
-#            upload: ./test/react-native/maze_output/**/*
-#          docker-compose#v4.12.0:
-#            pull: react-native-maze-runner
-#            run: react-native-maze-runner
-#            service-ports: true
-#            command:
-#              - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
-#              - --farm=bb
-#              - --device=IOS_17|IOS_18|IOS_26
-#              - --fail-fast
-#              - --no-tunnel
-#              - --aws-public-ip
-#          test-collector#v1.10.2:
-#            files: "reports/TEST-*.xml"
-#            format: "junit"
-#            branch: "^main|next$$"
-#            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
-#        env:
-#          RCT_NEW_ARCH_ENABLED: "1"
-#          RN_VERSION: "{{matrix}}"
-#          REACT_NAVIGATION: "true"
-#        retry:
-#          manual:
-#            permit_on_passed: true
-#          automatic:
-#            - exit_status: 103  # Appium session failed
-#              limit: 2
-#        concurrency: 25
-#        concurrency_group: "bitbar"
-#        concurrency_method: eager
-#        matrix:
-#          - "0.82"
-#
+      #
+      # End-to-end tests
+      #
+      - label: ":bitbar: :mac: RN {{matrix}} iOS end-to-end tests"
+        depends_on: "build-react-native-ios-fixture-new-arch"
+        timeout_in_minutes: 30
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
+              - --farm=bb
+              - --device=IOS_17|IOS_18|IOS_26
+              - --fail-fast
+              - --no-tunnel
+              - --aws-public-ip
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
+        env:
+          RCT_NEW_ARCH_ENABLED: "1"
+          RN_VERSION: "{{matrix}}"
+          REACT_NAVIGATION: "true"
+        retry:
+          manual:
+            permit_on_passed: true
+          automatic:
+            - exit_status: 103  # Appium session failed
+              limit: 2
+        concurrency: 25
+        concurrency_group: "bitbar"
+        concurrency_method: eager
+        matrix:
+          - "0.82"
+
