@@ -161,6 +161,9 @@ Then('the event {string} equals the version-dependent string:') do |field_path, 
   payload = Maze::Server.errors.current[:body]
   payload_value = Maze::Helper.read_key_path(payload, "events.0.#{field_path}")
 
+  puts "payload: #{payload.inspect}"
+  puts "payload_value: #{payload_value.inspect}"
+
   expected_value = get_value_for_arch_and_version(table)
 
   unless expected_value.eql?('@skip')
