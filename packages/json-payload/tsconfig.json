@@ -1,8 +1,10 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src/**/*.ts"],
   "compilerOptions": {
-    "lib": ["es2017"],
-    "types": ["node", "./safe-json-stringify.d.ts"],
-  }
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "sourceMap": true
+  },
+  "include": ["src/**/*.ts"]
 }

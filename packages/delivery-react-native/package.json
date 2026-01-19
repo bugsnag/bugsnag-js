@@ -12,11 +12,8 @@
     "access": "public"
   },
   "files": [
-    "dist"
+    "*.js"
   ],
-  "scripts": {
-    "build": "rollup --config rollup.config.js"
-  },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {

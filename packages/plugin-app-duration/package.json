@@ -6,8 +6,7 @@
   "exports": {
     ".": {
       "types": "./dist/types/app-duration.d.ts",
-      "default": "./dist/app-duration.js",
-      "import": "./dist/app-duration.mjs"
+      "default": "./dist/app-duration.js"
     }
   },
   "description": "@bugsnag/js plugin to set app duration in browsers and node",
@@ -31,8 +30,8 @@
     "@bugsnag/core": "^8.0.0"
   },
   "scripts": {
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "tsc"
   }
 }

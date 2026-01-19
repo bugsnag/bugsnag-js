@@ -6,8 +6,7 @@
   "exports": {
     ".": {
       "types": "./dist/types/console-breadcrumbs.d.ts",
-      "default": "./dist/console-breadcrumbs.js",
-      "import": "./dist/console-breadcrumbs.mjs"
+      "default": "./dist/console-breadcrumbs.js"
     }
   },
   "description": "@bugsnag/js plugin to record console log method calls as breadcrumbs",
@@ -31,8 +30,8 @@
     "@bugsnag/core": "^8.0.0"
   },
    "scripts": {
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "tsc"
   }
 }
