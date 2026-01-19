@@ -7,7 +7,7 @@ def get_test_url(path)
   if Maze.config.aws_public_ip
     maze_runner = Maze.public_address
   else
-    maze_runner = "#{ENV['HOST']}:9339"
+    maze_runner = "#{ENV['HOST'] || 'localhost'}:9339"
   end
 
   protocol = Maze.config.https ? 'https' : 'http'
@@ -19,6 +19,10 @@ def get_test_url(path)
   config_query_string = "NOTIFY=#{notify}&SESSIONS=#{sessions}&API_KEY=#{$api_key}&LOGS=#{logs}&REFLECT=#{reflect}"
 
   uri = URI("#{protocol}://#{maze_runner}/docs#{path}")
+
+  # store hostname and url for later use
+  Maze::Store.values["browser.hostname"] = maze_runner
+  Maze::Store.values["browser.url"] = "#{protocol}://#{maze_runner}"
 
   if uri.query
     uri.query += "&#{config_query_string}"

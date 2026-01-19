@@ -2,7 +2,8 @@ const jsonStringify = require('@bugsnag/safe-json-stringify')
 const EVENT_REDACTION_PATHS = [
   'events.[].metaData',
   'events.[].breadcrumbs.[].metaData',
-  'events.[].request'
+  'events.[].request',
+  'events.[].response'
 ]
 
 module.exports.event = (event, redactedKeys) => {

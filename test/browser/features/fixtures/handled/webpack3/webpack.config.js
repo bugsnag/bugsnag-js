@@ -14,7 +14,7 @@ module.exports = {
     filename: '[name].js'
   },
   plugins: [
-    new es3ifyPlugin(),
-    new webpack.optimize.UglifyJsPlugin({ compress: false, mangle: false, ie8: true })
+    new es3ifyPlugin()
+    // UglifyJs plugin disabled due to ES6 compatibility issues
   ]
 }

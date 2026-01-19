@@ -2,8 +2,11 @@
 
 ## [Unreleased]
 
+This release adds support for notitfying failed network requests using the new `plugin-network-instrumentation` package
+
 ### Added
 
+(plugin-network-instrumentation) Add new plugin to notify failed network requests [#2647](https://github.com/bugsnag/bugsnag-js/pull/2647)
 (plugin-cloudflare-workers): Add initial support for Cloudflare Workers [#2643](https://github.com/bugsnag/bugsnag-js/pull/2643) [#2644](https://github.com/bugsnag/bugsnag-js/pull/2644)
 (plugin-contextualize) Return callback value from contextualize plugin [#2654](https://github.com/bugsnag/bugsnag-js/pull/2654)
 

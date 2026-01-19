@@ -1,8 +1,9 @@
 {
-  "name": "@bugsnag/plugin-network-breadcrumbs",
+  "name": "@bugsnag/plugin-network-instrumentation",
   "version": "8.6.0",
-  "main": "network-breadcrumbs.js",
-  "description": "@bugsnag/js plugin to record browser requests as breadcrumbs",
+  "main": "network-instrumentation.js",
+  "types": "types/bugsnag-plugin-network-instrumentation.d.ts",
+  "description": "@bugsnag/js plugin for HTTP error handling",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
@@ -12,15 +13,14 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "network-instrumentation.js",
+    "lib",
+    "types"
   ],
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
     "@bugsnag/core": "^8.6.0"
-  },
-  "dependencies": {
-    "@bugsnag/request-tracker": "^8.0.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
