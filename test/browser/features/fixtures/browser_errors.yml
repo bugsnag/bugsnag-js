@@ -8,7 +8,7 @@ ie_11:
     errorMessage: "Expected ';'"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -34,7 +34,7 @@ edge_17:
     errorMessage: "Expected ';'"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -60,7 +60,7 @@ safari_10:
     errorMessage: "Unexpected token '!'. Parse error."
     lineNumber: 18
     columnNumber: 0
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -86,7 +86,7 @@ safari_16:
     errorMessage: "Unexpected token '!'. Parse error."
     lineNumber: 18
     columnNumber: 0
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -112,7 +112,7 @@ ios_11:
     errorMessage: "Unexpected token '!'. Parse error."
     lineNumber: 18
     columnNumber: 0
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -138,7 +138,7 @@ ios_15:
     errorMessage: "Unexpected token '!'. Parse error."
     lineNumber: 18
     columnNumber: 0
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -164,7 +164,7 @@ android_4:
     errorMessage: "Unexpected token '!'"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -190,7 +190,7 @@ android_6:
     errorMessage: "Unexpected token '!'"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -216,7 +216,7 @@ android_7:
     errorMessage: "Unexpected token '!'"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -242,7 +242,7 @@ android_8:
     errorMessage: "Unexpected token '!'"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -268,7 +268,7 @@ android_9:
     errorMessage: "Unexpected token '!'"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -294,7 +294,7 @@ firefox_78:
     errorMessage: "unexpected token: '!'"
     lineNumber: 18
     columnNumber: 12
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -320,7 +320,7 @@ chrome_43:
     errorMessage: "Unexpected token !"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -346,7 +346,7 @@ chrome_72:
     errorMessage: "Unexpected token !"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -374,7 +374,7 @@ chrome_latest:
     errorMessage: "Unexpected token '!'"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -400,7 +400,7 @@ edge_latest:
     errorMessage: "Unexpected token '!'"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"
@@ -426,7 +426,7 @@ firefox_latest:
     errorMessage: "unexpected token: '!'"
     lineNumber: 18
     columnNumber: 13
-    file: '/unhandled/script/a.html'
+    file: '/unhandled/script/syntax_error.html'
   unhandled_thrown:
     errorClass: 'Error'
     errorMessage: "bad things"

@@ -22,6 +22,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new UglifyJsPlugin({ sourceMap: true, uglifyOptions: { compress: false, mangle: false, ie8: true } })
+    new UglifyJsPlugin({ sourceMap: true, uglifyOptions: { compress: false, mangle: false } })
   ]
 }

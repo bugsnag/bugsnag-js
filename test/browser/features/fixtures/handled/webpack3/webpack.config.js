@@ -3,14 +3,18 @@ const webpack = require('webpack')
 const es3ifyPlugin = require('es3ify-webpack-plugin')
 
 module.exports = {
-  entry: { a: './src/a.js', b: './src/b.js', c: './src/c.js' },
+  entry: {
+    notify_new_error: './src/notify_new_error.js',
+    try_catch_notify: './src/try_catch_notify.js',
+    promise_catch: './src/promise_catch.js'
+  },
   devtool: 'sourcemap',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
   },
   plugins: [
-    new es3ifyPlugin(),
-    new webpack.optimize.UglifyJsPlugin({ compress: false, mangle: false, ie8: true })
+    new es3ifyPlugin()
+    // UglifyJs plugin disabled due to ES6 compatibility issues
   ]
 }

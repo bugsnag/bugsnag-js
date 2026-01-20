@@ -29,7 +29,7 @@ module.exports = {
     project('web workers', ['web-worker'], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),
-    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
+    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser', 'request-tracker']),
     project('browser', [
       'browser',
       'delivery-x-domain-request',
@@ -50,7 +50,8 @@ module.exports = {
       'plugin-inline-script-content',
       'plugin-simple-throttle',
       'plugin-console-breadcrumbs',
-      'plugin-browser-session'
+      'plugin-browser-session',
+      'plugin-network-instrumentation'
     ], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),
@@ -131,6 +132,10 @@ module.exports = {
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures']
     }),
-    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' })
+    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' }),
+    project('cloudflare-workers', ['plugin-cloudflare-workers'], {
+      testEnvironment: 'node',
+      setupFilesAfterEnv: ['<rootDir>/packages/plugin-cloudflare-workers/test/setup.ts']
+    })
   ]
 }

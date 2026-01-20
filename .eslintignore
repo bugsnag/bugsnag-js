@@ -10,3 +10,5 @@ packages/**/fixtures
 test/browser
 test/node
 test/react-native-cli/features/fixtures
+test/react-native/features/fixtures
+test/cloudflare-workers
