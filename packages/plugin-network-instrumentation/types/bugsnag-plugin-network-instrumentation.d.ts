@@ -25,10 +25,20 @@ export interface BugsnagPluginHttpErrorsConfiguration {
   httpErrorCodes?: number | HttpErrorRange | Array<number | HttpErrorRange>
 
   /**
-   * Maximum size of the request body to capture (in characters)
-   * @default 5000
+   * Maximum size in bytes of the request body to capture
+   * Disabled as default
+   * @default 0
    */
   maxRequestSize?: number
+
+  /**
+   * Maximum size in bytes of the response body to capture
+   * Does not capture streaming responses, such as a
+   * fetch request with a ReadableStream body
+   * Disabled as default
+   * @default 0
+   */
+  maxResponseSize?: number
 
   /**
    * Callback function to intercept HTTP errors before they are reported.
