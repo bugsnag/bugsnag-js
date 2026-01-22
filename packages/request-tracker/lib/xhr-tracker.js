@@ -1,5 +1,6 @@
 const RequestTracker = require('./request-tracker')
 const xhrHeaderStringToObject = require('./xhr-header-string-to-object')
+const xhrResponseParser = require('./xhr-response-parser')
 
 /**
  * Create XHR request tracker with singleton pattern
@@ -72,7 +73,7 @@ function createXhrTracker (global, options = {}) {
             status: this.status,
             state: 'success',
             headers: getResponseHeaders(),
-            body: this.responseText
+            body: xhrResponseParser(this)
           })
         }
 
@@ -81,7 +82,7 @@ function createXhrTracker (global, options = {}) {
             endTime: Date.now(),
             state: 'error',
             headers: getResponseHeaders(),
-            body: this.responseText
+            body: xhrResponseParser(this)
           })
         }
 
