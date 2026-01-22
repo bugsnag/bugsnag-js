@@ -63,16 +63,11 @@ end
 
 When('I relaunch the app after a crash') do
   state = wait_for_app_state :not_running
-  # TODO: Really we should be using terminate_app/activate_app with the newer Appium client,
-  #       but for some reason they seem to make some scenarios flaky (presumably due to the
-  #       nature of how/when they close the app).
   manager = Maze::Api::Appium::AppManager.new
   if state != :not_running
-    manager.close
-    # manager.terminate
+    manager.terminate
   end
-  manager.launch
-  # manager.activate
+  manager.activate
 end
 
 When('I clear any error dialogue') do
