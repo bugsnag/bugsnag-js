@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [8.8.0] - 2026-01-20
 
 This release adds support for notitfying failed network requests using the new `plugin-network-instrumentation` package
 

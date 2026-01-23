@@ -15,5 +15,8 @@ export const endpoints = {
 }
 
 export const plugins = [
-  BugsnagPluginNetworkInstrumentation()
+  BugsnagPluginNetworkInstrumentation({
+    maxRequestSize: 5000,
+    maxResponseSize: 5000
+  })
 ]

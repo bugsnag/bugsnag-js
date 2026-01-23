@@ -10,7 +10,8 @@ const shouldCaptureStatusCode = require('./lib/should-capture-status-code')
 const truncate = require('./lib/truncate')
 
 const DEFAULT_HTTP_ERROR_CODES = [{ min: 400, max: 599 }]
-const DEFAULT_MAX_REQUEST_SIZE = 5000
+const DEFAULT_MAX_RESPONSE_SIZE = 0
+const DEFAULT_MAX_REQUEST_SIZE = 0
 
 /**
  * Creates the HTTP errors plugin with configuration
@@ -24,6 +25,7 @@ const DEFAULT_MAX_REQUEST_SIZE = 5000
 module.exports = (config = {}, global = window) => {
   const {
     httpErrorCodes = DEFAULT_HTTP_ERROR_CODES,
+    maxResponseSize = DEFAULT_MAX_RESPONSE_SIZE,
     maxRequestSize = DEFAULT_MAX_REQUEST_SIZE,
     onHttpError
   } = config
@@ -92,9 +94,7 @@ module.exports = (config = {}, global = window) => {
             url: startContext.url,
             httpMethod: startContext.method,
             headers: startContext.headers,
-            params: requestParams,
-            body: startContext.body,
-            bodyLength: startContext.body ? startContext.body.length : undefined
+            params: requestParams
           }
           const responseObj = {
             statusCode: endContext.status,
@@ -114,13 +114,15 @@ module.exports = (config = {}, global = window) => {
           }
 
           // Truncate request body
-          if (requestObj.body) {
-            requestObj.body = truncate(requestObj.body, maxRequestSize)
+          if (maxRequestSize > 0 && startContext.body) {
+            requestObj.body = truncate(startContext.body, maxRequestSize)
+            requestObj.bodyLength = startContext.body.length
           }
 
           // Truncate response body - XHR only
-          if (responseObj.body) {
-            responseObj.body = truncate(responseObj.body, maxRequestSize)
+          if (maxResponseSize > 0 && endContext.body) {
+            responseObj.body = truncate(endContext.body, maxResponseSize)
+            responseObj.bodyLength = endContext.body.length
           }
 
           // Strip query parameters from URL

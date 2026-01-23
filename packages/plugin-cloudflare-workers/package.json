@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-cloudflare-workers",
-  "version": "8.6.0",
+  "version": "8.8.0",
   "main": "src/index.js",
   "types": "types/bugsnag-plugin-cloudflare-workers.d.ts",
   "description": "Cloudflare Workers support for @bugsnag/js",
@@ -19,11 +19,11 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/in-flight": "^8.6.0",
-    "@bugsnag/plugin-browser-session": "^8.6.0"
+    "@bugsnag/in-flight": "^8.8.0",
+    "@bugsnag/plugin-browser-session": "^8.8.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.6.0",
+    "@bugsnag/core": "^8.8.0",
     "@cloudflare/workers-types": "^4.20251213.0"
   },
   "peerDependencies": {
