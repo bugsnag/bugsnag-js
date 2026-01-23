@@ -20,7 +20,8 @@ Bugsnag.start({
   apiKey: 'YOUR_API_KEY_HERE',
   plugins: [BugsnagPluginNetworkInstrumentation({
     httpErrorCodes = [400, 401, { min: 450: max 499 }], // Status codes to report as errors
-    maxRequestSize = 20_000,                            // Truncate the request and response body over this size (in kb) 
+    maxRequestSize = 20_000,                            // Truncate the request body over this size (in bytes) defaults to 0 (nothing is captured)
+    maxResponseSize = 20_000,                           // Truncate the response body over this size (in bytes) defaults to 0 (nothing is captured)
     onHttpError: ({ request, response }) => {
       request.headers['x-custom-header'] = 'value'      // Modify any request values before sending
       response.body = 'custom body'                     // Modify any response values before sending

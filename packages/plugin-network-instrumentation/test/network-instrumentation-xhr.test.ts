@@ -20,9 +20,8 @@ describe('plugin-network-instrumentation', () => {
       status: number | null
       statusText: string
       responseURL: string
-      response: string
-      responseText: string
-      responseType: string
+      response: typeof XMLHttpRequest.prototype.response
+      responseType: typeof XMLHttpRequest.prototype.responseType
       _method: string
       _url: string
       _requestHeaders: Headers
@@ -34,7 +33,6 @@ describe('plugin-network-instrumentation', () => {
         this.statusText = ''
         this.responseURL = ''
         this.response = ''
-        this.responseText = ''
         this.responseType = ''
         this._method = 'GET'
         this._url = ''
@@ -102,7 +100,9 @@ describe('plugin-network-instrumentation', () => {
       const notifyCallbacks: Event[] = []
 
       plugin = createPlugin({
-        httpErrorCodes: { min: 400, max: 499 }
+        httpErrorCodes: { min: 400, max: 499 },
+        maxRequestSize: 1000,
+        maxResponseSize: 1000
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
@@ -114,7 +114,7 @@ describe('plugin-network-instrumentation', () => {
       xhr.statusText = 'Not Found'
       xhr.responseURL = 'https://api.example.com/users/123'
       xhr.response = '{"error": "User not found", "code": "USER_NOT_FOUND"}'
-      xhr.responseText = '{"error": "User not found", "code": "USER_NOT_FOUND"}'
+      xhr.responseType = 'json'
 
       // Simulate an XHR request
       xhr.open('POST', 'https://api.example.com/users/123')
@@ -143,22 +143,22 @@ describe('plugin-network-instrumentation', () => {
       expect(event.request.httpMethod).toBe('POST')
       expect(event.request.body).toBe(requestBody)
       expect(event.request.bodyLength).toBe(requestBody.length)
-      // expect(event.request.headers?.['content-type']).toBe('application/json')
+      expect(event.request.headers).toStrictEqual({ 'Content-Type': 'application/json' })
 
       // Verify response metadata including body
       expect(event.response.statusCode).toBe(404)
       expect(event.response.headers['content-type']).toBe('application/json')
       expect(event.response.headers['content-length']).toBe('45')
-      expect(event.response.body).toBe('{"error": "User not found", "code": "USER_NOT_FOUND"}')
-      expect(event.response.bodyLength).toBe(xhr.responseText.length)
+      expect(event.response.body).toBe(JSON.stringify(xhr.response))
+      expect(event.response.bodyLength).toBe(JSON.stringify(xhr.response).length)
     })
 
-    it('should truncate XHR response body when it exceeds maxRequestSize', async () => {
+    it('should truncate XHR response body when it exceeds maxResponseSize', async () => {
       const notifyCallbacks: Event[] = []
 
       plugin = createPlugin({
         httpErrorCodes: { min: 400, max: 499 },
-        maxRequestSize: 20
+        maxResponseSize: 20
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
@@ -171,7 +171,6 @@ describe('plugin-network-instrumentation', () => {
       xhr.statusText = 'Internal Server Error'
       xhr.responseURL = 'https://api.example.com/error'
       xhr.response = largeResponseBody
-      xhr.responseText = largeResponseBody
 
       xhr.open('GET', 'https://api.example.com/error')
       xhr.send()
@@ -225,7 +224,6 @@ describe('plugin-network-instrumentation', () => {
       xhr.status = 403
       xhr.statusText = 'Forbidden'
       xhr.response = 'Forbidden'
-      xhr.responseText = 'Forbidden'
 
       xhr.open('GET', 'https://api.example.com/data?userId=42')
       xhr.send()

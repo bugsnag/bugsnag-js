@@ -282,7 +282,7 @@ describe('plugin-network-instrumentation', () => {
       expect(requestMetadata.bodyLength).toBe(100)
     })
 
-    it('should use default maxRequestSize of 5000 when not specified', async () => {
+    it('should use default maxRequestSize of 0 when not specified', async () => {
       const notifyCallbacks: Event[] = []
 
       plugin = createPlugin({
@@ -311,8 +311,8 @@ describe('plugin-network-instrumentation', () => {
       const event = notifyCallbacks[0]
       const requestMetadata = event.request
 
-      expect(requestMetadata.body.length).toBeLessThanOrEqual(5000)
-      expect(requestMetadata.bodyLength).toBe(10000)
+      expect(requestMetadata.body).toBeUndefined()
+      expect(requestMetadata.bodyLength).toBeUndefined()
     })
   })
 
@@ -528,7 +528,9 @@ describe('plugin-network-instrumentation', () => {
       const notifyCallbacks: Event[] = []
 
       plugin = createPlugin({
-        httpErrorCodes: { min: 400, max: 499 }
+        httpErrorCodes: { min: 400, max: 499 },
+        maxRequestSize: 1000,
+        maxResponseSize: 1000
       })
 
       const client = new Client({ apiKey: 'api_key', plugins: [plugin] })
