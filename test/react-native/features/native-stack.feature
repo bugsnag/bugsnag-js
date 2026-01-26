@@ -129,22 +129,23 @@ Scenario: Handled native promise rejection with native stacktrace
 
   # the javascript part follows
   # On 0.74+ New Arch there is no JS stacktrace - see PLAT-12193
-  And the event "exceptions.0.stacktrace.20.columnNumber" equals the version-dependent string:
+  # We're check the method: asyncGeneratorStep
+  And the event "exceptions.0.stacktrace.21.columnNumber" equals the version-dependent string:
   | arch | version | value                   |
   | new  | 0.72    | @not_null               |
   | new  | default | @skip                   |
   | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.20.file" equals the version-dependent string:
+  And the event "exceptions.0.stacktrace.21.file" equals the version-dependent string:
   | arch | version | value                   |
   | new  | 0.72    | @not_null               |
   | new  | default | @skip                   |
   | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.20.lineNumber" equals the version-dependent string:
+  And the event "exceptions.0.stacktrace.21.lineNumber" equals the version-dependent string:
   | arch | version | value                   |
   | new  | 0.72    | @not_null               |
   | new  | default | @skip                   |
   | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.20.type" equals the version-dependent string:
+  And the event "exceptions.0.stacktrace.21.type" equals the version-dependent string:
   | arch | version | value                   |
   | new  | 0.72    | @null                   |
   | new  | default | @skip                   |
@@ -173,22 +174,23 @@ Scenario: Unhandled native promise rejection with native stacktrace
 
   # the javascript part follows
   # On 0.74+ New Arch there is no JS stacktrace - see PLAT-12193
-  And the event "exceptions.0.stacktrace.20.columnNumber" equals the version-dependent string:
+  # We're check the method: asyncGeneratorStep
+  And the event "exceptions.0.stacktrace.21.columnNumber" equals the version-dependent string:
   | arch | version | value                   |
   | new  | 0.72    | @not_null               |
   | new  | default | @skip                   |
   | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.20.file" equals the version-dependent string:
+  And the event "exceptions.0.stacktrace.21.file" equals the version-dependent string:
   | arch | version | value                   |
   | new  | 0.72    | @not_null               |
   | new  | default | @skip                   |
   | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.20.lineNumber" equals the version-dependent string:
+  And the event "exceptions.0.stacktrace.21.lineNumber" equals the version-dependent string:
   | arch | version | value                   |
   | new  | 0.72    | @not_null               |
   | new  | default | @skip                   |
   | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.20.type" equals the version-dependent string:
+  And the event "exceptions.0.stacktrace.21.type" equals the version-dependent string:
   | arch | version | value                   |
   | new  | 0.72    | @null                   |
   | new  | default | @skip                   |

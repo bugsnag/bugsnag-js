@@ -48,7 +48,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
-              - --device=IOS_15
+              - --device=IOS_17|IOS_18|IOS_26
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
