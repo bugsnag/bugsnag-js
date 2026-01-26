@@ -5,7 +5,9 @@ require 'net/http'
 # @step_input reqbody [String] urlencoded data to send.
 # @step_input url [String] The URL to post data to.
 When("I POST the data {string} to the URL {string}") do |reqbody, url|
-  Net::HTTP.post(URI(url), reqbody)
+  Net::HTTP.post(URI(url),
+                 reqbody,
+                 'Content-Type' => 'application/x-www-form-urlencoded')
 end
 
 When('I open the URL {string} tolerating any error') do |url|
