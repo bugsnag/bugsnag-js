@@ -29,12 +29,5 @@
     "test:types": "tsc -p tsconfig.json"
   },
   "author": "Bugsnag",
-  "license": "MIT",
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.2",
-    "@rollup/plugin-node-resolve": "^16.0.0",
-    "@rollup/plugin-typescript": "^12.1.2",
-    "rollup": "^4.24.0",
-    "typescript": "^5.7.2"
-  }
+  "license": "MIT"
 }
