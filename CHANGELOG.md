@@ -1,9 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependencies
+
+Update bugsnag-cocoa to [v6.35.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.35.0) [#2663](https://github.com/bugsnag/bugsnag-js/pull/2663)
+
 ## [8.8.0] - 2026-01-20
 
 This release adds support for notitfying failed network requests using the new `plugin-network-instrumentation` package
-
 ### Added
 
 (plugin-network-instrumentation) Add new plugin to notify failed network requests [#2647](https://github.com/bugsnag/bugsnag-js/pull/2647)
