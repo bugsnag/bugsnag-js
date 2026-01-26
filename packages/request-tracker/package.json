@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/request-tracker",
-  "version": "8.8.0",
+  "version": "8.8.1",
   "main": "index.js",
   "types": "index.d.ts",
   "description": "Shared HTTP request tracking for Bugsnag JavaScript plugins",
