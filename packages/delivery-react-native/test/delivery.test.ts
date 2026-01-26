@@ -1,5 +1,5 @@
 import { Client, Event } from '@bugsnag/core'
-import delivery from '../src/delivery'
+import delivery from '../delivery'
 
 type NativeStackIOS = string[]
 interface AndroidStackFrame {

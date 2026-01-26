@@ -1,4 +1,4 @@
- const Client = require('../src/client').default
+import Client from '../src/client'
 
 /* --------------------------------------------------------------------------
  *  Constants – keep tests self-contained
