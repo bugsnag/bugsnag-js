@@ -40,7 +40,8 @@ const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtur
 
 const INTERNAL_DEPENDENCIES = [
   '@bugsnag/react-native',
-  '@bugsnag/request-tracker'
+  '@bugsnag/request-tracker',
+  '@bugsnag/plugin-network-instrumentation'
 ]
 
 // make sure we install a compatible versions of peer dependencies

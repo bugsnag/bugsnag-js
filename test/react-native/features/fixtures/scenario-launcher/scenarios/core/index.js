@@ -81,3 +81,6 @@ export { ReactNativeErrorBoundaryScenario } from './ReactNativeErrorBoundaryScen
 // grouping-discriminator.feature
 export { GroupingDiscriminatorScenario } from './GroupingDiscriminatorScenario'
 export { GroupingDiscriminatorNativeScenario } from './GroupingDiscriminatorNativeScenario'
+
+// http_errors.feature
+export { NetworkRequestScenario } from './NetworkRequestScenario'
