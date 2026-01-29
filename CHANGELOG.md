@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+(plugin-network-instrumentation) Stop reporting HTTPErrors as unhandled [#2662](https://github.com/bugsnag/bugsnag-js/pull/2662)
+
 ## [8.8.1] - 2026-01-26
 
 ### Fixed

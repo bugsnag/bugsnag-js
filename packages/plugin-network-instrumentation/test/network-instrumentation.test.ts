@@ -87,7 +87,7 @@ describe('plugin-network-instrumentation', () => {
       expect(event.exceptions[0].errorMessage).toBe('404: https://example.com/api/users')
       expect(event.context).toBe('GET example.com')
       expect(event.severity).toBe('error')
-      expect(event.unhandled).toBe(true)
+      expect(event.unhandled).toBe(false)
       expect(event.severityReason.type).toBe('httpError')
       expect(event.request.url).toBe('https://example.com/api/users')
       expect(event.request.httpMethod).toBe('GET')
