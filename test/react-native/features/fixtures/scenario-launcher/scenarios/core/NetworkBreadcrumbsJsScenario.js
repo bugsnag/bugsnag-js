@@ -2,9 +2,9 @@ import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
 
 export class NetworkBreadcrumbsJsScenario extends Scenario {
-  constructor (configuration) {
+  constructor (nativeConfig, jsConfig, scenarioData) {
     super()
-    this.reflectEndpoint = configuration.endpoints.notify.replace('/notify', '/reflect')
+    this.reflectEndpoint = nativeConfig.endpoints.notify.replace('/notify', '/reflect')
   }
 
   run () {
