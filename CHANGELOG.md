@@ -6,6 +6,12 @@
 
 Update bugsnag-android to [v6.22.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.22.0) [#2656](https://github.com/bugsnag/bugsnag-js/pull/2656)
 
+## [8.8.1] - 2026-01-26
+
+### Fixed
+
+(plugin-network-breadcrumbs, plugin-network-instrumentation) Ensure XMLHttpRequest response types are handled gracefully [#2660](https://github.com/bugsnag/bugsnag-js/pull/2660)
+
 ## [8.8.0] - 2026-01-20
 
 This release adds support for notitfying failed network requests using the new `plugin-network-instrumentation` package

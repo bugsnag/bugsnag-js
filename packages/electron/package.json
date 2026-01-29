@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/electron",
-  "version": "8.8.0",
+  "version": "8.8.1",
   "main": "src/notifier.js",
   "exports": {
     ".": {
@@ -55,7 +55,7 @@
     "@bugsnag/plugin-electron-session": "^8.8.0",
     "@bugsnag/plugin-interaction-breadcrumbs": "^8.8.0",
     "@bugsnag/plugin-internal-callback-marker": "^8.8.0",
-    "@bugsnag/plugin-network-breadcrumbs": "^8.8.0",
+    "@bugsnag/plugin-network-breadcrumbs": "^8.8.1",
     "@bugsnag/plugin-node-surrounding-code": "^8.8.0",
     "@bugsnag/plugin-node-uncaught-exception": "^8.8.0",
     "@bugsnag/plugin-node-unhandled-rejection": "^8.8.0",
