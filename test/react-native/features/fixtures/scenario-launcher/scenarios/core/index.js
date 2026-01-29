@@ -35,6 +35,7 @@ export { BreadcrumbsAutomaticErrorScenario } from './BreadcrumbsAutomaticErrorSc
 export { BreadcrumbsJsManualScenario } from './BreadcrumbsJsManualScenario'
 export { BreadcrumbsNativeManualScenario } from './BreadcrumbsNativeManualScenario'
 export { BreadcrumbsNullEnabledBreadcrumbTypesScenario } from './BreadcrumbsNullEnabledBreadcrumbTypesScenario'
+export { NetworkBreadcrumbsJsScenario } from './NetworkBreadcrumbsJsScenario'
 
 // device.feature
 export { DeviceJsHandledScenario } from './DeviceJsHandledScenario'

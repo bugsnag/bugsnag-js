@@ -1,0 +1,11 @@
+{
+    "type": "request",
+    "name": "XMLHttpRequest succeeded",
+    "timestamp": "^\\d{4}\\-\\d{2}\\-\\d{2}T\\d{2}:\\d{2}:[\\d\\.]+Z?$",
+    "metaData": {
+        "status": "NUMBER",
+        "method": "GET",
+        "url": "^http:\/\/[0-9.:]*\/reflect$",
+        "duration": "NUMBER"
+    }
+}
