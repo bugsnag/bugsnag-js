@@ -106,7 +106,7 @@ describe('Client', () => {
         done()
       }
       const client = new Client({
-        apiKey: 'API_KEY_YEAH',
+        apiKey: '123456abcdef123456abcdef123456ab',
         logger: {
           debug: log,
           info: log,
@@ -334,21 +334,21 @@ describe('Client', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
 
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.notify(undefined)
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.notify(null)
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.notify(() => {})
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.notify({ name: 'some message' })
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.notify(1)
-      // @ts-ignore
+
       client.notify('errrororor')
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.notify('str1', 'str2')
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.notify('str1', null)
 
       expect(payloads[0].events[0].toJSON().exceptions[0].message).toBe('notify() received a non-error. See "notify()" tab for more detail.')
@@ -425,7 +425,7 @@ describe('Client', () => {
       }))
 
       const session = new Session()
-      // @ts-ignore
+
       client._session = session
 
       client.notify(new Error('111'), () => {}, (err, event) => {
@@ -447,7 +447,7 @@ describe('Client', () => {
       }))
 
       const session = new Session()
-      // @ts-ignore
+
       client._session = session
 
       client.notify(new Error('111'), () => {}, (err, event) => {
@@ -471,7 +471,7 @@ describe('Client', () => {
       }))
 
       const session = new Session()
-      // @ts-ignore
+
       client._session = session
 
       client.notify(new Error('111'), () => {}, (err, event) => {
@@ -492,7 +492,7 @@ describe('Client', () => {
       }))
 
       const session = new Session()
-      // @ts-ignore
+
       client._session = session
 
       client.notify(new Error('111'), () => {}, (err, event) => {
@@ -511,7 +511,8 @@ describe('Client', () => {
         sendEvent: (payload, cb) => cb(null)
       }))
       const orig = new Error('111')
-      // @ts-ignore
+
+      // @ts-expect-error - testing with unexpected arguments
       client.notify(orig, {}, (err, event) => {
         expect(err).toBe(null)
         expect(event).toBeTruthy()
@@ -550,13 +551,13 @@ describe('Client', () => {
 
     it('doesn’t add the breadcrumb if it didn’t contain a message', () => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.leaveBreadcrumb(undefined)
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.leaveBreadcrumb(null, { data: 'is useful' })
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.leaveBreadcrumb(null, {}, null)
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.leaveBreadcrumb(null, { t: 10 }, null, 4)
       expect(client._breadcrumbs.length).toBe(0)
     })
@@ -604,7 +605,7 @@ describe('Client', () => {
       const client = new Client({
         apiKey: 'API_KEY_YEAH'
       })
-      // @ts-ignore
+      // @ts-expect-error - testing with unexpected arguments
       client.leaveBreadcrumb('GET /jim', {}, 'requeeest')
       expect(client._breadcrumbs.length).toBe(1)
       expect(client._breadcrumbs[0].type).toBe('manual')
@@ -885,7 +886,7 @@ describe('Client', () => {
         featureFlags: [
           { name: 'a', variant: '1' },
           { name: 'b' },
-          // @ts-expect-error
+          // @ts-expect-error - testing with unexpected arguments
           { name: 'c', variant: 3 }
         ]
       })
@@ -906,7 +907,7 @@ describe('Client', () => {
         logger,
         featureFlags: [
           { name: 'a', variant: '1' },
-          // @ts-expect-error
+          // @ts-expect-error - testing with unexpected arguments
           { variant: 'b' },
           { name: 'c', variant: '3' }
         ]
@@ -944,7 +945,7 @@ describe('Client', () => {
         error: jest.fn()
       }
 
-      // @ts-expect-error
+      // @ts-expect-error - testing with unexpected arguments
       const client = new Client({ apiKey: 'a123456789012345678901234567890b', logger, featureFlags })
 
       expect(client._features).toStrictEqual([])
@@ -987,7 +988,7 @@ describe('Client', () => {
       it('does not add the flag if no name is passed', () => {
         const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
 
-        // @ts-expect-error
+        // @ts-expect-error - testing with unexpected arguments
         client.addFeatureFlag()
 
         expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }])
@@ -1027,7 +1028,7 @@ describe('Client', () => {
       it('does not add flags if nothing is passed', () => {
         const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
 
-        // @ts-expect-error
+        // @ts-expect-error - testing with unexpected arguments
         client.addFeatureFlags()
 
         expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }])
@@ -1062,7 +1063,7 @@ describe('Client', () => {
       it('does nothing if not given a flag', () => {
         const client = new Client({ apiKey: 'API_KEY', featureFlags: [{ name: 'a', variant: '1' }] })
 
-        // @ts-expect-error
+        // @ts-expect-error - testing with unexpected arguments
         client.clearFeatureFlag()
 
         expect(client._features).toStrictEqual([{ name: 'a', variant: '1' }])
