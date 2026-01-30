@@ -26,18 +26,8 @@ module.exports = api => {
       plugins: [
         // Add specific plugins for Object.assign polyfill if needed
         ['@babel/plugin-transform-object-assign'],
-        // Explicitly transform const/let to var
-        ['@babel/plugin-transform-block-scoping'],
         // Transform arrow functions
-        ['@babel/plugin-transform-arrow-functions'],
-        // Transform classes
-        ['@babel/plugin-transform-classes'],
-        // Transform spread
-        ['@babel/plugin-transform-spread'],
-        // Transform template literals
-        ['@babel/plugin-transform-template-literals'],
-        // Transform destructuring
-        ['@babel/plugin-transform-destructuring']
+        ['@babel/plugin-transform-arrow-functions']
       ]
     }
   }

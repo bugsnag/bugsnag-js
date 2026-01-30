@@ -21,7 +21,7 @@
     "size": "../../bin/size dist/bugsnag.min.js",
     "clean": "rm -fr dist && mkdir dist",
     "prebuild": "npm run clean",
-    "build": "tsc",
+    "build": "rollup --config rollup.config.mjs",
     "cdn-upload": "../../bin/cdn-upload dist/*"
   },
   "author": "Bugsnag",
