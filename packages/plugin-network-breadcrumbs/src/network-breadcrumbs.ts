@@ -19,7 +19,7 @@ type FetchArguments = Parameters<Window['fetch']>
 /*
  * Leaves breadcrumbs when network requests occur
  */
-export default (_ignoredUrls = [], win: GlobalWithFetchAndXHR = window): Plugin => {
+export default (_ignoredUrls: string[] = [], win: GlobalWithFetchAndXHR = window): Plugin => {
   let restoreFunctions: Array<() => void> = []
   const plugin: Plugin = {
     load: client => {

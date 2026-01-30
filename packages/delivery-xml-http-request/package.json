@@ -1,13 +1,19 @@
 {
   "name": "@bugsnag/delivery-xml-http-request",
   "version": "8.8.0",
-  "main": "dist/delivery.js",
-  "types": "dist/types/delivery.d.ts",
+  "main": "./dist/cjs/delivery.cjs",
+  "module": "./dist/esm/delivery.mjs",
+  "types": "./dist/cjs/delivery.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/delivery.d.ts",
-      "default": "./dist/delivery.js",
-      "import": "./dist/delivery.mjs"
+      "import": {
+        "types": "./dist/esm/delivery.d.ts",
+        "default": "./dist/esm/delivery.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/delivery.d.ts",
+        "default": "./dist/cjs/delivery.cjs"
+      }
     }
   },
   "description": "@bugsnag/js delivery mechanism for most browsers",
@@ -27,7 +33,7 @@
   "scripts": {
     "clean": "rm -fr dist",
     "prebuild": "npm run clean",
-    "build": "tsc"
+    "build": "rollup --config rollup.config.mjs"
   },
   "devDependencies": {
     "@bugsnag/core": "^8.8.0"

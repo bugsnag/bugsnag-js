@@ -1,12 +1,20 @@
 {
   "name": "@bugsnag/plugin-browser-session",
   "version": "8.8.0",
-  "main": "dist/session.js",
-  "types": "dist/types/session.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/session.cjs",
+  "module": "./dist/esm/session.mjs",
+  "types": "./dist/cjs/session.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/session.d.ts",
-      "default": "./dist/session.js"
+      "import": {
+        "types": "./dist/esm/session.d.ts",
+        "default": "./dist/esm/session.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/session.d.ts",
+        "default": "./dist/cjs/session.cjs"
+      }
     }
   },
   "description": "@bugsnag/js plugin to enable session tracking in browsers",
@@ -32,6 +40,6 @@
   "scripts": {
     "clean": "rm -fr dist",
     "prebuild": "npm run clean",
-    "build": "tsc"
+    "build": "rollup --config rollup.config.mjs"
   }
 }

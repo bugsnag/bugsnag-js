@@ -1,13 +1,20 @@
 {
   "name": "@bugsnag/plugin-browser-device",
   "version": "8.8.0",
-  "main": "dist/device.js",
-  "types": "dist/types/device.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/device.cjs",
+  "module": "./dist/esm/device.mjs",
+  "types": "./dist/cjs/device.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/device.d.ts",
-      "default": "./dist/device.js",
-      "import": "./dist/device.mjs"
+      "import": {
+        "types": "./dist/esm/device.d.ts",
+        "default": "./dist/esm/device.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/device.d.ts",
+        "default": "./dist/cjs/device.cjs"
+      }
     }
   },
   "description": "@bugsnag/js plugin to set device info in browsers",
@@ -36,6 +43,6 @@
   "scripts": {
     "clean": "rm -fr dist",
     "prebuild": "npm run clean",
-    "build": "tsc"
+    "build": "rollup --config rollup.config.mjs"
   }
 }

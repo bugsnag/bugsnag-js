@@ -1,10 +1,24 @@
 {
   "name": "@bugsnag/core",
   "version": "8.8.0",
-  "main": "dist/index.js",
-  "types": "dist/types/index.d.ts",
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
+  "type": "module",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.cjs"
+      }
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:bugsnag/bugsnag-js.git"
@@ -18,7 +32,7 @@
   "scripts": {
     "clean": "rm -fr dist",
     "prebuild": "npm run clean",
-    "build": "tsc"
+    "build": "rollup --config rollup.config.mjs"
   },
   "author": "Bugsnag",
   "license": "MIT",

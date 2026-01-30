@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    /* Basic Options */
-    "target": "es5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */
-    //"module": "es2015",                       /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
-    "moduleResolution": "node",
-    "lib": [ "dom", "es2022" ],               /* Specify library files to be included in the compilation. */
-    //"allowJs": true,                          /* Allow javascript files to be compiled. */
-    "jsx": "preserve",                        /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
-    "strict": true,                           /* Enable all strict type-checking options. */
-    //"baseUrl": "./",                          /* Base directory to resolve non-absolute module names. */
+    "target": "ES2015",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "jsx": "preserve",
+    "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "lib": [ "dom", "es2022" ]
   }
 }

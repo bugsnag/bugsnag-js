@@ -1,13 +1,20 @@
 {
   "name": "@bugsnag/plugin-strip-query-string",
   "version": "8.8.0",
-  "main": "dist/strip-query-string.js",
-  "types": "dist/types/strip-query-string.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/strip-query-string.cjs",
+  "module": "./dist/esm/strip-query-string.mjs",
+  "types": "./dist/cjs/strip-query-string.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/strip-query-string.d.ts",
-      "default": "./dist/strip-query-string.js",
-      "import": "./dist/strip-query-string.mjs"
+      "import": {
+        "types": "./dist/esm/strip-query-string.d.ts",
+        "default": "./dist/esm/strip-query-string.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/strip-query-string.d.ts",
+        "default": "./dist/cjs/strip-query-string.cjs"
+      }
     }
   },
   "description": "@bugsnag/js plugin to strip query string and document fragment from stackframe filenames",
@@ -33,6 +40,6 @@
   "scripts": {
     "clean": "rm -fr dist",
     "prebuild": "npm run clean",
-    "build": "tsc"
+    "build": "rollup --config rollup.config.mjs"
   }
 }
