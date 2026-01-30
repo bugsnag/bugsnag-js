@@ -1,34 +1,25 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2019",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "noEmit": true,
-    "types": ["jest"]
+    "allowJs": true,
+    "skipLibCheck": true,
+    "types": ["jest", "node"]
   },
   "include": [
-    "packages/core",
-    "packages/delivery-node",
-    "packages/delivery-react-native",
-    "packages/in-flight",
-    "packages/node",
-    "packages/plugin-aws-lambda",
-    "packages/plugin-contextualize",
-    "packages/plugin-navigation-breadcrumbs",
-    "packages/plugin-server-session",
-    "packages/plugin-react",
-    "packages/plugin-vue",
-    "packages/plugin-express",
-    "packages/plugin-koa",
-    "packages/plugin-restify",
-    "packages/plugin-strip-project-root",
-    "packages/plugin-interaction-breadcrumbs",
-    "packages/plugin-intercept",
-    "packages/plugin-node-unhandled-rejection",
-    "packages/plugin-node-in-project",
-    "packages/plugin-node-device",
-    "packages/plugin-node-surrounding-code",
-    "packages/plugin-node-uncaught-exception"
+    "packages/*/test/**/*.ts",
+    "packages/*/test/**/*.tsx",
+    "packages/*/src/**/*.test.ts",
+    "packages/*/src/test/**/*.ts",
+    "jest/**/*.ts"
   ],
   "exclude": [
-    "packages/**/dist"
+    "**/node_modules",
+    "**/dist"
   ]
 }

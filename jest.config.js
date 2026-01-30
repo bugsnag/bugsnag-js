@@ -1,12 +1,35 @@
 const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s?(x)`
 
-const project = (displayName, packageNames, config = {}) => ({
-  resolver: '<rootDir>/jest/node-exports-resolver',
-  roots: ['<rootDir>/packages'],
-  displayName,
-  testMatch: packageNames.map(testsForPackage),
-  ...config
-})
+// Base configuration shared across all projects
+const baseConfig = {
+  preset: 'ts-jest/presets/js-with-ts',
+  transform: {
+    '^.+\\.[jt]sx?$': ['ts-jest', {
+      tsconfig: {
+        module: 'commonjs',
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+        allowJs: true
+      },
+      diagnostics: {
+        ignoreCodes: [7016]
+      }
+    }]
+  },
+  transformIgnorePatterns: [
+    'node_modules/(?!(@bugsnag)/)'
+  ],
+  roots: ['<rootDir>/packages']
+}
+
+const project = (displayName, packageNames, customConfig = {}) => {
+  return {
+    ...baseConfig,
+    displayName,
+    testMatch: packageNames.map(testsForPackage),
+    ...customConfig
+  }
+}
 
 const extensions = 'js,jsx,ts,tsx'
 
@@ -14,12 +37,14 @@ module.exports = {
   modulePathIgnorePatterns: [
     '<rootDir>/packages/[^/]+/dist/'
   ],
+  testTimeout: 10000,
   collectCoverageFrom: [
-    `**/packages/*/**/*.{${extensions}}`,
+    `**/packages/*/src/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,
     `!**/*.test-*.{${extensions}}`,
     '!**/*.d.ts',
     '!**/dist/**',
+    '!**/node_modules/**',
     '!**/packages/js/**',
     '!<rootDir>/packages/plugin-angular/**/*',
     '!<rootDir>/packages/react-native/src/test/setup.js',
@@ -29,12 +54,18 @@ module.exports = {
     'json-summary', 'json', 'lcov', 'text', 'clover'
   ],
   projects: [
-    project('core', ['core']),
-    project('utilities', ['derecursify', 'json-payload']),
-    project('web workers', ['web-worker'], {
-      testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
+    project('core', ['core'], {
+      testEnvironment: 'node'
     }),
-    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser', 'request-tracker']),
+    project('utilities', ['derecursify', 'json-payload'], {
+      testEnvironment: 'node'
+    }),
+    project('web workers', ['web-worker'], {
+      testEnvironment: 'jsdom'
+    }),
+    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser', 'request-tracker'], {
+      testEnvironment: 'node'
+    }),
     project('browser', [
       'browser',
       'delivery-x-domain-request',
@@ -58,8 +89,7 @@ module.exports = {
       'plugin-browser-session',
       'plugin-network-instrumentation'
     ], {
-      testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js',
-      modulePathIgnorePatterns: ['.verdaccio', 'dist', 'examples', 'fixtures']
+      testEnvironment: 'jsdom'
     }),
     project('react native', [
       'react-native',
@@ -138,10 +168,12 @@ module.exports = {
       'plugin-internal-callback-marker'
     ], {
       setupFilesAfterEnv: ['<rootDir>/test/electron/setup.ts'],
-      clearMocks: true,
-      modulePathIgnorePatterns: ['.verdaccio', 'fixtures']
+      testEnvironment: 'node',
+      clearMocks: true
     }),
-    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' }),
+    project('react native cli', ['react-native-cli'], { 
+      testEnvironment: 'node' 
+    }),
     project('cloudflare-workers', ['plugin-cloudflare-workers'], {
       testEnvironment: 'node',
       setupFilesAfterEnv: ['<rootDir>/packages/plugin-cloudflare-workers/test/setup.ts']
