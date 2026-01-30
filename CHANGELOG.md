@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
+### Changed
+
+Update bugsnag-android to [v6.22.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.22.0) [#2656](https://github.com/bugsnag/bugsnag-js/pull/2656)
+
 ### Fixed
 
-(plugin-network-instrumentation) Stop reporting HTTPErrors as unhandled [#2662](https://github.com/bugsnag/bugsnag-js/pull/2662)
+(plugin-network-instrumentation) Report HTTP Errors as handled [#2662](https://github.com/bugsnag/bugsnag-js/pull/2662)
 
 ## [8.8.1] - 2026-01-26
 
