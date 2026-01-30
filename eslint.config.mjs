@@ -100,56 +100,22 @@ const c = tseslint.config(
       // This incorrectly fails on TypeScript method override signatures
       'no-dupe-class-members': 'off',
 
-      /*
-       * TypeScript 3.8 Compatibility Rules
-       * 
-       * TypeScript 3.8 was released in February 2020. The following rules ensure
-       * we don't use syntax or features introduced in later versions:
-       * 
-       * Avoided features from TS 3.9+:
-       * - `// @ts-expect-error` comments (prefer `// @ts-ignore`)
-       * 
-       * Avoided features from TS 4.0+:
-       * - Variadic tuple types: [...T, ...U]
-       * - Labeled tuple elements: [first: string, second: number]
-       * - catch clause variable type annotations: catch (e: Error)
-       * 
-       * Avoided features from TS 4.1+:
-       * - Template literal types: `${string}-${number}`
-       * - Key remapping in mapped types: { [K in keyof T as `get${K}`]: T[K] }
-       * - Recursive conditional types
-       * 
-       * Limited browser support features (available in TS 3.7-3.8 but avoided):
-       * - Optional chaining (?.) - limited IE support
-       * - Nullish coalescing (??) - limited IE support
-       */
-
-      // TypeScript 3.8 compatibility rules
-      // Optional chaining compiles to a lot more code and has limited browser support
+      // Optional chaining compiles to significantly more code and has limited IE support
       '@typescript-eslint/prefer-optional-chain': 'off',
       
-      // Prevent nullish coalescing (??) - introduced in TS 3.7 but limited browser support
+      // Nullish coalescing also increases bundle size and has limited IE support
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
-      
-      // Support TypeScript 3.8 by disallowing import { type Module } from 'module'
+
+      // TypeScript 3.8 type compatibility rules
+      // Prevent inline type imports like: import { type Module } from 'module'
+      // These are TS 4.5+ syntax that may affect generated .d.ts files
       'import/consistent-type-specifier-style': ['warn', 'prefer-top-level'],
 
       // Prevent inline type exports like export { type Bugsnag }
+      // These are TS 4.5+ syntax that may affect generated .d.ts files
       'custom-rules/no-inline-type-exports': 'warn',
       
-      // Warn about confusing non-null assertions for code clarity
-      '@typescript-eslint/no-confusing-non-null-assertion': 'warn',
-
-      // Disallow @ts-expect-error (TS 3.9+) and enforce descriptions for @ts-ignore
-      '@typescript-eslint/ban-ts-comment': ['warn', {
-        'ts-expect-error': true, // Disallow @ts-expect-error for TypeScript 3.8 compatibility
-        'ts-ignore': 'allow-with-description',
-        'ts-nocheck': 'allow-with-description',
-        'ts-check': false,
-        'minimumDescriptionLength': 10
-      }],
-      
-      // General code quality rules (not specifically TypeScript 3.8 related)
+      // General code quality rules (not TypeScript version-specific)
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-require-imports': 'warn',
       'prefer-rest-params': 'warn',
@@ -159,16 +125,25 @@ const c = tseslint.config(
       '@typescript-eslint/no-empty-object-type': 'warn',
       '@typescript-eslint/no-unsafe-declaration-merging': 'warn',
       '@typescript-eslint/no-invalid-void-type': 'warn',
-      
-      // Additional TypeScript 3.8 compatibility notes:
-      // - Variadic tuple types (TS 4.0+) are handled by parser compatibility
-      // - Labeled tuple elements (TS 4.0+) are handled by parser compatibility
-      // - Template literal types (TS 4.1+) are handled by parser compatibility
-      
-      // Allow explicit constructors for better compatibility
       '@typescript-eslint/no-useless-constructor': 'off',
+      '@typescript-eslint/no-confusing-non-null-assertion': 'warn',
       
-      // Ensure we don't use assertions that require newer TS versions
+      /*
+       * WARNING: No automated enforcement for type-breaking TS 4.0+ features!
+       * 
+       * The following type features will break TS 3.8 consumers but are NOT prevented:
+       * - Variadic tuple types: type Foo<T extends any[]> = [...T, string]
+       * - Labeled tuple elements: type Foo = [name: string, age: number]
+       * - Template literal types: type EventName = `${string}Changed`
+       * - Mapped type key remapping: { [K in keyof T as Uppercase<K>]: T[K] }
+       * 
+       * Mitigation strategies:
+       * 1. Manual code review focusing on type definitions
+       * 2. Expand test/browser/features/fixtures/typescript/3_8/ to import more packages
+       * 3. Consider CI job that compiles published types with TypeScript 3.8
+       */
+      
+      // Allow both 'as' and angle bracket assertions
       '@typescript-eslint/consistent-type-assertions': ['warn', {
         'assertionStyle': 'as',
         'objectLiteralTypeAssertions': 'allow'
