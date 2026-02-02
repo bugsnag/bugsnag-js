@@ -16,7 +16,7 @@ module.exports = function (url, redactedKeys) {
 
   // Parse the URL - use a base only for relative URLs
   const urlObj = new URL(url, base)
-  const params = new URLSearchParams(urlObj.search)
+  const params = urlObj.search ? new URLSearchParams(urlObj.search) : new URLSearchParams()
 
   // Convert URLSearchParams to object without using Object.fromEntries()
   const paramsObject = {}
@@ -25,7 +25,9 @@ module.exports = function (url, redactedKeys) {
   })
 
   const redactedParams = redactValues(paramsObject, redactedKeys)
-  urlObj.search = new URLSearchParams(redactedParams).toString()
+  if (urlObj.search) {
+    urlObj.search = new URLSearchParams(redactedParams).toString()
+  }
 
   // Return appropriate format based on original URL type
   if (isAbsolute) {
@@ -33,6 +35,6 @@ module.exports = function (url, redactedKeys) {
   }
 
   // For relative URLs, return only the path + search + hash components
-  const relativePart = urlObj.pathname + urlObj.search + urlObj.hash
+  const relativePart = urlObj.pathname + (urlObj.search || '') + urlObj.hash
   return decodeURI(relativePart)
 }
