@@ -135,7 +135,7 @@ describe('plugin-network-instrumentation', () => {
       expect(event.exceptions[0].errorMessage).toBe('404: https://api.example.com/users/123')
       expect(event.context).toBe('POST api.example.com')
       expect(event.severity).toBe('error')
-      expect(event.unhandled).toBe(true)
+      expect(event.unhandled).toBe(false)
       expect(event.severityReason.type).toBe('httpError')
 
       // Verify request metadata

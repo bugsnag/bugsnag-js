@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-network-breadcrumbs",
-  "version": "8.8.0",
+  "version": "8.8.1",
   "main": "network-breadcrumbs.js",
   "description": "@bugsnag/js plugin to record browser requests as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",
@@ -20,7 +20,7 @@
     "@bugsnag/core": "^8.8.0"
   },
   "dependencies": {
-    "@bugsnag/request-tracker": "^8.8.0"
+    "@bugsnag/request-tracker": "^8.8.1"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"

@@ -47,3 +47,10 @@ Scenario: Manual breadcrumbs (Native)
   | ios     | NSException                |
   And the exception "message" equals "BreadcrumbsNativeManualScenario"
   And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/NativeManualScenario.json"
+
+Scenario: Network breadcrumbs (JS)
+  When I run "NetworkBreadcrumbsJsScenario"
+  Then I wait to receive an error
+  And the exception "errorClass" equals "Error"
+  And the exception "message" equals "NetworkBreadcrumbsJsScenario"
+  And the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/NetworkJsScenario.json"

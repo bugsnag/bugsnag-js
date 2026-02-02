@@ -2,9 +2,20 @@
 
 ## [Unreleased]
 
-### Dependencies
+### Changed
 
+Update bugsnag-android to [v6.22.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.22.0) [#2656](https://github.com/bugsnag/bugsnag-js/pull/2656)
 Update bugsnag-cocoa to [v6.35.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.35.0) [#2663](https://github.com/bugsnag/bugsnag-js/pull/2663)
+
+### Fixed
+
+(plugin-network-instrumentation) Report HTTP Errors as handled [#2662](https://github.com/bugsnag/bugsnag-js/pull/2662)
+
+## [8.8.1] - 2026-01-26
+
+### Fixed
+
+(plugin-network-breadcrumbs, plugin-network-instrumentation) Ensure XMLHttpRequest response types are handled gracefully [#2660](https://github.com/bugsnag/bugsnag-js/pull/2660)
 
 ## [8.8.0] - 2026-01-20
 
