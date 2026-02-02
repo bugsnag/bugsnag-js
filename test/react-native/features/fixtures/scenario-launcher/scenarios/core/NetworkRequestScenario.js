@@ -18,9 +18,7 @@ export class NetworkRequestScenario extends Scenario {
   }
 
   run () {
-    const url = new URL(this.reflectEndpoint)
-    url.searchParams.append('status', this.statusCode)
-    fetch(url).catch((err) => {
+    fetch(`${this.reflectEndpoint}?status=${this.statusCode}`).catch((err) => {
       Bugsnag.notify(err)
     })
   }
