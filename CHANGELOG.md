@@ -23,6 +23,10 @@
 
 (plugin-network-instrumentation) Report HTTP Errors as handled [#2662](https://github.com/bugsnag/bugsnag-js/pull/2662)
 
+### Dependencies
+
+Update bugsnag-android to [v6.23.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.23.0) [#2673](https://github.com/bugsnag/bugsnag-js/pull/2673)
+
 ## [8.8.1] - 2026-01-26
 
 ### Fixed
@@ -32,7 +36,6 @@
 ## [8.8.0] - 2026-01-20
 
 This release adds support for notitfying failed network requests using the new `plugin-network-instrumentation` package
-
 ### Added
 
 - (plugin-network-instrumentation) Add new plugin to notify failed network requests [#2647](https://github.com/bugsnag/bugsnag-js/pull/2647)
