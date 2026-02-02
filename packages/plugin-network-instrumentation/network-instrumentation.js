@@ -136,7 +136,7 @@ module.exports = (config = {}, global = window) => {
 
           const handledState = {
             severity: 'error',
-            unhandled: true,
+            unhandled: false,
             severityReason: { type: 'httpError' }
           }
 

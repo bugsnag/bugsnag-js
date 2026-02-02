@@ -1,0 +1,8 @@
+[
+  {
+    "message": "^401: .*\/reflect\/[?]status=401$",
+    "errorClass": "HTTPError",
+    "type": "reactnativejs",
+    "stacktrace": "IGNORE"
+  }
+]
