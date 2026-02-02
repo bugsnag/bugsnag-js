@@ -19,6 +19,10 @@
 - Update bugsnag-android to [v6.23.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.23.0) [#2673](https://github.com/bugsnag/bugsnag-js/pull/2673)
 - Update bugsnag-android to [v6.25.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.25.0) [#2689](https://github.com/bugsnag/bugsnag-js/pull/2689)
 
+### Fixed
+
+(plugin-network-instrumentation) Report HTTP Errors as handled [#2662](https://github.com/bugsnag/bugsnag-js/pull/2662)
+
 ## [8.8.1] - 2026-01-26
 
 ### Fixed
