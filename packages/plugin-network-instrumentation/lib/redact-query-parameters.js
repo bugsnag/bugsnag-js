@@ -16,25 +16,40 @@ module.exports = function (url, redactedKeys) {
 
   // Parse the URL - use a base only for relative URLs
   const urlObj = new URL(url, base)
-  const params = urlObj.search ? new URLSearchParams(urlObj.search) : new URLSearchParams()
+
+  // Extract query string manually from the original URL
+  const queryStart = url.indexOf('?')
+  const hashStart = url.indexOf('#')
+
+  let queryString = ''
+  if (queryStart !== -1) {
+    const queryEnd = hashStart !== -1 && hashStart > queryStart ? hashStart : url.length
+    queryString = url.substring(queryStart + 1, queryEnd)
+  }
 
   // Convert URLSearchParams to object without using Object.fromEntries()
+  const params = new URLSearchParams(queryString)
   const paramsObject = {}
   params.forEach((value, key) => {
     paramsObject[key] = value
   })
 
   const redactedParams = redactValues(paramsObject, redactedKeys)
-  if (urlObj.search) {
-    urlObj.search = new URLSearchParams(redactedParams).toString()
+  const redactedQueryString = new URLSearchParams(redactedParams).toString()
+
+  // Build the result URL manually
+  let result = urlObj.pathname
+  if (redactedQueryString) {
+    result += '?' + redactedQueryString
+  }
+  if (urlObj.hash) {
+    result += urlObj.hash
   }
 
   // Return appropriate format based on original URL type
   if (isAbsolute) {
-    return decodeURI(urlObj.toString())
+    return decodeURI(urlObj.origin + result)
   }
 
-  // For relative URLs, return only the path + search + hash components
-  const relativePart = urlObj.pathname + (urlObj.search || '') + urlObj.hash
-  return decodeURI(relativePart)
+  return decodeURI(result)
 }
