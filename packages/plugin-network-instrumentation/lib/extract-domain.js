@@ -12,12 +12,22 @@ module.exports = function (url) {
 
     const urlWithoutProtocol = url.replace(/^https?:\/\//i, '')
 
-    const firstSlashIndex = urlWithoutProtocol.indexOf('/')
-    if (firstSlashIndex !== -1) {
-      return urlWithoutProtocol.substring(0, firstSlashIndex)
+    // Find the earliest occurrence of '/', '?', or '#' to determine the domain boundary
+    const slashIndex = urlWithoutProtocol.indexOf('/')
+    const queryIndex = urlWithoutProtocol.indexOf('?')
+    const hashIndex = urlWithoutProtocol.indexOf('#')
+    let endIndex = urlWithoutProtocol.length
+    if (slashIndex !== -1 && slashIndex < endIndex) {
+      endIndex = slashIndex
+    }
+    if (queryIndex !== -1 && queryIndex < endIndex) {
+      endIndex = queryIndex
+    }
+    if (hashIndex !== -1 && hashIndex < endIndex) {
+      endIndex = hashIndex
     }
 
-    return urlWithoutProtocol
+    return urlWithoutProtocol.substring(0, endIndex)
   } catch (e) {
     return 'unknown'
   }
