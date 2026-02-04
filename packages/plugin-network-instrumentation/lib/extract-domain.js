@@ -5,8 +5,19 @@
    */
 module.exports = function (url) {
   try {
-    const urlObj = new URL(url)
-    return urlObj.host
+    const isAbsolute = /^https?:\/\//i.test(url)
+    if (!isAbsolute) {
+      return 'unknown'
+    }
+
+    const urlWithoutProtocol = url.replace(/^https?:\/\//i, '')
+
+    const firstSlashIndex = urlWithoutProtocol.indexOf('/')
+    if (firstSlashIndex !== -1) {
+      return urlWithoutProtocol.substring(0, firstSlashIndex)
+    }
+
+    return urlWithoutProtocol
   } catch (e) {
     return 'unknown'
   }
