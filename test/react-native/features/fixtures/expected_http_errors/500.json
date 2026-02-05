@@ -1,6 +1,6 @@
 [
   {
-    "message": "^500: .*\/reflect\/[?]status=500$",
+    "message": "^500: .*\/reflect[?]status=500$",
     "errorClass": "HTTPError",
     "type": "reactnativejs",
     "stacktrace": "IGNORE"

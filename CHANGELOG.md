@@ -4,6 +4,7 @@
 
 ### Changed
 
+(plugin-network-instrumentation) Manually parse URLs to improve React Native compatibility [#2674](https://github.com/bugsnag/bugsnag-js/pull/2674)
 Update bugsnag-android to [v6.22.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.22.0) [#2656](https://github.com/bugsnag/bugsnag-js/pull/2656)
 Update bugsnag-cocoa to [v6.35.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.35.0) [#2663](https://github.com/bugsnag/bugsnag-js/pull/2663)
 

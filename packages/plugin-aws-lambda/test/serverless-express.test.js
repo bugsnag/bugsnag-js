@@ -14,6 +14,10 @@ let sentEvents
 let sentSessions
 
 describe('serverless express', function () {
+  beforeAll(() => {
+    jest.spyOn(console, 'debug').mockImplementation(() => {})
+  })
+
   beforeEach(function () {
     sentEvents = []
     sentSessions = []
