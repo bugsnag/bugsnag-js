@@ -1,38 +1,23 @@
+const parseQueryParams = require('./parse-query-params')
 const redactValues = require('./redact-values')
 
-function isAbsoluteURL (url) {
-  try {
-    // eslint-disable-next-line no-new
-    new URL(url)
-    return true
-  } catch (e) {
-    return false
-  }
-}
-
 module.exports = function (url, redactedKeys) {
-  const isAbsolute = isAbsoluteURL(url)
-  const base = isAbsolute ? undefined : 'http://localhost'
-
-  // Parse the URL - use a base only for relative URLs
-  const urlObj = new URL(url, base)
-  const params = new URLSearchParams(urlObj.search)
-
-  // Convert URLSearchParams to object without using Object.fromEntries()
-  const paramsObject = {}
-  params.forEach((value, key) => {
-    paramsObject[key] = value
-  })
-
+  const paramsObject = parseQueryParams(url)
   const redactedParams = redactValues(paramsObject, redactedKeys)
-  urlObj.search = new URLSearchParams(redactedParams).toString()
+  const redactedQueryString = Object.entries(redactedParams).map(([key, value]) => `${key}=${value}`).join('&')
 
-  // Return appropriate format based on original URL type
-  if (isAbsolute) {
-    return decodeURI(urlObj.toString())
+  const queryStart = url.indexOf('?')
+  const hashStart = url.indexOf('#')
+  const hash = hashStart !== -1 ? url.substring(hashStart) : ''
+  let result = queryStart !== -1 ? url.substring(0, queryStart) : url
+
+  // Build the result URL manually
+  if (redactedQueryString && redactedQueryString.length > 0) {
+    result += '?' + redactedQueryString
+  }
+  if (hash) {
+    result += hash
   }
 
-  // For relative URLs, return only the path + search + hash components
-  const relativePart = urlObj.pathname + urlObj.search + urlObj.hash
-  return decodeURI(relativePart)
+  return result
 }

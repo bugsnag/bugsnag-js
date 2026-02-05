@@ -4,6 +4,7 @@ describe('node notifier', () => {
   beforeAll(() => {
     jest.spyOn(console, 'debug').mockImplementation(() => {})
     jest.spyOn(console, 'warn').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(() => {})
   })
 
   beforeEach(() => {

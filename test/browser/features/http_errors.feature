@@ -16,7 +16,7 @@ Feature: HTTP Errors
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
     And the event "severity" equals "error"
-    And the event "unhandled" is true
+    And the event "unhandled" is false
     And the event "severityReason.type" equals "httpError"
     And the error payload field "events.0.context" equals the stored value "expected.context"
 
@@ -46,7 +46,7 @@ Feature: HTTP Errors
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
     And the event "severity" equals "error"
-    And the event "unhandled" is true
+    And the event "unhandled" is false
     And the event "severityReason.type" equals "httpError"
     And the error payload field "events.0.context" equals the stored value "expected.context"
 
@@ -78,7 +78,7 @@ Feature: HTTP Errors
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
     And the event "severity" equals "error"
-    And the event "unhandled" is true
+    And the event "unhandled" is false
     And the event "severityReason.type" equals "httpError"
     And the error payload field "events.0.context" equals the stored value "expected.context"
 
@@ -109,7 +109,7 @@ Feature: HTTP Errors
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
     And the event "severity" equals "error"
-    And the event "unhandled" is true
+    And the event "unhandled" is false
     And the event "severityReason.type" equals "httpError"
     And the error payload field "events.0.context" equals the stored value "expected.context"
 
