@@ -25,8 +25,10 @@ jobs:
           mkdir .diff
           npm ci
           npm run build
+          npm run test:coverage
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-before-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-before-gzipped
+          cp coverage/coverage-summary.json .diff/coverage-before.json
 
       - name: Checkout PR branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -39,8 +41,10 @@ jobs:
         run: |
           npm ci
           npm run build
+          npm run test:coverage
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-after-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-after-gzipped
+          cp coverage/coverage-summary.json .diff/coverage-after.json
 
       - name: Run danger
         uses: danger/danger-js@67ed2c1f42fd2fc198cc3c14b43c8f83351f4fe9 # 13.0.5
