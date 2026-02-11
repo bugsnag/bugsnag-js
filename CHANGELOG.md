@@ -15,6 +15,7 @@ Update bugsnag-cocoa to [v6.35.0](https//github.com/bugsnag/bugsnag-cocoa/releas
 ### Dependencies
 
 Update bugsnag-android to [v6.23.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.23.0) [#2673](https://github.com/bugsnag/bugsnag-js/pull/2673)
+Update bugsnag-android to [v6.24.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.24.0) [#2679](https://github.com/bugsnag/bugsnag-js/pull/2679)
 
 ## [8.8.1] - 2026-01-26
 
