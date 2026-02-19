@@ -148,6 +148,7 @@ module.exports = (config = {}, global = window) => {
             0
           )
 
+          event.errors[0].stacktrace = [] // Omit the stacktrace for HTTP errors
           event.request = requestObj
           event.response = responseObj
           event.context = `${method} ${domain}`

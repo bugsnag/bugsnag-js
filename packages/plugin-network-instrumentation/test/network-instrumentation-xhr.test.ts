@@ -133,6 +133,7 @@ describe('plugin-network-instrumentation', () => {
       // Verify error details
       expect(event.exceptions[0].errorClass).toBe('HTTPError')
       expect(event.exceptions[0].errorMessage).toBe('404: https://api.example.com/users/123')
+      expect(event.exceptions[0].stacktrace).toEqual([]) // Stacktrace should be empty for HTTP errors
       expect(event.context).toBe('POST api.example.com')
       expect(event.severity).toBe('error')
       expect(event.unhandled).toBe(false)
