@@ -85,6 +85,7 @@ describe('plugin-network-instrumentation', () => {
 
       expect(event.exceptions[0].errorClass).toBe('HTTPError')
       expect(event.exceptions[0].errorMessage).toBe('404: https://example.com/api/users')
+      expect(event.exceptions[0].stacktrace).toEqual([]) // Stacktrace should be empty for HTTP errors
       expect(event.context).toBe('GET example.com')
       expect(event.severity).toBe('error')
       expect(event.unhandled).toBe(false)
