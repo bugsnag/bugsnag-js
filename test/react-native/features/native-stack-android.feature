@@ -1,7 +1,8 @@
+@android_only
 Feature: Native stacktrace is parsed for promise rejections
 
 # Skipped on New Arch below 0.74 - see PLAT-12193
-@android_only @skip_new_arch_below_074
+@skip_new_arch_below_074
 Scenario: Handled native promise rejection with native stacktrace
   When I run "NativePromiseRejectionHandledScenario"
   Then I wait to receive an error
@@ -11,7 +12,6 @@ Scenario: Handled native promise rejection with native stacktrace
   # On 0.75+ the Error name is set to the native exception class
   And the event "exceptions.0.errorClass" equals the version-dependent string:
     | arch | version | value                      |
-    | new  | 0.72    | Error                      |
     | new  | 0.74    | Error                      |
     | new  | default | java.lang.RuntimeException |
     | old  | 0.68    | Error                      |
@@ -41,14 +41,14 @@ Scenario: Handled native promise rejection with native stacktrace
     | runScenario |
 
   # the javascript part follows
-  # On 0.74+ New Arch there is no JS stacktrace - see PLAT-12193
+  # On New Arch there is no JS stacktrace - see PLAT-12193
   And the stacktrace contains "file" equal to the version-dependent string:
   | arch | version | value                   |
   | new  | default | @skip                   |
   | old  | default | index.android.bundle    |
 
 # Skipped on New Arch below 0.74 - see PLAT-12193
-@android_only @skip_new_arch_below_074
+@skip_new_arch_below_074
 Scenario: Unhandled native promise rejection with native stacktrace
   When I run "NativePromiseRejectionUnhandledScenario"
   Then I wait to receive an error
@@ -57,7 +57,6 @@ Scenario: Unhandled native promise rejection with native stacktrace
   # On 0.75+ the Error name is set to the native exception class
   And the event "exceptions.0.errorClass" equals the version-dependent string:
     | arch | version | value                      |
-    | new  | 0.72    | Error                      |
     | new  | 0.74    | Error                      |
     | new  | default | java.lang.RuntimeException |
     | old  | 0.68    | Error                      |
@@ -94,7 +93,7 @@ Scenario: Unhandled native promise rejection with native stacktrace
     | runScenario |
 
   # the javascript part follows
-  # On 0.74+ New Arch there is no JS stacktrace - see PLAT-12193
+  # On New Arch there is no JS stacktrace - see PLAT-12193
   And the stacktrace contains "file" equal to the version-dependent string:
   | arch | version | value                   |
   | new  | default | @skip                   |
@@ -105,93 +104,47 @@ Scenario: Unhandled native promise rejection with native stacktrace
 #   And the error payload field "events.0.exceptions.1.stacktrace.1.lineNumber" equals 1
 #   And the error payload field "events.0.exceptions.1.stacktrace.2.lineNumber" equals 2
 
-# Skipped on New Arch below 0.74 - see PLAT-12193
-@ios_only @skip_new_arch_below_074
-Scenario: Handled native promise rejection with native stacktrace
-  When I run "NativePromiseRejectionHandledScenario"
-  Then I wait to receive an error
-  And the event "unhandled" is false
-  And the error payload field "events.0.exceptions" is an array with 1 elements
-  And the event "exceptions.0.errorClass" equals "Error"
-  And the event "exceptions.0.message" equals "NativePromiseRejectionHandledScenario"
-  And the event "exceptions.0.type" equals "reactnativejs"
-  And the error payload field "events.0.exceptions.0.stacktrace" is a non-empty array
-
-  # the native part of the stack comes first
-  And the error payload field "events.0.exceptions.0.stacktrace.0.frameAddress" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.machoFile" equals "reactnative"
-  And the error payload field "events.0.exceptions.0.stacktrace.0.machoLoadAddress" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.machoUUID" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.machoVMAddress" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.method" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.symbolAddress" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.type" equals "cocoa"
-
-  # the javascript part follows
-  # On 0.74+ New Arch there is no JS stacktrace - see PLAT-12193
-  # We're check the method: asyncGeneratorStep
-  And the event "exceptions.0.stacktrace.21.columnNumber" equals the version-dependent string:
-  | arch | version | value                   |
-  | new  | 0.72    | @not_null               |
-  | new  | default | @skip                   |
-  | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.21.file" equals the version-dependent string:
-  | arch | version | value                   |
-  | new  | 0.72    | @not_null               |
-  | new  | default | @skip                   |
-  | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.21.lineNumber" equals the version-dependent string:
-  | arch | version | value                   |
-  | new  | 0.72    | @not_null               |
-  | new  | default | @skip                   |
-  | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.21.type" equals the version-dependent string:
-  | arch | version | value                   |
-  | new  | 0.72    | @null                   |
-  | new  | default | @skip                   |
-  | old  | default | @null                   |
-
-# Skipped on New Arch below 0.74 - see PLAT-12193
-@ios_only @skip_new_arch_below_074
-Scenario: Unhandled native promise rejection with native stacktrace
-  When I run "NativePromiseRejectionUnhandledScenario"
+@skip_old_arch @skip_new_arch_below_074
+Scenario: Unhandled exception in synchronous turbo module method with native stacktrace
+  When I run "UnhandledNativeErrorSyncScenario" and relaunch the crashed app
+  And I configure Bugsnag for "UnhandledNativeErrorSyncScenario"
   Then I wait to receive an error
   And the event "unhandled" is true
+
+  # First exception is the JS Error with JS stacktrace
   And the event "exceptions.0.errorClass" equals "Error"
-  And the event "exceptions.0.message" equals "NativePromiseRejectionUnhandledScenario"
+  And the event "exceptions.0.message" equals "Exception in HostFunction: UnhandledNativeErrorScenario"
   And the event "exceptions.0.type" equals "reactnativejs"
-  And the error payload field "events.0.exceptions.0.stacktrace" is a non-empty array
+  And the event "exceptions.0.stacktrace.0.method" equals "runScenarioSync"
+  And the event "exceptions.0.stacktrace.0.file" equals "(native)"
+  And the event "exceptions.0.stacktrace.1.method" equals "run"
+  And the event "exceptions.0.stacktrace.1.file" equals "index.android.bundle"
 
-  # the native part of the stack comes first
-  And the error payload field "events.0.exceptions.0.stacktrace.0.frameAddress" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.machoFile" equals "reactnative"
-  And the error payload field "events.0.exceptions.0.stacktrace.0.machoLoadAddress" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.machoUUID" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.machoVMAddress" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.method" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.symbolAddress" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.type" equals "cocoa"
+  # Second exception (cause) is the native exception with native stacktrace
+  And the event "exceptions.1.errorClass" equals "java.lang.RuntimeException"
+  And the event "exceptions.1.message" equals "UnhandledNativeErrorScenario"
+  And the event "exceptions.1.type" equals "reactnativejs"
+  And the event "exceptions.1.stacktrace.0.method" equals "com.reactnative.scenarios.Scenario.generateException"
+  And the event "exceptions.1.stacktrace.0.file" equals "Scenario.kt"
+  And the event "exceptions.1.stacktrace.0.type" equals "android"
 
-  # the javascript part follows
-  # On 0.74+ New Arch there is no JS stacktrace - see PLAT-12193
-  # We're check the method: asyncGeneratorStep
-  And the event "exceptions.0.stacktrace.21.columnNumber" equals the version-dependent string:
-  | arch | version | value                   |
-  | new  | 0.72    | @not_null               |
-  | new  | default | @skip                   |
-  | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.21.file" equals the version-dependent string:
-  | arch | version | value                   |
-  | new  | 0.72    | @not_null               |
-  | new  | default | @skip                   |
-  | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.21.lineNumber" equals the version-dependent string:
-  | arch | version | value                   |
-  | new  | 0.72    | @not_null               |
-  | new  | default | @skip                   |
-  | old  | default | @not_null               |
-  And the event "exceptions.0.stacktrace.21.type" equals the version-dependent string:
-  | arch | version | value                   |
-  | new  | 0.72    | @null                   |
-  | new  | default | @skip                   |
-  | old  | default | @null                   |
+@skip_old_arch @skip_new_arch_below_074
+Scenario: Unhandled exception in asynchronous turbo module method with native stacktrace
+  When I run "UnhandledNativeErrorScenario" and relaunch the crashed app
+  And I configure Bugsnag for "UnhandledNativeErrorScenario"
+  Then I wait to receive an error
+  And the event "unhandled" is true
+
+  # First exception is the JS Error, however there is no JS stacktrace
+  And the event "exceptions.0.errorClass" equals "Error"
+  And the event "exceptions.0.message" equals "Exception in HostFunction: UnhandledNativeErrorScenario"
+  And the event "exceptions.0.type" equals "reactnativejs"
+  And the error payload field "events.0.exceptions.0.stacktrace" is an array with 0 elements
+
+  # Second exception (cause) is the native exception with native stacktrace
+  And the event "exceptions.1.errorClass" equals "java.lang.RuntimeException"
+  And the event "exceptions.1.message" equals "UnhandledNativeErrorScenario"
+  And the event "exceptions.1.type" equals "reactnativejs"
+  And the event "exceptions.1.stacktrace.0.method" equals "com.reactnative.scenarios.Scenario.generateException"
+  And the event "exceptions.1.stacktrace.0.file" equals "Scenario.kt"
+  And the event "exceptions.1.stacktrace.0.type" equals "android"
