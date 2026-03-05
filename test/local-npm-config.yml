@@ -13,6 +13,9 @@ packages:
   '@bugsnag/cuid':
     access: $anonymous
     proxy: npmjs
+  '@bugsnag/cli':
+    access: $anonymous
+    proxy: npmjs
   'bugsnag-expo-cli':
     access: $anonymous
     publish: $anonymous
