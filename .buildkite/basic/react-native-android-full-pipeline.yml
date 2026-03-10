@@ -34,8 +34,6 @@ steps:
               - "0.78"
               - "0.80"
               - "0.81"
-              - "0.82"
-              - "0.83"
             java:
               - "17"
             node:
@@ -82,7 +80,6 @@ steps:
               - "0.76"
               - "0.78"
               - "0.80"
-              - "0.81"
               - "0.82"
               - "0.83"
             reactnavigation:
@@ -191,8 +188,6 @@ steps:
           - "0.78"
           - "0.80"
           - "0.81"
-          - "0.82"
-          - "0.83"
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
       # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
@@ -240,7 +235,6 @@ steps:
               - "0.76"
               - "0.78"
               - "0.80"
-              - "0.81"
               - "0.82"
               - "0.83"
             reactnavigation:
