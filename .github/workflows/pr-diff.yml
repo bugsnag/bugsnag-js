@@ -21,6 +21,7 @@ jobs:
       - name: Record before stats
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          ELECTRON_DISABLE_SANDBOX: 1
         run: |
           mkdir .diff
           npm ci
@@ -38,6 +39,7 @@ jobs:
       - name: Record after stats
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          ELECTRON_DISABLE_SANDBOX: 1
         run: |
           npm ci
           npm run build
