@@ -12,6 +12,15 @@ describe('node notifier', () => {
     Bugsnag._client = null
   })
 
+  afterEach(() => {
+    // Clean up process listeners to prevent MaxListenersExceeded warning
+    // The unhandledRejection and uncaughtException plugins register listeners
+    // but don't have destroy methods called automatically
+    process.removeAllListeners('unhandledRejection')
+    process.removeAllListeners('uncaughtException')
+    jest.clearAllMocks()
+  })
+
   describe('isStarted()', () => {
     it('returns false when the notifier has not been initialised', () => {
       expect(Bugsnag.isStarted()).toBe(false)
