@@ -53,7 +53,8 @@ module.exports = {
       'plugin-browser-session',
       'plugin-network-instrumentation'
     ], {
-      testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
+      testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js',
+      modulePathIgnorePatterns: ['.verdaccio', 'dist', 'examples', 'fixtures']
     }),
     project('react native', [
       'react-native',
