@@ -15,7 +15,9 @@ Scenario: Handled native promise rejection with native stacktrace
 
   # the native part of the stack comes first
   And the error payload field "events.0.exceptions.0.stacktrace.0.frameAddress" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.machoFile" equals "reactnative"
+  And the error payload field "events.0.exceptions.0.stacktrace.0.machoFile" equals one of:
+    | reactnative |
+    | React       | 
   And the error payload field "events.0.exceptions.0.stacktrace.0.machoLoadAddress" is not null
   And the error payload field "events.0.exceptions.0.stacktrace.0.machoUUID" is not null
   And the error payload field "events.0.exceptions.0.stacktrace.0.machoVMAddress" is not null
@@ -56,7 +58,9 @@ Scenario: Unhandled native promise rejection with native stacktrace
 
   # the native part of the stack comes first
   And the error payload field "events.0.exceptions.0.stacktrace.0.frameAddress" is not null
-  And the error payload field "events.0.exceptions.0.stacktrace.0.machoFile" equals "reactnative"
+  And the error payload field "events.0.exceptions.0.stacktrace.0.machoFile" equals one of:
+    | reactnative |
+    | React       | 
   And the error payload field "events.0.exceptions.0.stacktrace.0.machoLoadAddress" is not null
   And the error payload field "events.0.exceptions.0.stacktrace.0.machoUUID" is not null
   And the error payload field "events.0.exceptions.0.stacktrace.0.machoVMAddress" is not null
