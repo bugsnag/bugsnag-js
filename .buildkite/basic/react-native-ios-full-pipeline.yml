@@ -35,6 +35,7 @@ steps:
               - "0.78"
               - "0.80"
               - "0.81"
+             
             node:
               - "22"
           adjustments:
@@ -73,7 +74,8 @@ steps:
               - "0.76"
               - "0.78"
               - "0.80"
-              - "0.81"
+              - "0.82"
+              - "0.83"
             reactnavigation:
               - "true"
           adjustments:
@@ -184,7 +186,7 @@ steps:
           - "0.78"
           - "0.80"
           - "0.81"
-
+          
       - label: ":bitbar: :mac: RN {{matrix.reactnative}} iOS (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch-full"
         timeout_in_minutes: 60
@@ -228,7 +230,8 @@ steps:
               - "0.76"
               - "0.78"
               - "0.80"
-              - "0.81"
+              - "0.82"
+              - "0.83"
             reactnavigation:
               - "true"
           adjustments:

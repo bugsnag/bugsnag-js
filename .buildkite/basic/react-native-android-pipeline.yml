@@ -26,7 +26,7 @@ steps:
             - exit_status: "*"
               limit: 1
         matrix:
-          - "0.82"
+          - "0.84"
 
       #
       # End-to-end tests
@@ -69,5 +69,5 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.82"
+          - "0.84"
 

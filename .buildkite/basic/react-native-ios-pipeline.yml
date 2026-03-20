@@ -26,7 +26,7 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.82"
+          - "0.84"
         retry:
           automatic:
             - exit_status: "*"
@@ -71,5 +71,5 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.82"
+          - "0.84"
 

@@ -8,7 +8,7 @@ export class NetworkRequestScenario extends Scenario {
     this.reflectEndpoint = nativeConfig.endpoints.notify.replace('/notify', '/reflect')
     this.statusCode = scenarioData
 
-    const plugin = new BugsnagPluginNetworkInstrumentation({
+    const plugin = BugsnagPluginNetworkInstrumentation({
       maxRequestSize: 1024,
       maxResponseSize: 1024
     })
