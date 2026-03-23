@@ -126,19 +126,19 @@ describe('react native notifier', () => {
     })
   })
 
-    it('calls addOnError callback for all errors', (done) => {
-      Bugsnag.start({})
-      const addOnErrorCb = jest.fn((event) => {
-        event.addMetadata('addonError', { called: true })
-        return true
-      })
-      Bugsnag.addOnError(addOnErrorCb)
-      const error = new Error('addonError test')
-      Bugsnag.notify(error, undefined, (err, event) => {
-        if (err) return done(err)
-        expect(addOnErrorCb).toHaveBeenCalledWith(expect.any(Object))
-        expect(event.getMetadata('addonError')).toEqual({ called: true })
-        done()
-      })
+  it('calls addOnError callback for all errors', (done) => {
+    Bugsnag.start({})
+    const addOnErrorCb = jest.fn((event) => {
+      event.addMetadata('addonError', { called: true })
+      return true
     })
+    Bugsnag.addOnError(addOnErrorCb)
+    const error = new Error('addonError test')
+    Bugsnag.notify(error, undefined, (err, event) => {
+      if (err) return done(err)
+      expect(addOnErrorCb).toHaveBeenCalledWith(expect.any(Object))
+      expect(event.getMetadata('addonError')).toEqual({ called: true })
+      done()
+    })
+  })
 })
