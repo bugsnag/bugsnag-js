@@ -86,6 +86,8 @@ steps:
           - "chrome_43"
           - "chrome_72"
           - "firefox_78"
+          - "chrome_latest" # Remove after resolving PLAT-15947
+          - "firefox_latest" # Remove after resolving PLAT-15947
         depends_on: "browser-maze-runner-bs"
         timeout_in_minutes: 30
         plugins:
@@ -115,8 +117,8 @@ steps:
       #
       - label: ":bitbar: {{matrix}} Browser tests (EU hub)"
         matrix:
-          - "firefox_latest"
-          - "chrome_latest"
+          # - "firefox_latest" # Skipped pending PLAT-15947
+          # - "chrome_latest" # Skipped pending PLAT-15947
           - "edge_latest"
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
