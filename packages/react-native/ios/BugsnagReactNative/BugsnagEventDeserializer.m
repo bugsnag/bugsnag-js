@@ -30,6 +30,8 @@
                                                     threads:[self deserializeThreads:payload[@"threads"]]
                                                     session:nil /* set by -[BugsnagClient notifyInternal:block:] */];
     event.context = payload[@"context"];
+    event.request = [self deserializeRequest:payload[@"request"]];
+    event.response = [self deserializeResponse:payload[@"response"]];
     event.groupingHash = payload[@"groupingHash"];
     event.groupingDiscriminator = payload[@"groupingDiscriminator"];
 
@@ -130,6 +132,20 @@
         }
     }
     return array;
+}
+
+- (BugsnagHttpRequest *)deserializeRequest:(NSDictionary *)request {
+    if (request != nil) {
+        return [BugsnagHttpRequest requestFromJson:request];
+    }
+    return nil;
+}
+
+- (BugsnagHttpResponse *)deserializeResponse:(NSDictionary *)response {
+    if (response != nil) {
+        return [BugsnagHttpResponse responseFromJson:response];
+    }
+    return nil;
 }
 
 @end
