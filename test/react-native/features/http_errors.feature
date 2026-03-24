@@ -4,7 +4,9 @@ Scenario Outline: Error is reported for network requests with error status code
   When I run "NetworkRequestScenario" with data "<status_code>"
   And I wait to receive an error
   Then the error payload field "events.0.context" matches the regex "^GET [0-9.]*:[0-9]{4}$"
-  And the error payload field "events.0.exceptions" matches the JSON fixture in "features/fixtures/expected_http_errors/<status_code>.json"
+  And the error payload field "events.0.exceptions" matches the JSON fixture in "features/fixtures/expected_http_errors/<status_code>/exceptions.json"
+  And the error payload field "events.0.request" matches the JSON fixture in "features/fixtures/expected_http_errors/<status_code>/request.json"
+  And the error payload field "events.0.response" matches the JSON fixture in "features/fixtures/expected_http_errors/<status_code>/response.json"
     Examples:
     | status_code |
     | 401         |
