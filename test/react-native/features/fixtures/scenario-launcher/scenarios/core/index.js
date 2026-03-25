@@ -84,3 +84,7 @@ export { GroupingDiscriminatorNativeScenario } from './GroupingDiscriminatorNati
 
 // http_errors.feature
 export { NetworkRequestScenario } from './NetworkRequestScenario'
+
+export { AddOnErrorCallbackScenario } from './AddOnErrorCallbackScenario'
+
+export { OnErrorCallbackScenario } from './OnErrorCallbackScenario'
