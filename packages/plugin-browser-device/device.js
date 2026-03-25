@@ -9,7 +9,6 @@ const getDeviceId = (win) => {
     let id = storage.getItem(BUGSNAG_ANONYMOUS_ID_KEY)
 
     // If we get an ID, make sure it looks like a valid cuid
-    
     if (id && cuid.isCuid(id)) {
       return id
     }
