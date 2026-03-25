@@ -4,6 +4,7 @@
 
 ### Changed
 
+- (plugin-inline-script-content) Add support for additional event target constructors including MediaSource, MediaRecorder, ServiceWorker, RTCPeerConnection, and others [#2700](https://github.com/bugsnag/bugsnag-js/pull/2700)
 - (plugin-network-instrumentation) Manually parse URLs to improve React Native compatibility [#2674](https://github.com/bugsnag/bugsnag-js/pull/2674)
 
 ### Fixed
