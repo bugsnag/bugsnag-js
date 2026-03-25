@@ -1,5 +1,6 @@
 const assign = require('@bugsnag/core/lib/es-utils/assign')
 const BUGSNAG_ANONYMOUS_ID_KEY = 'bugsnag-anonymous-id'
+const cuid = require('@bugsnag/cuid')
 
 const getDeviceId = (win) => {
   try {
@@ -7,13 +8,12 @@ const getDeviceId = (win) => {
 
     let id = storage.getItem(BUGSNAG_ANONYMOUS_ID_KEY)
 
-    // If we get an ID, make sure it looks like a valid cuid. The length can
-    // fluctuate slightly, so some leeway is built in
-    if (id && /^c[a-z0-9]{20,32}$/.test(id)) {
+    // If we get an ID, make sure it looks like a valid cuid
+    
+    if (id && cuid.isCuid(id)) {
       return id
     }
 
-    const cuid = require('@bugsnag/cuid')
     id = cuid()
 
     storage.setItem(BUGSNAG_ANONYMOUS_ID_KEY, id)
