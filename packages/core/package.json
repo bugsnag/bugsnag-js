@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/cuid": "^3.0.0",
+    "@bugsnag/cuid": "^3.2.1",
     "@bugsnag/safe-json-stringify": "^6.0.0",
     "error-stack-parser": "^2.0.3",
     "iserror": "^0.0.2",
