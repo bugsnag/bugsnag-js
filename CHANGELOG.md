@@ -15,6 +15,7 @@
  
 ### Dependencies
 
+- Update @bugsnag/cuid to [v3.2.1] (https://github.com/bugsnag/cuid/releases/tag/v3.2.1) [#2706](https://github.com/bugsnag/bugsnag-js/pull/2706)
 - Update bugsnag-cocoa to [v6.35.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.35.0) [#2663](https://github.com/bugsnag/bugsnag-js/pull/2663)
 - Update bugsnag-android to [v6.22.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.22.0) [#2656](https://github.com/bugsnag/bugsnag-js/pull/2656)
 - Update bugsnag-android to [v6.23.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.23.0) [#2673](https://github.com/bugsnag/bugsnag-js/pull/2673)
