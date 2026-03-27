@@ -12,7 +12,7 @@
 - (plugin-network-instrumentation) Report HTTP Errors as handled [#2662](https://github.com/bugsnag/bugsnag-js/pull/2662)
 - (plugin-network-instrumentation) Omit stacktraces from HTTP Error events [#2684](https://github.com/bugsnag/bugsnag-js/pull/2684)
 - (react-native) Report error cause with native stacktrace for Turbo Module exceptions [#2686] (https://github.com/bugsnag/bugsnag-js/pull/2686)
- 
+
 ### Dependencies
 
 - Update @bugsnag/cuid to [v3.2.1] (https://github.com/bugsnag/cuid/releases/tag/v3.2.1) [#2706](https://github.com/bugsnag/bugsnag-js/pull/2706)
@@ -20,6 +20,7 @@
 - Update bugsnag-android to [v6.22.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.22.0) [#2656](https://github.com/bugsnag/bugsnag-js/pull/2656)
 - Update bugsnag-android to [v6.23.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.23.0) [#2673](https://github.com/bugsnag/bugsnag-js/pull/2673)
 - Update bugsnag-android to [v6.25.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.25.0) [#2689](https://github.com/bugsnag/bugsnag-js/pull/2689)
+- Update bugsnag-cocoa to [v6.36.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.36.0) [#2707](https://github.com/bugsnag/bugsnag-js/pull/2707)
 
 ## [8.8.1] - 2026-01-26
 
@@ -30,7 +31,6 @@
 ## [8.8.0] - 2026-01-20
 
 This release adds support for notitfying failed network requests using the new `plugin-network-instrumentation` package
-
 ### Added
 
 - (plugin-network-instrumentation) Add new plugin to notify failed network requests [#2647](https://github.com/bugsnag/bugsnag-js/pull/2647)
