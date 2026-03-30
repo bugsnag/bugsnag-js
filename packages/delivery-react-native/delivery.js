@@ -48,6 +48,8 @@ module.exports = (client, NativeClient) => ({
       breadcrumbs: derecursify(event.breadcrumbs),
       context: event.context,
       user: event._user,
+      request: event.request,
+      response: event.response,
       metadata: derecursify(event._metadata),
       groupingHash: event.groupingHash,
       groupingDiscriminator: event._groupingDiscriminator,
