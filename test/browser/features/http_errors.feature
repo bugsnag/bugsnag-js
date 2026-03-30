@@ -10,8 +10,8 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And I define "expected.context" as "GET <browser.hostname>"
-    And I define "expected.exception.message" as "401: <browser.url>/reflect?status=401&userId=[REDACTED]"
-    And I define "expected.request.url" as "<browser.url>/reflect?status=401&userId=[REDACTED]"
+    And I define "expected.exception.message" as "401: <browser.url>/reflect"
+    And I define "expected.request.url" as "<browser.url>/reflect"
 
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
@@ -41,8 +41,8 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And I define "expected.context" as "POST <browser.hostname>"
-    And I define "expected.exception.message" as "408: <browser.url>/reflect?status=408&userId=[REDACTED]"
-    And I define "expected.request.url" as "<browser.url>/reflect?status=408&userId=[REDACTED]"
+    And I define "expected.exception.message" as "408: <browser.url>/reflect"
+    And I define "expected.request.url" as "<browser.url>/reflect"
 
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
@@ -74,8 +74,8 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And I define "expected.context" as "GET <browser.hostname>"
-    And I define "expected.exception.message" as "404: <browser.url>/reflect?status=404&userId=[REDACTED]"
-    And I define "expected.request.url" as "<browser.url>/reflect?status=404&userId=[REDACTED]"
+    And I define "expected.exception.message" as "404: <browser.url>/reflect"
+    And I define "expected.request.url" as "<browser.url>/reflect"
 
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
@@ -106,8 +106,8 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And I define "expected.context" as "POST <browser.hostname>"
-    And I define "expected.exception.message" as "403: <browser.url>/reflect?status=403&userId=[REDACTED]"
-    And I define "expected.request.url" as "<browser.url>/reflect?status=403&userId=[REDACTED]"
+    And I define "expected.exception.message" as "403: <browser.url>/reflect"
+    And I define "expected.request.url" as "<browser.url>/reflect"
 
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"

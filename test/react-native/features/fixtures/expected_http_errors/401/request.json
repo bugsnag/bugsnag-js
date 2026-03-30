@@ -1,0 +1,8 @@
+{
+    "url": "^http(s)?:\/\/.*\/reflect$",
+    "headers": {},
+    "params": {
+        "status": "401"
+    },
+    "httpMethod": "GET"
+}

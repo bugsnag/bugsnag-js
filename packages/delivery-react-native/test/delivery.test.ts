@@ -17,6 +17,8 @@ type NativeClientEvent = Pick<EventWithInternals,
 | 'unhandled'
 | 'app'
 | 'device'
+| 'request'
+| 'response'
 | 'threads'
 | 'breadcrumbs'
 | 'context'
@@ -89,6 +91,8 @@ describe('delivery: react native', () => {
       expect(sent[0].context).toBe('test screen')
       expect(sent[0].user).toEqual({ id: '123', email: undefined, name: undefined })
       expect(sent[0].metadata).toEqual({})
+      expect(sent[0].request).toEqual({})
+      expect(sent[0].response).toEqual({})
       expect(sent[0].groupingHash).toEqual('ER_GRP_098')
       expect(sent[0].apiKey).toBe('abcdef123456abcdef123456abcdef123456')
       expect(sent[0].correlation).toEqual({ traceId: 'trace-id', spanId: 'span-id' })
@@ -286,6 +290,8 @@ describe('delivery: react native', () => {
       expect(sent[0].context).toBe('test screen')
       expect(sent[0].user).toEqual({ id: '123', email: undefined, name: undefined })
       expect(sent[0].metadata).toEqual({})
+      expect(sent[0].request).toEqual({})
+      expect(sent[0].response).toEqual({})
       expect(sent[0].groupingHash).toEqual('ER_GRP_098')
       expect(sent[0].apiKey).toBe('abcdef123456abcdef123456abcdef123456')
       done()
