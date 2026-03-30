@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- (plugin-inline-script-content) Fix strict mode compatibility by replacing `arguments` usage with rest parameters [#2711](https://github.com/bugsnag/bugsnag-js/pull/2711)
+
 ### Changed
 
 - (plugin-inline-script-content) Add support for additional event target constructors including MediaSource, MediaRecorder, ServiceWorker, RTCPeerConnection, and others [#2700](https://github.com/bugsnag/bugsnag-js/pull/2700)
@@ -9,7 +13,6 @@
 
 ### Fixed
 
-- (plugin-inline-script-content) Fix strict mode compatibility by replacing `arguments` usage with rest parameters
 - (plugin-network-instrumentation) Report HTTP Errors as handled [#2662](https://github.com/bugsnag/bugsnag-js/pull/2662)
 - (plugin-network-instrumentation) Omit stacktraces from HTTP Error events [#2684](https://github.com/bugsnag/bugsnag-js/pull/2684)
 - (react-native) Report error cause with native stacktrace for Turbo Module exceptions [#2686] (https://github.com/bugsnag/bugsnag-js/pull/2686)
