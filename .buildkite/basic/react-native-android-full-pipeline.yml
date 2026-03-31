@@ -94,10 +94,10 @@ steps:
         key: "build-react-native-navigation-android-fixture-old-arch"
         timeout_in_minutes: 30
         agents:
-          queue: macos-node-18
+          queue: macos-node-22
         env:
           JAVA_VERSION: "17"
-          NODE_VERSION: "18"
+          NODE_VERSION: "22"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
@@ -119,10 +119,10 @@ steps:
         key: "build-react-native-navigation-android-fixture-new-arch"
         timeout_in_minutes: 30
         agents:
-          queue: macos-node-18
+          queue: macos-node-22
         env:
           JAVA_VERSION: "17"
-          NODE_VERSION: "18"
+          NODE_VERSION: "22"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"

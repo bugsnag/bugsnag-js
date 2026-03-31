@@ -93,7 +93,7 @@ steps:
         agents:
           queue: "macos-15"
         env:
-          NODE_VERSION: "18"
+          NODE_VERSION: "22"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_IOS: "true"
