@@ -12,7 +12,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
   }
 }
 
@@ -44,6 +44,10 @@ android {
                 java.srcDirs += ['src/oldarch/java']
             }
         }
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
