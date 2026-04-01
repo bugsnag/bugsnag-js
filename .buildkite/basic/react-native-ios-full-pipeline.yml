@@ -37,7 +37,7 @@ steps:
               - "0.81"
              
             node:
-              - "22"
+              - "24"
           adjustments:
             - with:
                 reactnative: "0.68"
@@ -56,7 +56,7 @@ steps:
         agents:
           queue: "macos-15"
         env:
-          NODE_VERSION: "22"
+          NODE_VERSION: "24"
           RN_VERSION: "{{matrix.reactnative}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"

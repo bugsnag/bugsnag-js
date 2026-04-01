@@ -13,7 +13,7 @@ steps:
           queue: "macos-15-isolated"
         env:
           JAVA_VERSION: "17"
-          NODE_VERSION: "22"
+          NODE_VERSION: "24"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"
@@ -40,7 +40,7 @@ steps:
         agents:
           queue: "macos-15-isolated"
         env:
-          NODE_VERSION: "22"
+          NODE_VERSION: "24"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"

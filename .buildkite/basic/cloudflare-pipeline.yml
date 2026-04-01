@@ -7,7 +7,7 @@ steps:
       agents:
         queue: macos-15-isolated
       env:
-        NODE_VERSION: "22"
+        NODE_VERSION: "24"
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         VERBOSE: "1"
       commands:
