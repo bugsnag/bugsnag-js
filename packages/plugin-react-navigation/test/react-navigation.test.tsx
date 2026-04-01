@@ -5,6 +5,7 @@ import * as React from 'react'
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native'
 
 jest.mock('@react-navigation/native', () => {
+  // @eslint-disable-next-line @typescript-eslint/no-var-requires
   const React = require('react')
   return {
     NavigationContainer: React.forwardRef(jest.fn().mockImplementation((props, ref) => null)),
@@ -64,7 +65,7 @@ describe('plugin: react navigation', () => {
         }
       })
       return (
-        <BugsnagNavigationContainer ref={ref as unknown as React.RefObject<NavigationContainerRef<{}>>}>
+        <BugsnagNavigationContainer ref={ref as unknown as React.RefObject<NavigationContainerRef>}>
           Testing 123
         </BugsnagNavigationContainer>
       )
@@ -103,7 +104,7 @@ describe('plugin: react navigation', () => {
         }
       })
       return (
-        <BugsnagNavigationContainer ref={ref as unknown as React.RefObject<NavigationContainerRef<{}>>}>
+        <BugsnagNavigationContainer ref={ref as unknown as React.RefObject<NavigationContainerRef>}>
           Testing 123
         </BugsnagNavigationContainer>
       )
@@ -157,7 +158,7 @@ describe('plugin: react navigation', () => {
         }
       })
       return (
-        <BugsnagNavigationContainer ref={ref as unknown as React.RefObject<NavigationContainerRef<{}>>}>
+        <BugsnagNavigationContainer ref={ref as unknown as React.RefObject<NavigationContainerRef>}>
           Testing 123
         </BugsnagNavigationContainer>
       )
@@ -196,7 +197,7 @@ describe('plugin: react navigation', () => {
         }
       })
       return (
-        <BugsnagNavigationContainer ref={ref as unknown as React.RefObject<NavigationContainerRef<{}>>}>
+        <BugsnagNavigationContainer ref={ref as unknown as React.RefObject<NavigationContainerRef>}>
           Testing 123
         </BugsnagNavigationContainer>
       )
