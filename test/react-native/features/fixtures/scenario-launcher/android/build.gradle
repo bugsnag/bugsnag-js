@@ -36,6 +36,11 @@ android {
         targetSdkVersion safeExtGet('targetSdkVersion', 28)
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
     sourceSets {
         main {
             if (isNewArchitectureEnabled()) {
@@ -47,7 +52,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
 }
 
