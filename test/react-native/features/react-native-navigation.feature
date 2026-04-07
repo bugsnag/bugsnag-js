@@ -50,3 +50,25 @@ Scenario: Navigating when navigation breadcrumbs are disabled only updates conte
   And the event "unhandled" is true
   And the event "context" equals "Details"
   And the event does not have a "navigation" breadcrumb
+
+Scenario: Multiple rapid navigation events are tracked correctly
+  When I run "ReactNativeNavigationRapidNavigationScenario"
+  And I wait to receive 1 error
+  Then the exception "message" equals "RapidNavigationError"
+  And the event "context" equals "FinalScreen"
+  And the event has a "navigation" breadcrumb named "React Native Navigation componentDidAppear"
+
+Scenario: Navigation context persists across error handling
+  When I run "ReactNativeNavigationPersistenceScenario"
+  And I relaunch the app after a crash
+  And I configure Bugsnag for "ReactNativeNavigationPersistenceScenario"
+  And I wait to receive 2 errors
+
+  # First error should have Home context
+  Then the exception "message" equals "FirstNavigationError"
+  And the event "context" equals "Home"
+  And I discard the oldest error
+
+  # Second error should have updated context
+  Then the exception "message" equals "SecondNavigationError"
+  And the event "context" equals "Settings"

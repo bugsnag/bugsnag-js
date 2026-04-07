@@ -1,0 +1,468 @@
+# Logfile created on 2026-04-07 18:25:38 +0530 by logger.rb/v1.7.0
+[2m[18:25:38][0m  INFO: Maze Runner v11.0.0
+[2m[18:25:38][0m  INFO: Reading command line options from features/support/maze.all.cfg
+[2m[18:25:39][0m  INFO: Running in appium mode
+[2m[18:25:39][0m  INFO: Clearing contents of /Users/priyanka_potdar/Documents/bugsnag-js-2/bugsnag-js/test/react-native/maze_output/device_info.json
+[2m[18:25:39][0m  INFO: Clearing contents of /Users/priyanka_potdar/Documents/bugsnag-js-2/bugsnag-js/test/react-native/maze_output/maze_output.zip
+[2m[18:25:39][0m  INFO: Clearing contents of /Users/priyanka_potdar/Documents/bugsnag-js-2/bugsnag-js/test/react-native/maze_output/passed
+[2m[18:25:39][0m  INFO: UUID for this run: fb4684dd-550f-4292-ae67-5b6df8f31412
+[2m[18:25:39][0m  INFO: WEBrick 1.9.2
+[2m[18:25:39][0m  INFO: ruby 3.4.8 (2025-12-17) [arm64-darwin25]
+[2m[18:25:39][0m DEBUG: #<WEBrick::HTTPServlet::ProcHandler:0x00000001258a11e8 @proc=#<Proc:0x000000012617c1a0 /Users/priyanka_potdar/.rbenv/versions/3.4.8/lib/ruby/gems/3.4.0/gems/bugsnag-maze-runner-11.0.0/lib/maze/server.rb:254>> is mounted on /.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /notify.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /sessions.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /builds.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /uploads.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::TraceServlet is mounted on /traces.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /sourcemap.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /react-native-source-map.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /dart-symbol.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /ndk-symbol.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /proguard.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /dsym.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /breakpad-symbol.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /unity-line-mappings.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::CommandServlet is mounted on /command.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::IdempotentCommandServlet is mounted on /idem-command.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::AllCommandsServlet is mounted on /commands.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::ErrorConfigServlet is mounted on /error-config.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::LogServlet is mounted on /logs.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::Servlet is mounted on /metrics.
+[2m[18:25:39][0m DEBUG: Maze::Servlets::ReflectiveServlet is mounted on /reflect.
+[2m[18:25:39][0m  INFO: WEBrick::HTTPServer#start: pid=33274 port=9339
+[2m[18:25:40][0m  INFO: Uploading app: /Users/priyanka_potdar/Documents/bugsnag-js-2/bugsnag-js/test/react-native/features/fixtures/generated/react-native-navigation/new-arch/0.72/android/app/build/outputs/apk/release/app-release.apk
+[2m[18:25:48][0m  INFO: App uploaded to: bs://83f0e87b129e810c637ad2ff86e9be1c6836d072
+[2m[18:25:48][0m  INFO: You can use this url to avoid uploading the same app more than once.
+[2m[18:25:48][0m  INFO: Starting BrowserStack local tunnel
+[2m[18:25:48][0m DEBUG: Executing: /Users/priyanka_potdar/BrowserStackLocal -d start --key hHDo5besaVcNDLyjGzyP --local-identifier fb4684dd-550f-4292-ae67-5b6df8f31412 --force-local --only-automate --force
+[2m[18:25:53][0m DEBUG: {"state":"connected","pid":33305,"message":{"message":"Connected"}}
+[2m[18:25:53][0m DEBUG: Exit status: 0
+[2m[18:25:53][0m  INFO: BrowserStackLocal daemon running under pid 33305
+[2m[18:25:53][0m  INFO: Creating Appium session with http://hub-cloud.browserstack.com/wd/hub...
+[2m[18:26:29][0m  INFO: Appium driver started in 36s
+[2m[18:26:29][0m  INFO: Created Appium session: d21cdf88d7c3c9e5f206e42533e148981b42151e
+[2m[18:26:30][0m  INFO: BrowserStack session(s): https://app-automate.browserstack.com/dashboard/v2/search?query=fb4684dd-550f-4292-ae67-5b6df8f31412&type=builds
+[2m[18:26:30][0m TRACE: Step started: Before hook
+[2m[18:26:30][0m TRACE: Step started: Before hook
+[2m[18:26:30][0m TRACE: Step started: Before hook
+[2m[18:26:30][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m TRACE: Step started: Before hook
+[2m[18:26:31][0m DEBUG: Before hook - scenario.status: passed
+[2m[18:26:31][0m DEBUG: Before hook - Maze.driver&.failed?: false
+[2m[18:26:31][0m TRACE: Pushing file to '/sdcard/Android/data/com.reactnative/files/fixture_config.json' with contents: {"maze_address":"bs-local.com:9339"}
+[2m[18:26:32][0m TRACE: 
+[2m[18:26:32][0m TRACE: 
+--- Begin Scenario: Navigating screens causes breadcrumbs and context to be updated "# features/react-native-navigation.feature:4"
+[2m[18:26:32][0m TRACE: Step started: I run "ReactNativeNavigationBreadcrumbsEnabledScenario"
+[2m[18:26:32][0m TRACE: Step started: I run "ReactNativeNavigationBreadcrumbsEnabledScenario"
+[2m[18:26:32][0m TRACE: Step started: I run "ReactNativeNavigationBreadcrumbsEnabledScenario"
+[2m[18:26:32][0m TRACE: Step started: I run "ReactNativeNavigationBreadcrumbsEnabledScenario"
+[2m[18:26:32][0m DEBUG: Queuing command: {action: "run-scenario", scenario_name: "ReactNativeNavigationBreadcrumbsEnabledScenario", notify: "http://localhost:9339/notify", sessions: "http://localhost:9339/sessions", api_key: "12312312312312312312312312312312", scenario_data: ""}
+[2m[18:27:30][0m DEBUG: accept: 127.0.0.1:59783
+[2m[18:27:30][0m DEBUG: Maze::Servlets::CommandServlet is invoked.
+[2m[18:27:30][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:27:30][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:27:30][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:27:30][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:27:31][0m DEBUG: accept: 127.0.0.1:59786
+[2m[18:27:31][0m DEBUG: Maze::Servlets::Servlet is invoked.
+[2m[18:27:31][0m TRACE: DIGESTS computed: sha1=1f90f2fc600567988dad4cb30df195ad6741805a simple=30735
+[2m[18:27:33][0m DEBUG: Maze::Servlets::Servlet is invoked.
+[2m[18:27:33][0m TRACE: DIGESTS computed: sha1=d903da432427a9a90c57ff38f4f32be40a567f6b simple=31953
+[2m[18:27:35][0m DEBUG: Maze::Servlets::Servlet is invoked.
+[2m[18:27:35][0m TRACE: DIGESTS computed: sha1=2a7383df93802daba5bfad03a2f791af1bd18ff5 simple=32315
+[2m[18:27:48][0m  WARN: App state running_in_foreground instead of not_running after 10s
+[2m[18:27:48][0m DEBUG: close: 127.0.0.1:59786
+[2m[18:27:48][0m DEBUG: close: 127.0.0.1:59783
+[2m[18:27:49][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationBreadcrumbsEnabledScenario"
+[2m[18:27:49][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationBreadcrumbsEnabledScenario"
+[2m[18:27:49][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationBreadcrumbsEnabledScenario"
+[2m[18:27:49][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationBreadcrumbsEnabledScenario"
+[2m[18:27:49][0m DEBUG: Queuing command: {action: "start-bugsnag", scenario_name: "ReactNativeNavigationBreadcrumbsEnabledScenario", notify: "http://localhost:9339/notify", sessions: "http://localhost:9339/sessions", api_key: "12312312312312312312312312312312", scenario_data: ""}
+[2m[18:28:50][0m DEBUG: accept: 127.0.0.1:59933
+[2m[18:28:50][0m DEBUG: Maze::Servlets::CommandServlet is invoked.
+[2m[18:28:50][0m TRACE: Step started: I wait to receive 3 errors
+[2m[18:28:50][0m TRACE: Step started: I wait to receive 3 errors
+[2m[18:28:50][0m TRACE: Step started: I wait to receive 3 errors
+[2m[18:28:50][0m TRACE: Step started: I wait to receive 3 errors
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "HomeNavigationError"
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "HomeNavigationError"
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "HomeNavigationError"
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "HomeNavigationError"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: I discard the oldest error
+[2m[18:28:50][0m TRACE: Step started: I discard the oldest error
+[2m[18:28:50][0m TRACE: Step started: I discard the oldest error
+[2m[18:28:50][0m TRACE: Step started: I discard the oldest error
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "DetailsNavigationError"
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "DetailsNavigationError"
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "DetailsNavigationError"
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "DetailsNavigationError"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeToDetailsNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeToDetailsNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeToDetailsNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeToDetailsNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: I discard the oldest error
+[2m[18:28:50][0m TRACE: Step started: I discard the oldest error
+[2m[18:28:50][0m TRACE: Step started: I discard the oldest error
+[2m[18:28:50][0m TRACE: Step started: I discard the oldest error
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "DetailsNavigationUnhandledError"
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "DetailsNavigationUnhandledError"
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "DetailsNavigationUnhandledError"
+[2m[18:28:50][0m TRACE: Step started: the exception "message" equals "DetailsNavigationUnhandledError"
+[2m[18:28:50][0m TRACE: Step started: the event "unhandled" is true
+[2m[18:28:50][0m TRACE: Step started: the event "unhandled" is true
+[2m[18:28:50][0m TRACE: Step started: the event "unhandled" is true
+[2m[18:28:50][0m TRACE: Step started: the event "unhandled" is true
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:28:50][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeReadyNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeToDetailsNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeToDetailsNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeToDetailsNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: the event contains a breadcrumb matching the JSON fixture in "features/fixtures/expected_breadcrumbs/HomeToDetailsNavigation.json"
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m DEBUG: After hook 3 - scenario.status: passed
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m DEBUG: After hook 2 - scenario.status: passed
+[2m[18:28:50][0m DEBUG: After hook 2 - Maze.driver&.failed?: false
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m TRACE: Step started: After hook
+[2m[18:28:50][0m DEBUG: After hook 1 - scenario.status: passed
+[2m[18:28:50][0m TRACE: --- End Scenario: Navigating screens causes breadcrumbs and context to be updated "# features/react-native-navigation.feature:4"
+[2m[18:28:50][0m TRACE: 
+[2m[18:28:50][0m DEBUG: Appium after hook
+[2m[18:28:50][0m DEBUG: close: 127.0.0.1:59933
+[2m[18:28:52][0m TRACE: Step started: Before hook
+[2m[18:28:52][0m TRACE: Step started: Before hook
+[2m[18:28:52][0m TRACE: Step started: Before hook
+[2m[18:28:52][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m TRACE: Step started: Before hook
+[2m[18:28:53][0m DEBUG: Before hook - scenario.status: passed
+[2m[18:28:53][0m DEBUG: Before hook - Maze.driver&.failed?: false
+[2m[18:28:53][0m TRACE: Pushing file to '/sdcard/Android/data/com.reactnative/files/fixture_config.json' with contents: {"maze_address":"bs-local.com:9339"}
+[2m[18:28:54][0m TRACE: 
+[2m[18:28:54][0m TRACE: 
+--- Begin Scenario: Navigating when navigation breadcrumbs are disabled only updates context "# features/react-native-navigation.feature:30"
+[2m[18:28:54][0m TRACE: Step started: I run "ReactNativeNavigationBreadcrumbsDisabledScenario"
+[2m[18:28:54][0m TRACE: Step started: I run "ReactNativeNavigationBreadcrumbsDisabledScenario"
+[2m[18:28:54][0m TRACE: Step started: I run "ReactNativeNavigationBreadcrumbsDisabledScenario"
+[2m[18:28:54][0m TRACE: Step started: I run "ReactNativeNavigationBreadcrumbsDisabledScenario"
+[2m[18:28:54][0m DEBUG: Queuing command: {action: "run-scenario", scenario_name: "ReactNativeNavigationBreadcrumbsDisabledScenario", notify: "http://localhost:9339/notify", sessions: "http://localhost:9339/sessions", api_key: "12312312312312312312312312312312", scenario_data: ""}
+[2m[18:29:52][0m DEBUG: accept: 127.0.0.1:60025
+[2m[18:29:52][0m DEBUG: Maze::Servlets::CommandServlet is invoked.
+[2m[18:29:52][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:29:52][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:29:52][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:29:52][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:29:53][0m DEBUG: accept: 127.0.0.1:60028
+[2m[18:29:54][0m DEBUG: Maze::Servlets::Servlet is invoked.
+[2m[18:29:54][0m TRACE: DIGESTS computed: sha1=47a0643ec0f0f767e58197f77d844ab561321186 simple=29179
+[2m[18:29:55][0m DEBUG: Maze::Servlets::Servlet is invoked.
+[2m[18:29:55][0m TRACE: DIGESTS computed: sha1=a42f4b57d562e9ec3ef5f11894c5605ade27fc5d simple=30033
+[2m[18:29:57][0m DEBUG: Maze::Servlets::Servlet is invoked.
+[2m[18:29:57][0m TRACE: DIGESTS computed: sha1=2d0b20a0c63d6dd9fd2c7078cf368a295cd0b1f9 simple=31796
+[2m[18:30:11][0m  WARN: App state running_in_foreground instead of not_running after 10s
+[2m[18:30:11][0m DEBUG: close: 127.0.0.1:60025
+[2m[18:30:11][0m DEBUG: close: 127.0.0.1:60028
+[2m[18:30:12][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationBreadcrumbsDisabledScenario"
+[2m[18:30:12][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationBreadcrumbsDisabledScenario"
+[2m[18:30:12][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationBreadcrumbsDisabledScenario"
+[2m[18:30:12][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationBreadcrumbsDisabledScenario"
+[2m[18:30:12][0m DEBUG: Queuing command: {action: "start-bugsnag", scenario_name: "ReactNativeNavigationBreadcrumbsDisabledScenario", notify: "http://localhost:9339/notify", sessions: "http://localhost:9339/sessions", api_key: "12312312312312312312312312312312", scenario_data: ""}
+[2m[18:31:13][0m DEBUG: accept: 127.0.0.1:60111
+[2m[18:31:13][0m DEBUG: Maze::Servlets::CommandServlet is invoked.
+[2m[18:31:13][0m TRACE: Step started: I wait to receive 3 errors
+[2m[18:31:13][0m TRACE: Step started: I wait to receive 3 errors
+[2m[18:31:13][0m TRACE: Step started: I wait to receive 3 errors
+[2m[18:31:13][0m TRACE: Step started: I wait to receive 3 errors
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "HomeNavigationError"
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "HomeNavigationError"
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "HomeNavigationError"
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "HomeNavigationError"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: I discard the oldest error
+[2m[18:31:13][0m TRACE: Step started: I discard the oldest error
+[2m[18:31:13][0m TRACE: Step started: I discard the oldest error
+[2m[18:31:13][0m TRACE: Step started: I discard the oldest error
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "DetailsNavigationError"
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "DetailsNavigationError"
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "DetailsNavigationError"
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "DetailsNavigationError"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: I discard the oldest error
+[2m[18:31:13][0m TRACE: Step started: I discard the oldest error
+[2m[18:31:13][0m TRACE: Step started: I discard the oldest error
+[2m[18:31:13][0m TRACE: Step started: I discard the oldest error
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "DetailsNavigationUnhandledError"
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "DetailsNavigationUnhandledError"
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "DetailsNavigationUnhandledError"
+[2m[18:31:13][0m TRACE: Step started: the exception "message" equals "DetailsNavigationUnhandledError"
+[2m[18:31:13][0m TRACE: Step started: the event "unhandled" is true
+[2m[18:31:13][0m TRACE: Step started: the event "unhandled" is true
+[2m[18:31:13][0m TRACE: Step started: the event "unhandled" is true
+[2m[18:31:13][0m TRACE: Step started: the event "unhandled" is true
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:31:13][0m TRACE: Step started: the event "context" equals "Details"
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: the event does not have a "navigation" breadcrumb
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m DEBUG: After hook 3 - scenario.status: passed
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m DEBUG: After hook 2 - scenario.status: passed
+[2m[18:31:13][0m DEBUG: After hook 2 - Maze.driver&.failed?: false
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m TRACE: Step started: After hook
+[2m[18:31:13][0m DEBUG: After hook 1 - scenario.status: passed
+[2m[18:31:13][0m TRACE: --- End Scenario: Navigating when navigation breadcrumbs are disabled only updates context "# features/react-native-navigation.feature:30"
+[2m[18:31:13][0m TRACE: 
+[2m[18:31:13][0m DEBUG: Appium after hook
+[2m[18:31:35][0m DEBUG: close: 127.0.0.1:60111
+[2m[18:31:36][0m TRACE: Step started: Before hook
+[2m[18:31:36][0m TRACE: Step started: Before hook
+[2m[18:31:36][0m TRACE: Step started: Before hook
+[2m[18:31:36][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m TRACE: Step started: Before hook
+[2m[18:31:45][0m DEBUG: Before hook - scenario.status: passed
+[2m[18:31:45][0m DEBUG: Before hook - Maze.driver&.failed?: false
+[2m[18:31:45][0m TRACE: Pushing file to '/sdcard/Android/data/com.reactnative/files/fixture_config.json' with contents: {"maze_address":"bs-local.com:9339"}
+[2m[18:32:03][0m TRACE: 
+[2m[18:32:03][0m TRACE: 
+--- Begin Scenario: Multiple rapid navigation events are tracked correctly "# features/react-native-navigation.feature:54"
+[2m[18:32:03][0m TRACE: Step started: I run "ReactNativeNavigationRapidNavigationScenario"
+[2m[18:32:03][0m TRACE: Step started: I run "ReactNativeNavigationRapidNavigationScenario"
+[2m[18:32:03][0m TRACE: Step started: I run "ReactNativeNavigationRapidNavigationScenario"
+[2m[18:32:03][0m TRACE: Step started: I run "ReactNativeNavigationRapidNavigationScenario"
+[2m[18:32:03][0m DEBUG: Queuing command: {action: "run-scenario", scenario_name: "ReactNativeNavigationRapidNavigationScenario", notify: "http://localhost:9339/notify", sessions: "http://localhost:9339/sessions", api_key: "12312312312312312312312312312312", scenario_data: ""}
+[2m[18:32:37][0m DEBUG: accept: 127.0.0.1:60257
+[2m[18:32:37][0m DEBUG: Maze::Servlets::CommandServlet is invoked.
+[2m[18:32:37][0m TRACE: Step started: I wait to receive 1 error
+[2m[18:32:37][0m TRACE: Step started: I wait to receive 1 error
+[2m[18:32:37][0m TRACE: Step started: I wait to receive 1 error
+[2m[18:32:37][0m TRACE: Step started: I wait to receive 1 error
+[2m[18:32:38][0m DEBUG: accept: 127.0.0.1:60260
+[2m[18:32:38][0m DEBUG: Maze::Servlets::Servlet is invoked.
+[2m[18:32:38][0m TRACE: DIGESTS computed: sha1=b23f5fafcf646c42718d849141cd1ebab42b5038 simple=30576
+[2m[18:32:38][0m TRACE: Step started: the exception "message" equals "RapidNavigationError"
+[2m[18:32:38][0m TRACE: Step started: the exception "message" equals "RapidNavigationError"
+[2m[18:32:38][0m TRACE: Step started: the exception "message" equals "RapidNavigationError"
+[2m[18:32:38][0m TRACE: Step started: the exception "message" equals "RapidNavigationError"
+[2m[18:32:38][0m TRACE: Step started: the event "context" equals "FinalScreen"
+[2m[18:32:38][0m TRACE: Step started: the event "context" equals "FinalScreen"
+[2m[18:32:38][0m TRACE: Step started: the event "context" equals "FinalScreen"
+[2m[18:32:38][0m TRACE: Step started: the event "context" equals "FinalScreen"
+[2m[18:32:38][0m TRACE: Step started: the event has a "navigation" breadcrumb named "React Native Navigation componentDidAppear"
+[2m[18:32:38][0m TRACE: Step started: the event has a "navigation" breadcrumb named "React Native Navigation componentDidAppear"
+[2m[18:32:38][0m TRACE: Step started: the event has a "navigation" breadcrumb named "React Native Navigation componentDidAppear"
+[2m[18:32:38][0m TRACE: Step started: the event has a "navigation" breadcrumb named "React Native Navigation componentDidAppear"
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m DEBUG: After hook 3 - scenario.status: passed
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m DEBUG: After hook 2 - scenario.status: passed
+[2m[18:32:38][0m DEBUG: After hook 2 - Maze.driver&.failed?: false
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m TRACE: Step started: After hook
+[2m[18:32:38][0m DEBUG: After hook 1 - scenario.status: passed
+[2m[18:32:38][0m TRACE: --- End Scenario: Multiple rapid navigation events are tracked correctly "# features/react-native-navigation.feature:54"
+[2m[18:32:38][0m TRACE: 
+[2m[18:32:38][0m DEBUG: Appium after hook
+[2m[18:32:53][0m DEBUG: close: 127.0.0.1:60257
+[2m[18:32:53][0m DEBUG: close: 127.0.0.1:60260
+[2m[18:33:02][0m TRACE: Step started: Before hook
+[2m[18:33:02][0m TRACE: Step started: Before hook
+[2m[18:33:02][0m TRACE: Step started: Before hook
+[2m[18:33:02][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m TRACE: Step started: Before hook
+[2m[18:33:03][0m DEBUG: Before hook - scenario.status: passed
+[2m[18:33:03][0m DEBUG: Before hook - Maze.driver&.failed?: false
+[2m[18:33:03][0m TRACE: Pushing file to '/sdcard/Android/data/com.reactnative/files/fixture_config.json' with contents: {"maze_address":"bs-local.com:9339"}
+[2m[18:33:16][0m TRACE: 
+[2m[18:33:16][0m TRACE: 
+--- Begin Scenario: Navigation context persists across error handling "# features/react-native-navigation.feature:61"
+[2m[18:33:16][0m TRACE: Step started: I run "ReactNativeNavigationPersistenceScenario"
+[2m[18:33:16][0m TRACE: Step started: I run "ReactNativeNavigationPersistenceScenario"
+[2m[18:33:16][0m TRACE: Step started: I run "ReactNativeNavigationPersistenceScenario"
+[2m[18:33:16][0m TRACE: Step started: I run "ReactNativeNavigationPersistenceScenario"
+[2m[18:33:16][0m DEBUG: Queuing command: {action: "run-scenario", scenario_name: "ReactNativeNavigationPersistenceScenario", notify: "http://localhost:9339/notify", sessions: "http://localhost:9339/sessions", api_key: "12312312312312312312312312312312", scenario_data: ""}
+[2m[18:34:02][0m DEBUG: accept: 127.0.0.1:60446
+[2m[18:34:02][0m DEBUG: Maze::Servlets::CommandServlet is invoked.
+[2m[18:34:02][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:34:02][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:34:02][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:34:02][0m TRACE: Step started: I relaunch the app after a crash
+[2m[18:34:03][0m DEBUG: accept: 127.0.0.1:60448
+[2m[18:34:03][0m DEBUG: Maze::Servlets::Servlet is invoked.
+[2m[18:34:03][0m TRACE: DIGESTS computed: sha1=27a6433078cc328f52f8d84acf23d6ebe96741bf simple=29974
+[2m[18:34:07][0m DEBUG: Maze::Servlets::Servlet is invoked.
+[2m[18:34:07][0m TRACE: DIGESTS computed: sha1=dae8be69269221bde83fab8d08c481bba90a6769 simple=31201
+[2m[18:34:20][0m  WARN: App state running_in_foreground instead of not_running after 10s
+[2m[18:34:21][0m DEBUG: close: 127.0.0.1:60446
+[2m[18:34:21][0m DEBUG: close: 127.0.0.1:60448
+[2m[18:34:21][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationPersistenceScenario"
+[2m[18:34:21][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationPersistenceScenario"
+[2m[18:34:21][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationPersistenceScenario"
+[2m[18:34:21][0m TRACE: Step started: I configure Bugsnag for "ReactNativeNavigationPersistenceScenario"
+[2m[18:34:21][0m DEBUG: Queuing command: {action: "start-bugsnag", scenario_name: "ReactNativeNavigationPersistenceScenario", notify: "http://localhost:9339/notify", sessions: "http://localhost:9339/sessions", api_key: "12312312312312312312312312312312", scenario_data: ""}
+[2m[18:35:22][0m DEBUG: accept: 127.0.0.1:60564
+[2m[18:35:22][0m DEBUG: Maze::Servlets::CommandServlet is invoked.
+[2m[18:35:22][0m TRACE: Step started: I wait to receive 2 errors
+[2m[18:35:22][0m TRACE: Step started: I wait to receive 2 errors
+[2m[18:35:22][0m TRACE: Step started: I wait to receive 2 errors
+[2m[18:35:22][0m TRACE: Step started: I wait to receive 2 errors
+[2m[18:35:22][0m TRACE: Step started: the exception "message" equals "FirstNavigationError"
+[2m[18:35:22][0m TRACE: Step started: the exception "message" equals "FirstNavigationError"
+[2m[18:35:22][0m TRACE: Step started: the exception "message" equals "FirstNavigationError"
+[2m[18:35:22][0m TRACE: Step started: the exception "message" equals "FirstNavigationError"
+[2m[18:35:22][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:35:22][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:35:22][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:35:22][0m TRACE: Step started: the event "context" equals "Home"
+[2m[18:35:22][0m TRACE: Step started: I discard the oldest error
+[2m[18:35:22][0m TRACE: Step started: I discard the oldest error
+[2m[18:35:22][0m TRACE: Step started: I discard the oldest error
+[2m[18:35:22][0m TRACE: Step started: I discard the oldest error
+[2m[18:35:22][0m TRACE: Step started: the exception "message" equals "SecondNavigationError"
+[2m[18:35:22][0m TRACE: Step started: the exception "message" equals "SecondNavigationError"
+[2m[18:35:22][0m TRACE: Step started: the exception "message" equals "SecondNavigationError"
+[2m[18:35:22][0m TRACE: Step started: the exception "message" equals "SecondNavigationError"
+[2m[18:35:22][0m TRACE: Step started: the event "context" equals "Settings"
+[2m[18:35:22][0m TRACE: Step started: the event "context" equals "Settings"
+[2m[18:35:22][0m TRACE: Step started: the event "context" equals "Settings"
+[2m[18:35:22][0m TRACE: Step started: the event "context" equals "Settings"
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m DEBUG: After hook 3 - scenario.status: passed
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m DEBUG: After hook 2 - scenario.status: passed
+[2m[18:35:22][0m DEBUG: After hook 2 - Maze.driver&.failed?: false
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m TRACE: Step started: After hook
+[2m[18:35:22][0m DEBUG: After hook 1 - scenario.status: passed
+[2m[18:35:22][0m TRACE: --- End Scenario: Navigation context persists across error handling "# features/react-native-navigation.feature:61"
+[2m[18:35:22][0m TRACE: 
+[2m[18:35:22][0m DEBUG: Appium after hook
+[2m[18:35:23][0m DEBUG: close: 127.0.0.1:60564
+[2m[18:35:24][0m  INFO: Timer totals:
+[2m[18:35:24][0m  INFO:   Appium - click element: 0
+[2m[18:35:24][0m  INFO:   Appium - find element: 0
+[2m[18:35:24][0m  INFO: Appium session created: d21cdf88d7c3c9e5f206e42533e148981b42151e
+[2m[18:35:24][0m DEBUG: close TCPSocket(::, 9339)
+[2m[18:35:24][0m  INFO: BrowserStack session(s): https://app-automate.browserstack.com/dashboard/v2/search?query=fb4684dd-550f-4292-ae67-5b6df8f31412&type=builds
+[2m[18:35:24][0m  INFO: Stopping the Appium session
+[2m[18:35:24][0m DEBUG: close TCPSocket(0.0.0.0, 9339)
+[2m[18:35:24][0m  INFO: going to shutdown ...
+[2m[18:35:24][0m  INFO: WEBrick::HTTPServer#start done.
+[2m[18:35:25][0m  INFO: Stopping BrowserStack local tunnel

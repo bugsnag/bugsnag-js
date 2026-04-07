@@ -6,18 +6,12 @@ def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
-buildscript {
-  repositories {
-    google()
-    mavenCentral()
-  }
-  dependencies {
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
-  }
-}
-
 apply plugin: 'com.android.library'
-apply plugin: 'org.jetbrains.kotlin.android'
+try {
+    apply plugin: 'org.jetbrains.kotlin.android'
+} catch (e) {
+    // Kotlin 2.x + AGP 9 may fail here; the root project handles Kotlin config
+}
 if (isNewArchitectureEnabled()) {
     apply plugin: 'com.facebook.react'
 }
@@ -26,10 +20,7 @@ if (isNewArchitectureEnabled()) {
 android {
     buildToolsVersion safeExtGet('buildToolsVersion', '28.0.3')
     compileSdkVersion safeExtGet('compileSdkVersion', 28)
-
-    if (android.hasProperty('namespace')) {
-        namespace 'com.reactnative.scenarios'
-    }
+    namespace 'com.reactnative.scenarios'
 
     defaultConfig {
         minSdkVersion safeExtGet('minSdkVersion', 16)
@@ -49,10 +40,6 @@ android {
                 java.srcDirs += ['src/oldarch/java']
             }
         }
-    }
-
-    kotlinOptions {
-        jvmTarget = '11'
     }
 }
 
