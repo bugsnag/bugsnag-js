@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.8.0"
+    "@bugsnag/core": "^8.8.0",
     "@types/react-native": "0.67.8"
   },
   "peerDependencies": {
