@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/request-tracker",
-  "version": "8.8.1",
+  "version": "8.9.0",
   "main": "index.js",
   "types": "index.d.ts",
   "description": "Shared HTTP request tracking for Bugsnag JavaScript plugins",
@@ -19,6 +19,6 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^8.8.0"
+    "@bugsnag/core": "^8.9.0"
   }
 }
