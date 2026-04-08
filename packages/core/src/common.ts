@@ -115,9 +115,9 @@ export interface Request {
   [key: string]: any
 }
 
-interface Response {
-  statusCode: number
-  headers: { [key: string]: unknown }
+export interface Response {
+  statusCode?: number
+  headers?: { [key: string]: unknown }
   body?: string
   bodyLength?: number
 }
