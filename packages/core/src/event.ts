@@ -1,4 +1,4 @@
-import { App, Device, FeatureFlag, Logger, Request, Stackframe, Thread, User, BugsnagError, NotifiableError } from "./common"
+import { App, Device, FeatureFlag, Logger, Request, Response, Stackframe, Thread, User, BugsnagError, NotifiableError } from "./common"
 
 import ErrorStackParser from 'error-stack-parser'
 import StackGenerator from 'stack-generator'
@@ -27,6 +27,7 @@ export default class Event {
   public app: App
   public device: Device
   public request: Request
+  public response: Response
 
   public errors: BugsnagError[];
   public breadcrumbs: Breadcrumb[]
