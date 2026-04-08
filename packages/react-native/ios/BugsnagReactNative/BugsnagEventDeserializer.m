@@ -9,6 +9,7 @@
 #import "BugsnagEventDeserializer.h"
 
 #import "BugsnagInternals.h"
+#import <Bugsnag/BugsnagStacktrace.h>
 
 @implementation BugsnagEventDeserializer
 
@@ -25,10 +26,12 @@
                                                        user:[[BugsnagUser alloc] initWithDictionary:user]
                                                    metadata:metadata
                                                 breadcrumbs:[self deserializeBreadcrumbs:payload[@"breadcrumbs"]]
-                                                     errors:@[[BugsnagError new]]
+                                                     errors:[self deserializeErrors:payload[@"errors"]]
                                                     threads:[self deserializeThreads:payload[@"threads"]]
                                                     session:nil /* set by -[BugsnagClient notifyInternal:block:] */];
     event.context = payload[@"context"];
+    event.request = [self deserializeRequest:payload[@"request"]];
+    event.response = [self deserializeResponse:payload[@"response"]];
     event.groupingHash = payload[@"groupingHash"];
     event.groupingDiscriminator = payload[@"groupingDiscriminator"];
 
@@ -49,13 +52,17 @@
         }
     }
 
-    NSDictionary *error = payload[@"errors"][0];
+    return event;
+}
 
-    if (error != nil) {
-        event.errors[0].errorClass = error[@"errorClass"];
-        event.errors[0].errorMessage = error[@"errorMessage"];
+- (NSArray<BugsnagError *> *)deserializeErrors:(NSArray *)errors {
+    NSMutableArray *array = [NSMutableArray new];
+    for (NSDictionary *error in errors) {
+        BugsnagError *errorObj = [BugsnagError new];
+        errorObj.errorClass = error[@"errorClass"];
+        errorObj.errorMessage = error[@"errorMessage"];
         NSArray<NSDictionary *> *stacktrace = error[@"stacktrace"];
-        NSArray<NSString *> *nativeStack = payload[@"nativeStack"];
+        NSArray<NSString *> *nativeStack = error[@"nativeStack"];
         if (nativeStack) {
             NSMutableArray<NSDictionary *> *mixedStack = [NSMutableArray array];
             for (BugsnagStackframe *frame in [BugsnagStackframe stackframesWithCallStackSymbols:nativeStack]) {
@@ -66,10 +73,13 @@
             [mixedStack addObjectsFromArray:stacktrace];
             stacktrace = mixedStack;
         }
-        [event attachCustomStacktrace:stacktrace withType:@"reactnativejs"];
+
+        errorObj.stacktrace = [BugsnagStacktrace stacktraceFromJson:stacktrace].trace;
+        errorObj.type = BSGErrorTypeReactNativeJs;
+        [array addObject:errorObj];
     }
 
-    return event;
+    return array;
 }
 
 - (NSArray *)deserializeBreadcrumbs:(NSArray *)crumbs {
@@ -122,6 +132,20 @@
         }
     }
     return array;
+}
+
+- (BugsnagHttpRequest *)deserializeRequest:(NSDictionary *)request {
+    if (request != nil) {
+        return [BugsnagHttpRequest requestFromJson:request];
+    }
+    return nil;
+}
+
+- (BugsnagHttpResponse *)deserializeResponse:(NSDictionary *)response {
+    if (response != nil) {
+        return [BugsnagHttpResponse responseFromJson:response];
+    }
+    return nil;
 }
 
 @end

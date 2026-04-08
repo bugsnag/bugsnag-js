@@ -1,15 +1,18 @@
 /* global markdown */
 
 const { readFileSync } = require('fs')
+const coverageDiff = require('coverage-diff')
 
 const before = {
   minified: parseInt(readFileSync(`${__dirname}/.diff/size-before-minified`, 'utf8').trim()),
-  gzipped: parseInt(readFileSync(`${__dirname}/.diff/size-before-gzipped`, 'utf8').trim())
+  gzipped: parseInt(readFileSync(`${__dirname}/.diff/size-before-gzipped`, 'utf8').trim()),
+  coverage: JSON.parse(readFileSync(`${__dirname}/.diff/coverage-before.json`, 'utf8'))
 }
 
 const after = {
   minified: parseInt(readFileSync(`${__dirname}/.diff/size-after-minified`, 'utf8').trim()),
-  gzipped: parseInt(readFileSync(`${__dirname}/.diff/size-after-gzipped`, 'utf8').trim())
+  gzipped: parseInt(readFileSync(`${__dirname}/.diff/size-after-gzipped`, 'utf8').trim()),
+  coverage: JSON.parse(readFileSync(`${__dirname}/.diff/coverage-after.json`, 'utf8'))
 }
 
 const formatKbs = (n) => `${(n / 1000).toFixed(2)} kB`
@@ -33,5 +36,5 @@ markdown(`
 
 ### code coverage diff
 
-<_temporarily disabled_>
+${coverageDiff.diff(before.coverage, after.coverage).results}
 `)

@@ -3,12 +3,35 @@ const derecursify = require('@bugsnag/core/lib/derecursify')
 module.exports = (client, NativeClient) => ({
   sendEvent: (payload, cb = () => {}) => {
     const event = payload.events[0]
-    let nativeStack
+
     if (event.originalError) {
+      // extract native stacktrace from originalError if available
+      let nativeErrorMessage, nativeStack
       if (event.originalError.nativeStackIOS) {
+        // old arch ios
+        nativeErrorMessage = event.originalError.message
         nativeStack = event.originalError.nativeStackIOS
       } else if (event.originalError.nativeStackAndroid) {
+        // old arch android
+        nativeErrorMessage = event.originalError.message
         nativeStack = event.originalError.nativeStackAndroid
+      } else if (event.originalError.cause && event.originalError.cause.stackSymbols) {
+        // new arch ios
+        nativeErrorMessage = event.originalError.cause.message
+        nativeStack = event.originalError.cause.stackSymbols
+      } else if (event.originalError.cause && event.originalError.cause.stackElements) {
+        // new arch android
+        nativeErrorMessage = event.originalError.cause.message
+        nativeStack = event.originalError.cause.stackElements
+      }
+
+      if (nativeErrorMessage && nativeStack) {
+      // add the native stack to the corresponding error in the event payload
+        const nativeError = event.errors.find(err => err.errorMessage === nativeErrorMessage)
+
+        if (nativeError) {
+          nativeError.nativeStack = nativeStack
+        }
       }
     }
 
@@ -25,12 +48,13 @@ module.exports = (client, NativeClient) => ({
       breadcrumbs: derecursify(event.breadcrumbs),
       context: event.context,
       user: event._user,
+      request: event.request,
+      response: event.response,
       metadata: derecursify(event._metadata),
       groupingHash: event.groupingHash,
       groupingDiscriminator: event._groupingDiscriminator,
       apiKey: event.apiKey,
       featureFlags: event.toJSON().featureFlags,
-      nativeStack: nativeStack,
       correlation: event._correlation
     }
 

@@ -4,11 +4,21 @@ describe('node notifier', () => {
   beforeAll(() => {
     jest.spyOn(console, 'debug').mockImplementation(() => {})
     jest.spyOn(console, 'warn').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(() => {})
   })
 
   beforeEach(() => {
     // @ts-ignore
     Bugsnag._client = null
+  })
+
+  afterEach(() => {
+    // Clean up process listeners to prevent MaxListenersExceeded warning
+    // The unhandledRejection and uncaughtException plugins register listeners
+    // but don't have destroy methods called automatically
+    process.removeAllListeners('unhandledRejection')
+    process.removeAllListeners('uncaughtException')
+    jest.clearAllMocks()
   })
 
   describe('isStarted()', () => {

@@ -10,13 +10,14 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And I define "expected.context" as "GET <browser.hostname>"
-    And I define "expected.exception.message" as "401: <browser.url>/reflect?status=401&userId=[REDACTED]"
-    And I define "expected.request.url" as "<browser.url>/reflect?status=401&userId=[REDACTED]"
+    And I define "expected.exception.message" as "401: <browser.url>/reflect"
+    And I define "expected.request.url" as "<browser.url>/reflect"
 
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
+    And the error payload field "events.0.exceptions.0.stacktrace" is an array with 0 elements
     And the event "severity" equals "error"
-    And the event "unhandled" is true
+    And the event "unhandled" is false
     And the event "severityReason.type" equals "httpError"
     And the error payload field "events.0.context" equals the stored value "expected.context"
 
@@ -40,13 +41,14 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And I define "expected.context" as "POST <browser.hostname>"
-    And I define "expected.exception.message" as "408: <browser.url>/reflect?status=408&userId=[REDACTED]"
-    And I define "expected.request.url" as "<browser.url>/reflect?status=408&userId=[REDACTED]"
+    And I define "expected.exception.message" as "408: <browser.url>/reflect"
+    And I define "expected.request.url" as "<browser.url>/reflect"
 
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
+    And the error payload field "events.0.exceptions.0.stacktrace" is an array with 0 elements
     And the event "severity" equals "error"
-    And the event "unhandled" is true
+    And the event "unhandled" is false
     And the event "severityReason.type" equals "httpError"
     And the error payload field "events.0.context" equals the stored value "expected.context"
 
@@ -72,13 +74,14 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And I define "expected.context" as "GET <browser.hostname>"
-    And I define "expected.exception.message" as "404: <browser.url>/reflect?status=404&userId=[REDACTED]"
-    And I define "expected.request.url" as "<browser.url>/reflect?status=404&userId=[REDACTED]"
+    And I define "expected.exception.message" as "404: <browser.url>/reflect"
+    And I define "expected.request.url" as "<browser.url>/reflect"
 
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
+    And the error payload field "events.0.exceptions.0.stacktrace" is an array with 0 elements
     And the event "severity" equals "error"
-    And the event "unhandled" is true
+    And the event "unhandled" is false
     And the event "severityReason.type" equals "httpError"
     And the error payload field "events.0.context" equals the stored value "expected.context"
 
@@ -103,13 +106,14 @@ Feature: HTTP Errors
     Then the error is a valid browser payload for the error reporting API
 
     And I define "expected.context" as "POST <browser.hostname>"
-    And I define "expected.exception.message" as "403: <browser.url>/reflect?status=403&userId=[REDACTED]"
-    And I define "expected.request.url" as "<browser.url>/reflect?status=403&userId=[REDACTED]"
+    And I define "expected.exception.message" as "403: <browser.url>/reflect"
+    And I define "expected.request.url" as "<browser.url>/reflect"
 
     And the exception "errorClass" equals "HTTPError"
     And the error payload field "events.0.exceptions.0.message" equals the stored value "expected.exception.message"
+    And the error payload field "events.0.exceptions.0.stacktrace" is an array with 0 elements
     And the event "severity" equals "error"
-    And the event "unhandled" is true
+    And the event "unhandled" is false
     And the event "severityReason.type" equals "httpError"
     And the error payload field "events.0.context" equals the stored value "expected.context"
 

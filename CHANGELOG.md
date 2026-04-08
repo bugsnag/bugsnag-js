@@ -1,29 +1,55 @@
 # Changelog
 
+## [8.9.0] - 2026-04-08
+
+### Added 
+
+- (delivery-react-native) Handle request and response parameters [#2667](https://github.com/bugsnag/bugsnag-js/pull/2667)
+
+### Changed
+
+- (plugin-inline-script-content) Add support for additional event target constructors including MediaSource, MediaRecorder, ServiceWorker, RTCPeerConnection, and others [#2700](https://github.com/bugsnag/bugsnag-js/pull/2700)
+- (plugin-network-instrumentation) Manually parse URLs to improve React Native compatibility [#2674](https://github.com/bugsnag/bugsnag-js/pull/2674)
+- (plugin-network-instrumentation) Refactor URL parsing to improve performance [#2667](https://github.com/bugsnag/bugsnag-js/pull/2667)
+
+### Fixed
+
+- (plugin-network-instrumentation) Report HTTP Errors as handled [#2662](https://github.com/bugsnag/bugsnag-js/pull/2662)
+- (plugin-network-instrumentation) Omit stacktraces from HTTP Error events [#2684](https://github.com/bugsnag/bugsnag-js/pull/2684)
+- (react-native) Report error cause with native stacktrace for Turbo Module exceptions [#2686] (https://github.com/bugsnag/bugsnag-js/pull/2686)
+
+### Dependencies
+
+- Update @bugsnag/cuid to [v3.2.1] (https://github.com/bugsnag/cuid/releases/tag/v3.2.1) [#2706](https://github.com/bugsnag/bugsnag-js/pull/2706)
+- Update bugsnag-cocoa to [v6.35.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.35.0) [#2663](https://github.com/bugsnag/bugsnag-js/pull/2663)
+- Update bugsnag-android to [v6.22.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.22.0) [#2656](https://github.com/bugsnag/bugsnag-js/pull/2656)
+- Update bugsnag-android to [v6.23.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.23.0) [#2673](https://github.com/bugsnag/bugsnag-js/pull/2673)
+- Update bugsnag-android to [v6.25.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.25.0) [#2689](https://github.com/bugsnag/bugsnag-js/pull/2689)
+- Update bugsnag-cocoa to [v6.36.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.36.0) [#2707](https://github.com/bugsnag/bugsnag-js/pull/2707)
+
 ## [8.8.1] - 2026-01-26
 
 ### Fixed
 
-(plugin-network-breadcrumbs, plugin-network-instrumentation) Ensure XMLHttpRequest response types are handled gracefully [#2660](https://github.com/bugsnag/bugsnag-js/pull/2660)
+- (plugin-network-breadcrumbs, plugin-network-instrumentation) Ensure XMLHttpRequest response types are handled gracefully [#2660](https://github.com/bugsnag/bugsnag-js/pull/2660)
 
 ## [8.8.0] - 2026-01-20
 
 This release adds support for notitfying failed network requests using the new `plugin-network-instrumentation` package
-
 ### Added
 
-(plugin-network-instrumentation) Add new plugin to notify failed network requests [#2647](https://github.com/bugsnag/bugsnag-js/pull/2647)
-(plugin-cloudflare-workers): Add initial support for Cloudflare Workers [#2643](https://github.com/bugsnag/bugsnag-js/pull/2643) [#2644](https://github.com/bugsnag/bugsnag-js/pull/2644)
-(plugin-contextualize) Return callback value from contextualize plugin [#2654](https://github.com/bugsnag/bugsnag-js/pull/2654)
+- (plugin-network-instrumentation) Add new plugin to notify failed network requests [#2647](https://github.com/bugsnag/bugsnag-js/pull/2647)
+- (plugin-cloudflare-workers): Add initial support for Cloudflare Workers [#2643](https://github.com/bugsnag/bugsnag-js/pull/2643) [#2644](https://github.com/bugsnag/bugsnag-js/pull/2644)
+- (plugin-contextualize) Return callback value from contextualize plugin [#2654](https://github.com/bugsnag/bugsnag-js/pull/2654)
 
 ### Fixed
 
-(plugin-server-session) Delay session tracker initialization until first use [#2642](https://github.com/bugsnag/bugsnag-js/pull/2642)
+- (plugin-server-session) Delay session tracker initialization until first use [#2642](https://github.com/bugsnag/bugsnag-js/pull/2642)
 
 ### Dependencies
 
-Update bugsnag-cocoa to [6.34.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/6.34.1) [#2606](https://github.com/bugsnag/bugsnag-js/pull/2606)
-Update bugsnag-android to [v6.20.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.20.0) [#2625](https://github.com/bugsnag/bugsnag-js/pull/2625)
+- Update bugsnag-cocoa to [6.34.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/6.34.1) [#2606](https://github.com/bugsnag/bugsnag-js/pull/2606)
+- Update bugsnag-android to [v6.20.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.20.0) [#2625](https://github.com/bugsnag/bugsnag-js/pull/2625)
 
 ## [8.7.0] - 2025-10-13
 

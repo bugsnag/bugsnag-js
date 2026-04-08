@@ -3,9 +3,9 @@
  * A plugin to automatically capture and report HTTP errors
  */
 
-const extractDomain = require('./lib/extract-domain')
-const parseQueryParams = require('./lib/parse-query-params')
-const redactQueryParameters = require('./lib/redact-query-parameters')
+const parseUrl = require('./lib/parse-url')
+const parseQueryString = require('./lib/parse-query-string')
+const redactValues = require('./lib/redact-values')
 const shouldCaptureStatusCode = require('./lib/should-capture-status-code')
 const truncate = require('./lib/truncate')
 
@@ -84,22 +84,25 @@ module.exports = (config = {}, global = window) => {
 
         try {
           // Extract request information
-          const url = startContext.url
-          const requestParams = parseQueryParams(url)
+          const originalUrl = startContext.url
+          const { domain, cleanUrl, queryString } = parseUrl(originalUrl)
+          const url = cleanUrl
           const method = startContext.method
-          const domain = extractDomain(url)
+
+          // Parse query string into object
+          const requestParams = parseQueryString(queryString)
 
           // Create request and response objects for callback
           const requestObj = {
-            url: startContext.url,
-            httpMethod: startContext.method,
+            url,
+            httpMethod: method,
             headers: startContext.headers,
-            params: requestParams
+            params: redactValues(requestParams, client._config.redactedKeys),
+            bodyLength: startContext.body ? startContext.body.length : undefined
           }
           const responseObj = {
             statusCode: endContext.status,
             headers: endContext.headers,
-            body: endContext.body,
             bodyLength: endContext.body ? endContext.body.length : undefined
           }
 
@@ -116,27 +119,20 @@ module.exports = (config = {}, global = window) => {
           // Truncate request body
           if (maxRequestSize > 0 && startContext.body) {
             requestObj.body = truncate(startContext.body, maxRequestSize)
-            requestObj.bodyLength = startContext.body.length
           }
 
           // Truncate response body - XHR only
           if (maxResponseSize > 0 && endContext.body) {
             responseObj.body = truncate(endContext.body, maxResponseSize)
-            responseObj.bodyLength = endContext.body.length
-          }
-
-          // Strip query parameters from URL
-          if (requestObj.url !== '[REDACTED]') {
-            requestObj.url = redactQueryParameters(requestObj.url, client._config.redactedKeys)
           }
 
           // Create error and notify
-          const error = new Error(`${responseObj.statusCode}: ${requestObj.url}`)
+          const error = new Error(`${responseObj.statusCode}: ${url}`)
           error.name = 'HTTPError'
 
           const handledState = {
             severity: 'error',
-            unhandled: true,
+            unhandled: false,
             severityReason: { type: 'httpError' }
           }
 
@@ -148,6 +144,7 @@ module.exports = (config = {}, global = window) => {
             0
           )
 
+          event.errors[0].stacktrace = [] // Omit the stacktrace for HTTP errors
           event.request = requestObj
           event.response = responseObj
           event.context = `${method} ${domain}`

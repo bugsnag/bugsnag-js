@@ -55,6 +55,45 @@ describe('plugin-network-instrumentation', () => {
     })
   })
 
+  describe('config.redactedKeys', () => {
+    it('should redact specified query parameters from request.params', async () => {
+      const notifyCallbacks: Event[] = []
+
+      plugin = createPlugin()
+
+      const client = new Client({ apiKey: 'api_key', plugins: [plugin], redactedKeys: ['password', 'token'] })
+      client._setDelivery(createMockDelivery(notifyCallbacks))
+
+      mockFetch.mockResolvedValue(createMockResponse({
+        ok: false,
+        status: 404,
+        statusText: 'Not Found',
+        url: 'https://example.com/api/users',
+        headers: new Headers({ 'content-type': 'application/json' }),
+        text: async () => '{"error": "User not found"}'
+      }))
+
+      await fetch('https://example.com/api/users?page=1&limit=10&password=secret&token=abc123')
+
+      // Wait for async processing
+      await new Promise(resolve => setTimeout(resolve, 10))
+
+      expect(notifyCallbacks.length).toBe(1)
+      const event = notifyCallbacks[0].toJSON()
+
+      expect(event.exceptions[0].errorClass).toBe('HTTPError')
+      expect(event.exceptions[0].errorMessage).toBe('404: https://example.com/api/users')
+      expect(event.exceptions[0].stacktrace).toEqual([]) // Stacktrace should be empty for HTTP errors
+      expect(event.context).toBe('GET example.com')
+      expect(event.request.params).toStrictEqual({
+        page: '1',
+        limit: '10',
+        password: '[REDACTED]',
+        token: '[REDACTED]'
+      })
+    })
+  })
+
   describe('config.httpErrorCodes - single range', () => {
     it('should capture 4xx errors when configured with single range', async () => {
       const notifyCallbacks: Event[] = []
@@ -85,9 +124,10 @@ describe('plugin-network-instrumentation', () => {
 
       expect(event.exceptions[0].errorClass).toBe('HTTPError')
       expect(event.exceptions[0].errorMessage).toBe('404: https://example.com/api/users')
+      expect(event.exceptions[0].stacktrace).toEqual([]) // Stacktrace should be empty for HTTP errors
       expect(event.context).toBe('GET example.com')
       expect(event.severity).toBe('error')
-      expect(event.unhandled).toBe(true)
+      expect(event.unhandled).toBe(false)
       expect(event.severityReason.type).toBe('httpError')
       expect(event.request.url).toBe('https://example.com/api/users')
       expect(event.request.httpMethod).toBe('GET')
@@ -312,7 +352,7 @@ describe('plugin-network-instrumentation', () => {
       const requestMetadata = event.request
 
       expect(requestMetadata.body).toBeUndefined()
-      expect(requestMetadata.bodyLength).toBeUndefined()
+      expect(requestMetadata.bodyLength).toBe(10000)
     })
   })
 
@@ -554,7 +594,7 @@ describe('plugin-network-instrumentation', () => {
       expect(notifyCallbacks.length).toBe(1)
       const event = notifyCallbacks[0].toJSON()
 
-      expect(event.request.url).toBe('https://example.com/api/users?page=1&limit=10')
+      expect(event.request.url).toBe('https://example.com/api/users')
       expect(event.request.httpMethod).toBe('POST')
       expect(event.request.headers).toBeDefined()
       expect(event.request.headers?.['content-type']).toBe('application/json')
