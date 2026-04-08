@@ -35,6 +35,7 @@ export { BreadcrumbsAutomaticErrorScenario } from './BreadcrumbsAutomaticErrorSc
 export { BreadcrumbsJsManualScenario } from './BreadcrumbsJsManualScenario'
 export { BreadcrumbsNativeManualScenario } from './BreadcrumbsNativeManualScenario'
 export { BreadcrumbsNullEnabledBreadcrumbTypesScenario } from './BreadcrumbsNullEnabledBreadcrumbTypesScenario'
+export { NetworkBreadcrumbsJsScenario } from './NetworkBreadcrumbsJsScenario'
 
 // device.feature
 export { DeviceJsHandledScenario } from './DeviceJsHandledScenario'
@@ -80,3 +81,10 @@ export { ReactNativeErrorBoundaryScenario } from './ReactNativeErrorBoundaryScen
 // grouping-discriminator.feature
 export { GroupingDiscriminatorScenario } from './GroupingDiscriminatorScenario'
 export { GroupingDiscriminatorNativeScenario } from './GroupingDiscriminatorNativeScenario'
+
+// http_errors.feature
+export { NetworkRequestScenario } from './NetworkRequestScenario'
+
+export { AddOnErrorCallbackScenario } from './AddOnErrorCallbackScenario'
+
+export { OnErrorCallbackScenario } from './OnErrorCallbackScenario'

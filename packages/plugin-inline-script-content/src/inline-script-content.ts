@@ -112,7 +112,10 @@ export default (doc = document, win = window) => ({
     const eventListeners = ['EventTarget', 'Window', 'Node', 'ApplicationCache', 'AudioTrackList', 'ChannelMergerNode', 'CryptoOperation', 'EventSource', 'FileReader', 'HTMLUnknownElement', 'IDBDatabase',
       'IDBRequest', 'IDBTransaction', 'KeyOperation', 'MediaController', 'MessagePort', 'ModalWindow',
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
-      'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload'
+      'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload',
+	  'MediaSource', 'MediaRecorder', 'MediaStream', 'ServiceWorker', 'ServiceWorkerContainer',
+      'ServiceWorkerRegistration', 'BroadcastChannel', 'RTCPeerConnection', 'RTCDataChannel', 'AbortSignal',
+      'MediaQueryList', 'ShadowRoot', 'FontFaceSet', 'Animation', 'PermissionStatus', 'PaymentRequest', 'VideoTrackList'
     ]
 
     eventListeners.map(o => {

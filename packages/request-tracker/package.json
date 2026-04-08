@@ -1,0 +1,24 @@
+{
+  "name": "@bugsnag/request-tracker",
+  "version": "8.8.1",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "description": "Shared HTTP request tracking for Bugsnag JavaScript plugins",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "*.js",
+    "lib/"
+  ],
+  "author": "Bugsnag",
+  "license": "MIT",
+  "dependencies": {
+    "@bugsnag/core": "^8.8.0"
+  }
+}

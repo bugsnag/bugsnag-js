@@ -62,6 +62,7 @@ export default class Event {
     this.app = {}
     this.device = {}
     this.request = {}
+    this.response = {}
 
     this.breadcrumbs = []
     this.threads = []
@@ -159,6 +160,7 @@ export default class Event {
       app: this.app,
       device: this.device,
       request: this.request,
+      response: this.response,
       breadcrumbs: this.breadcrumbs,
       context: this.context,
       groupingHash: this.groupingHash,

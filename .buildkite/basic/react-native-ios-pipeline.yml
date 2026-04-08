@@ -16,6 +16,7 @@ steps:
           queue: "macos-15"
         env:
           RN_VERSION: "{{matrix}}"
+          NODE_VERSION: "22"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_IOS: "true"
           XCODE_VERSION: "16.2.0"
@@ -26,7 +27,7 @@ steps:
           - "bundle install"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
-          - "0.82"
+          - "0.84"
         retry:
           automatic:
             - exit_status: "*"
@@ -48,7 +49,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
-              - --device=IOS_15
+              - --device=IOS_17|IOS_18|IOS_26
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -71,5 +72,5 @@ steps:
         concurrency_group: "bitbar"
         concurrency_method: eager
         matrix:
-          - "0.82"
+          - "0.84"
 

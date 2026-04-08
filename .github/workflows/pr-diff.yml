@@ -9,38 +9,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup node
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version: 18.x
+          node-version: 22
 
       - name: Checkout base branch
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ github.base_ref }}
 
       - name: Record before stats
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          ELECTRON_DISABLE_SANDBOX: 1
         run: |
           mkdir .diff
           npm ci
           npm run build
+          npm run test:coverage
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-before-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-before-gzipped
+          cp coverage/coverage-summary.json .diff/coverage-before.json
 
       - name: Checkout PR branch
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           clean: false
 
       - name: Record after stats
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          ELECTRON_DISABLE_SANDBOX: 1
         run: |
           npm ci
           npm run build
+          npm run test:coverage
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-after-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-after-gzipped
+          cp coverage/coverage-summary.json .diff/coverage-after.json
 
       - name: Run danger
         uses: danger/danger-js@67ed2c1f42fd2fc198cc3c14b43c8f83351f4fe9 # 13.0.5

@@ -1,0 +1,28 @@
+{
+  "name": "@bugsnag/plugin-network-instrumentation",
+  "version": "8.8.1",
+  "main": "network-instrumentation.js",
+  "types": "types/bugsnag-plugin-network-instrumentation.d.ts",
+  "description": "@bugsnag/js plugin for HTTP error handling",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "network-instrumentation.js",
+    "lib",
+    "types"
+  ],
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@bugsnag/core": "^8.8.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^8.0.0"
+  }
+}

@@ -6,7 +6,8 @@ type RedactedKey = string | RegExp
 const EVENT_REDACTION_PATHS = [
   'events.[].metaData',
   'events.[].breadcrumbs.[].metaData',
-  'events.[].request'
+  'events.[].request',
+  'events.[].response'
 ]
 
 export const event = (event: EventDeliveryPayload, redactedKeys?: RedactedKey[]) => {

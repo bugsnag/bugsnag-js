@@ -29,6 +29,10 @@ class XMLHttpRequest {
     this?._listeners[evt].push(listener)
   }
 
+  getAllResponseHeaders () {
+    return ''
+  }
+
   removeEventListener (evt: 'load'| 'error', listener: () => void) {
     for (let i = this?._listeners?.[evt]?.length ?? 0 - 1; i >= 0; i--) {
       if (listener.name === this?._listeners?.[evt]?.[i]?.name) delete this?._listeners[evt][i]

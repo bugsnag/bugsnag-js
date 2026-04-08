@@ -80,7 +80,8 @@ steps:
               - "0.76"
               - "0.78"
               - "0.80"
-              - "0.81"
+              - "0.82"
+              - "0.83"
             reactnavigation:
               - "true"
           adjustments:
@@ -93,10 +94,10 @@ steps:
         key: "build-react-native-navigation-android-fixture-old-arch"
         timeout_in_minutes: 30
         agents:
-          queue: macos-node-18
+          queue: macos-node-22
         env:
           JAVA_VERSION: "17"
-          NODE_VERSION: "18"
+          NODE_VERSION: "22"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_ANDROID: "true"
@@ -118,10 +119,10 @@ steps:
         key: "build-react-native-navigation-android-fixture-new-arch"
         timeout_in_minutes: 30
         agents:
-          queue: macos-node-18
+          queue: macos-node-22
         env:
           JAVA_VERSION: "17"
-          NODE_VERSION: "18"
+          NODE_VERSION: "22"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"
@@ -187,7 +188,6 @@ steps:
           - "0.78"
           - "0.80"
           - "0.81"
-
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
       # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
@@ -235,7 +235,8 @@ steps:
               - "0.76"
               - "0.78"
               - "0.80"
-              - "0.81"
+              - "0.82"
+              - "0.83"
             reactnavigation:
               - "true"
           adjustments:

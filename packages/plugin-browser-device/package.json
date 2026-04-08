@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-browser-device",
-  "version": "8.6.0",
+  "version": "8.8.0",
   "main": "dist/device.js",
   "types": "dist/types/device.d.ts",
   "exports": {
@@ -25,10 +25,10 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/cuid": "^3.0.0"
+    "@bugsnag/cuid": "^3.2.1"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.6.0"
+    "@bugsnag/core": "^8.8.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"

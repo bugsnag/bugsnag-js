@@ -115,6 +115,13 @@ export interface Request {
   [key: string]: any
 }
 
+interface Response {
+  statusCode: number
+  headers: { [key: string]: unknown }
+  body?: string
+  bodyLength?: number
+}
+
 export interface User {
   id?: string | null
   email?: string | null

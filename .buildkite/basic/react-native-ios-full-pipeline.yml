@@ -35,6 +35,7 @@ steps:
               - "0.78"
               - "0.80"
               - "0.81"
+             
             node:
               - "22"
           adjustments:
@@ -73,7 +74,8 @@ steps:
               - "0.76"
               - "0.78"
               - "0.80"
-              - "0.81"
+              - "0.82"
+              - "0.83"
             reactnavigation:
               - "true"
           adjustments:
@@ -91,7 +93,7 @@ steps:
         agents:
           queue: "macos-15"
         env:
-          NODE_VERSION: "18"
+          NODE_VERSION: "22"
           RN_VERSION: "{{matrix}}"
           RCT_NEW_ARCH_ENABLED: "0"
           BUILD_IOS: "true"
@@ -153,7 +155,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
-              - --device=IOS_15
+              - --device=IOS_17|IOS_18|IOS_26
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -184,7 +186,7 @@ steps:
           - "0.78"
           - "0.80"
           - "0.81"
-
+          
       - label: ":bitbar: :mac: RN {{matrix.reactnative}} iOS (New Arch) end-to-end tests"
         depends_on: "build-react-native-ios-fixture-new-arch-full"
         timeout_in_minutes: 60
@@ -199,7 +201,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix.reactnative}}/output/reactnative.ipa
               - --farm=bb
-              - --device=IOS_15
+              - --device=IOS_17|IOS_18|IOS_26
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -228,7 +230,8 @@ steps:
               - "0.76"
               - "0.78"
               - "0.80"
-              - "0.81"
+              - "0.82"
+              - "0.83"
             reactnavigation:
               - "true"
           adjustments:
@@ -253,7 +256,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/react-native-navigation/old-arch/{{matrix}}/output/reactnative.ipa
               - --farm=bb
-              - --device=IOS_15
+              - --device=IOS_17|IOS_18|IOS_26
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
@@ -295,7 +298,7 @@ steps:
       #       command:
       #         - --app=/app/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/output/reactnative.ipa
       #         - --farm=bb
-      #         - --device=IOS_15
+      #         - --device=IOS_17|IOS_18|IOS_26
       #         - --fail-fast
       #         - --no-tunnel
       #         - --aws-public-ip

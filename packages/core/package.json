@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/core",
-  "version": "8.6.0",
+  "version": "8.8.0",
   "main": "dist/index.cjs",
   "types": "dist/types/index.d.ts",
   "exports": {
@@ -33,7 +33,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/cuid": "^3.0.0",
+    "@bugsnag/cuid": "^3.2.1",
     "@bugsnag/safe-json-stringify": "^6.0.0",
     "error-stack-parser": "^2.0.3",
     "stack-generator": "^2.0.3"

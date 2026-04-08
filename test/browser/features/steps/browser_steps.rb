@@ -53,3 +53,15 @@ When('the following sets are present in the current {word} payloads:') do |reque
                     "#{expected_data} was not found in any of the current payloads")
   end
 end
+
+# construct a value with placeholder using <> syntax and store it for later use
+# the placeholders are replaced with existing stored values, i.e. browser.hostname
+When('I define {string} as {string}') do |key, value|
+  resolved_value = value.gsub(/<([^>]+)>/) do
+    placeholder = $1
+    stored_value = Maze::Store.values[placeholder]
+    raise "No stored value found for placeholder '#{placeholder}'" unless stored_value
+    stored_value
+  end
+  Maze::Store.values[key] = resolved_value
+end

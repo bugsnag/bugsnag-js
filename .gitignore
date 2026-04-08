@@ -22,4 +22,5 @@ Gemfile.lock
 # IDE files
 .idea/
 *.iml
+zscaler-root-ca.crt*
 .ts38-validation

@@ -37,46 +37,43 @@ To solve this problem we publish to a local npm clone, which proxies requests fo
 
 #### Prerequisites
 
-The proxy of choice is [verdaccio](https://verdaccio.org/):
+The proxy of choice is [verdaccio](https://verdaccio.org/). This is already included as a dev dependency in the bugsnag-js repository, along with a config file at `test/local-npm.config.yml`.
 
-```sh
-# install it globally on your system
-npm i -g verdaccio
-
-# starts the  on the default port
-verdaccio
-
-# log in to the registry
-# (you can enter anything, just be sure to remember them when
-# your session times out and you need to "sign in" again)
-npm adduser --registry http://localhost:4873
-```
-
-On the project you want to install the development notifier, create an a `.npmrc` file at the project root alongside `package.json`:
+To start the verdaccio server, run the `local-npm:start` npm script from the repo root:
 
 ```
-registry=http://localhost:4873
+npm run local-npm:start
 ```
 
-Alternatively you can just supply the `--registry=http://localhost:4873` to each npm/yarn command you issue.
+This will start verdaccio running on port `5539`. You will need to keep this running for the following steps.
 
-#### Installing the development notifier on a React Native project
+In the project where you want to install the development notifier, create an a `.npmrc` file at the project root alongside `package.json` and set the local registry URL:
+
+```
+registry=http://localhost:5539
+```
+
+Alternatively you can just supply the `--registry=http://localhost:5539` to each npm/yarn command you issue.
+
+#### Installing the development notifier in a React Native project
 
 1. Make changes.
-2. Run the following command to publish to the local registry:
+2. In a new terminal window, from the repo root, run the `local-npm:publish-all` npm script to publish to the local registry:
 
     ```
-    npx lerna publish v99.99.99-canary.`git rev-parse HEAD` --no-push --exact --no-git-tag-version --registry http://localhost:4873/
+    VERSION_IDENTIFIER=8.99.99 npm run local-npm:publish-all
     ```
 
-    This should prompt you for each module that has changed since the last proper publish.
+    This will publish all of the packages in the repo to verdaccio with the specified version.
+    
+    Note: You'll need to ensure you publish using the same major version as is currently in the repository. This is because some packages declare a peer dependency on `@bugsnag/core`, and lerna does not update peer dependencies when versioning, so changing the major version will mean the packages fail to install (since the peer dependency cannot be resolved from the local registry).
 
-4. Reset the changes that were made to `lerna.json` and `package-lock.json`s `git reset --hard HEAD` (we don't want to store these throwaway versions)
+4. Reset the changes that were made to `package.json`, `lerna.json` and `package-lock.json` files with `git reset --hard HEAD` (we don't want to commit these throwaway versions)
 
-On the project you want to install `@bugsnag/react-native` substitute the version's output from above:
+In the project where you want to install `@bugsnag/react-native` substitute the version's output from above:
 
 ```
-yarn add @bugsnag/react-native@99.99.99-canary.<hash>
+yarn add @bugsnag/react-native@8.99.99
 # or
-npm i @bugsnag/react-native@99.99.99-canary.<hash>
+npm i @bugsnag/react-native@8.99.99
 ```

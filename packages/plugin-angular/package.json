@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-angular",
-  "version": "8.6.0",
+  "version": "8.8.1",
   "description": "Angular integration for bugsnag-js",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -32,7 +32,7 @@
     "@angular/compiler": "^19.0.0",
     "@angular/compiler-cli": "^19.0.0",
     "@angular/core": "^19.0.0",
-    "@bugsnag/js": "^8.6.0",
+    "@bugsnag/js": "^8.8.1",
     "dependency-graph": "^1.0.0",
     "esbuild": "^0.24.2",
     "injection-js": "^2.5.0",
