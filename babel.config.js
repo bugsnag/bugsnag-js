@@ -9,7 +9,7 @@ module.exports = api => {
     presets.push(['@babel/preset-env', {targets: {node: 'current'}}])
     presets.push('@babel/preset-typescript')
     overrides.push({
-      test: '**/node_modules/react-native/**/*',
+      test: ['node_modules/react-native/**/*', 'node_modules/@react-native/**/*'],
       presets: ['module:metro-react-native-babel-preset', '@babel/preset-typescript']
     })
     overrides.push({

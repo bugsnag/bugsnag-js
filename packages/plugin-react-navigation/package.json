@@ -23,15 +23,11 @@
   "license": "MIT",
   "devDependencies": {
     "@bugsnag/core": "^8.8.0",
-    "@react-navigation/native": "^5.7.3",
-    "react": "^18.2.0",
-    "react-native": "^0.75.0",
-    "react-test-renderer": "^18.2.0"
+    "@react-navigation/native": "^5.7.3"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0",
-    "@react-navigation/native": "^5.0 || ^6.0 || ^7.0",
-    "react": "*"
+    "@react-navigation/native": "^5.0 || ^6.0 || ^7.0"
   },
   "peerDependenciesMeta": {
     "@bugsnag/core": {
