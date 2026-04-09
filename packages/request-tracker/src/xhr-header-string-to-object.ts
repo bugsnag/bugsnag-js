@@ -1,16 +1,10 @@
-
-/**
- * Converts an XHR header string to an object
- * @param {string} headersString
- * @returns {Object}
- */
-module.exports = function (headersString) {
+export default function xhrHeaderStringToObject (headersString: string): Record<string, string> {
   if (!headersString) return {}
   const arr = headersString.trim().split(/[\r\n]+/)
-  const headerMap = {}
+  const headerMap: Record<string, string> = {}
   arr.forEach((line) => {
     const parts = line.split(': ')
-    const header = parts.shift()
+    const header = parts.shift() as string
     const value = parts.join(': ')
     headerMap[header] = value
   })

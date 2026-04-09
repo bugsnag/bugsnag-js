@@ -1,9 +1,9 @@
-/**
- * Receives the XHR response and parses it based on the responseType
- * @param {XMLHttpRequest} xhr The XHR instance
- * @returns {string | undefined} The parsed response
- */
-module.exports = function xhrResponseParser ({ response, responseType }) {
+interface XhrLike {
+  response: unknown
+  responseType: XMLHttpRequestResponseType
+}
+
+export default function xhrResponseParser ({ response, responseType }: XhrLike): string | undefined {
   if (response === null || response === undefined) {
     return undefined
   }

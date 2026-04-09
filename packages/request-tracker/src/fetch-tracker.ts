@@ -1,38 +1,33 @@
-const headersToObject = require('./headers-to-object')
-const RequestTracker = require('./request-tracker')
+import headersToObject from './headers-to-object'
+import RequestTracker from './request-tracker'
 
-/**
- * Create fetch request tracker with singleton pattern
- * @param {Object} global - Global object (window or global)
- * @param {Object} options - Configuration options
- * @returns {Object} Tracker instance
- */
-function createFetchTracker (global, options = {}) {
-  // only patch it if it exists and if it is not a polyfill (patching a polyfilled
-  // fetch() results in duplicate breadcrumbs for the same request because the
-  // implementation uses XMLHttpRequest which is also patched)
+interface FetchTrackerGlobal {
+  fetch: typeof fetch & { polyfill?: boolean }
+  __bugsnag_fetch_tracker__?: RequestTracker
+}
+
+export default function createFetchTracker (global: FetchTrackerGlobal) {
   if (!('fetch' in global) || global.fetch.polyfill) return
 
-  // Use singleton pattern - one tracker per global context
   if (!global.__bugsnag_fetch_tracker__) {
     const tracker = new RequestTracker()
     const originalFetch = global.fetch
 
-    global.fetch = function wrappedFetch (urlOrRequest, options = {}) {
-      let url = null
+    global.fetch = function wrappedFetch (this: typeof globalThis, urlOrRequest: RequestInfo | URL, options: RequestInit = {}) {
+      let url: string | null = null
       let method = 'GET'
 
       if (urlOrRequest && typeof urlOrRequest === 'object') {
-        url = urlOrRequest.url
+        url = (urlOrRequest as Request).url
         if (options && 'method' in options) {
-          method = options.method
+          method = options.method as string
         } else if (urlOrRequest && 'method' in urlOrRequest) {
-          method = urlOrRequest.method
+          method = (urlOrRequest as Request).method
         }
       } else {
-        url = urlOrRequest
+        url = urlOrRequest as string
         if (options && 'method' in options) {
-          method = options.method
+          method = options.method as string
         }
       }
 
@@ -40,13 +35,12 @@ function createFetchTracker (global, options = {}) {
         method = 'GET'
       }
 
-      let requestHeaders = {}
+      let requestHeaders: Record<string, string> = {}
       if (options && options.headers) {
-        // eslint-disable-next-line no-undef
         if (options.headers instanceof Headers) {
           requestHeaders = headersToObject(options.headers)
         } else if (typeof options.headers === 'object') {
-          requestHeaders = options.headers
+          requestHeaders = options.headers as Record<string, string>
         }
       }
 
@@ -55,7 +49,7 @@ function createFetchTracker (global, options = {}) {
         url: String(url),
         method: String(method),
         startTime,
-        type: 'fetch',
+        type: 'fetch' as const,
         input: urlOrRequest,
         headers: requestHeaders,
         body: options ? options.body : undefined
@@ -63,9 +57,8 @@ function createFetchTracker (global, options = {}) {
 
       const { onRequestEnd } = tracker.start(context)
 
-      // Call original fetch
-      return originalFetch.call(this, ...arguments).then(
-        response => {
+      return originalFetch.call(this, ...arguments as unknown as Parameters<typeof originalFetch>).then(
+        (response: Response) => {
           onRequestEnd({
             endTime: Date.now(),
             status: response.status,
@@ -74,7 +67,7 @@ function createFetchTracker (global, options = {}) {
           })
           return response
         },
-        error => {
+        (error: unknown) => {
           onRequestEnd({
             endTime: Date.now(),
             state: 'error',
@@ -83,12 +76,9 @@ function createFetchTracker (global, options = {}) {
           throw error
         }
       )
-    }
-
-    // Store tracker and mark as active
+    } as typeof fetch
     global.__bugsnag_fetch_tracker__ = tracker
 
-    // Restore function for development
     if (process.env.NODE_ENV !== 'production') {
       tracker._restore = () => {
         global.fetch = originalFetch
@@ -99,5 +89,3 @@ function createFetchTracker (global, options = {}) {
 
   return global.__bugsnag_fetch_tracker__
 }
-
-module.exports = createFetchTracker
