@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- (plugin-inline-script-content) Fix strict mode compatibility by replacing `arguments` usage with rest parameters [#2711](https://github.com/bugsnag/bugsnag-js/pull/2711)
+
 ### Added 
 
 - (delivery-react-native) Handle request and response parameters [#2667](https://github.com/bugsnag/bugsnag-js/pull/2667)
