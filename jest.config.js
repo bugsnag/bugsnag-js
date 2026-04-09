@@ -86,7 +86,7 @@ module.exports = {
       'plugin-browser-session',
       'plugin-network-instrumentation'
     ], {
-      testEnvironment: 'jsdom'
+      testEnvironment: 'jsdom',
       modulePathIgnorePatterns: ['.verdaccio', 'dist', 'examples', 'fixtures']
     }),
     project('react native', [
