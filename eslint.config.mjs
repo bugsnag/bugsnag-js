@@ -22,6 +22,7 @@ const c = tseslint.config(
       'packages/**/fixtures',
       'test/browser',
       'test/node',
+      'test/react-native/features/fixtures',
       'test/react-native-cli/features/fixtures',
       'packages/react-native/ios/vendor'
     ],
