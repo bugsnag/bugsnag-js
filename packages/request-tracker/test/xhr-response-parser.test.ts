@@ -1,4 +1,4 @@
-import xhrResponseParser from '../lib/xhr-response-parser'
+import xhrResponseParser from '../src/xhr-response-parser'
 
 describe('xhr-response-parser', () => {
   describe('xhrResponseParser', () => {

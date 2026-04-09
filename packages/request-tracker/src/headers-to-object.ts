@@ -1,12 +1,7 @@
-/**
-   * Convert Headers object to plain object
-   * @param {Headers} headers - Headers object
-   * @returns {Object} Plain object with header key-value pairs
-   */
-module.exports = function (headers) {
+export default function headersToObject (headers: Headers): Record<string, string> {
   if (!headers) return {}
 
-  const obj = {}
+  const obj: Record<string, string> = {}
   if (typeof headers.entries === 'function') {
     const iterator = headers.entries()
     let entry = iterator.next()
@@ -15,8 +10,8 @@ module.exports = function (headers) {
       obj[key] = value
       entry = iterator.next()
     }
-  } else if (headers.forEach) {
-    headers.forEach((value, key) => {
+  } else if (typeof headers.forEach === 'function') {
+    headers.forEach((value: string, key: string) => {
       obj[key] = value
     })
   }

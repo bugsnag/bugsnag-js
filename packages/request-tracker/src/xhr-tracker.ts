@@ -1,37 +1,45 @@
-const RequestTracker = require('./request-tracker')
-const xhrHeaderStringToObject = require('./xhr-header-string-to-object')
-const xhrResponseParser = require('./xhr-response-parser')
+import RequestTracker from './request-tracker'
+import xhrHeaderStringToObject from './xhr-header-string-to-object'
+import xhrResponseParser from './xhr-response-parser'
 
-/**
- * Create XHR request tracker with singleton pattern
- * @param {Object} global - Global object (window or global)
- * @param {Object} options - Configuration options
- * @returns {Object} Tracker instance
- */
-function createXhrTracker (global, options = {}) {
+interface TrackedRequestData {
+  method: string
+  url: string
+  headers?: Record<string, string>
+}
+
+interface RequestHandlers {
+  load: () => void
+  error: () => void
+}
+
+interface XhrTrackerGlobal {
+  XMLHttpRequest: typeof XMLHttpRequest
+  WeakMap: typeof WeakMap
+  __bugsnag_xhr_tracker__?: RequestTracker
+}
+
+export default function createXhrTracker (global: XhrTrackerGlobal) {
   if (!('addEventListener' in global.XMLHttpRequest.prototype) || !('WeakMap' in global)) return
 
-  // Use singleton pattern - one tracker per global context
   if (!global.__bugsnag_xhr_tracker__) {
     const tracker = new RequestTracker()
 
-    const trackedRequests = new WeakMap()
-    const requestHandlers = new WeakMap()
+    const trackedRequests = new WeakMap<XMLHttpRequest, TrackedRequestData>()
+    const requestHandlers = new WeakMap<XMLHttpRequest, RequestHandlers>()
 
     const originalOpen = global.XMLHttpRequest.prototype.open
     const originalSend = global.XMLHttpRequest.prototype.send
     const originalSetRequestHeader = global.XMLHttpRequest.prototype.setRequestHeader
 
-    global.XMLHttpRequest.prototype.open = function open (method, url) {
-      // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
+    global.XMLHttpRequest.prototype.open = function open (method: string, url: string | URL) {
       if (this) {
         trackedRequests.set(this, { method: String(method), url: String(url) })
       }
-      originalOpen.apply(this, arguments)
+      originalOpen.apply(this, arguments as unknown as Parameters<typeof originalOpen>)
     }
 
-    global.XMLHttpRequest.prototype.setRequestHeader = function setRequestHeader (header, value) {
-      // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
+    global.XMLHttpRequest.prototype.setRequestHeader = function setRequestHeader (header: string, value: string) {
       if (this) {
         const requestData = trackedRequests.get(this)
         if (requestData) {
@@ -39,14 +47,12 @@ function createXhrTracker (global, options = {}) {
           requestData.headers[String(header)] = (requestData.headers[String(header)] || '') + String(value)
         }
       }
-      originalSetRequestHeader.apply(this, arguments)
+      originalSetRequestHeader.apply(this, arguments as unknown as Parameters<typeof originalSetRequestHeader>)
     }
 
-    global.XMLHttpRequest.prototype.send = function send (body) {
+    global.XMLHttpRequest.prototype.send = function send (body?: Document | XMLHttpRequestBodyInit | null) {
       const requestData = trackedRequests.get(this)
       if (requestData) {
-        // if we have already setup listeners then this request instance is being reused,
-        // so we need to remove the listeners from the previous send
         const listeners = requestHandlers.get(this)
         if (listeners) {
           this.removeEventListener('load', listeners.load)
@@ -58,7 +64,7 @@ function createXhrTracker (global, options = {}) {
           url: requestData.url,
           method: requestData.method,
           startTime,
-          type: 'xmlhttprequest',
+          type: 'xmlhttprequest' as const,
           body,
           headers: requestData.headers
         }
@@ -89,19 +95,16 @@ function createXhrTracker (global, options = {}) {
         this.addEventListener('load', handleLoad)
         this.addEventListener('error', handleError)
 
-        // it's possible for `this` to be `undefined`, which is not a valid key for a WeakMap
         if (this) {
           requestHandlers.set(this, { load: handleLoad, error: handleError })
         }
       }
 
-      originalSend.apply(this, arguments)
+      originalSend.apply(this, arguments as unknown as Parameters<typeof originalSend>)
     }
 
-    // Store tracker and mark as active
     global.__bugsnag_xhr_tracker__ = tracker
 
-    // Restore function for development
     if (process.env.NODE_ENV !== 'production') {
       tracker._restore = () => {
         global.XMLHttpRequest.prototype.open = originalOpen
@@ -114,5 +117,3 @@ function createXhrTracker (global, options = {}) {
 
   return global.__bugsnag_xhr_tracker__
 }
-
-module.exports = createXhrTracker
