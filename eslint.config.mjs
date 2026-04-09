@@ -22,9 +22,12 @@ const c = tseslint.config(
       'packages/**/fixtures',
       'test/browser',
       'test/node',
+      'test/react-native/features/fixtures',
       'test/react-native-cli/features/fixtures',
       'packages/react-native/ios/vendor',
-      'test/cloudflare-workers'
+      'test/cloudflare-workers',
+      'test/electron',
+      'test/aws-lambda'
     ],
   },
   eslint.configs.recommended,
