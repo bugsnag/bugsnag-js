@@ -60,8 +60,8 @@ async function init () {
 
 async function update () {
   try {
-    await updateNotifiers()
     await installFixtureDeps()
+    await updateNotifiers()
     await buildFixtures()
   } catch (e) {
     console.log(e)

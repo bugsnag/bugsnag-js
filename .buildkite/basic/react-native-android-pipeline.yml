@@ -13,7 +13,7 @@ steps:
         env:
           JAVA_VERSION: "17"
           RN_VERSION: "{{matrix}}"
-          NODE_VERSION: "22"
+          NODE_VERSION: "24"
           RCT_NEW_ARCH_ENABLED: "1"
           BUILD_ANDROID: "true"
           REACT_NAVIGATION: "true"

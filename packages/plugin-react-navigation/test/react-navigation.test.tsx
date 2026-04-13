@@ -1,10 +1,17 @@
 import Plugin from '../'
 import Client from '@bugsnag/core/client'
-import TestRenderer from 'react-test-renderer'
+import ReactTestRenderer from 'react-test-renderer'
 import * as React from 'react'
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native'
 
-jest.mock('@react-navigation/native')
+jest.mock('@react-navigation/native', () => {
+  // @eslint-disable-next-line @typescript-eslint/no-var-requires
+  const React = require('react')
+  return {
+    NavigationContainer: React.forwardRef(jest.fn().mockImplementation((props, ref) => null)),
+    NavigationContainerRef: {}
+  }
+})
 
 afterEach(() => jest.clearAllMocks())
 
@@ -27,7 +34,7 @@ describe('plugin: react navigation', () => {
     }
 
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
-    TestRenderer.create(<App/>)
+    ReactTestRenderer.create(<App/>)
 
     expect(MockedNavigationContainerRender).toBeCalledTimes(1)
 
@@ -65,7 +72,7 @@ describe('plugin: react navigation', () => {
     }
 
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
-    TestRenderer.create(<App/>)
+    ReactTestRenderer.create(<App/>)
 
     expect(MockedNavigationContainerRender).toBeCalledTimes(1)
 
@@ -104,7 +111,7 @@ describe('plugin: react navigation', () => {
     }
 
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
-    TestRenderer.create(<App/>)
+    ReactTestRenderer.create(<App/>)
 
     expect(MockedNavigationContainerRender).toBeCalledTimes(1)
 
@@ -158,7 +165,7 @@ describe('plugin: react navigation', () => {
     }
 
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
-    TestRenderer.create(<App/>)
+    ReactTestRenderer.create(<App/>)
 
     expect(MockedNavigationContainerRender).toBeCalledTimes(1)
 
@@ -197,7 +204,7 @@ describe('plugin: react navigation', () => {
     }
 
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
-    TestRenderer.create(<App/>)
+    ReactTestRenderer.create(<App/>)
 
     expect(MockedNavigationContainerRender).toBeCalledTimes(1)
 

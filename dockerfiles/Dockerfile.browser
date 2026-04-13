@@ -1,5 +1,5 @@
 # CI test image for unit/lint/type tests
-FROM node:22-alpine@sha256:4d64b49e6c891c8fc821007cb1cdc6c0db7773110ac2c34bf2e6960adef62ed3 AS browser-feature-builder
+FROM node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a95ac4e4700b AS browser-feature-builder
 
 RUN apk add --update bash python3 make gcc g++ musl-dev xvfb-run curl
 
@@ -25,6 +25,12 @@ RUN npm pack --verbose packages/web-worker/
 
 COPY test/browser/features test/browser/features
 WORKDIR /app/test/browser/features/fixtures
+
+# install the dependencies for each fixture
+RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_modules/*" | \
+  xargs -I % bash -c 'cd `dirname %` && npm install --no-package-lock'
+
+# install bugsnag dependencies
 RUN npm install --no-package-lock --no-save \
 ../../../../bugsnag-browser-*.tgz \
 ../../../../bugsnag-plugin-react-*.tgz \
@@ -45,10 +51,10 @@ RUN npm install --no-package-lock --no-save \
   ../../../../../../bugsnag-browser-*.tgz \
   ../../../../../../bugsnag-js-*.tgz
 
-# install the dependencies and build each fixture
+# build each fixture
 WORKDIR /app/test/browser/features/fixtures
 RUN find . -name package.json -type f -mindepth 2 -maxdepth 3 ! -path "./node_modules/*" | \
-  xargs -I % bash -c 'cd `dirname %` && npm install --no-package-lock && npm run build'
+  xargs -I % bash -c 'cd `dirname %` && npm run build'
 
 # once the fixtures are built we no longer need node_modules and
 # it makes the COPY later on much faster if we don't have them

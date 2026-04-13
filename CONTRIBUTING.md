@@ -45,7 +45,7 @@ Here’s a bit about our process designing and building the Bugsnag libraries:
 ## System requirements
 
 In order to develop on the project you’ll need to be on Mac/Linux٭. You’ll need:
-- [node](https://nodejs.org) `v8+` (which includes [npm](https://www.npmjs.com/get-npm) 5+)
+- [node](https://nodejs.org) `v24` (which includes [npm](https://www.npmjs.com/get-npm) v11)
 - [git](https://git-scm.com/)
 
 If you want to run the end-to-end tests locally you'll need [Docker](https://www.docker.com/products/docker-desktop) (including Docker Compose), and the [AWS CLI](https://aws.amazon.com/cli/). Note that you'll also need some BrowserStack and AWS credentials which are only available to Bugsnag employees.

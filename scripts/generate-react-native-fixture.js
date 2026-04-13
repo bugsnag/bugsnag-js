@@ -138,7 +138,7 @@ if (process.env.REACT_NATIVE_NAVIGATION === 'true' || process.env.REACT_NATIVE_N
 
 // install and build the packages
 if (!process.env.SKIP_BUILD_PACKAGES) {
-  execFileSync('npm', ['ci'], { cwd: ROOT_DIR, stdio: 'inherit', env: { ...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1' } })
+  execFileSync('npm', ['ci', '--legacy-peer-deps'], { cwd: ROOT_DIR, stdio: 'inherit', env: { ...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1' } })
   execFileSync('npm', ['run', 'build'], { cwd: ROOT_DIR, stdio: 'inherit' })
 }
 

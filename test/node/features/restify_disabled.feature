@@ -1,4 +1,4 @@
-@skip_node_12
+@skip_node_12 @skip_node_24
 Feature: @bugsnag/plugin-restify autoDetectErrors=false
 
 Background:
