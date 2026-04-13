@@ -63,7 +63,7 @@ module.exports = {
     project('web workers', ['web-worker'], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),
-    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser', 'request-tracker']),
+    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
     project('browser', [
       'browser',
       'delivery-x-domain-request',
@@ -85,7 +85,8 @@ module.exports = {
       'plugin-simple-throttle',
       'plugin-console-breadcrumbs',
       'plugin-browser-session',
-      'plugin-network-instrumentation'
+      'plugin-network-instrumentation',
+      'request-tracker'
     ], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js',
       modulePathIgnorePatterns: ['.verdaccio', 'dist', 'examples', 'fixtures']
