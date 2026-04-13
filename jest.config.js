@@ -110,15 +110,21 @@ module.exports = {
         '<rootDir>/packages/react-native/src/test/setup.js'
       ],
       transform: {
-        // Override preset's babel-jest with ts-jest
-        '^.+\\.(js|ts|tsx)$': ['ts-jest', {
+        // Use ts-jest for TypeScript files
+        '^.+\\.tsx?$': ['ts-jest', {
           tsconfig: {
             module: 'commonjs',
             esModuleInterop: true,
             allowSyntheticDefaultImports: true,
-            allowJs: true
+            allowJs: false,
+            jsx: 'react'
+          },
+          diagnostics: {
+            ignoreCodes: [7016, 2307, 7006, 7031]
           }
         }],
+        // Use babel-jest (from react-native preset) for JS files (may contain Flow)
+        '^.+\\.jsx?$': 'babel-jest',
         // Keep asset transformer from preset
         '^.+\\.(bmp|gif|jpg|jpeg|mp4|png|psd|svg|webp)$': require.resolve('react-native/jest/assetFileTransformer.js')
       },
