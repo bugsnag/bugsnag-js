@@ -11,6 +11,11 @@ const baseConfig = {
       }
     }]
   },
+  moduleNameMapper: {
+    // Map monorepo @bugsnag/* packages to source (excluding published deps: cuid, safe-json-stringify, delivery-x-domain-request)
+    '^@bugsnag/(?!cuid|safe-json-stringify|delivery-x-domain-request)([^/]+)/(.+)$': '<rootDir>/packages/$1/src/$2',
+    '^@bugsnag/(?!cuid|safe-json-stringify|delivery-x-domain-request)([^/]+)$': '<rootDir>/packages/$1/src'
+  },
   transformIgnorePatterns: [
     'node_modules/(?!(@bugsnag)/)'
   ],
