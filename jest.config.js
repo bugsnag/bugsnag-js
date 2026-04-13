@@ -180,7 +180,6 @@ module.exports = {
       'plugin-internal-callback-marker'
     ], {
       setupFilesAfterEnv: ['<rootDir>/test/electron/setup.ts'],
-      testEnvironment: 'node',
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures']
     }),
