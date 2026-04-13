@@ -2,14 +2,20 @@
   "name": "@bugsnag/plugin-react",
   "version": "8.8.0",
   "description": "React integration for @bugsnag/js",
-  "main": "dist/index-cjs.cjs",
-  "types": "dist/types/index-es.d.ts",
-  "browser": "./dist/bugsnag-react.js",
+  "type": "module",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
+  "types": "./dist/cjs/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/index-es.d.ts",
-      "import": "./dist/index-es.mjs",
-      "default": "./dist/index-cjs.cjs"
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.cjs"
+      }
     }
   },
   "homepage": "https://www.bugsnag.com/",
@@ -26,7 +32,8 @@
   "scripts": {
     "clean": "rm -fr dist",
     "prebuild": "npm run clean",
-    "build": "tsc"
+    "build": "rollup --config rollup.config.mjs",
+    "test:types": "tsc -p tsconfig.json"
   },
   "author": "Bugsnag",
   "license": "MIT",
