@@ -6,7 +6,6 @@ import BugsnagReactNativeStatic, {
   OnErrorCallback
 } from '..'
 
-// @ts-expect-error react-native is mocked in this test file
 import { NativeModules } from 'react-native'
 
 const NativeClient = NativeModules.BugsnagReactNative
@@ -43,10 +42,10 @@ describe('react native notifier', () => {
       Bugsnag = require('..')
     })
 
-    // @ts-expect-error Cannot find name 'window'
-    window.fetch = jest.fn()
-    // @ts-expect-error Cannot find name 'window'
-    window.XMLHttpRequest = jest.fn() as any
+
+    global.fetch = jest.fn()
+
+    global.XMLHttpRequest = jest.fn() as any
   })
 
   it('accepts plugins', () => {
