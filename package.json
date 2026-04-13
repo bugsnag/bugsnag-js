@@ -82,6 +82,7 @@
   },
   "scripts": {
     "build": "lerna run build",
+    "clean": "lerna run clean",
     "build:electron": "lerna run build --scope '@bugsnag/plugin-electron-ipc' --scope '@bugsnag/plugin-electron-app' --scope '@bugsnag/plugin-electron-client-state-persistence'",
     "test:lint": "eslint --report-unused-disable-directives .",
     "test:lint-native": "bash scripts/cppcheck.sh",
