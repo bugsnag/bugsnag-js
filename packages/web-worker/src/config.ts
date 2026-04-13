@@ -1,5 +1,3 @@
-/* eslint-env worker, serviceworker */
-
 import { schema } from '@bugsnag/core'
 
 import getPrefixedConsole from './get-prefixed-console'

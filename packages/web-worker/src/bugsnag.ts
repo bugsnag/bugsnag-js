@@ -1,5 +1,3 @@
-/* eslint-env worker, serviceworker */
-
 import delivery from '@bugsnag/delivery-fetch'
 import pluginClientIp from '@bugsnag/plugin-client-ip'
 import pluginWindowOnError from '@bugsnag/plugin-window-onerror'
@@ -94,7 +92,6 @@ const notifier: WorkerClient = {
   }
 })
 
-// @ts-expect-error
-const Bugsnag = notifier as WorkerBugsnagStatic
+const Bugsnag = notifier as unknown as WorkerBugsnagStatic
 
 export default Bugsnag

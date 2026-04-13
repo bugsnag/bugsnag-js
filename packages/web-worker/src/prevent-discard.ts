@@ -1,5 +1,3 @@
-/* eslint-env worker, serviceworker */
-
 import { Client } from '@bugsnag/core'
 
 const extensionRegex = /^(chrome|moz|safari|safari-web)-extension:/
