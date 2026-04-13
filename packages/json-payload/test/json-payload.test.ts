@@ -22,7 +22,7 @@ describe('jsonPayload.event', () => {
       apiKey: 'd145b8e5afb56516423bc4d605e45442',
       notifier: { name: 'Bugsnag', version: '1.0.0', url: 'https://bugsnag.com' },
       events: [event]
-    }, ['apiKey'])).toBe('{"apiKey":"d145b8e5afb56516423bc4d605e45442","notifier":{"name":"Bugsnag","version":"1.0.0","url":"https://bugsnag.com"},"events":[{"payloadVersion":"4","exceptions":[{"errorClass":"CheckoutError","errorMessage":"Failed load tickets","type":"browserjs","stacktrace":[],"message":"Failed load tickets"}],"severity":"warning","unhandled":false,"severityReason":{"type":"handledException"},"app":{},"device":{},"request":{"apiKey":"[REDACTED]"},"breadcrumbs":[],"metaData":{},"user":{"id":"123","email":"jim@bugsnag.com","name":"Jim Bug"},"featureFlags":[]}]}')
+    }, ['apiKey'])).toBe('{"apiKey":"d145b8e5afb56516423bc4d605e45442","notifier":{"name":"Bugsnag","version":"1.0.0","url":"https://bugsnag.com"},"events":[{"payloadVersion":"4","exceptions":[{"errorClass":"CheckoutError","errorMessage":"Failed load tickets","type":"browserjs","stacktrace":[],"message":"Failed load tickets"}],"severity":"warning","unhandled":false,"severityReason":{"type":"handledException"},"app":{},"device":{},"request":{"apiKey":"[REDACTED]"},"response":{},"breadcrumbs":[],"metaData":{},"user":{"id":"123","email":"jim@bugsnag.com","name":"Jim Bug"},"featureFlags":[]}]}')
   })
 
   it('strips the metaData of the first event if the payload is too large', () => {
@@ -37,7 +37,7 @@ describe('jsonPayload.event', () => {
       events: [event]
     }
 
-    expect(jsonPayload.event(payload)).toBe('{"apiKey":"d145b8e5afb56516423bc4d605e45442","notifier":{"name":"Bugsnag","version":"1.0.0","url":"https://bugsnag.com"},"events":[{"payloadVersion":"4","exceptions":[{"errorClass":"CheckoutError","errorMessage":"Failed load tickets","type":"browserjs","stacktrace":[],"message":"Failed load tickets"}],"severity":"warning","unhandled":false,"severityReason":{"type":"handledException"},"app":{},"device":{},"request":{"apiKey":"245b39ebd3cd3992e85bffc81c045924"},"breadcrumbs":[],"metaData":{"notifier":"WARNING!\\nSerialized payload was 2.003764MB (limit = 1MB)\\nmetadata was removed"},"user":{"id":"123","email":"jim@bugsnag.com","name":"Jim Bug"},"featureFlags":[]}]}')
+    expect(jsonPayload.event(payload)).toBe('{"apiKey":"d145b8e5afb56516423bc4d605e45442","notifier":{"name":"Bugsnag","version":"1.0.0","url":"https://bugsnag.com"},"events":[{"payloadVersion":"4","exceptions":[{"errorClass":"CheckoutError","errorMessage":"Failed load tickets","type":"browserjs","stacktrace":[],"message":"Failed load tickets"}],"severity":"warning","unhandled":false,"severityReason":{"type":"handledException"},"app":{},"device":{},"request":{"apiKey":"245b39ebd3cd3992e85bffc81c045924"},"response":{},"breadcrumbs":[],"metaData":{"notifier":"WARNING!\\nSerialized payload was 2.003778MB (limit = 1MB)\\nmetadata was removed"},"user":{"id":"123","email":"jim@bugsnag.com","name":"Jim Bug"},"featureFlags":[]}]}')
   })
 
   it('does not attempt to strip any other data paths from the payload to reduce the size', () => {
