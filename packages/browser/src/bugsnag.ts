@@ -55,7 +55,7 @@ type BrowserClient = Partial<Client> & {
 
 const notifier: BrowserClient = {
   _client: null,
-  // @ts-expect-error
+  // @ts-expect-error createClient returns Client but BrowserClient type expects different signature
   createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
     if (typeof opts === 'string') opts = { apiKey: opts }
@@ -83,10 +83,10 @@ const notifier: BrowserClient = {
     ]
 
     // configure a client with user supplied options
-    // @ts-expect-error
+    // @ts-expect-error schema includes browser-specific keys not in the base Config type
     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url });
 
-    // @ts-expect-error
+    // @ts-expect-error _setDelivery is not in Partial<Client> but exists on the Client instance
     (bugsnag as BrowserClient)._setDelivery?.(dXMLHttpRequest)
 
     bugsnag._logger.debug('Loaded!')
@@ -113,18 +113,18 @@ const clientMethods = Object.getOwnPropertyNames(Client.prototype).concat(['rese
 
 clientMethods.map((m) => {
   if (/^_/.test(m) || m === 'constructor') return
-  // @ts-expect-error
+  // @ts-expect-error dynamically assigning Client methods to the notifier object
   notifier[m] = function () {
     if (!notifier._client) return console.log(`Bugsnag.${m}() was called before Bugsnag.start()`)
     notifier._client._depth += 1
-    // @ts-expect-error
+    // @ts-expect-error dynamically calling Client method by string name
     const ret = notifier._client[m].apply(notifier._client, arguments)
     notifier._client._depth -= 1
     return ret
   }
 })
 
-// @ts-expect-error
+// @ts-expect-error BrowserClient is a partial type that gets methods added dynamically
 const Bugsnag = notifier as BrowserBugsnagStatic
 
 export default Bugsnag

@@ -376,8 +376,8 @@ const normaliseError = (maybeError: unknown, tolerateNonErrors: boolean, compone
 }
 
 const hasNecessaryFields = (error: unknown): error is { name?: string; errorClass?: string; message?: string; errorMessage?: string } =>
-  // @ts-expect-error - needs rewriting to be more type safe
+  // @ts-expect-error accessing properties on unknown type before type guard narrows it
   (typeof error.name === 'string' || typeof error.errorClass === 'string') &&
-  // @ts-expect-error - needs rewriting to be more type safe
+  // @ts-expect-error accessing properties on unknown type before type guard narrows it
   (typeof error.message === 'string' || typeof error.errorMessage === 'string')
 

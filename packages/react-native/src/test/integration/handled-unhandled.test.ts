@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error no type declarations for native module
 import { NativeClient } from '../../native'
 
 jest.mock('react-native', () => {
@@ -36,7 +36,7 @@ jest.mock('react-native', () => {
   }
 })
 
-// @ts-ignore
+// @ts-expect-error no type declarations for promise/setimmediate
 import rnPromise from 'promise/setimmediate'  
  
 import Bugsnag from '../../..'
@@ -97,7 +97,7 @@ describe('@bugsnag/react-native: handled and unhandled errors', () => {
     // we can't actually reject an error because that will fail the test, but we
     // can send an mocked promise rejection event
     try {
-      // @ts-ignore
+      // @ts-expect-error calling non-existent method to trigger TypeError
       'sdf'.sdflkj()
     } catch (e) {
       rnPromise.reject(e)

@@ -255,7 +255,7 @@ const schema: Schema = {
     validate: (value: unknown) =>
       (!value) ||
       (value && ['debug', 'info', 'warn', 'error'].reduce(
-        // @ts-expect-error - TS doesn't know that value is an object
+        // @ts-expect-error value is checked for truthiness above but TS cannot narrow unknown
         (accum, method) => accum && typeof value[method] === 'function',
         true
       ))

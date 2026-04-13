@@ -111,7 +111,7 @@ export default class Client<T extends Config = Config> {
     const self = this
     const notify = this.notify
     this.notify = function () {
-      // @ts-ignore
+      // @ts-expect-error arguments object is not assignable to the typed notify parameters
       // eslint-disable-next-line prefer-rest-params
       return notify.apply(self, arguments)
     }

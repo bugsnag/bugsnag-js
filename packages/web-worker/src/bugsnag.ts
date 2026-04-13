@@ -39,7 +39,7 @@ type WorkerClient = Partial<Client> & {
 
 const notifier: WorkerClient = {
   _client: null,
-  // @ts-expect-error
+  // @ts-expect-error createClient returns Client but WorkerClient type expects different signature
   createClient: (opts) => {
     // handle very simple use case where user supplies just the api key as a string
     if (typeof opts === 'string') opts = { apiKey: opts }
@@ -83,11 +83,11 @@ const notifier: WorkerClient = {
 (Object.getOwnPropertyNames(Client.prototype)).forEach(method => {
   // skip private methods
   if (/^_/.test(method) || method === 'constructor') return
-  // @ts-expect-error
+  //@ts-expect-error 'this' is implicitly any in this dynamic function wrapper context
   notifier[method] = function () {
     if (!notifier._client) return console.log(`Bugsnag.${method}() was called before Bugsnag.start()`)
     notifier._client._depth += 1
-    // @ts-expect-error
+    //@ts-expect-error 'this' is implicitly any in this dynamic function wrapper context
     const ret = notifier._client[method].apply(notifier._client, arguments)
     notifier._client._depth -= 1
     return ret

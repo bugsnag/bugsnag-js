@@ -296,7 +296,7 @@ describe('BugsnagIpcMain', () => {
       client.addFeatureFlags([
         { name: 'flag1' },
         { name: 'flag2', variant: null },
-        // @ts-ignore:
+        // @ts-expect-error intentionally passing number instead of string variant
         { name: 'flag3', variant: 1234 },
         { name: 'flag4', variant: 'abc' }
       ])
@@ -404,7 +404,7 @@ describe('BugsnagIpcMain', () => {
       const internalCb = jest.fn((event) => {
         event.addMetadata('internal', 'ran', true)
       })
-      // @ts-expect-error
+      // @ts-expect-error _internal is not part of the public callback type
       internalCb._internal = true
       client.addOnError(internalCb)
 

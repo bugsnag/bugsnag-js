@@ -3,18 +3,18 @@ import { Client } from '@bugsnag/core'
 
 // use the promise polyfill that RN uses, otherwise the unhandled rejections in
 // this test go to node's process#unhandledRejection event
-// @ts-ignore
+// @ts-expect-error no type declarations for promise/setimmediate
 import RnPromise from 'promise/setimmediate'
 
 beforeEach(() => {
-  // @ts-ignore
+  // @ts-expect-error __DEV__ is not defined on global type
   global.__DEV__ = true
   jest.spyOn(console, 'warn').mockImplementation(() => { })
 })
 
 afterEach(() => {
   jest.restoreAllMocks()
-  // @ts-ignore
+  // @ts-expect-error __DEV__ is not defined on global type
   delete global.__DEV__
 })
 
@@ -41,7 +41,7 @@ describe('plugin: react native rejection handler', () => {
     // in the interests of keeping the tests quick, TypeErrors get rejected quicker
     // see: https://github.com/then/promise/blob/d980ed01b7a383bfec416c96095e2f40fd18ab34/src/rejection-tracking.js#L48-L54
     try {
-      // @ts-ignore
+      // @ts-expect-error calling non-existent method to trigger TypeError
       String.floop()
     } catch (e) {
       RnPromise.reject(e)
@@ -65,7 +65,7 @@ describe('plugin: react native rejection handler', () => {
     // in the interests of keeping the tests quick, TypeErrors get rejected quicker
     // see: https://github.com/then/promise/blob/d980ed01b7a383bfec416c96095e2f40fd18ab34/src/rejection-tracking.js#L48-L54
     try {
-      // @ts-ignore
+      // @ts-expect-error calling non-existent method to trigger TypeError
       String.floop()
     } catch (e) {
       RnPromise.reject(e)
@@ -74,7 +74,7 @@ describe('plugin: react native rejection handler', () => {
   })
 
   it('should hook in to the hermes promise rejection tracker', (done) => {
-    // @ts-ignore
+    // @ts-expect-error HermesInternal is not defined on global type
     global.HermesInternal = {
       hasPromise: jest.fn().mockReturnValue(true),
       enablePromiseRejectionTracker: jest.fn()
@@ -98,7 +98,7 @@ describe('plugin: react native rejection handler', () => {
         setTimeout(() => {
           expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('Possible Unhandled Promise Rejection'))
 
-          // @ts-ignore
+          // @ts-expect-error HermesInternal is not defined on global type
           delete global.HermesInternal
 
           done()
@@ -109,20 +109,20 @@ describe('plugin: react native rejection handler', () => {
 
     plugin.load(c)
 
-    // @ts-ignore
+    // @ts-expect-error HermesInternal is not defined on global type
     expect(global.HermesInternal.enablePromiseRejectionTracker).toHaveBeenCalledWith({
       allRejections: true,
       onUnhandled: expect.any(Function)
     })
 
-    // @ts-ignore
+    // @ts-expect-error HermesInternal is not defined on global type
     const onUnhandled = global.HermesInternal.enablePromiseRejectionTracker.mock.calls[0][0].onUnhandled
     const rejection = new Error('This is an unhandled promise')
     onUnhandled('someid', rejection)
   })
 
   it('should not try to hook in to hermes if not present', () => {
-    // @ts-ignore
+    // @ts-expect-error HermesInternal is not defined on global type
     global.HermesInternal = {
       hasPromise: jest.fn().mockReturnValue(false),
       enablePromiseRejectionTracker: jest.fn()
@@ -131,10 +131,10 @@ describe('plugin: react native rejection handler', () => {
     const c = new Client({ apiKey: 'api_key' })
     plugin.load(c)
 
-    // @ts-ignore
+    // @ts-expect-error HermesInternal is not defined on global type
     expect(global.HermesInternal?.enablePromiseRejectionTracker).not.toHaveBeenCalled()
 
-    // @ts-ignore
+    // @ts-expect-error HermesInternal is not defined on global type
     delete global.HermesInternal
   })
 
@@ -150,7 +150,7 @@ describe('plugin: react native rejection handler', () => {
     }))
     const stop = plugin.load(c)
     try {
-      // @ts-ignore
+      // @ts-expect-error calling non-existent method to trigger TypeError
       String.floop()
     } catch (e) {
       RnPromise.reject(e)
@@ -174,7 +174,7 @@ describe('plugin: react native rejection handler', () => {
     }))
     const stop = plugin.load(c)
     try {
-      // @ts-ignore
+      // @ts-expect-error calling non-existent method to trigger TypeError
       String.floop()
     } catch (e) {
       RnPromise.reject(e)
