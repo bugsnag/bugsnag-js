@@ -31,12 +31,12 @@ function mockFetch (onSessionSend?: SendCallback, onNotifySend?: SendCallback) {
   const session = makeMockXHR(onSessionSend)
   const notify = makeMockXHR(onNotifySend)
 
-  // @ts-expect-error
+  // @ts-expect-error assigning mock to readonly XMLHttpRequest property
   window.XMLHttpRequest = jest.fn()
     .mockImplementationOnce(() => session)
     .mockImplementationOnce(() => notify)
     .mockImplementation(() => makeMockXHR(() => {}))
-  // @ts-expect-error
+  // @ts-expect-error assigning DONE constant to mock XMLHttpRequest
   window.XMLHttpRequest.DONE = DONE
 
   return { session, notify }
@@ -110,7 +110,7 @@ describe('browser notifier', () => {
     mockFetch(onSessionSend, onNotifySend)
 
     const Bugsnag = getBugsnag()
-    // @ts-expect-error
+    // @ts-expect-error intentionally passing incomplete endpoints config
     Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
     Bugsnag.notify(new Error('123'), undefined, (err, event) => {
       expect(err).toStrictEqual(new Error('Event not sent due to incomplete endpoint configuration'))
@@ -120,7 +120,7 @@ describe('browser notifier', () => {
   it('does not send a session with invalid configuration', (done) => {
     const { session } = mockFetch()
     const Bugsnag = getBugsnag()
-    // @ts-expect-error
+    // @ts-expect-error intentionally passing incomplete endpoints config
     Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
     Bugsnag.startSession()
 
@@ -235,7 +235,7 @@ describe('browser notifier', () => {
     it('resets events on pushState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
-      // @ts-expect-error
+      // @ts-expect-error accessing private method for test spying
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.pushState('', '', 'new-url')
@@ -248,7 +248,7 @@ describe('browser notifier', () => {
     it('does not reset events on replaceState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
-      // @ts-expect-error
+      // @ts-expect-error accessing private method for test spying
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.replaceState('', '', 'new-url')

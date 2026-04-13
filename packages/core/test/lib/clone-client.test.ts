@@ -138,7 +138,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const cloned = cloneClient(original)
       expect(cloned._cbs.e).not.toBe(original._cbs.e)
 
-      // @ts-ignore
+      // @ts-expect-error invoking callback without expected arguments in test
       cloned._cbs.e.forEach(cb => { cb() })
       expect(onError1).toHaveBeenCalledTimes(1)
       expect(onError2).toHaveBeenCalledTimes(0)
@@ -146,12 +146,12 @@ describe('@bugsnag/core/lib/clone-client', () => {
       // adding a new callback should not affect the clone
       original.addOnError(onError2)
 
-      // @ts-ignore
+      // @ts-expect-error invoking callback without expected arguments in test
       cloned._cbs.e.forEach(cb => { cb() })
       expect(onError1).toHaveBeenCalledTimes(2)
       expect(onError2).toHaveBeenCalledTimes(0)
 
-      // @ts-ignore
+      // @ts-expect-error invoking callback without expected arguments in test
       original._cbs.e.forEach(cb => { cb() })
       expect(onError1).toHaveBeenCalledTimes(3)
       expect(onError2).toHaveBeenCalledTimes(1)
@@ -167,7 +167,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const cloned = cloneClient(original)
       expect(cloned._cbs.s).not.toBe(original._cbs.s)
 
-      // @ts-ignore
+      // @ts-expect-error invoking callback without expected arguments in test
       cloned._cbs.s.forEach(cb => { cb() })
       expect(onSession1).toHaveBeenCalledTimes(1)
       expect(onSession2).toHaveBeenCalledTimes(0)
@@ -175,12 +175,12 @@ describe('@bugsnag/core/lib/clone-client', () => {
       // adding a new callback should not affect the clone
       original.addOnSession(onSession2)
 
-      // @ts-ignore
+      // @ts-expect-error invoking callback without expected arguments in test
       cloned._cbs.s.forEach(cb => { cb() })
       expect(onSession1).toHaveBeenCalledTimes(2)
       expect(onSession2).toHaveBeenCalledTimes(0)
 
-      // @ts-ignore
+      // @ts-expect-error invoking callback without expected arguments in test
       original._cbs.s.forEach(cb => { cb() })
       expect(onSession1).toHaveBeenCalledTimes(3)
       expect(onSession2).toHaveBeenCalledTimes(1)
@@ -196,7 +196,6 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const cloned = cloneClient(original)
       expect(cloned._cbs.sp).not.toBe(original._cbs.sp)
 
-      // @ts-ignore
       cloned._cbs.sp.forEach(cb => { cb() })
       expect(onSessionPayload1).toHaveBeenCalledTimes(1)
       expect(onSessionPayload2).toHaveBeenCalledTimes(0)
@@ -204,12 +203,10 @@ describe('@bugsnag/core/lib/clone-client', () => {
       // adding a new callback should not affect the clone
       original._addOnSessionPayload(onSessionPayload2)
 
-      // @ts-ignore
       cloned._cbs.sp.forEach(cb => { cb() })
       expect(onSessionPayload1).toHaveBeenCalledTimes(2)
       expect(onSessionPayload2).toHaveBeenCalledTimes(0)
 
-      // @ts-ignore
       original._cbs.sp.forEach(cb => { cb() })
       expect(onSessionPayload1).toHaveBeenCalledTimes(3)
       expect(onSessionPayload2).toHaveBeenCalledTimes(1)
@@ -225,7 +222,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const cloned = cloneClient(original)
       expect(cloned._cbs.b).not.toBe(original._cbs.b)
 
-      // @ts-ignore
+      // @ts-expect-error invoking callback without expected arguments in test
       cloned._cbs.b.forEach(cb => { cb() })
       expect(onBreadcrumb1).toHaveBeenCalledTimes(1)
       expect(onBreadcrumb2).toHaveBeenCalledTimes(0)
@@ -233,12 +230,12 @@ describe('@bugsnag/core/lib/clone-client', () => {
       // adding a new callback should not affect the clone
       original.addOnBreadcrumb(onBreadcrumb2)
 
-      // @ts-ignore
+      // @ts-expect-error invoking callback without expected arguments in test
       cloned._cbs.b.forEach(cb => { cb() })
       expect(onBreadcrumb1).toHaveBeenCalledTimes(2)
       expect(onBreadcrumb2).toHaveBeenCalledTimes(0)
 
-      // @ts-ignore
+      // @ts-expect-error invoking callback without expected arguments in test
       original._cbs.b.forEach(cb => { cb() })
       expect(onBreadcrumb1).toHaveBeenCalledTimes(3)
       expect(onBreadcrumb2).toHaveBeenCalledTimes(1)

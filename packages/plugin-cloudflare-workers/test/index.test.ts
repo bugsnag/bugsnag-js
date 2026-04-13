@@ -26,7 +26,7 @@ const createMockExecutionContext = (): MockExecutionContext => {
 const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryPayload[], config = {}, additionalPlugins: any[] = []) => {
   const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers, ...additionalPlugins], ...config })
 
-  // @ts-ignore the following property is not defined on the public Event interface
+  // @ts-expect-error the following property is not defined on the public Event interface
   client.Event.__type = 'nodejs'
 
   client._delivery = {
@@ -122,7 +122,7 @@ describe('plugin: cloudflare workers', () => {
         'cf-connecting-ip': '203.0.113.1'
       }
     })
-    // @ts-ignore
+    // @ts-expect-error _metadata is a private property on Event
     expect(event._metadata?.request).toMatchObject({
       url: 'https://example.com/test?foo=bar&baz=qux',
       path: '/test',
@@ -266,7 +266,7 @@ describe('plugin: cloudflare workers', () => {
     expect(events).toHaveLength(1)
 
     const event = events[0].events[0]
-    // @ts-ignore
+    // @ts-expect-error errors property not on public Event type
     expect(event.errors[0].errorMessage).toBe('badness')
     expect(event.unhandled).toBe(true)
 
@@ -414,7 +414,7 @@ describe('plugin: cloudflare workers', () => {
         'x-custom-header': 'request1'
       })
     })
-    // @ts-ignore
+    // @ts-expect-error _metadata is a private property on Event
     expect(event1._metadata?.request).toMatchObject({
       url: 'https://example.com/request1?param1=value1',
       path: '/request1',
@@ -436,7 +436,7 @@ describe('plugin: cloudflare workers', () => {
         'x-custom-header': 'request2'
       })
     })
-    // @ts-ignore
+    // @ts-expect-error _metadata is a private property on Event
     expect(event2._metadata?.request).toMatchObject({
       url: 'https://example.com/request2?param2=value2',
       path: '/request2',

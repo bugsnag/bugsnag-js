@@ -6,7 +6,7 @@ import BugsnagReactNativeStatic, {
   OnErrorCallback
 } from '..'
 
-// @ts-ignore
+// @ts-expect-error react-native is mocked in this test file
 import { NativeModules } from 'react-native'
 
 const NativeClient = NativeModules.BugsnagReactNative

@@ -85,12 +85,12 @@ const notifier: NodeClient = {
      * plugin where we want to call `leaveBreadcrumb` on the request-scoped client, if it exists.
      */
     clientMethods.forEach((m) => {
-      // @ts-expect-error
+      // @ts-expect-error dynamically accessing Client methods by string index
       const original = bugsnag[m]
-      // @ts-expect-error
+      // @ts-expect-error dynamically assigning patched methods to the Client instance
       bugsnag[m] = function () {
         // if we are in an async context, use the client from that context
-        // @ts-expect-error
+        // @ts-expect-error _clientContext is added dynamically and not in the Client type definition
         const contextClient = bugsnag._clientContext && typeof bugsnag._clientContext.getStore === 'function' ? bugsnag._clientContext.getStore() : null
         const client = contextClient || bugsnag
         const originalMethod = contextClient ? contextClient[m] : original
@@ -105,7 +105,7 @@ const notifier: NodeClient = {
     // Used to store and retrieve the request-scoped client which makes it easy to obtain the request-scoped client
     // from anywhere in the codebase e.g. when calling Bugsnag.leaveBreadcrumb() or even within the global unhandled
     // promise rejection handler.
-    // @ts-expect-error
+    // @ts-expect-error _clientContext is a node-specific property not in the base Client type
     bugsnag._clientContext = new AsyncLocalStorage()
 
     bugsnag._setDelivery(delivery)
@@ -129,11 +129,11 @@ const notifier: NodeClient = {
 
 clientMethods.forEach((m) => {
   if (/^_/.test(m) || m === 'constructor') return
-  // @ts-expect-error
+  // @ts-expect-error dynamically assigning Client methods to the notifier object
   notifier[m] = function () {
     // if we are in an async context, use the client from that context
     let client = notifier._client
-    // @ts-expect-error
+    // @ts-expect-error _clientContext is added dynamically and not in the Client type definition
     const ctx = client && client._clientContext && client._clientContext.getStore()
     if (ctx) {
       client = ctx
@@ -142,14 +142,14 @@ clientMethods.forEach((m) => {
     if (!client) return console.error(`Bugsnag.${m}() was called before Bugsnag.start()`)
 
     client._depth += 1
-    // @ts-expect-error
+    // @ts-expect-error dynamically calling Client method by string name
     const ret = client[m].apply(client, arguments)
     client._depth -= 1
     return ret
   }
 })
 
-// @ts-expect-error
+// @ts-expect-error NodeClient is a partial type that gets methods added dynamically
 const Bugsnag = notifier as NodeBugsnagStatic
 
 export default Bugsnag

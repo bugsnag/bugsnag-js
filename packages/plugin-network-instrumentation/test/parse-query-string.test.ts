@@ -19,9 +19,9 @@ describe('parseQueryString', () => {
   })
 
   it('should handle null/undefined gracefully', () => {
-    // @ts-expect-error
+    // @ts-expect-error intentionally passing null to test graceful handling
     expect(parseQueryString(null)).toEqual({})
-    // @ts-expect-error
+    // @ts-expect-error intentionally passing undefined to test graceful handling
     expect(parseQueryString(undefined)).toEqual({})
   })
 
