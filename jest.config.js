@@ -7,7 +7,9 @@ const baseConfig = {
     '^.+\\.[jt]sx?$': ['ts-jest', {
       tsconfig: '<rootDir>/tsconfig.test.json',
       diagnostics: {
-        ignoreCodes: [7016]
+        // 7016: untyped module imports, 2307: monorepo cross-package imports,
+        // 7006/7031: implicit any params (tests not written with strict types)
+        ignoreCodes: [7016, 2307, 7006, 7031]
       }
     }]
   },
