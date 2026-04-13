@@ -1,32 +1,33 @@
 const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s?(x)`
 
 // Base configuration shared across all projects
-const baseConfig = {
-  preset: 'ts-jest/presets/js-with-ts',
-  transform: {
-    '^.+\\.[jt]sx?$': ['ts-jest', {
-      tsconfig: '<rootDir>/tsconfig.test.json',
-      diagnostics: {
-        // 7016: untyped module imports, 2307: monorepo cross-package imports,
-        // 7006/7031: implicit any params (tests not written with strict types)
-        ignoreCodes: [7016, 2307, 7006, 7031]
-      }
-    }]
-  },
-  moduleNameMapper: {
-    // Map monorepo @bugsnag/* packages to source (excluding published deps: cuid, safe-json-stringify, delivery-x-domain-request)
-    '^@bugsnag/(?!cuid|safe-json-stringify|delivery-x-domain-request)([^/]+)/(.+)$': '<rootDir>/packages/$1/src/$2',
-    '^@bugsnag/(?!cuid|safe-json-stringify|delivery-x-domain-request)([^/]+)$': '<rootDir>/packages/$1/src'
-  },
-  transformIgnorePatterns: [
-    'node_modules/(?!(@bugsnag)/)'
-  ],
-  roots: ['<rootDir>/packages']
-}
+// const baseConfig = {
+//   preset: 'ts-jest/presets/js-with-ts',
+//   transform: {
+//     '^.+\\.[jt]sx?$': ['ts-jest', {
+//       tsconfig: '<rootDir>/tsconfig.test.json',
+//       diagnostics: {
+//         // 7016: untyped module imports, 2307: monorepo cross-package imports,
+//         // 7006/7031: implicit any params (tests not written with strict types)
+//         ignoreCodes: [7016, 2307, 7006, 7031]
+//       }
+//     }]
+//   },
+//   moduleNameMapper: {
+//     // Map monorepo @bugsnag/* packages to source (excluding published deps: cuid, safe-json-stringify, delivery-x-domain-request)
+//     '^@bugsnag/(?!cuid|safe-json-stringify|delivery-x-domain-request)([^/]+)/(.+)$': '<rootDir>/packages/$1/src/$2',
+//     '^@bugsnag/(?!cuid|safe-json-stringify|delivery-x-domain-request)([^/]+)$': '<rootDir>/packages/$1/src'
+//   },
+//   transformIgnorePatterns: [
+//     'node_modules/(?!(@bugsnag)/)'
+//   ],
+//   roots: ['<rootDir>/packages']
+// }
 
 const project = (displayName, packageNames, customConfig = {}) => {
   return {
-    ...baseConfig,
+    // ...baseConfig,
+    roots: ['<rootDir>/packages'],
     displayName,
     testMatch: packageNames.map(testsForPackage),
     ...customConfig
@@ -60,11 +61,9 @@ module.exports = {
       testEnvironment: 'node'
     }),
     project('web workers', ['web-worker'], {
-      testEnvironment: 'jsdom'
+      testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),
-    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser', 'request-tracker'], {
-      testEnvironment: 'node'
-    }),
+    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser', 'request-tracker']),
     project('browser', [
       'browser',
       'delivery-x-domain-request',
@@ -88,7 +87,7 @@ module.exports = {
       'plugin-browser-session',
       'plugin-network-instrumentation'
     ], {
-      testEnvironment: 'jsdom',
+      testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js',
       modulePathIgnorePatterns: ['.verdaccio', 'dist', 'examples', 'fixtures']
     }),
     project('react native', [
