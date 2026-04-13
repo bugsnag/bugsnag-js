@@ -51,7 +51,7 @@ describe('worker notifier', () => {
     Bugsnag.start(testConfig)
     Bugsnag.notify(new Error('123'), undefined, (err, event) => {
       if (err) done(err)
-      expect(event.originalError.message).toBe('123')
+      expect((event.originalError as Error).message).toBe('123')
       expect(typedGlobal.fetch).toHaveBeenCalledWith('/echo/', expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({
@@ -137,11 +137,11 @@ describe('worker notifier', () => {
 
   describe('payload checksum behavior (Bugsnag-Integrity header)', () => {
     beforeEach(() => {
-      window.isSecureContext = true
+      Object.defineProperty(window, 'isSecureContext', { value: true, writable: true, configurable: true })
     })
 
     afterEach(() => {
-      window.isSecureContext = false
+      Object.defineProperty(window, 'isSecureContext', { value: false, writable: true, configurable: true })
     })
 
     it('includes the integrity header by default', (done) => {

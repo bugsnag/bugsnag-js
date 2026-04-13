@@ -11,7 +11,7 @@ const id = <T>(a: T) => a
 
 describe('plugin: device', () => {
   it('should add an onError callback which captures device information', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(navigator)])
+    const client = new Client({ apiKey: 'API_KEY_YEAH' } as any, undefined, [plugin(navigator)])
     const payloads: EventDeliveryPayload[] = []
 
     expect(client._cbs.e).toHaveLength(1)
@@ -29,7 +29,7 @@ describe('plugin: device', () => {
   })
 
   it('should capture the screen orientation if possible and add it to the event', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(navigator, mockWindow)])
+    const client = new Client({ apiKey: 'API_KEY_YEAH' } as any, undefined, [plugin(navigator, mockWindow)])
     const payloads: EventDeliveryPayload[] = []
 
     expect(client._cbs.e).toHaveLength(1)
@@ -47,7 +47,7 @@ describe('plugin: device', () => {
   })
 
   it('should add an onSession callback which captures device information', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(navigator)])
+    const client = new Client({ apiKey: 'API_KEY_YEAH' } as any, undefined, [plugin(navigator)])
     const payloads: SessionDeliveryPayload[] = []
     client._sessionDelegate = {
       startSession: (client, session) => {
@@ -73,7 +73,7 @@ describe('plugin: device', () => {
   })
 
   it('should capture the screen orientation if possible and add it to the session', () => {
-    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(navigator, mockWindow)])
+    const client = new Client({ apiKey: 'API_KEY_YEAH' } as any, undefined, [plugin(navigator, mockWindow)])
     const payloads: SessionDeliveryPayload[] = []
     client._sessionDelegate = {
       startSession: (client, session) => {
@@ -153,7 +153,7 @@ describe('plugin: device', () => {
 
     it('should generate a device ID when "generateAnonymousId" is enabled', () => {
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -177,7 +177,7 @@ describe('plugin: device', () => {
       window.localStorage.setItem(anonymousIdKey, fakeCuid)
 
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -199,7 +199,7 @@ describe('plugin: device', () => {
 
     it('should save the device ID in localStorage, if it does not exist', () => {
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -230,7 +230,7 @@ describe('plugin: device', () => {
 
     it('should reuse the same device ID for every event/session', () => {
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -274,7 +274,7 @@ describe('plugin: device', () => {
 
     it('should not generate a device ID when "generateAnonymousId" is disabled', () => {
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: false },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: false } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -301,7 +301,7 @@ describe('plugin: device', () => {
       })
 
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -332,7 +332,7 @@ describe('plugin: device', () => {
       })
 
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -363,7 +363,7 @@ describe('plugin: device', () => {
       })
 
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -388,7 +388,7 @@ describe('plugin: device', () => {
       window.localStorage.setItem(anonymousIdKey, storedId)
 
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -414,7 +414,7 @@ describe('plugin: device', () => {
       window.localStorage.setItem(anonymousIdKey, storedId)
 
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -440,7 +440,7 @@ describe('plugin: device', () => {
       window.localStorage.setItem(anonymousIdKey, storedId)
 
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true },
+        { apiKey: 'API_KEY_YEAH', generateAnonymousId: true } as any,
         undefined,
         [plugin(navigator)]
       )
@@ -463,7 +463,7 @@ describe('plugin: device', () => {
 
     it('should not set device.id as user.id when collectUserIp=true', () => {
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH' },
+        { apiKey: 'API_KEY_YEAH' } as any,
         {
           ...schema,
           collectUserIp: {
@@ -471,7 +471,7 @@ describe('plugin: device', () => {
             validate: () => true,
             message: ''
           }
-        },
+        } as any,
         [plugin(navigator)]
       )
       const events: Event[] = []
@@ -493,7 +493,7 @@ describe('plugin: device', () => {
 
     it('should set device.id as user.id when collectUserIp=false', () => {
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', collectUserIp: false },
+        { apiKey: 'API_KEY_YEAH', collectUserIp: false } as any,
         {
           ...schema,
           collectUserIp: {
@@ -501,7 +501,7 @@ describe('plugin: device', () => {
             validate: () => true,
             message: ''
           }
-        },
+        } as any,
         [plugin(navigator)]
       )
       const events: Event[] = []
@@ -525,7 +525,7 @@ describe('plugin: device', () => {
 
     it('should not replace an existing user.id with device.id', () => {
       const client = new Client(
-        { apiKey: 'API_KEY_YEAH', collectUserIp: false },
+        { apiKey: 'API_KEY_YEAH', collectUserIp: false } as any,
         {
           ...schema,
           collectUserIp: {
@@ -533,7 +533,7 @@ describe('plugin: device', () => {
             validate: () => true,
             message: ''
           }
-        },
+        } as any,
         [plugin(navigator)]
       )
       const events: Event[] = []

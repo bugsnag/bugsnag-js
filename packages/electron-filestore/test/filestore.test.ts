@@ -87,7 +87,7 @@ describe('FileStore', () => {
 
     it('returns an ID after initialization', async () => {
       await store.init()
-      const contents = store.getDeviceInfo()
+      const contents = store.getDeviceInfo() as any
       expect(typeof contents.id).toBe('string')
     })
 
@@ -95,7 +95,7 @@ describe('FileStore', () => {
       const base = join(fixtures, 'bugsnag', 'mykey')
       await mkdir(base, { recursive: true })
       await writeFile(join(base, 'device.json'), '')
-      const contents = store.getDeviceInfo()
+      const contents = store.getDeviceInfo() as any
       expect(typeof contents.id).toBe('string')
     })
 
@@ -103,7 +103,7 @@ describe('FileStore', () => {
       const base = join(fixtures, 'bugsnag', 'mykey')
       await mkdir(base, { recursive: true })
       await writeFile(join(base, 'device.json'), '{"id":')
-      const contents = store.getDeviceInfo()
+      const contents = store.getDeviceInfo() as any
       expect(typeof contents.id).toBe('string')
     })
 
@@ -115,7 +115,7 @@ describe('FileStore', () => {
 
     it('returns an object with an ID if none given to setDeviceInfo()', async () => {
       store.setDeviceInfo({ name: 'jeanne' })
-      const contents = store.getDeviceInfo()
+      const contents = store.getDeviceInfo() as any
       expect(contents.name).toEqual('jeanne')
       expect(typeof contents.id).toBe('string')
     })
@@ -225,7 +225,7 @@ describe('FileStore', () => {
 
   describe('getAppRunMetadata()', () => {
     it('generates a key in an expected format', () => {
-      const metadata = store.getAppRunMetadata()
+      const metadata = store.getAppRunMetadata() as any
       expect(metadata.bugsnag_crash_id).toMatch(/^[0-9a-z]{64}$/)
     })
   })
