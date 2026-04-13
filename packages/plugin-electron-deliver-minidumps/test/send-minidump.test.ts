@@ -13,7 +13,7 @@ const client = {
 }
 
 describe('electron-minidump-delivery: sendMinidump', () => {
-  let minidumpsPath
+  let minidumpsPath: string
 
   beforeEach(async () => {
     minidumpsPath = await mkdtemp('send-minidumps-')
@@ -23,15 +23,15 @@ describe('electron-minidump-delivery: sendMinidump', () => {
 
   it('sends minidump successfully', async () => {
     const net = {
-      request: jest.fn().mockImplementation((_, handle) => {
-        handle({ statusCode: 200, on: (event, cb) => {} })
+      request: jest.fn().mockImplementation((_: any, handle: any) => {
+        handle({ statusCode: 200, on: (event: any, cb: any) => {} })
       })
     }
 
     const minidumpFile = join(minidumpsPath, 'test-minidump.dmp')
     await writeFile(minidumpFile, '{}', 'utf8')
 
-    const { sendMinidump } = sendMinidumpFactory(net, client)
+    const { sendMinidump } = sendMinidumpFactory(net as any, client as any)
     await sendMinidump(minidumpFile, null)
 
     expect(net.request).toBeCalledTimes(1)
@@ -47,37 +47,37 @@ describe('electron-minidump-delivery: sendMinidump', () => {
 
   it('marks server error as retry', async () => {
     const net = {
-      request: jest.fn().mockImplementation((opts, handle) => {
-        handle({ statusCode: 500, on: (event, cb) => {} })
+      request: jest.fn().mockImplementation((opts: any, handle: any) => {
+        handle({ statusCode: 500, on: (event: any, cb: any) => {} })
       })
     }
 
     const minidumpFile = join(minidumpsPath, 'test-minidump.dmp')
     await writeFile(minidumpFile, '{}', 'utf8')
 
-    const { sendMinidump } = sendMinidumpFactory(net, client)
+    const { sendMinidump } = sendMinidumpFactory(net as any, client as any)
     await expect(sendMinidump(minidumpFile, null)).rejects.toHaveProperty('isRetryable', true)
   })
 
   it('marks bad request as no-retry', async () => {
     const net = {
-      request: jest.fn().mockImplementation((opts, handle) => {
-        handle({ statusCode: 400, on: (event, cb) => {} })
+      request: jest.fn().mockImplementation((opts: any, handle: any) => {
+        handle({ statusCode: 400, on: (event: any, cb: any) => {} })
       })
     }
 
     const minidumpFile = join(minidumpsPath, 'test-minidump.dmp')
     await writeFile(minidumpFile, '{}', 'utf8')
 
-    const { sendMinidump } = sendMinidumpFactory(net, client)
+    const { sendMinidump } = sendMinidumpFactory(net as any, client as any)
     await expect(sendMinidump(minidumpFile, null)).rejects.toHaveProperty('isRetryable', false)
   })
 
   describe('apiKey in events', () => {
-    let minidumpFile
+    let minidumpFile: any
     const net = {
-      request: jest.fn().mockImplementation((_, handle) => {
-        handle({ statusCode: 200, on: (event, cb) => {} })
+      request: jest.fn().mockImplementation((_: any, handle: any) => {
+        handle({ statusCode: 200, on: (event: any, cb: any) => {} })
       })
     }
 
@@ -87,7 +87,7 @@ describe('electron-minidump-delivery: sendMinidump', () => {
     })
 
     it('can be set by the event', async () => {
-      const { sendMinidump } = sendMinidumpFactory(net, client)
+      const { sendMinidump } = sendMinidumpFactory(net as any, client as any)
       await sendMinidump(minidumpFile, {
         apiKey: 'c0ffeec0ffeec0ffeec0ffeec0ffeec0'
       })

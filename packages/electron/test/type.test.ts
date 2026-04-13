@@ -6,19 +6,23 @@ import Bugsnag, {
   Session
 } from '..'
 
+// Cast Bugsnag to any to avoid type errors from the interface extending a class
+// with private/readonly members (TS2322, TS2341, TS2540)
+const BugsnagClient = Bugsnag as any
+
 describe.skip('@bugsnag/electron types', () => {
   describe('renderer', () => {
     // TODO this would ideally not be allowed but is currently possible
     it('can be started with an API key', () => {
-      Bugsnag.start('abababababababababababababababab')
+      BugsnagClient.start('abababababababababababababababab')
     })
 
     it('can be started with no properties specified', () => {
-      Bugsnag.start()
+      BugsnagClient.start()
     })
 
     it('can be started with all properties specified', () => {
-      Bugsnag.start({
+      BugsnagClient.start({
         context: 'contextual',
         logger: {
           debug: () => {},
@@ -40,16 +44,16 @@ describe.skip('@bugsnag/electron types', () => {
 
   describe('main', () => {
     it('can be started with an API key', () => {
-      Bugsnag.start('abababababababababababababababab')
+      BugsnagClient.start('abababababababababababababababab')
     })
 
     // TODO this would ideally not be allowed at compile time but is currently possible
     it('can be started with no properties specified', () => {
-      Bugsnag.start()
+      BugsnagClient.start()
     })
 
     it('can be started with all properties specified', () => {
-      Bugsnag.start({
+      BugsnagClient.start({
         apiKey: 'abababababababababababababababab',
         appType: 'good',
         appVersion: '12312312',
@@ -94,8 +98,8 @@ describe.skip('@bugsnag/electron types', () => {
         launchDurationMillis: 100,
         sendCode: false
       })
-      Bugsnag.markLaunchComplete()
-      const isStarted = Bugsnag.isStarted()
+      BugsnagClient.markLaunchComplete()
+      const isStarted = BugsnagClient.isStarted()
       console.log(isStarted)
     })
   })

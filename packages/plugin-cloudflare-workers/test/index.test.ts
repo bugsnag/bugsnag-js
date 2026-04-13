@@ -24,17 +24,16 @@ const createMockExecutionContext = (): MockExecutionContext => {
 }
 
 const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryPayload[], config = {}, additionalPlugins: any[] = []) => {
-  const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers, ...additionalPlugins], ...config })
+  const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers as any, ...additionalPlugins], ...config })
 
-  // @ts-expect-error the following property is not defined on the public Event interface
   client.Event.__type = 'nodejs'
 
   client._delivery = {
-    sendEvent (payload, cb = () => {}) {
+    sendEvent (payload: EventDeliveryPayload, cb = () => {}) {
       events.push(payload)
       cb()
     },
-    sendSession (payload, cb = () => {}) {
+    sendSession (payload: SessionDeliveryPayload, cb = () => {}) {
       sessions.push(payload)
       cb()
     }
@@ -42,8 +41,8 @@ const createClient = (events: EventDeliveryPayload[], sessions: SessionDeliveryP
 
   // Mock _clientContext.run to execute the callback immediately
   // This simulates AsyncLocalStorage behavior for testing
-  client._clientContext = {
-    run: jest.fn((requestClient, callback) => callback())
+  ;(client as any)._clientContext = {
+    run: jest.fn((requestClient: Client, callback: Function) => callback())
   }
 
   return client
@@ -53,14 +52,14 @@ describe('plugin: cloudflare workers', () => {
   it('has a name', () => {
     expect(BugsnagPluginCloudflareWorkers.name).toBe('cloudflareWorkers')
 
-    const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers] })
+    const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers as any] })
     const plugin = client.getPlugin('cloudflareWorkers')
 
     expect(plugin).toBeTruthy()
   })
 
   it('exports a "createHandler" function', () => {
-    const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers] })
+    const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers as any] })
     const plugin = client.getPlugin('cloudflareWorkers')
 
     expect(plugin).toMatchObject({ createHandler: expect.any(Function) })
@@ -104,8 +103,8 @@ describe('plugin: cloudflare workers', () => {
     await ctx._waitForAllPromises()
 
     // Verify _clientContext.run was called with a cloned client
-    expect(client._clientContext.run).toHaveBeenCalledTimes(1)
-    expect(client._clientContext.run).toHaveBeenCalledWith(
+    expect((client as any)._clientContext.run).toHaveBeenCalledTimes(1)
+    expect((client as any)._clientContext.run).toHaveBeenCalledWith(
       expect.any(Client),
       expect.any(Function)
     )
@@ -122,7 +121,6 @@ describe('plugin: cloudflare workers', () => {
         'cf-connecting-ip': '203.0.113.1'
       }
     })
-    // @ts-expect-error _metadata is a private property on Event
     expect(event._metadata?.request).toMatchObject({
       url: 'https://example.com/test?foo=bar&baz=qux',
       path: '/test',
@@ -140,21 +138,21 @@ describe('plugin: cloudflare workers', () => {
   })
 
   it('logs an error if flush times out', async () => {
-    const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers] })
+    const client = new Client({ apiKey: 'AN_API_KEY', plugins: [BugsnagPluginCloudflareWorkers as any] })
     client._logger.error = jest.fn()
 
     client._delivery = {
-      sendEvent (payload, cb = () => {}) {
+      sendEvent (payload: EventDeliveryPayload, cb = () => {}) {
         setTimeout(cb, 250)
       },
-      sendSession (payload, cb = () => {}) {
+      sendSession (payload: SessionDeliveryPayload, cb = () => {}) {
         setTimeout(cb, 250)
       }
     }
 
     // Mock _clientContext.run to execute the callback immediately
-    client._clientContext = {
-      run: jest.fn((requestClient, callback) => callback())
+    ;(client as any)._clientContext = {
+      run: jest.fn((requestClient: Client, callback: Function) => callback())
     }
 
     const timeoutError = new Error('flush timed out after 20ms')
@@ -219,8 +217,8 @@ describe('plugin: cloudflare workers', () => {
     expect(await response?.text()).toBe('Hello World! test value')
 
     // Verify _clientContext.run was called
-    expect(client._clientContext.run).toHaveBeenCalledTimes(1)
-    expect(client._clientContext.run).toHaveBeenCalledWith(
+    expect((client as any)._clientContext.run).toHaveBeenCalledTimes(1)
+    expect((client as any)._clientContext.run).toHaveBeenCalledWith(
       expect.any(Client),
       expect.any(Function)
     )
@@ -261,12 +259,11 @@ describe('plugin: cloudflare workers', () => {
     await ctx._waitForAllPromises()
 
     // Verify _clientContext.run was called
-    expect(client._clientContext.run).toHaveBeenCalledTimes(1)
+    expect((client as any)._clientContext.run).toHaveBeenCalledTimes(1)
 
     expect(events).toHaveLength(1)
 
     const event = events[0].events[0]
-    // @ts-expect-error errors property not on public Event type
     expect(event.errors[0].errorMessage).toBe('badness')
     expect(event.unhandled).toBe(true)
 
@@ -387,10 +384,10 @@ describe('plugin: cloudflare workers', () => {
     await ctx2._waitForAllPromises()
 
     // Verify _clientContext.run was called twice with different cloned clients
-    expect(client._clientContext.run).toHaveBeenCalledTimes(2)
+    expect((client as any)._clientContext.run).toHaveBeenCalledTimes(2)
 
-    const firstCallClient = (client._clientContext.run as jest.Mock).mock.calls[0][0]
-    const secondCallClient = (client._clientContext.run as jest.Mock).mock.calls[1][0]
+    const firstCallClient = ((client as any)._clientContext.run as jest.Mock).mock.calls[0][0]
+    const secondCallClient = ((client as any)._clientContext.run as jest.Mock).mock.calls[1][0]
 
     // Both should be Client instances but different instances
     expect(firstCallClient).toBeInstanceOf(Client)
@@ -414,7 +411,6 @@ describe('plugin: cloudflare workers', () => {
         'x-custom-header': 'request1'
       })
     })
-    // @ts-expect-error _metadata is a private property on Event
     expect(event1._metadata?.request).toMatchObject({
       url: 'https://example.com/request1?param1=value1',
       path: '/request1',
@@ -436,7 +432,6 @@ describe('plugin: cloudflare workers', () => {
         'x-custom-header': 'request2'
       })
     })
-    // @ts-expect-error _metadata is a private property on Event
     expect(event2._metadata?.request).toMatchObject({
       url: 'https://example.com/request2?param2=value2',
       path: '/request2',

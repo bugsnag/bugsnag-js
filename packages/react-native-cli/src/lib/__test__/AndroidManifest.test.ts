@@ -193,7 +193,7 @@ test('configure(): endpoints only, missing file', async () => {
     sessionsEndpoint: 'SESSIONS_ENDPOINT_GOES_HERE'
   }
 
-  await configure('/random/path', options, logger)
+  await configure('/random/path', options as any, logger)
   expect(readFileMock).toHaveBeenCalledWith('/random/path/android/app/src/main/AndroidManifest.xml', 'utf8')
   expect(writeFileMock).not.toHaveBeenCalled()
 
