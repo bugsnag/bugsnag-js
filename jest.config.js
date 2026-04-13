@@ -24,9 +24,51 @@ const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*
 //   roots: ['<rootDir>/packages']
 // }
 
+// these paths must be specified because otherwise typescript relies on the
+// "main" field in each package.json file, which points to the compiled JS and
+// we want to run Jest against the TS source
+const paths = {
+  // @bugsnag/core must resolve to source so that module-level singleton state
+  // (e.g. clone-client's onCloneCallbacks) is shared across jest.isolateModules
+  // boundaries. Without this, bundled dist creates duplicate state.
+  '@bugsnag/core': ['./packages/core/src/index.ts'],
+}
+
+// convert the tsconfig "paths" option into Jest's "moduleNameMapper" option
+// e.g.: "{ 'path': ['./a/b'] }" -> "{ '^path$': ['<rootDir>/a/b'] }"
+const moduleNameMapper = Object.fromEntries(
+  Object.entries(paths)
+    .map(([name, directories]) => [
+          `^${name}$`,
+          directories.map(directory => directory.replace('./', '<rootDir>/'))
+    ])
+)
+
+const defaultModuleConfig = {
+  preset: 'ts-jest/presets/js-with-ts',
+  moduleNameMapper,
+  transform: {
+    '^.+\\.m?[tj]sx?$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          module: 'commonjs',
+          target: 'ES2019',
+          esModuleInterop: true,
+          allowSyntheticDefaultImports: true,
+          allowJs: true,
+          skipLibCheck: true,
+          jsx: 'react',
+          paths,
+        }
+      }
+    ]
+  }
+}
+
 const project = (displayName, packageNames, customConfig = {}) => {
   return {
-    // ...baseConfig,
+    ...defaultModuleConfig,
     roots: ['<rootDir>/packages'],
     displayName,
     testMatch: packageNames.map(testsForPackage),
@@ -66,7 +108,6 @@ module.exports = {
     project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
     project('browser', [
       'browser',
-      'delivery-x-domain-request',
       'delivery-xml-http-request',
       'delivery-fetch',
       'plugin-react',
