@@ -1,10 +1,34 @@
-const RequestTracker = require('../lib/request-tracker')
-const createFetchTracker = require('../lib/fetch-tracker')
-const createXhrTracker = require('../lib/xhr-tracker')
+import RequestTracker, { RequestStartContext } from '../src/request-tracker'
+import createFetchTracker from '../src/fetch-tracker'
+import createXhrTracker from '../src/xhr-tracker'
+
+interface FetchTrackerGlobal {
+  fetch: typeof fetch & { polyfill?: boolean }
+  __bugsnag_fetch_tracker__?: RequestTracker
+}
+
+
+interface XhrTrackerGlobal {
+  XMLHttpRequest: typeof XMLHttpRequest
+  WeakMap: typeof WeakMap
+  __bugsnag_xhr_tracker__?: RequestTracker
+}
 
 // Mock environment
-const mockGlobal = {
-  fetch: jest.fn()
+const mockGlobal: FetchTrackerGlobal = {
+  fetch: jest.fn(),
+  __bugsnag_fetch_tracker__: undefined
+}
+
+interface MockXMLHttpRequest {
+  method: string | null
+  url: string | null
+  data: string | null
+  body: string | null
+  headers: { [key: string]: string }
+  readyState: number | null
+  status: number
+  listeners: { [key: string]: Function[] }
 }
 
 // Mock XMLHttpRequest
@@ -15,12 +39,12 @@ class MockXMLHttpRequest {
     this.listeners = {}
   }
 
-  open (method, url) {
+  open (method: string, url: string) {
     this.method = method
     this.url = url
   }
 
-  send (body) {
+  send (body: string | null = null) {
     this.body = body
     // Simulate async request
     setTimeout(() => {
@@ -34,20 +58,20 @@ class MockXMLHttpRequest {
     return ''
   }
 
-  addEventListener (event, listener) {
+  addEventListener (event: string, listener: Function) {
     if (!this.listeners[event]) {
       this.listeners[event] = []
     }
     this.listeners[event].push(listener)
   }
 
-  removeEventListener (event, listener) {
+  removeEventListener (event: string, listener: Function) {
     if (this.listeners[event]) {
       this.listeners[event] = this.listeners[event].filter(l => l !== listener)
     }
   }
 
-  _triggerEvent (event, data = {}) {
+  _triggerEvent (event: string, data: any = {}) {
     if (this.listeners[event]) {
       this.listeners[event].forEach(listener => listener(data))
     }
@@ -59,8 +83,8 @@ class MockXMLHttpRequest {
 }
 
 // Mock global with XMLHttpRequest
-const mockGlobalWithXHR = {
-  XMLHttpRequest: MockXMLHttpRequest,
+const mockGlobalWithXHR: XhrTrackerGlobal = {
+  XMLHttpRequest: MockXMLHttpRequest as unknown as typeof XMLHttpRequest,
   WeakMap: WeakMap
 }
 
@@ -85,7 +109,7 @@ describe('@bugsnag/request-tracker', () => {
       tracker.onStart(callback1)
       tracker.onStart(callback2)
 
-      const context = { url: 'https://example.com', method: 'GET', startTime: Date.now() }
+      const context = { type: 'fetch', url: 'https://example.com', method: 'GET', startTime: Date.now() } as RequestStartContext
       tracker.start(context)
 
       expect(callback1).toHaveBeenCalledWith(context)
@@ -103,9 +127,9 @@ describe('@bugsnag/request-tracker', () => {
       tracker.onStart(errorCallback)
       tracker.onStart(goodCallback)
 
-      const context = { url: 'https://example.com', method: 'GET', startTime: Date.now() }
+      const context = { type: 'fetch', url: 'https://example.com', method: 'GET', startTime: Date.now() } as RequestStartContext
       const result = tracker.start(context)
-
+      
       expect(errorCallback).toHaveBeenCalled()
       expect(goodCallback).toHaveBeenCalled()
       expect(result.onRequestEnd).toBeDefined()
@@ -131,7 +155,7 @@ describe('@bugsnag/request-tracker', () => {
 
     it('should not throw error if fetch is not available', () => {
       const globalWithoutFetch = {}
-      expect(() => createFetchTracker(globalWithoutFetch)).not.toThrow()
+      expect(() => createFetchTracker(globalWithoutFetch as unknown as FetchTrackerGlobal)).not.toThrow()
     })
 
     it('should wrap fetch and call callbacks', async () => {
@@ -140,7 +164,7 @@ describe('@bugsnag/request-tracker', () => {
 
       const tracker = createFetchTracker(mockGlobal)
       const callback = jest.fn().mockReturnValue({ onRequestEnd: jest.fn() })
-      tracker.onStart(callback)
+      tracker?.onStart(callback)
 
       await mockGlobal.fetch('https://example.com')
 
@@ -157,7 +181,7 @@ describe('@bugsnag/request-tracker', () => {
 
       const tracker = createFetchTracker(mockGlobal)
       const callback = jest.fn().mockReturnValue({ onRequestEnd: jest.fn() })
-      tracker.onStart(callback)
+      tracker?.onStart(callback)
 
       const headers = { 'x-token': 'super-secret-token' }
       await mockGlobal.fetch('https://example.com', { method: 'POST', headers })
@@ -204,7 +228,7 @@ describe('@bugsnag/request-tracker', () => {
         WeakMap: WeakMap
       }
 
-      const tracker = createXhrTracker(globalWithoutAddEventListener)
+      const tracker = createXhrTracker(globalWithoutAddEventListener as unknown as XhrTrackerGlobal)
       expect(tracker).toBeUndefined()
     })
 
@@ -217,7 +241,7 @@ describe('@bugsnag/request-tracker', () => {
         }
       }
 
-      const tracker = createXhrTracker(globalWithoutWeakMap)
+      const tracker = createXhrTracker(globalWithoutWeakMap as unknown as XhrTrackerGlobal)
       expect(tracker).toBeUndefined()
     })
 
@@ -234,7 +258,7 @@ describe('@bugsnag/request-tracker', () => {
     it('should track XHR requests and call callbacks', async () => {
       const tracker = createXhrTracker(mockGlobalWithXHR)
       const callback = jest.fn().mockReturnValue({ onRequestEnd: jest.fn() })
-      tracker.onStart(callback)
+      tracker?.onStart(callback)
 
       const xhr = new mockGlobalWithXHR.XMLHttpRequest()
       xhr.open('POST', 'https://api.example.com/data')
@@ -255,7 +279,7 @@ describe('@bugsnag/request-tracker', () => {
       const tracker = createXhrTracker(mockGlobalWithXHR)
       const onRequestEnd = jest.fn()
       const callback = jest.fn().mockReturnValue({ onRequestEnd })
-      tracker.onStart(callback)
+      tracker?.onStart(callback)
 
       const xhr = new mockGlobalWithXHR.XMLHttpRequest()
       xhr.open('GET', 'https://example.com')
@@ -277,9 +301,9 @@ describe('@bugsnag/request-tracker', () => {
       const tracker = createXhrTracker(mockGlobalWithXHR)
       const onRequestEnd = jest.fn()
       const callback = jest.fn().mockReturnValue({ onRequestEnd })
-      tracker.onStart(callback)
+      tracker?.onStart(callback)
 
-      const xhr = new mockGlobalWithXHR.XMLHttpRequest()
+      const xhr = new mockGlobalWithXHR.XMLHttpRequest() as unknown as MockXMLHttpRequest
       xhr.open('GET', 'https://example.com')
       xhr.send()
 
@@ -297,7 +321,7 @@ describe('@bugsnag/request-tracker', () => {
     it('should handle request data when this is undefined in open', () => {
       const tracker = createXhrTracker(mockGlobalWithXHR)
       const callback = jest.fn().mockReturnValue({ onRequestEnd: jest.fn() })
-      tracker.onStart(callback)
+      tracker?.onStart(callback)
 
       // The wrapper should not set anything in WeakMap when this is undefined
       // but should still call the original method (which may throw)
@@ -320,7 +344,7 @@ describe('@bugsnag/request-tracker', () => {
     it('should handle request handlers when this is undefined in send', () => {
       const tracker = createXhrTracker(mockGlobalWithXHR)
       const callback = jest.fn().mockReturnValue({ onRequestEnd: jest.fn() })
-      tracker.onStart(callback)
+      tracker?.onStart(callback)
 
       // The wrapper should not set event handlers when this is undefined
       // but should still call the original method (which may throw)
@@ -344,7 +368,7 @@ describe('@bugsnag/request-tracker', () => {
       const tracker = createXhrTracker(mockGlobalWithXHR)
       const onRequestEnd = jest.fn()
       const callback = jest.fn().mockReturnValue({ onRequestEnd })
-      tracker.onStart(callback)
+      tracker?.onStart(callback)
 
       const xhr = new mockGlobalWithXHR.XMLHttpRequest()
 
@@ -371,9 +395,10 @@ describe('@bugsnag/request-tracker', () => {
     it('should handle method and url as non-strings gracefully', async () => {
       const tracker = createXhrTracker(mockGlobalWithXHR)
       const callback = jest.fn().mockReturnValue({ onRequestEnd: jest.fn() })
-      tracker.onStart(callback)
+      tracker?.onStart(callback)
 
       const xhr = new mockGlobalWithXHR.XMLHttpRequest()
+      // @ts-expect-error Testing non-string method and url
       xhr.open(123, { toString: () => 'https://example.com' })
       xhr.send()
 
@@ -402,10 +427,10 @@ describe('@bugsnag/request-tracker', () => {
 
       try {
         const tracker = createXhrTracker(mockGlobalWithXHR)
-        expect(typeof tracker._restore).toBe('function')
+        expect(typeof tracker?._restore).toBe('function')
 
         // Test restore functionality
-        tracker._restore()
+        tracker?._restore && tracker._restore()
 
         expect(mockGlobalWithXHR.XMLHttpRequest.prototype.open).toBe(MockXMLHttpRequest.prototype.open)
         expect(mockGlobalWithXHR.XMLHttpRequest.prototype.send).toBe(MockXMLHttpRequest.prototype.send)
@@ -421,7 +446,7 @@ describe('@bugsnag/request-tracker', () => {
 
       try {
         const tracker = createXhrTracker(mockGlobalWithXHR)
-        expect(tracker._restore).toBeUndefined()
+        expect(tracker?._restore).toBeUndefined()
       } finally {
         process.env.NODE_ENV = originalEnv
       }
@@ -436,9 +461,9 @@ describe('@bugsnag/request-tracker', () => {
       const callback2 = jest.fn().mockReturnValue(null) // This one returns null
       const callback3 = jest.fn().mockReturnValue({ onRequestEnd: onRequestEnd2 })
 
-      tracker.onStart(callback1)
-      tracker.onStart(callback2)
-      tracker.onStart(callback3)
+      tracker?.onStart(callback1)
+      tracker?.onStart(callback2)
+      tracker?.onStart(callback3)
 
       const xhr = new mockGlobalWithXHR.XMLHttpRequest()
       xhr.open('GET', 'https://example.com')
