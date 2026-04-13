@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { makeClientForPlugin } from '@bugsnag/electron-test-helpers'
 import { Breadcrumb } from '@bugsnag/core'
 import plugin from '../'
