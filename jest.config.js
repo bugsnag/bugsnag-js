@@ -5,12 +5,7 @@ const baseConfig = {
   preset: 'ts-jest/presets/js-with-ts',
   transform: {
     '^.+\\.[jt]sx?$': ['ts-jest', {
-      tsconfig: {
-        module: 'commonjs',
-        esModuleInterop: true,
-        allowSyntheticDefaultImports: true,
-        allowJs: true
-      },
+      tsconfig: '<rootDir>/tsconfig.test.json',
       diagnostics: {
         ignoreCodes: [7016]
       }

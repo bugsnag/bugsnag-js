@@ -11,5 +11,13 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "lib": [ "dom", "es2022" ]
-  }
+  },
+  "include:": [ "src/**/*" ],
+  "exclude": [
+    "packages/*/test/**/*.ts",
+    "packages/*/test/**/*.tsx",
+    "packages/*/src/**/*.test.ts",
+    "packages/*/src/test/**/*.ts",
+    "jest/**/*.ts"
+  ],
 }
