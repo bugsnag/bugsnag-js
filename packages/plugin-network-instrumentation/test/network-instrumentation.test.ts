@@ -1,6 +1,6 @@
-import Client, { Delivery } from '@bugsnag/core/client'
+import Client, { Delivery } from '@bugsnag/core'
 import createPlugin from '..'
-import Event from '@bugsnag/core/event'
+import Event from '@bugsnag/core'
 import { Plugin } from '@bugsnag/core'
 
 // Mock fetch globally
