@@ -65,10 +65,20 @@ const c = tseslint.config(
   },
   // Node environment
   {
-    files: ['jest/**/*.[js|mjs]', '**/*/babel.config.js', '**/*/rollup.config.mjs', '.rollup/index.mjs'],
+    files: ['jest/**/*.[js|mjs]', '**/*/babel.config.js', '**/*/rollup.config.mjs', '.rollup/index.mjs', 'scripts/**/*.js', 'dangerfile.js', '*.config.{js,mjs,cjs}'],
     languageOptions: {
       globals: {
         ...globals.node,
+      },
+    },
+  },
+  // Web Worker environment
+  {
+    files: ['packages/web-worker/src/**/*.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.worker,
+        ...globals.serviceworker,
       },
     },
   },
