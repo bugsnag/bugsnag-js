@@ -1,7 +1,5 @@
-import Client, { Delivery } from '@bugsnag/core'
+import { Client, Delivery, Event, Plugin } from '@bugsnag/core'
 import createPlugin from '..'
-import Event from '@bugsnag/core'
-import { Plugin } from '@bugsnag/core'
 
 const createMockDelivery = (notifyCallbacks: Event[]) => (): Delivery => ({
   sendEvent: (payload) => {
@@ -148,8 +146,8 @@ describe('plugin-network-instrumentation', () => {
 
       // Verify response metadata including body
       expect(event.response.statusCode).toBe(404)
-      expect(event.response.headers['content-type']).toBe('application/json')
-      expect(event.response.headers['content-length']).toBe('45')
+      expect(event.response.headers?.['content-type']).toBe('application/json')
+      expect(event.response.headers?.['content-length']).toBe('45')
       expect(event.response.body).toBe(JSON.stringify(xhr.response))
       expect(event.response.bodyLength).toBe(JSON.stringify(xhr.response).length)
     })
