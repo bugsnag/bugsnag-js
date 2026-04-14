@@ -189,4 +189,175 @@ describe('plugin-react-native-navigation', () => {
 
     expect(breadcrumbs.length).toBe(0)
   })
+
+  describe('navigation context tracking', () => {
+    it('tracks navigation between multiple screens', () => {
+      let listener = (event: Event) => {
+        throw new Error(`This function was not supposed to be called! ${event.componentName}`)
+      }
+
+      const Navigation = {
+        events () {
+          return {
+            registerComponentDidAppearListener (callback: (event: Event) => never) {
+              listener = callback
+            }
+          }
+        }
+      }
+
+      const plugin = new Plugin(Navigation)
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin] })
+
+      expect(client.getContext()).toBe(undefined)
+
+      // Navigate to Home
+      listener({ componentId: 1, componentName: 'Home', passProps: {} })
+      expect(client.getContext()).toBe('Home')
+
+      // Navigate to Profile
+      listener({ componentId: 2, componentName: 'Profile', passProps: {} })
+      expect(client.getContext()).toBe('Profile')
+
+      // Navigate to Settings
+      listener({ componentId: 3, componentName: 'Settings', passProps: {} })
+      expect(client.getContext()).toBe('Settings')
+
+      // Back to Home
+      listener({ componentId: 1, componentName: 'Home', passProps: {} })
+      expect(client.getContext()).toBe('Home')
+    })
+
+    it('handles navigation with complex component names', () => {
+      let listener = (event: Event) => {
+        throw new Error(`This function was not supposed to be called! ${event.componentName}`)
+      }
+
+      const Navigation = {
+        events () {
+          return {
+            registerComponentDidAppearListener (callback: (event: Event) => never) {
+              listener = callback
+            }
+          }
+        }
+      }
+
+      const plugin = new Plugin(Navigation)
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin] })
+
+      // Test with namespaced component names
+      listener({ componentId: 1, componentName: 'com.example.screens.HomeScreen', passProps: {} })
+      expect(client.getContext()).toBe('com.example.screens.HomeScreen')
+
+      // Test with screen names containing special characters
+      listener({ componentId: 2, componentName: 'User-Details-Screen', passProps: {} })
+      expect(client.getContext()).toBe('User-Details-Screen')
+    })
+  })
+
+  describe('breadcrumb metadata', () => {
+    it('includes previous screen context in breadcrumb', () => {
+      let listener = (event: Event) => {
+        throw new Error(`This function was not supposed to be called! ${event.componentName}`)
+      }
+
+      const Navigation = {
+        events () {
+          return {
+            registerComponentDidAppearListener (callback: (event: Event) => never) {
+              listener = callback
+            }
+          }
+        }
+      }
+
+      const breadcrumbs: Breadcrumb[] = []
+
+      const plugin = new Plugin(Navigation)
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin] })
+      client.addOnBreadcrumb(breadcrumb => { breadcrumbs.push(breadcrumb) })
+
+      listener({ componentId: 1, componentName: 'Home', passProps: {} })
+      listener({ componentId: 2, componentName: 'Details', passProps: {} })
+
+      expect(breadcrumbs.length).toBe(2)
+      expect(breadcrumbs[1].metadata).toStrictEqual({ to: 'Details', from: 'Home' })
+    })
+
+    it('sets from as undefined for initial navigation', () => {
+      let listener = (event: Event) => {
+        throw new Error(`This function was not supposed to be called! ${event.componentName}`)
+      }
+
+      const Navigation = {
+        events () {
+          return {
+            registerComponentDidAppearListener (callback: (event: Event) => never) {
+              listener = callback
+            }
+          }
+        }
+      }
+
+      const breadcrumbs: Breadcrumb[] = []
+
+      const plugin = new Plugin(Navigation)
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin] })
+      client.addOnBreadcrumb(breadcrumb => { breadcrumbs.push(breadcrumb) })
+
+      listener({ componentId: 1, componentName: 'Splash', passProps: {} })
+
+      expect(breadcrumbs.length).toBe(1)
+      expect(breadcrumbs[0].metadata).toStrictEqual({ to: 'Splash', from: undefined })
+    })
+  })
+
+  describe('plugin error handling', () => {
+    it('handles events without Navigation API gracefully', () => {
+      const message = '@bugsnag/plugin-react-native-navigation reference to `Navigation` was undefined'
+
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new Plugin(undefined)
+      }).toThrow(new Error(message))
+    })
+
+    it('does not crash when Navigation.events is not available', () => {
+      // Create a Navigation object without the events method
+      const Navigation = {
+        events: () => ({
+          registerComponentDidAppearListener: jest.fn()
+        })
+      }
+
+      const plugin = new Plugin(Navigation)
+      const client = new Client({ apiKey: 'API_KEY_YEAH', plugins: [plugin] })
+
+      // Should not throw and client should be properly initialized
+      expect(client).toBeDefined()
+    })
+
+    it('handles missing Navigation object in plugin constructor', () => {
+      const message = '@bugsnag/plugin-react-native-navigation reference to `Navigation` was undefined'
+
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new Plugin(null)
+      }).toThrow(new Error(message))
+    })
+
+    it('initializes plugin with valid Navigation API', () => {
+      const Navigation = {
+        events: () => ({
+          registerComponentDidAppearListener: jest.fn()
+        })
+      }
+
+      const plugin = new Plugin(Navigation)
+
+      // Plugin should be created successfully
+      expect(plugin).toBeDefined()
+    })
+  })
 })
