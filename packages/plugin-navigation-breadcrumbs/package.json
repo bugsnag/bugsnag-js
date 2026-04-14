@@ -26,9 +26,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "*.js"
-  ],
+  "files": ["dist"],
   "scripts": {
     "clean": "rm -fr dist",
     "prebuild": "npm run clean",
