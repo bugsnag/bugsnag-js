@@ -35,6 +35,7 @@ BUGSNAG_PACKAGES = [
   "plugin-node-uncaught-exception",
   "plugin-node-unhandled-rejection",
   "plugin-server-session",
+  "plugin-stackframe-path-normaliser",
   "plugin-strip-project-root"
 ]
 
