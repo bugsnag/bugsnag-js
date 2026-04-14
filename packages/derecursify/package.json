@@ -2,13 +2,20 @@
   "name": "@bugsnag/derecursify",
   "version": "8.4.0",
   "description": "Internal utility for safely serializing objects",
-  "main": "dist/derecursify.js",
-  "module": "dist/derecursify.js",
-  "types": "dist/derecursify.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
+  "types": "./dist/cjs/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/derecursify.d.ts",
-      "default": "./dist/derecursify.js"
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.cjs"
+      }
     }
   },
   "publishConfig": {
@@ -23,8 +30,8 @@
   "scripts": {
     "clean": "rm -fr dist",
     "prebuild": "npm run clean",
-    "build": "tsc",
-    "test:types": "tsc -p tsconfig.json --noEmit"
+    "build": "rollup --config rollup.config.mjs",
+    "test:types": "tsc -p tsconfig.json"
   },
   "files": ["dist"]
 }
