@@ -37,7 +37,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/cuid": "^3.2.1",
+    "@bugsnag/cuid": "^3.2.2",
     "@bugsnag/safe-json-stringify": "^6.0.0",
     "error-stack-parser": "^2.0.3",
     "stack-generator": "^2.0.3"
