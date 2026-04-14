@@ -42,7 +42,9 @@ function createRollupConfig (options = defaultOptions()) {
             ...options.additionalReplacements,
           }
         }),
-        nodeResolve(),
+        nodeResolve({
+          preferBuiltins: true
+        }),
         commonjs(),
         typescript({
           tsconfig: './tsconfig.json',
@@ -77,7 +79,9 @@ function createRollupConfig (options = defaultOptions()) {
             ...options.additionalReplacements,
           }
         }),
-        nodeResolve(),
+        nodeResolve({
+          preferBuiltins: true
+        }),
         commonjs(),
         typescript({
           tsconfig: './tsconfig.json',

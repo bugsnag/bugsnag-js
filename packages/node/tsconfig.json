@@ -1,11 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "declaration": true,
-    "declarationDir": "./dist/types",
-    "sourceMap": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationDir": "dist/types",
     "types": ["node"],
   },
-  "include": ["src/**/*.ts", "bugsnag-packages.d.ts"]
+  "include": ["src/**/*.ts"]
 }
