@@ -1,6 +1,7 @@
 import createRollupConfig from '../../.rollup/index.mjs'
 
 export default createRollupConfig({
+  input: './src/bugsnag.ts',
   external: [
     '@bugsnag/core',
     '@bugsnag/plugin-node-surrounding-code',
