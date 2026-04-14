@@ -11,7 +11,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": ["path-normaliser.js"],
+  "files": ["*.js"],
   "author": "Bugsnag",
   "license": "MIT",
   "peerDependencies": {

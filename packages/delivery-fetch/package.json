@@ -12,6 +12,7 @@
     "publishConfig": {
         "access": "public"
     },
+    "files": ["*.js"],
     "license": "MIT",
     "dependencies": {
         "@bugsnag/json-payload": "^8.4.0"
