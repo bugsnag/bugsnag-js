@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-network-instrumentation",
-  "version": "8.8.1",
+  "version": "8.9.0",
   "main": "network-instrumentation.js",
   "types": "types/bugsnag-plugin-network-instrumentation.d.ts",
   "description": "@bugsnag/js plugin for HTTP error handling",
@@ -20,7 +20,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.8.0"
+    "@bugsnag/core": "^8.9.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
