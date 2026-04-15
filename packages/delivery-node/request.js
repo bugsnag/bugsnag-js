@@ -1,7 +1,6 @@
 const http = require('http')
 const https = require('https')
-// eslint-disable-next-line node/no-deprecated-api
-const { parse } = require('url')
+
 
 module.exports = ({ url, headers, body, agent }, cb) => {
   let didError = false
@@ -11,14 +10,14 @@ module.exports = ({ url, headers, body, agent }, cb) => {
     cb(err)
   }
 
-  const parsedUrl = parse(url)
+  const parsedUrl = new URL(url)
   const secure = parsedUrl.protocol === 'https:'
   const transport = secure ? https : http
   const req = transport.request({
     method: 'POST',
     hostname: parsedUrl.hostname,
     port: parsedUrl.port,
-    path: parsedUrl.path,
+    path: parsedUrl.pathname + parsedUrl.search,
     headers,
     agent
   })
