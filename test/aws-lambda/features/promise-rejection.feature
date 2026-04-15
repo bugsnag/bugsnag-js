@@ -6,7 +6,7 @@ Scenario Outline: unhandled promise rejections are reported
     When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/promise-rejection.json" event
     Then the lambda response "errorMessage" equals "Error: yikes"
     And the lambda response "errorType" equals "Runtime.UnhandledPromiseRejection"
-    And the lambda response "trace" is an array with 4 elements
+    And the lambda response "trace" is an array with 6 elements
     And the lambda response "trace.0" equals "Runtime.UnhandledPromiseRejection: Error: yikes"
     And the lambda response "body" is null
     And the lambda response "statusCode" is null
@@ -57,7 +57,7 @@ Scenario: promise rejections are reported when using serverless-express
     When I invoke the "ExpressFunction" lambda in "features/fixtures/serverless-express-app" with the "events/promise-rejection.json" event
     Then the lambda response "errorMessage" equals "Error: abc"
     And the lambda response "errorType" equals "Runtime.UnhandledPromiseRejection"
-    And the lambda response "trace" is an array with 4 elements
+    And the lambda response "trace" is an array with 6 elements
     And the lambda response "trace.0" equals "Runtime.UnhandledPromiseRejection: Error: abc"
     And the lambda response "body" is null
     And the lambda response "statusCode" is null
@@ -90,7 +90,7 @@ Scenario: promise rejections are reported when using hono
     When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/promise-rejection.json" event
     Then the lambda response "errorMessage" equals "Error: reject"
     And the lambda response "errorType" equals "Runtime.UnhandledPromiseRejection"
-    And the lambda response "trace" is an array with 4 elements
+    And the lambda response "trace" is an array with 6 elements
     And the lambda response "trace.0" equals "Runtime.UnhandledPromiseRejection: Error: reject"
     And the lambda response "body" is null
     And the lambda response "statusCode" is null
@@ -118,7 +118,7 @@ Scenario Outline: thrown non-error exceptions are reported when using hono
     When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/throw-non-error.json" event
     Then the lambda response "errorMessage" equals "1"
     And the lambda response "errorType" equals "Runtime.UnhandledPromiseRejection"
-    And the lambda response "trace" is an array with 4 elements
+    And the lambda response "trace" is an array with 6 elements
     And the lambda response "trace.0" equals "Runtime.UnhandledPromiseRejection: 1"
     And the lambda response "body" is null
     And the lambda response "statusCode" is null
