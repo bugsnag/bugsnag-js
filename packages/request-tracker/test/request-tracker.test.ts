@@ -429,7 +429,9 @@ describe('@bugsnag/request-tracker', () => {
         expect(typeof tracker?._restore).toBe('function')
 
         // Test restore functionality
-        tracker?._restore && tracker._restore()
+        if (tracker && typeof tracker._restore === 'function') {
+          tracker._restore()
+        }
 
         expect(mockGlobalWithXHR.XMLHttpRequest.prototype.open).toBe(MockXMLHttpRequest.prototype.open)
         expect(mockGlobalWithXHR.XMLHttpRequest.prototype.send).toBe(MockXMLHttpRequest.prototype.send)
