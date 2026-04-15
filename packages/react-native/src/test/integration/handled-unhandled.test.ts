@@ -1,4 +1,3 @@
-// @ts-expect-error no type declarations for native module
 import { NativeClient } from '../../native'
 
 jest.mock('react-native', () => {
