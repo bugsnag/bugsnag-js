@@ -40,12 +40,10 @@ describe('react native notifier', () => {
   beforeEach(() => {
     jest.isolateModules(() => {
       Bugsnag = require('..')
-    })
+    });
 
-
-    global.fetch = jest.fn()
-
-    global.XMLHttpRequest = jest.fn() as any
+    (global as any).fetch = jest.fn();
+    (global as any).XMLHttpRequest = jest.fn();
   })
 
   it('accepts plugins', () => {
