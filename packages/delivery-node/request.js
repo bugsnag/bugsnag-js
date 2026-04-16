@@ -1,7 +1,6 @@
 const http = require('http')
 const https = require('https')
 
-
 module.exports = ({ url, headers, body, agent }, cb) => {
   let didError = false
   const onError = (err) => {
