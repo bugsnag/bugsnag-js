@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- (plugin-react-native-navigation) Update react-native-navigation peer dependency to support v8 [#2727](https://github.com/bugsnag/bugsnag-js/pull/2727)
+
 ## [8.9.0] - 2026-04-08
 
 ### Fixed
