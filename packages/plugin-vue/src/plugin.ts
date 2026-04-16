@@ -1,7 +1,7 @@
 import installVue2 from './vue2'
 import installVue from './vue'
-import { Client } from '@bugsnag/core'
-import { VueApp } from './types'
+import type { Client } from '@bugsnag/core'
+import type { VueApp } from './types'
 
 declare global {
   interface Window {
