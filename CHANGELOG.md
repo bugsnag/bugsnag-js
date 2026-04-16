@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- (delivery-node) Replace deprecated `url.parse()` with `URL` constructor [#2730](https://github.com/bugsnag/bugsnag-js/pull/2730)
+
 ## [8.9.0] - 2026-04-08
 
 ### Fixed
