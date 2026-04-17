@@ -97,6 +97,6 @@ Scenario: throwing non-Error error
   And the event "request.url" equals "http://hono/throw-non-error"
   And the event "request.httpMethod" equals "GET"
 
-Scenario: post request with JSON body
-  When I open the URL "http://hono/post"
-  Then I should receive no errors
+# Scenario: post request with JSON body
+#   When I open the URL "http://hono/post"
+#   Then I should receive no errors

@@ -16,7 +16,6 @@ const app = new Hono();
 const middleware = Bugsnag.getPlugin('hono')
 
 app.use(middleware.requestHandler)
-
 app.use(middleware.errorHandler)
 
 app.get('/', (c) => {
@@ -52,14 +51,15 @@ app.get('/throw-non-error', async (c, next) => {
     throw 1 
 })
 
-app.get('/post-body', () => {
-    app.fetch('http://localhost/post', {
+app.get('/post-body', async (c) => {
+    const response = await app.fetch('http://127.0.0.1/post', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ a: 1, b: 2 })
     })
+    return response;
 })
 
 app.post('/post', async (c) => {
@@ -71,3 +71,12 @@ serve({
     fetch: app.fetch,
     port: 80
 });
+
+// Keep the process alive
+process.on('SIGTERM', () => {
+    process.exit(0)
+})
+
+process.on('SIGINT', () => {
+    process.exit(0)
+})
