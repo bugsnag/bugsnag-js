@@ -6,7 +6,7 @@
 
 - (plugin-inline-script-content) Fix strict mode compatibility by replacing `arguments` usage with rest parameters [#2711](https://github.com/bugsnag/bugsnag-js/pull/2711)
 
-### Added 
+### Added
 
 - (delivery-react-native) Handle request and response parameters [#2667](https://github.com/bugsnag/bugsnag-js/pull/2667)
 
@@ -30,6 +30,7 @@
 - Update bugsnag-android to [v6.23.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.23.0) [#2673](https://github.com/bugsnag/bugsnag-js/pull/2673)
 - Update bugsnag-android to [v6.25.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.25.0) [#2689](https://github.com/bugsnag/bugsnag-js/pull/2689)
 - Update bugsnag-cocoa to [v6.36.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.36.0) [#2707](https://github.com/bugsnag/bugsnag-js/pull/2707)
+Update bugsnag-android to [v6.26.0](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.26.0) [#2721](https://github.com/bugsnag/bugsnag-js/pull/2721)
 
 ## [8.8.1] - 2026-01-26
 
