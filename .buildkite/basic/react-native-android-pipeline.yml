@@ -47,7 +47,7 @@ steps:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk
               - --farm=bb
               - --device=ANDROID_12
-              - --appium-version=1.22
+              - --appium-version=2.19
               - --fail-fast
               - --no-tunnel
               - --aws-public-ip
