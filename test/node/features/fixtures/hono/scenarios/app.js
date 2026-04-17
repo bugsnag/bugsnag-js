@@ -52,6 +52,21 @@ app.get('/throw-non-error', async (c, next) => {
     throw 1 
 })
 
+app.get('/post-body', () => {
+    app.fetch('http://localhost/post', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ a: 1, b: 2 })
+    })
+})
+
+app.post('/post', async (c) => {
+    await c.req.raw.json();
+    return c.json({});
+});
+
 serve({
     fetch: app.fetch,
     port: 80
