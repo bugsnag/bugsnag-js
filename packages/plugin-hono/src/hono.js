@@ -37,7 +37,7 @@ module.exports = {
     })
 
     const errorHandler = createMiddleware(async (c, next) => {
-      next()
+      await next()
 
       if (!c.error || !client._config.autoDetectErrors) return
 
