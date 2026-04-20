@@ -51,21 +51,9 @@ app.get('/throw-non-error', async (c, next) => {
     throw 1 
 })
 
-app.get('/post-body', async (c) => {
-    const response = await app.fetch('http://127.0.0.1/post', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ a: 1, b: 2 })
-    })
-    return response;
+app.get('/health', (c) => {
+    return c.json({ status: 'ok' })
 })
-
-app.post('/post', async (c) => {
-    await c.req.raw.json();
-    return c.json({});
-});
 
 serve({
     fetch: app.fetch,

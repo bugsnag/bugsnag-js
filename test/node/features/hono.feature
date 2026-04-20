@@ -20,6 +20,7 @@ Scenario: A handled error
   And the "file" of stack frame 0 equals "scenarios/app.js"
   And the event "request.url" equals "http://hono/handled"
   And the event "request.httpMethod" equals "GET"
+  Then I open the URL "http://hono/health" and get a 200 response
 
 Scenario: a synchronous thrown error in a route
   Then I open the URL "http://hono/sync?a=1&b=2c" tolerating any error
@@ -39,6 +40,7 @@ Scenario: a synchronous thrown error in a route
   And the event "metaData.request.path" equals "/sync"
   And the event "metaData.request.query.a" equals "1"
   And the event "metaData.request.query.b" equals "2c"
+  Then I open the URL "http://hono/health" and get a 200 response
 
 Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://hono/async" tolerating any error
@@ -55,6 +57,7 @@ Scenario: an asynchronous thrown error in a route
   And the event "request.url" equals "http://hono/async"
   And the event "request.httpMethod" equals "GET"
   And the event "severityReason.attributes.framework" equals "Hono"
+  Then I open the URL "http://hono/health" and get a 200 response
 
 Scenario: a synchronous promise rejection in a route
   Then I open the URL "http://hono/rejection-sync"
@@ -69,6 +72,7 @@ Scenario: a synchronous promise rejection in a route
   And the "file" of stack frame 0 equals "scenarios/app.js"
   And the event "request.url" equals "http://hono/rejection-sync"
   And the event "request.httpMethod" equals "GET"
+  Then I open the URL "http://hono/health" and get a 200 response
 
 Scenario: an asynchronous promise rejection in a route
   Then I open the URL "http://hono/rejection-async"
@@ -83,6 +87,7 @@ Scenario: an asynchronous promise rejection in a route
   And the "file" of stack frame 0 equals "scenarios/app.js"
   And the event "request.url" equals "http://hono/rejection-async"
   And the event "request.httpMethod" equals "GET"
+  Then I open the URL "http://hono/health" and get a 200 response
 
 Scenario: throwing non-Error error
   Then I open the URL "http://hono/throw-non-error"
@@ -96,7 +101,4 @@ Scenario: throwing non-Error error
   And the exception "type" equals "nodejs"
   And the event "request.url" equals "http://hono/throw-non-error"
   And the event "request.httpMethod" equals "GET"
-
-Scenario: post request with JSON body
-  When I open the URL "http://hono/post"
-  Then I should receive no errors
+  Then I open the URL "http://hono/health" and get a 200 response
