@@ -93,7 +93,7 @@ Scenario: throwing non-Error error
   And the event "severity" equals "error"
   And the event "severityReason.type" equals "unhandledErrorMiddleware"
   And the exception "errorClass" equals "InvalidError"
-  And the exception "message" matches "hono middleware received a non-error. See \"hono middleware\" tab for more detail."
+  And the exception "message" matches "hono middleware received a non-error\."
   And the exception "type" equals "nodejs"
   And the event "request.url" equals "http://hono/throw-non-error"
   And the event "request.httpMethod" equals "GET"
