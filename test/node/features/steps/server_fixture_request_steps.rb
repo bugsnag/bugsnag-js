@@ -5,7 +5,7 @@ require 'net/http'
 # @step_input reqbody [String] urlencoded data to send.
 # @step_input url [String] The URL to post data to.
 # @step_input content_type [String] The content type of the data being sent.
-When("I POST the data {string} to the URL {string} with content type {string}") do |reqbody, url, content_type|
+When("I POST the data {string} to the URL {string} with the content type {string}") do |reqbody, url, content_type|
   Net::HTTP.post(URI(url),
                  reqbody,
                  'Content-Type' => content_type)
