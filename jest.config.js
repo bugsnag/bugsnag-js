@@ -1,52 +1,7 @@
 const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s?(x)`
 
-// Base configuration shared across all projects
-// const baseConfig = {
-//   preset: 'ts-jest/presets/js-with-ts',
-//   transform: {
-//     '^.+\\.[jt]sx?$': ['ts-jest', {
-//       tsconfig: '<rootDir>/tsconfig.test.json',
-//       diagnostics: {
-//         // 7016: untyped module imports, 2307: monorepo cross-package imports,
-//         // 7006/7031: implicit any params (tests not written with strict types)
-//         ignoreCodes: [7016, 2307, 7006, 7031]
-//       }
-//     }]
-//   },
-//   moduleNameMapper: {
-//     // Map monorepo @bugsnag/* packages to source (excluding published deps: cuid, safe-json-stringify, delivery-x-domain-request)
-//     '^@bugsnag/(?!cuid|safe-json-stringify|delivery-x-domain-request)([^/]+)/(.+)$': '<rootDir>/packages/$1/src/$2',
-//     '^@bugsnag/(?!cuid|safe-json-stringify|delivery-x-domain-request)([^/]+)$': '<rootDir>/packages/$1/src'
-//   },
-//   transformIgnorePatterns: [
-//     'node_modules/(?!(@bugsnag)/)'
-//   ],
-//   roots: ['<rootDir>/packages']
-// }
-
-// these paths must be specified because otherwise typescript relies on the
-// "main" field in each package.json file, which points to the compiled JS and
-// we want to run Jest against the TS source
-const paths = {
-  // @bugsnag/core must resolve to source so that module-level singleton state
-  // (e.g. clone-client's onCloneCallbacks) is shared across jest.isolateModules
-  // boundaries. Without this, bundled dist creates duplicate state.
-  '@bugsnag/core': ['./packages/core/src/index.ts'],
-}
-
-// convert the tsconfig "paths" option into Jest's "moduleNameMapper" option
-// e.g.: "{ 'path': ['./a/b'] }" -> "{ '^path$': ['<rootDir>/a/b'] }"
-const moduleNameMapper = Object.fromEntries(
-  Object.entries(paths)
-    .map(([name, directories]) => [
-          `^${name}$`,
-          directories.map(directory => directory.replace('./', '<rootDir>/'))
-    ])
-)
-
 const defaultModuleConfig = {
   preset: 'ts-jest/presets/js-with-ts',
-  moduleNameMapper,
   transform: {
     '^.+\\.m?[tj]sx?$': [
       'ts-jest',
@@ -58,8 +13,7 @@ const defaultModuleConfig = {
           allowSyntheticDefaultImports: true,
           allowJs: true,
           skipLibCheck: true,
-          jsx: 'react',
-          paths,
+          jsx: 'react'
         }
       }
     ]
