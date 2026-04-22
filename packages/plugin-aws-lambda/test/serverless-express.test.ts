@@ -1,17 +1,15 @@
 /**
  * @jest-environment node
  */
+import Bugsnag from '@bugsnag/node'
+import { Client } from '@bugsnag/core'
+import BugsnagPluginAwsLambda from '@bugsnag/plugin-aws-lambda'
+import BugsnagPluginExpress from '@bugsnag/plugin-express'
+import serverlessExpress from '@vendia/serverless-express'
+import express from 'express'
 
-// require the raw source files to avoid getting the built files - otherwise
-// we'd need to rebuild these packages to see any changes reflected in this file
-const Bugsnag = require('../../node/src/bugsnag').default
-const BugsnagPluginAwsLambda = require('../../plugin-aws-lambda')
-const BugsnagPluginExpress = require('../../plugin-express/src/express')
-const serverlessExpress = require('@vendia/serverless-express')
-const express = require('express')
-
-let sentEvents
-let sentSessions
+let sentEvents: any[] = []
+let sentSessions: any[] = []
 
 describe('serverless express', function () {
   beforeAll(() => {
@@ -167,9 +165,10 @@ function makeClient () {
   return client
 }
 
-function makeExpressApp (client) {
+function makeExpressApp (client: Client) {
   const app = express()
-  const middleware = client.getPlugin('express')
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const middleware = client.getPlugin('express')!
 
   app.use(middleware.requestHandler)
 
@@ -178,19 +177,19 @@ function makeExpressApp (client) {
   })
 
   app.get('/abc', function (req, res) {
-    req.bugsnag.notify(new Error('abc'))
+    req.bugsnag?.notify(new Error('abc'))
 
     res.send('abc')
   })
 
   app.get('/xyz', function (req, res) {
-    req.bugsnag.notify(new Error('xyz'))
+    req.bugsnag?.notify(new Error('xyz'))
 
     res.send('xyz')
   })
 
   app.get('/aaa', function (req, res) {
-    req.bugsnag.notify(new Error('aaa'))
+    req.bugsnag?.notify(new Error('aaa'))
 
     res.send(':^)')
   })
@@ -200,9 +199,10 @@ function makeExpressApp (client) {
   return app
 }
 
-function makeLambdaHandler (client) {
+function makeLambdaHandler (client: Client) {
   const app = makeExpressApp(client)
-  const bugsnagHandler = client.getPlugin('awsLambda').createHandler()
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const bugsnagHandler = client.getPlugin('awsLambda')!.createHandler()
 
   return bugsnagHandler(serverlessExpress({ app }))
 }
@@ -210,8 +210,8 @@ function makeLambdaHandler (client) {
 function makeAwsLambdaEvent (path = '/') {
   const url = new URL(path, 'http://localhost:3000')
 
-  const queryStringParameters = {}
-  const multiValueQueryStringParameters = {}
+  const queryStringParameters: Record<string, string | null> = {}
+  const multiValueQueryStringParameters: Record<string, string[]> = {}
 
   for (const name of url.searchParams.keys()) {
     queryStringParameters[name] = url.searchParams.get(name)
