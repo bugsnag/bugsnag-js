@@ -99,7 +99,7 @@ Scenario: throwing non-Error error
   And the event "request.httpMethod" equals "GET"
 
 Scenario: error handler awaits next()
-  When I POST the data "a=1&b=2&c=3&d=4" to the URL "http://hono/post-body"
+  When I POST the JSON data "{\"a\":1,\"b\":2}" to the URL "http://hono/post-body"
   Then I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false

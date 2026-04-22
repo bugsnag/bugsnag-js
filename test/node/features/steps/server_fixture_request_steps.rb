@@ -10,6 +10,20 @@ When("I POST the data {string} to the URL {string}") do |reqbody, url|
                  'Content-Type' => 'application/x-www-form-urlencoded')
 end
 
+# Attempts to POST a string of JSON data to a server.
+#
+# @step_input reqbody [String] JSON data to send.
+# @step_input url [String] The URL to post data to.
+When("I POST the JSON data {string} to the URL {string}") do |reqbody, url|
+  response = Net::HTTP.post(URI(url),
+                            reqbody,
+                            'Content-Type' => 'application/json')
+  
+  unless response.is_a?(Net::HTTPSuccess)
+    raise "POST request failed with response code #{response.code}. Response body:\n\n#{response.body}"
+  end
+end
+
 When('I open the URL {string} tolerating any error') do |url|
   begin
     URI(url).open(&:read)
