@@ -1,4 +1,4 @@
-import Client from '@bugsnag/core'
+import { Client } from '@bugsnag/core'
 
 declare const plugin: {
   load: (client: Client) => void
