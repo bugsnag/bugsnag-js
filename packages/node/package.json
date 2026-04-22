@@ -3,7 +3,6 @@
   "version": "8.8.0",
   "type": "module",
   "main": "./dist/cjs/bugsnag.js",
-  "module": "./dist/esm/bugsnag.js",
   "types": "./dist/cjs/bugsnag.d.ts",
   "exports": {
     ".": {
