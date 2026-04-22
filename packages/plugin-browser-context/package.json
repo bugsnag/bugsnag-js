@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-browser-context",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/context.cjs",
-  "module": "./dist/esm/context.mjs",
+  "main": "./dist/cjs/context.js",
+  "module": "./dist/esm/context.js",
   "types": "./dist/cjs/context.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/context.d.ts",
-        "default": "./dist/esm/context.mjs"
+        "default": "./dist/esm/context.js"
       },
       "require": {
         "types": "./dist/cjs/context.d.ts",
-        "default": "./dist/cjs/context.cjs"
+        "default": "./dist/cjs/context.js"
       }
     }
   },

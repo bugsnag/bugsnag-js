@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-window-onerror",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/onerror.cjs",
-  "module": "./dist/esm/onerror.mjs",
+  "main": "./dist/cjs/onerror.js",
+  "module": "./dist/esm/onerror.js",
   "types": "./dist/cjs/onerror.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/onerror.d.ts",
-        "default": "./dist/esm/onerror.mjs"
+        "default": "./dist/esm/onerror.js"
       },
       "require": {
         "types": "./dist/cjs/onerror.d.ts",
-        "default": "./dist/cjs/onerror.cjs"
+        "default": "./dist/cjs/onerror.js"
       }
     }
   },

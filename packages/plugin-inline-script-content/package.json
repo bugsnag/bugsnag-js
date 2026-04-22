@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-inline-script-content",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/inline-script-content.cjs",
-  "module": "./dist/esm/inline-script-content.mjs",
+  "main": "./dist/cjs/inline-script-content.js",
+  "module": "./dist/esm/inline-script-content.js",
   "types": "./dist/cjs/inline-script-content.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/inline-script-content.d.ts",
-        "default": "./dist/esm/inline-script-content.mjs"
+        "default": "./dist/esm/inline-script-content.js"
       },
       "require": {
         "types": "./dist/cjs/inline-script-content.d.ts",
-        "default": "./dist/cjs/inline-script-content.cjs"
+        "default": "./dist/cjs/inline-script-content.js"
       }
     }
   },

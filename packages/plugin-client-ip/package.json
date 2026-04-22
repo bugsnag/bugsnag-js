@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-client-ip",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/client-ip.cjs",
-  "module": "./dist/esm/client-ip.mjs",
+  "main": "./dist/cjs/client-ip.js",
+  "module": "./dist/esm/client-ip.js",
   "types": "./dist/cjs/client-ip.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/client-ip.d.ts",
-        "default": "./dist/esm/client-ip.mjs"
+        "default": "./dist/esm/client-ip.js"
       },
       "require": {
         "types": "./dist/cjs/client-ip.d.ts",
-        "default": "./dist/cjs/client-ip.cjs"
+        "default": "./dist/cjs/client-ip.js"
       }
     }
   },

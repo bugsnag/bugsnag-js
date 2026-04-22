@@ -1,18 +1,18 @@
 {
   "name": "@bugsnag/plugin-app-duration",
   "version": "8.8.0",
-  "main": "./dist/cjs/app-duration.cjs",
-  "module": "./dist/esm/app-duration.mjs",
+  "main": "./dist/cjs/app-duration.js",
+  "module": "./dist/esm/app-duration.js",
   "types": "./dist/cjs/app-duration.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/app-duration.d.ts",
-        "default": "./dist/esm/app-duration.mjs"
+        "default": "./dist/esm/app-duration.js"
       },
       "require": {
         "types": "./dist/cjs/app-duration.d.ts",
-        "default": "./dist/cjs/app-duration.cjs"
+        "default": "./dist/cjs/app-duration.js"
       }
     }
   },

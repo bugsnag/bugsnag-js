@@ -2,18 +2,18 @@
   "name": "@bugsnag/node",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/bugsnag.cjs",
-  "module": "./dist/esm/bugsnag.mjs",
+  "main": "./dist/cjs/bugsnag.js",
+  "module": "./dist/esm/bugsnag.js",
   "types": "./dist/cjs/bugsnag.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/bugsnag.d.ts",
-        "default": "./dist/esm/bugsnag.mjs"
+        "default": "./dist/esm/bugsnag.js"
       },
       "require": {
         "types": "./dist/cjs/bugsnag.d.ts",
-        "default": "./dist/cjs/bugsnag.cjs"
+        "default": "./dist/cjs/bugsnag.js"
       }
     }
   },

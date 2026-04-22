@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-strip-query-string",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/strip-query-string.cjs",
-  "module": "./dist/esm/strip-query-string.mjs",
+  "main": "./dist/cjs/strip-query-string.js",
+  "module": "./dist/esm/strip-query-string.js",
   "types": "./dist/cjs/strip-query-string.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/strip-query-string.d.ts",
-        "default": "./dist/esm/strip-query-string.mjs"
+        "default": "./dist/esm/strip-query-string.js"
       },
       "require": {
         "types": "./dist/cjs/strip-query-string.d.ts",
-        "default": "./dist/cjs/strip-query-string.cjs"
+        "default": "./dist/cjs/strip-query-string.js"
       }
     }
   },

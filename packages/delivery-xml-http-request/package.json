@@ -1,18 +1,18 @@
 {
   "name": "@bugsnag/delivery-xml-http-request",
   "version": "8.8.0",
-  "main": "./dist/cjs/delivery.cjs",
-  "module": "./dist/esm/delivery.mjs",
+  "main": "./dist/cjs/delivery.js",
+  "module": "./dist/esm/delivery.js",
   "types": "./dist/cjs/delivery.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/delivery.d.ts",
-        "default": "./dist/esm/delivery.mjs"
+        "default": "./dist/esm/delivery.js"
       },
       "require": {
         "types": "./dist/cjs/delivery.d.ts",
-        "default": "./dist/cjs/delivery.cjs"
+        "default": "./dist/cjs/delivery.js"
       }
     }
   },

@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-interaction-breadcrumbs",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/interaction-breadcrumbs.cjs",
-  "module": "./dist/esm/interaction-breadcrumbs.mjs",
+  "main": "./dist/cjs/interaction-breadcrumbs.js",
+  "module": "./dist/esm/interaction-breadcrumbs.js",
   "types": "./dist/cjs/interaction-breadcrumbs.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/interaction-breadcrumbs.d.ts",
-        "default": "./dist/esm/interaction-breadcrumbs.mjs"
+        "default": "./dist/esm/interaction-breadcrumbs.js"
       },
       "require": {
         "types": "./dist/cjs/interaction-breadcrumbs.d.ts",
-        "default": "./dist/cjs/interaction-breadcrumbs.cjs"
+        "default": "./dist/cjs/interaction-breadcrumbs.js"
       }
     }
   },

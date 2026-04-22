@@ -1,7 +1,7 @@
 {
   "name": "@bugsnag/browser",
   "version": "8.8.1",
-  "main": "dist/index-cjs.cjs",
+  "main": "dist/index-cjs.js",
   "types": "dist/types/index-es.d.ts",
   "browser": "./dist/bugsnag.js",
   "sideEffects": false,

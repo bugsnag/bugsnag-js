@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-browser-session",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/session.cjs",
-  "module": "./dist/esm/session.mjs",
+  "main": "./dist/cjs/session.js",
+  "module": "./dist/esm/session.js",
   "types": "./dist/cjs/session.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/session.d.ts",
-        "default": "./dist/esm/session.mjs"
+        "default": "./dist/esm/session.js"
       },
       "require": {
         "types": "./dist/cjs/session.d.ts",
-        "default": "./dist/cjs/session.cjs"
+        "default": "./dist/cjs/session.js"
       }
     }
   },

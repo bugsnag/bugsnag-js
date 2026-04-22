@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-network-breadcrumbs",
   "version": "8.8.1",
   "type": "module",
-  "main": "./dist/cjs/network-breadcrumbs.cjs",
-  "module": "./dist/esm/network-breadcrumbs.mjs",
+  "main": "./dist/cjs/network-breadcrumbs.js",
+  "module": "./dist/esm/network-breadcrumbs.js",
   "types": "./dist/cjs/network-breadcrumbs.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/network-breadcrumbs.d.ts",
-        "default": "./dist/esm/network-breadcrumbs.mjs"
+        "default": "./dist/esm/network-breadcrumbs.js"
       },
       "require": {
         "types": "./dist/cjs/network-breadcrumbs.d.ts",
-        "default": "./dist/cjs/network-breadcrumbs.cjs"
+        "default": "./dist/cjs/network-breadcrumbs.js"
       }
     }
   },

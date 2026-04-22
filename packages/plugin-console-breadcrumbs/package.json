@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-console-breadcrumbs",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/console-breadcrumbs.cjs",
-  "module": "./dist/esm/console-breadcrumbs.mjs",
+  "main": "./dist/cjs/console-breadcrumbs.js",
+  "module": "./dist/esm/console-breadcrumbs.js",
   "types": "./dist/cjs/console-breadcrumbs.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/console-breadcrumbs.d.ts",
-        "default": "./dist/esm/console-breadcrumbs.mjs"
+        "default": "./dist/esm/console-breadcrumbs.js"
       },
       "require": {
         "types": "./dist/cjs/console-breadcrumbs.d.ts",
-        "default": "./dist/cjs/console-breadcrumbs.cjs"
+        "default": "./dist/cjs/console-breadcrumbs.js"
       }
     }
   },

@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-simple-throttle",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/throttle.cjs",
-  "module": "./dist/esm/throttle.mjs",
+  "main": "./dist/cjs/throttle.js",
+  "module": "./dist/esm/throttle.js",
   "types": "./dist/cjs/throttle.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/throttle.d.ts",
-        "default": "./dist/esm/throttle.mjs"
+        "default": "./dist/esm/throttle.js"
       },
       "require": {
         "types": "./dist/cjs/throttle.d.ts",
-        "default": "./dist/cjs/throttle.cjs"
+        "default": "./dist/cjs/throttle.js"
       }
     }
   },

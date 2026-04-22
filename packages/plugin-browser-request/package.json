@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-browser-request",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/request.cjs",
-  "module": "./dist/esm/request.mjs",
+  "main": "./dist/cjs/request.js",
+  "module": "./dist/esm/request.js",
   "types": "./dist/cjs/request.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/request.d.ts",
-        "default": "./dist/esm/request.mjs"
+        "default": "./dist/esm/request.js"
       },
       "require": {
         "types": "./dist/cjs/request.d.ts",
-        "default": "./dist/cjs/request.cjs"
+        "default": "./dist/cjs/request.js"
       }
     }
   },

@@ -2,18 +2,18 @@
   "name": "@bugsnag/plugin-browser-device",
   "version": "8.8.0",
   "type": "module",
-  "main": "./dist/cjs/device.cjs",
-  "module": "./dist/esm/device.mjs",
+  "main": "./dist/cjs/device.js",
+  "module": "./dist/esm/device.js",
   "types": "./dist/cjs/device.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/device.d.ts",
-        "default": "./dist/esm/device.mjs"
+        "default": "./dist/esm/device.js"
       },
       "require": {
         "types": "./dist/cjs/device.d.ts",
-        "default": "./dist/cjs/device.cjs"
+        "default": "./dist/cjs/device.js"
       }
     }
   },
