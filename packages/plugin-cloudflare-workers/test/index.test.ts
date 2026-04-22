@@ -1,5 +1,5 @@
-import BugsnagPluginCloudflareWorkers from '../src/'
-import Client, { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
+import BugsnagPluginCloudflareWorkers from '..'
+import { Client, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 import type { Request as CloudflareRequest, Response as CloudflareResponse, ExecutionContext, ExportedHandler, IncomingRequestCfProperties } from '@cloudflare/workers-types'
 
 // Extended ExecutionContext type for testing with helper method
