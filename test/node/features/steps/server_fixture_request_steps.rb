@@ -4,24 +4,11 @@ require 'net/http'
 #
 # @step_input reqbody [String] urlencoded data to send.
 # @step_input url [String] The URL to post data to.
-When("I POST the data {string} to the URL {string}") do |reqbody, url|
+# @step_input content_type [String] The content type of the data being sent.
+When("I POST the data {string} to the URL {string} with content type {string}") do |reqbody, url, content_type|
   Net::HTTP.post(URI(url),
                  reqbody,
-                 'Content-Type' => 'application/x-www-form-urlencoded')
-end
-
-# Attempts to POST a string of JSON data to a server.
-#
-# @step_input reqbody [String] JSON data to send.
-# @step_input url [String] The URL to post data to.
-When("I POST the JSON data {string} to the URL {string}") do |reqbody, url|
-  response = Net::HTTP.post(URI(url),
-                            reqbody,
-                            'Content-Type' => 'application/json')
-  
-  unless response.is_a?(Net::HTTPSuccess)
-    raise "POST request failed with response code #{response.code}. Response body:\n\n#{response.body}"
-  end
+                 'Content-Type' => content_type)
 end
 
 When('I open the URL {string} tolerating any error') do |url|

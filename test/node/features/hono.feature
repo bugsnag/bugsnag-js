@@ -99,13 +99,13 @@ Scenario: throwing non-Error error
   And the event "request.httpMethod" equals "GET"
 
 Scenario: error handler awaits next()
-  When I POST the JSON data "{\"a\":1,\"b\":2}" to the URL "http://hono/post-body"
+  When I POST the data "{\"a\":1,\"b\":2}" to the URL "http://hono/post-body" with the content type "application/json"
   Then I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is false
   And the event "severity" equals "warning"
   And the exception "errorClass" equals "Error"
-  And the exception "message" matches "error in post body route\."
+  And the exception "message" matches "error in post body route"
   And the exception "type" equals "nodejs"
   And the "file" of stack frame 0 equals "scenarios/app.js"
   And the event "request.url" equals "http://hono/post-body"
