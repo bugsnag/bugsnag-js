@@ -26,7 +26,7 @@ function createRollupConfig (options = defaultOptions()) {
       input: options.input || './src/index.ts',
       output: {
         dir: 'dist/esm',
-        entryFileNames: '[name].mjs',
+        entryFileNames: '[name].js',
         format: 'es',
         sourcemap: true,
         generatedCode: {
@@ -60,7 +60,7 @@ function createRollupConfig (options = defaultOptions()) {
       input: options.input || './src/index.ts',
       output: {
         dir: 'dist/cjs',
-        entryFileNames: '[name].cjs',
+        entryFileNames: '[name].js',
         format: 'cjs',
         sourcemap: true,
         generatedCode: {
