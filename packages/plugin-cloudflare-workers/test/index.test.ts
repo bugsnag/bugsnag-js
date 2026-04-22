@@ -1,4 +1,4 @@
-import BugsnagPluginCloudflareWorkers from '../src/'
+import BugsnagPluginCloudflareWorkers from '..'
 import { Client, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 import type { Request as CloudflareRequest, Response as CloudflareResponse, ExecutionContext, ExportedHandler, IncomingRequestCfProperties } from '@cloudflare/workers-types'
 
