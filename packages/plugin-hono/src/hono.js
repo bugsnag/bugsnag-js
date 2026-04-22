@@ -37,29 +37,36 @@ module.exports = {
     })
 
     const errorHandler = createMiddleware(async (c, next) => {
+      let rethrow = false
+
       try {
         // Catch non-errors thrown in routes without causing the route to hang by awaiting the next() call inside a try/catch block.
         // The error is then attached to the context and processed in the same way as errors thrown in routes.
         await next()
       } catch (err) {
         c.error = err
+        rethrow = true
       }
 
-      if (!c.error || !client._config.autoDetectErrors) return
+      if (!c.error) return
 
-      const event = client.Event.create(c.error, false, handledState, 'hono middleware', 1)
+      if (client._config.autoDetectErrors) {
+        const event = client.Event.create(c.error, false, handledState, 'hono middleware', 1)
 
-      if (c.bugsnag) {
-        c.bugsnag._notify(event)
-      } else {
-        client._logger.warn(
-          'c.bugsnag is not defined. Make sure the @bugsnag/plugin-hono requestHandler middleware is added first.'
-        )
-        const { metadata, request } = await getRequestAndMetadataFromReq(c)
-        event.request = { ...event.request, ...request }
-        event.addMetadata('request', metadata)
-        client._notify(event)
+        if (c.bugsnag) {
+          c.bugsnag._notify(event)
+        } else {
+          client._logger.warn(
+            'c.bugsnag is not defined. Make sure the @bugsnag/plugin-hono requestHandler middleware is added first.'
+          )
+          const { metadata, request } = await getRequestAndMetadataFromReq(c)
+          event.request = { ...event.request, ...request }
+          event.addMetadata('request', metadata)
+          client._notify(event)
+        }
       }
+
+      if (rethrow) throw c.error
     })
 
     return { requestHandler, errorHandler }
