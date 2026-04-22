@@ -2,7 +2,6 @@
   "name": "@bugsnag/plugin-react",
   "version": "8.8.0",
   "description": "React integration for @bugsnag/js",
-  "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/cjs/index.d.ts",
