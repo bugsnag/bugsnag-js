@@ -12,7 +12,6 @@
     "skipLibCheck": true,
     "lib": [ "dom", "es2022" ]
   },
-  "include:": [ "src/**/*" ],
   "exclude": [
     "packages/*/test/**/*.ts",
     "packages/*/test/**/*.tsx",
