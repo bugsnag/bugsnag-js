@@ -23,7 +23,7 @@ app.get('/', (c) => {
 })
 
 app.get('/handled', async (c, next) => {
-    Bugsnag.notify(new Error('handled'));
+    c.bugsnag.notify(new Error('handled'));
     await next();
 });
 
@@ -56,7 +56,7 @@ app.get('/throw-non-error', async (c, next) => {
 // Causes a 'Context is not finalized' Error if the error handler middleware does not `await next()`
 app.post('/post-body', async (c) => {
   await c.req.raw.json();
-  Bugsnag.notify(new Error('error in post body route'));
+  c.bugsnag.notify(new Error('error in post body route'));
   return c.json({ a: 'test' });
 });
 
