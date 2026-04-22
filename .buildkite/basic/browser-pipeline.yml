@@ -59,7 +59,6 @@ steps:
             run: "browser-maze-runner-bs"
             use-aliases: true
             command:
-              - "--fail-fast"
               - "--farm=bs"
               - "--browser={{matrix}}"
           artifacts#v1.5.0:
@@ -94,7 +93,6 @@ steps:
             run: "browser-maze-runner-bs"
             use-aliases: true
             command:
-              - "--fail-fast"
               - "--https"
               - "--farm=bs"
               - "--browser={{matrix}}"
@@ -127,7 +125,6 @@ steps:
             service-ports: true
             use-aliases: true
             command:
-              - "--fail-fast"
               - "--https"
               - "--farm=bb"
               - "--browser={{matrix}}"
@@ -155,7 +152,6 @@ steps:
             service-ports: true
             use-aliases: true
             command:
-              - "--fail-fast"
               - "--farm=bb"
               - "--browser=ie_11"
               - "--no-tunnel"
