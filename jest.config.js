@@ -6,6 +6,7 @@ const defaultModuleConfig = {
     '^.+\\.m?[tj]sx?$': [
       'ts-jest',
       {
+        isolatedModules: true,
         tsconfig: {
           module: 'commonjs',
           target: 'ES2019',
@@ -37,6 +38,7 @@ module.exports = {
     '<rootDir>/packages/[^/]+/dist/'
   ],
   testTimeout: 10000,
+  workerIdleMemoryLimit: '1GB',
   collectCoverageFrom: [
     `**/packages/*/src/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,
