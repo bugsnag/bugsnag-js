@@ -6,10 +6,9 @@ module.exports = api => {
     return {
       presets: [
         ['@babel/preset-env', {
-          // Target Chrome 43 and IE 11 for maximum compatibility
+          // Target Chrome 47 for maximum compatibility
           targets: {
-            chrome: '43',
-            ie: '11'
+            chrome: '47'
           },
           // Disable bugfixes to ensure maximum compatibility
           bugfixes: false,
