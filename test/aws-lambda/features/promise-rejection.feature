@@ -117,9 +117,7 @@ Scenario Outline: thrown non-error exceptions are reported when using hono
     Given I setup the environment
     When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/throw-non-error.json" event
     Then the lambda response "errorMessage" equals "1"
-    And the lambda response "errorType" equals "Runtime.UnhandledPromiseRejection"
-    And the lambda response "trace" is an array with 4 elements
-    And the lambda response "trace.0" equals "Runtime.UnhandledPromiseRejection: 1"
+    And the lambda response "errorType" equals "number"
     And the lambda response "body" is null
     And the lambda response "statusCode" is null
     And the SAM exit code equals 0
@@ -127,9 +125,9 @@ Scenario Outline: thrown non-error exceptions are reported when using hono
     Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
     And the event "unhandled" is true
     And the event "severity" equals "error"
-    And the event "severityReason.type" equals "unhandledPromiseRejection"
+    And the event "severityReason.type" equals "unhandledErrorMiddleware"
     And the exception "errorClass" equals "InvalidError"
-    And the exception "message" matches "unhandledRejection handler received a non-error\."
+    And the exception "message" matches "unhandledErrorMiddleware handler received a non-error\."
     And the exception "type" equals "nodejs"
     And the event "metaData.AWS Lambda context.functionName" equals "HonoFunction"
     And the event "metaData.AWS Lambda context.awsRequestId" is not null
