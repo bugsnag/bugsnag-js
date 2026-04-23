@@ -6,6 +6,7 @@ const defaultModuleConfig = {
     '^.+\\.m?[tj]sx?$': [
       'ts-jest',
       {
+        isolatedModules: true,
         tsconfig: {
           module: 'commonjs',
           target: 'ES2019',
@@ -34,6 +35,7 @@ const extensions = 'js,jsx,ts,tsx'
 
 module.exports = {
   testTimeout: 10000,
+  workerIdleMemoryLimit: '1GB',
   collectCoverageFrom: [
     `**/packages/*/src/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,
@@ -108,6 +110,7 @@ module.exports = {
       transform: {
         // Use ts-jest for TypeScript files
         '^.+\\.tsx?$': ['ts-jest', {
+          isolatedModules: true,
           tsconfig: {
             module: 'commonjs',
             esModuleInterop: true,
