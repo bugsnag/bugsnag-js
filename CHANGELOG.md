@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- (plugin-hono) Fix issue where error handler middleware did not `await next()` [#2735](https://github.com/bugsnag/bugsnag-js/pull/2735)
+
 ## [8.9.0] - 2026-04-08
 
 ### Fixed
