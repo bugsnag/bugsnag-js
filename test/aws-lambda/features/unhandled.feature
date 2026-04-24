@@ -132,7 +132,7 @@ Scenario: unhandled asynchronous exceptions are reported when using serverless-e
     And the event "session.events.unhandled" equals 1
 
 @hono-app
-Scenario Outline: unhandled exceptions are reported when using hono
+Scenario: unhandled exceptions are reported when using hono
     Given I setup the environment
     When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/unhandled.json" event
     And the SAM exit code equals 0
@@ -156,7 +156,7 @@ Scenario Outline: unhandled exceptions are reported when using hono
     And the event "session.events.unhandled" equals 1
 
 @hono-app
-Scenario Outline: unhandled asynchronous exceptions are reported when using hono
+Scenario: unhandled asynchronous exceptions are reported when using hono
     Given I setup the environment
     When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/unhandled-async.json" event
     And the SAM exit code equals 0
@@ -180,7 +180,7 @@ Scenario Outline: unhandled asynchronous exceptions are reported when using hono
     And the event "session.events.unhandled" equals 1
 
 @hono-app
-Scenario Outline: thrown non-error exceptions are reported when using hono
+Scenario: thrown non-error exceptions are reported when using hono
     Given I setup the environment
     When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/throw-non-error.json" event
     Then the lambda response "errorMessage" equals "1"
