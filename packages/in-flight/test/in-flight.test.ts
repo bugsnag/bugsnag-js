@@ -1,4 +1,4 @@
-import { Client, cloneClient, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
+import { Client as ClientType, cloneClient as cloneClientType, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 
 // The in-flight package has module level state which can leak between tests
 // We can avoid this using jest's 'isolateModules' but need to type the
@@ -6,7 +6,14 @@ import { Client, cloneClient, EventDeliveryPayload, SessionDeliveryPayload } fro
 import BugsnagInFlightJustForTypescript from '../types/bugsnag-in-flight'
 
 let bugsnagInFlight: typeof BugsnagInFlightJustForTypescript
-jest.isolateModules(() => { bugsnagInFlight = require('../src/in-flight') })
+let Client: typeof ClientType
+let cloneClient: typeof cloneClientType
+jest.isolateModules(() => {
+  bugsnagInFlight = require('../src/in-flight')
+  const core = require('@bugsnag/core')
+  Client = core.Client
+  cloneClient = core.cloneClient
+})
 const noop = () => {}
 const id = <T>(a: T) => a
 
@@ -47,7 +54,7 @@ describe('@bugsnag/in-flight', () => {
     const client = new Client({ apiKey: 'AN_API_KEY' })
 
     // eslint thinks this is never reassigned, but it clearly is
-    let cloned: Client // eslint-disable-line prefer-const
+    let cloned: InstanceType<typeof Client> // eslint-disable-line prefer-const
 
     const payloads: EventDeliveryPayload[] = []
     const sendSession = jest.fn()

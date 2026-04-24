@@ -1,7 +1,7 @@
 {
   "name": "@bugsnag/browser",
   "version": "8.8.1",
-  "main": "dist/index-cjs.cjs",
+  "main": "dist/index-cjs.js",
   "types": "dist/types/index-es.d.ts",
   "browser": "./dist/bugsnag.js",
   "sideEffects": false,
@@ -21,14 +21,12 @@
     "size": "../../bin/size dist/bugsnag.min.js",
     "clean": "rm -fr dist && mkdir dist",
     "prebuild": "npm run clean",
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "build": "rollup --config rollup.config.mjs",
     "cdn-upload": "../../bin/cdn-upload dist/*"
   },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-x-domain-request": "^8.8.0",
     "@bugsnag/delivery-xml-http-request": "^8.8.0",
     "@bugsnag/plugin-app-duration": "^8.8.0",
     "@bugsnag/plugin-browser-context": "^8.8.0",

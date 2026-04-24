@@ -17,12 +17,12 @@ const schema = {
       nativeCrashes: true
     }),
     allowPartialObject: true,
-    validate: value => true
+    validate: (value: unknown) => true
   }
 }
 
 describe('plugin: electron sessions', () => {
-  let NativeClient
+  let NativeClient: any
   beforeEach(() => {
     jest.useRealTimers()
     NativeClient = { setSession: jest.fn() }
@@ -33,8 +33,8 @@ describe('plugin: electron sessions', () => {
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      config,
-      schema,
+      config as any,
+      schema as any,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -77,14 +77,14 @@ describe('plugin: electron sessions', () => {
   })
 
   it('starts a session when the app returns to the foreground after being in the background for 60 seconds', () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const BrowserWindow = makeBrowserWindow()
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      config,
-      schema,
+      config as any,
+      schema as any,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -127,14 +127,14 @@ describe('plugin: electron sessions', () => {
   })
 
   it('does not start a session when the app switches between foreground and background', () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const BrowserWindow = makeBrowserWindow()
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      config,
-      schema,
+      config as any,
+      schema as any,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -183,14 +183,14 @@ describe('plugin: electron sessions', () => {
   })
 
   it('does not start a session when autoTrackSessions is disabled', () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const BrowserWindow = makeBrowserWindow()
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      { apiKey: 'abcabcabcabcabcabcabc1234567890f', autoTrackSessions: false },
-      schema,
+      { apiKey: 'abcabcabcabcabcabcabc1234567890f', autoTrackSessions: false } as any,
+      schema as any,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -220,8 +220,8 @@ describe('plugin: electron sessions', () => {
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      config,
-      schema,
+      config as any,
+      schema as any,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -244,8 +244,8 @@ describe('plugin: electron sessions', () => {
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      config,
-      schema,
+      config as any,
+      schema as any,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -259,8 +259,8 @@ describe('plugin: electron sessions', () => {
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      config,
-      schema,
+      config as any,
+      schema as any,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -277,14 +277,13 @@ describe('plugin: electron sessions', () => {
   })
 
   it('does not update the native session when nativeCrashes is disabled', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
     const BrowserWindow = makeBrowserWindow()
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      // @ts-expect-error enabledErrorTypes.nativeCrashes is not part of the core schema
-      { ...config, enabledErrorTypes: { nativeCrashes: false } },
-      schema,
+      { ...config, enabledErrorTypes: { nativeCrashes: false } } as any,
+      schema as any,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 
@@ -314,13 +313,13 @@ describe('plugin: electron sessions', () => {
   })
 
   it('does not update the native session when autoDetectErrors is disabled', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
     const BrowserWindow = makeBrowserWindow()
     const app = makeApp({ BrowserWindow })
 
     const client = new Client(
-      { ...config, autoDetectErrors: false },
-      schema,
+      { ...config, autoDetectErrors: false } as any,
+      schema as any,
       [plugin(app, BrowserWindow, NativeClient)]
     )
 

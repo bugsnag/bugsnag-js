@@ -1,4 +1,4 @@
-import { Schema } from '../../core/dist/types/config'
+import { schema } from '@bugsnag/core'
 import BugsnagIpcMain from '../bugsnag-ipc-main'
 import { Client, User, Plugin, Event, FeatureFlag } from '@bugsnag/core'
 
@@ -16,7 +16,7 @@ const Notifier = {
 }
 
 // @ts-expect-error invalid schema expected for testing
-const testSchema: Schema = {}
+const testSchema: typeof schema = {}
 
 describe('BugsnagIpcMain', () => {
   describe('constructor()', () => {
@@ -55,7 +55,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for updating grouping discriminator', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [mockClientStateManagerPlugin], Notifier)
       client.setGroupingDiscriminator = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle({}, 'setGroupingDiscriminator', JSON.stringify('grouping-discriminator'))
@@ -63,7 +63,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns the current grouping discriminator', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [mockClientStateManagerPlugin], Notifier)
       client.setGroupingDiscriminator('current-grouping-discriminator')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
@@ -258,7 +258,7 @@ describe('BugsnagIpcMain', () => {
         {
           load: (client) => {
             // mock an internal plugin that adds app data
-            const cb = (event: Event) => {
+            const cb: any = (event: Event) => {
               event.app = { ...event.app, name: 'testApp', type: 'test' }
               event.addMetadata('app', 'testingMode', 'unit')
             }
@@ -269,7 +269,7 @@ describe('BugsnagIpcMain', () => {
         {
           load: (client) => {
             // mock an internal plugin that adds device data
-            const cb = (event: Event) => {
+            const cb: any = (event: Event) => {
               event.device = { ...event.device, id: '123' }
               event.addMetadata('device', 'isOutdated', true)
             }
@@ -296,7 +296,7 @@ describe('BugsnagIpcMain', () => {
       client.addFeatureFlags([
         { name: 'flag1' },
         { name: 'flag2', variant: null },
-        // @ts-ignore:
+        // @ts-expect-error intentionally passing number instead of string variant
         { name: 'flag3', variant: 1234 },
         { name: 'flag4', variant: 'abc' }
       ])
@@ -354,7 +354,7 @@ describe('BugsnagIpcMain', () => {
       const client = new Client({
         apiKey: '123',
         codeBundleId: 'test-bundle-456'
-      }, schema, [mockClientStateManagerPlugin], Notifier)
+      }, schema as any, [mockClientStateManagerPlugin], Notifier)
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const payloadInfo = await bugsnagIpcMain.getPayloadInfo()
@@ -404,7 +404,7 @@ describe('BugsnagIpcMain', () => {
       const internalCb = jest.fn((event) => {
         event.addMetadata('internal', 'ran', true)
       })
-      // @ts-expect-error
+      // @ts-expect-error _internal is not part of the public callback type
       internalCb._internal = true
       client.addOnError(internalCb)
 

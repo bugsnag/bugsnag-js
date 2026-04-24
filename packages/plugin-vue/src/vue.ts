@@ -1,5 +1,5 @@
-import { Client } from '@bugsnag/core'
-import { ComponentPublicInstance, VueConstructor, VueErrorHandler } from './types'
+import type { Client } from '@bugsnag/core'
+import type { ComponentPublicInstance, VueConstructor, VueErrorHandler } from './types'
 
 export default (app: VueConstructor, client: Client) => {
   const prev = app.config.errorHandler

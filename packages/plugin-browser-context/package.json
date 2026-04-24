@@ -1,13 +1,20 @@
 {
   "name": "@bugsnag/plugin-browser-context",
   "version": "8.8.0",
-  "main": "dist/context.js",
-  "types": "dist/types/context.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/context.js",
+  "module": "./dist/esm/context.js",
+  "types": "./dist/cjs/context.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/context.d.ts",
-      "default": "./dist/context.js",
-      "import": "./dist/context.mjs"
+      "import": {
+        "types": "./dist/esm/context.d.ts",
+        "default": "./dist/esm/context.js"
+      },
+      "require": {
+        "types": "./dist/cjs/context.d.ts",
+        "default": "./dist/cjs/context.js"
+      }
     }
   },
   "description": "@bugsnag/js plugin to set event context in browsers",
@@ -31,8 +38,8 @@
     "@bugsnag/core": "^8.0.0"
   },
   "scripts": {
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

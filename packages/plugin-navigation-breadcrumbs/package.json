@@ -1,13 +1,20 @@
 {
   "name": "@bugsnag/plugin-navigation-breadcrumbs",
   "version": "8.8.0",
-  "main": "dist/navigation-breadcrumbs.js",
-  "types": "dist/types/navigation-breadcrumbs.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/navigation-breadcrumbs.js",
+  "module": "./dist/esm/navigation-breadcrumbs.js",
+  "types": "./dist/cjs/navigation-breadcrumbs.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/navigation-breadcrumbs.d.ts",
-      "default": "./dist/navigation-breadcrumbs.js",
-      "import": "./dist/navigation-breadcrumbs.mjs"
+      "import": {
+        "types": "./dist/esm/navigation-breadcrumbs.d.ts",
+        "default": "./dist/esm/navigation-breadcrumbs.js"
+      },
+      "require": {
+        "types": "./dist/cjs/navigation-breadcrumbs.d.ts",
+        "default": "./dist/cjs/navigation-breadcrumbs.js"
+      }
     }
   },
   "description": "@bugsnag/js plugin to record browser navigation as breadcrumbs",
@@ -19,13 +26,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "*.js"
-  ],
+  "files": ["dist"],
   "scripts": {
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   },
   "author": "Bugsnag",
   "license": "MIT",

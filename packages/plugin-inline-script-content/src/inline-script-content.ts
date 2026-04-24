@@ -5,7 +5,7 @@ const MAX_SCRIPT_LENGTH = 500000
 
 export default (doc = document, win = window) => ({
   load: (client: Client) => {
-    // @ts-expect-error trackInlineScripts is a valid config option
+    // @ts-expect-error trackInlineScripts is defined in this plugin's configSchema, not in core Config
     if (!client._config.trackInlineScripts) return
 
     const originalLocation = win.location.href
@@ -13,7 +13,7 @@ export default (doc = document, win = window) => ({
 
     // in IE8-10 the 'interactive' state can fire too soon (before scripts have finished executing), so in those
     // we wait for the 'complete' state before assuming that synchronous scripts are no longer executing
-    // @ts-expect-error Property 'attachEvent' does not exist on type 'Document'
+    // @ts-expect-error attachEvent exists on Document in old IE but not in modern type definitions
     const isOldIe = !!doc.attachEvent
     let DOMContentLoaded = isOldIe ? doc.readyState === 'complete' : doc.readyState !== 'loading'
     const getHtml = () => doc.documentElement.outerHTML
@@ -28,7 +28,7 @@ export default (doc = document, win = window) => ({
         html = getHtml()
         DOMContentLoaded = true
       }
-      // @ts-expect-error Argument of type 'IArguments' is not assignable to parameter of type '[ev: Event]'
+      // @ts-expect-error IArguments is not assignable to the expected parameter type for apply
       try { prev?.apply(this, arguments) } catch (e) {}
     }
 
@@ -63,7 +63,7 @@ export default (doc = document, win = window) => ({
     client.addOnError(event => {
       // remove any of our own frames that may be part the stack this
       // happens before the inline script check as it happens for all errors
-      // @ts-expect-error Type 'undefined' is not assignable to type 'string'
+      // @ts-expect-error f.method may be undefined but regex test handles it at runtime
       event.errors[0].stacktrace = event.errors[0].stacktrace.filter(f => !(/__trace__$/.test(f.method)))
 
       const frame = event.errors[0].stacktrace[0]
@@ -119,13 +119,13 @@ export default (doc = document, win = window) => ({
     ]
 
     eventListeners.map(o => {
-      // @ts-expect-error Element implicitly has an 'any' type because index expression is not of type 'number'
+      // @ts-expect-error indexing Window with a string to access global constructors dynamically
       if (!win[o] || !win[o].prototype || !Object.prototype.hasOwnProperty.call(win[o].prototype, 'addEventListener')) return
-      // @ts-expect-error Element implicitly has an 'any' type because index expression is not of type 'number'
+      // @ts-expect-error indexing Window with a string to access global constructors dynamically
       __proxy(win[o].prototype, 'addEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor)
       )
-      // @ts-expect-error Element implicitly has an 'any' type because index expression is not of type 'number'
+      // @ts-expect-error indexing Window with a string to access global constructors dynamically
       __proxy(win[o].prototype, 'removeEventListener', original =>
         __traceOriginalScript(original, eventTargetCallbackAccessor, true)
       )
@@ -140,9 +140,9 @@ export default (doc = document, win = window) => ({
         try {
           const cba = callbackAccessor(args)
           const cb = cba.get()
-          // @ts-expect-error this' implicitly has type 'any' because it does not have a type annotation.
+          // @ts-expect-error 'this' is implicitly any in this dynamic function wrapper context
           if (alsoCallOriginal) fn.apply(this, args)
-          // @ts-expect-error this' implicitly has type 'any' because it does not have a type annotation.
+          // @ts-expect-error 'this' is implicitly any in this dynamic function wrapper context
           if (typeof cb !== 'function') return fn.apply(this, args)
           if (cb.__trace__) {
             cba.replace(cb.__trace__)
@@ -171,7 +171,7 @@ export default (doc = document, win = window) => ({
           // WebDriverException: Message: Permission denied to access property "handleEvent"
         }
         // IE8 doesn't let you call .apply() on setTimeout/setInterval
-        // @ts-expect-error 'this' implicitly has type 'any' because it does not have a type annotation.
+        // @ts-expect-error 'this' is implicitly any in this dynamic function wrapper context
         if (fn.apply) return fn.apply(this, args)
         switch (args.length) {
           case 1: return fn(args[0])

@@ -1,17 +1,24 @@
 {
   "name": "@bugsnag/core",
   "version": "8.8.0",
-  "main": "dist/index.cjs",
-  "types": "dist/types/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.cjs"
-    }
-  },
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:bugsnag/bugsnag-js.git"
@@ -20,34 +27,19 @@
     "access": "public"
   },
   "files": [
-    "src",
-    "types",
     "dist"
   ],
   "scripts": {
-    "size": "../../bin/size dist/bugsnag.min.js",
-    "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   },
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/cuid": "^3.2.1",
+    "@bugsnag/cuid": "^3.2.2",
     "@bugsnag/safe-json-stringify": "^6.0.0",
     "error-stack-parser": "^2.0.3",
     "stack-generator": "^2.0.3"
-  },
-  "devDependencies": {
-    "@babel/preset-env": "^7.26.8",
-    "@babel/preset-typescript": "^7.26.0",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^28.0.2",
-    "@rollup/plugin-node-resolve": "^16.0.0",
-    "@rollup/plugin-replace": "^6.0.2",
-    "@rollup/plugin-typescript": "^12.1.2",
-    "@types/jest": "^26",
-    "rollup": "^4.24.0",
-    "tslib": "^2.8.1"
   }
 }

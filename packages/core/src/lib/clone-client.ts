@@ -20,7 +20,7 @@ type OnCloneCallback = (client: Client) => void
 const onCloneCallbacks: Array<OnCloneCallback> = []
 
 const cloneClient = <T extends Config>(client: Client<T>): Client<T> => {
-  // @ts-expect-error overwriting properties manually so do not need to match constructor signature
+  // @ts-expect-error passing empty args to Client constructor since properties are overwritten below
   const clone: InternalClient = new client.Client({}, {}, [], client.getNotifier())
 
   clone._config = client._config

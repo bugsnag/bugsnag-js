@@ -51,7 +51,7 @@ describe('worker notifier', () => {
     Bugsnag.start(testConfig)
     Bugsnag.notify(new Error('123'), undefined, (err, event) => {
       if (err) done(err)
-      expect(event.originalError.message).toBe('123')
+      expect((event.originalError as Error).message).toBe('123')
       expect(typedGlobal.fetch).toHaveBeenCalledWith('/echo/', expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({
@@ -137,13 +137,11 @@ describe('worker notifier', () => {
 
   describe('payload checksum behavior (Bugsnag-Integrity header)', () => {
     beforeEach(() => {
-      // @ts-ignore
-      window.isSecureContext = true
+      Object.defineProperty(window, 'isSecureContext', { value: true, writable: true, configurable: true })
     })
 
     afterEach(() => {
-      // @ts-ignore
-      window.isSecureContext = false
+      Object.defineProperty(window, 'isSecureContext', { value: false, writable: true, configurable: true })
     })
 
     it('includes the integrity header by default', (done) => {
@@ -234,15 +232,11 @@ describe('prevent-discard', () => {
     const err1 = new Error('123')
     err1.stack = 'Error: message from content\n    at chrome-extension://notifier.test.ts:19:46'
 
-    // @ts-ignore
     const err2 = new Error('456', { cause: err1 })
-    // @ts-ignore
     err2.cause = err1
     err2.stack = 'Error: 456\n    at generateErrors (chrome-extension://notifier.test.ts:14:16)\n    at chrome-extension://notifier.test.ts:19:46'
 
-    // @ts-ignore
     const err3 = new Error('789')
-    // @ts-ignore
     err3.cause = err2
     err3.stack = 'Error: 789\n    at generateErrors (chrome-extension://notifier.test.ts:12:15)\n    at chrome-extension://notifier.test.ts:19:46'
 

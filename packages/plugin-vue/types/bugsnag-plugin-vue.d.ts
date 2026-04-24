@@ -1,4 +1,4 @@
-import { Plugin, Client } from '@bugsnag/core'
+import type { Plugin } from '@bugsnag/core'
 
 interface VueConfig {
   errorHandler?: VueErrorHandler

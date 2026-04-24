@@ -51,7 +51,7 @@ const INTERNAL_DEPENDENCIES = [
   '@bugsnag/plugin-react-native-hermes',
   '@bugsnag/plugin-react-native-session',
   '@bugsnag/plugin-react-native-unhandled-rejection',
-  '@bugsnag/derecursify'
+  '@bugsnag/derecursify',
   '@bugsnag/request-tracker',
   '@bugsnag/plugin-network-instrumentation'
 ]

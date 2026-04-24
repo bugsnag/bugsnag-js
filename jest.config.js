@@ -1,22 +1,48 @@
 const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s?(x)`
 
-const project = (displayName, packageNames, config = {}) => ({
-  resolver: '<rootDir>/jest/node-exports-resolver',
-  roots: ['<rootDir>/packages'],
-  displayName,
-  testMatch: packageNames.map(testsForPackage),
-  ...config
-})
+const defaultModuleConfig = {
+  preset: 'ts-jest/presets/js-with-ts',
+  transform: {
+    '^.+\\.m?[tj]sx?$': [
+      'ts-jest',
+      {
+        isolatedModules: true,
+        tsconfig: {
+          module: 'commonjs',
+          target: 'ES2019',
+          esModuleInterop: true,
+          allowSyntheticDefaultImports: true,
+          allowJs: true,
+          skipLibCheck: true,
+          jsx: 'react'
+        }
+      }
+    ]
+  }
+}
+
+const project = (displayName, packageNames, customConfig = {}) => {
+  return {
+    ...defaultModuleConfig,
+    roots: ['<rootDir>/packages'],
+    displayName,
+    testMatch: packageNames.map(testsForPackage),
+    ...customConfig
+  }
+}
 
 const extensions = 'js,jsx,ts,tsx'
 
 module.exports = {
+  testTimeout: 10000,
+  workerIdleMemoryLimit: '1GB',
   collectCoverageFrom: [
-    `**/packages/*/**/*.{${extensions}}`,
+    `**/packages/*/src/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,
     `!**/*.test-*.{${extensions}}`,
     '!**/*.d.ts',
     '!**/dist/**',
+    '!**/node_modules/**',
     '!**/packages/js/**',
     '!<rootDir>/packages/plugin-angular/**/*',
     '!<rootDir>/packages/react-native/src/test/setup.js',
@@ -26,15 +52,18 @@ module.exports = {
     'json-summary', 'json', 'lcov', 'text', 'clover'
   ],
   projects: [
-    project('core', ['core']),
-    project('utilities', ['derecursify', 'json-payload']),
+    project('core', ['core'], {
+      testEnvironment: 'node'
+    }),
+    project('utilities', ['derecursify', 'json-payload'], {
+      testEnvironment: 'node'
+    }),
     project('web workers', ['web-worker'], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),
-    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser', 'request-tracker']),
+    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
     project('browser', [
       'browser',
-      'delivery-x-domain-request',
       'delivery-xml-http-request',
       'delivery-fetch',
       'plugin-react',
@@ -53,7 +82,8 @@ module.exports = {
       'plugin-simple-throttle',
       'plugin-console-breadcrumbs',
       'plugin-browser-session',
-      'plugin-network-instrumentation'
+      'plugin-network-instrumentation',
+      'request-tracker'
     ], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js',
       modulePathIgnorePatterns: ['.verdaccio', 'dist', 'examples', 'fixtures']
@@ -76,6 +106,29 @@ module.exports = {
       preset: 'react-native',
       setupFiles: [
         '<rootDir>/packages/react-native/src/test/setup.js'
+      ],
+      transform: {
+        // Use ts-jest for TypeScript files
+        '^.+\\.tsx?$': ['ts-jest', {
+          isolatedModules: true,
+          tsconfig: {
+            module: 'commonjs',
+            esModuleInterop: true,
+            allowSyntheticDefaultImports: true,
+            allowJs: false,
+            jsx: 'react'
+          },
+          diagnostics: {
+            ignoreCodes: [7016, 2307, 7006, 7031]
+          }
+        }],
+        // Use babel-jest (from react-native preset) for JS files (may contain Flow)
+        '^.+\\.jsx?$': 'babel-jest',
+        // Keep asset transformer from preset
+        '^.+\\.(bmp|gif|jpg|jpeg|mp4|png|psd|svg|webp)$': require.resolve('react-native/jest/assetFileTransformer.js')
+      },
+      transformIgnorePatterns: [
+        'node_modules/(?!(react-native|@react-native|@bugsnag)/)'
       ]
     }),
     project('node plugins', [
@@ -135,7 +188,9 @@ module.exports = {
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures']
     }),
-    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' }),
+    project('react native cli', ['react-native-cli'], { 
+      testEnvironment: 'node' 
+    }),
     project('cloudflare-workers', ['plugin-cloudflare-workers'], {
       testEnvironment: 'node',
       setupFilesAfterEnv: ['<rootDir>/packages/plugin-cloudflare-workers/test/setup.ts']

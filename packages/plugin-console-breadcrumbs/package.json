@@ -1,13 +1,20 @@
 {
   "name": "@bugsnag/plugin-console-breadcrumbs",
   "version": "8.8.0",
-  "main": "dist/console-breadcrumbs.js",
-  "types": "dist/types/console-breadcrumbs.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/console-breadcrumbs.js",
+  "module": "./dist/esm/console-breadcrumbs.js",
+  "types": "./dist/cjs/console-breadcrumbs.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/console-breadcrumbs.d.ts",
-      "default": "./dist/console-breadcrumbs.js",
-      "import": "./dist/console-breadcrumbs.mjs"
+      "import": {
+        "types": "./dist/esm/console-breadcrumbs.d.ts",
+        "default": "./dist/esm/console-breadcrumbs.js"
+      },
+      "require": {
+        "types": "./dist/cjs/console-breadcrumbs.d.ts",
+        "default": "./dist/cjs/console-breadcrumbs.js"
+      }
     }
   },
   "description": "@bugsnag/js plugin to record console log method calls as breadcrumbs",
@@ -31,8 +38,8 @@
     "@bugsnag/core": "^8.0.0"
   },
    "scripts": {
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

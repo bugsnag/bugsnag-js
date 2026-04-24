@@ -1,4 +1,4 @@
-@http_errors @requires_set @skip_safari_10 @skip_chrome_43 @skip_ie_11
+@http_errors @requires_set @skip_safari_10 @skip_chrome_47 @skip_chrome_53 @skip_ie_11
 Feature: HTTP Errors
 
   HTTP errors plugin reports network request failures, including those made using fetch, and xml http requests.

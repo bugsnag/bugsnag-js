@@ -44,13 +44,13 @@ export default (win = window, component = 'window onerror'): Plugin => ({
           const name = messageOrEvent.type ? `Event: ${messageOrEvent.type}` : 'Error'
           // attempt to find a message from one of the conventional properties, but
           // default to empty string (the event will fill it with a placeholder)
-          // @ts-expect-error TODO: messageOrEvent has no message or detail property
+          // @ts-expect-error message and detail are not on Event type but may exist at runtime
           const message = messageOrEvent.message || messageOrEvent.detail || ''
 
           event = client.Event.create({ name, message }, true, handledState, component, 1)
 
           // provide the original thing onerror received – not our error-like object we passed to _notify
-          // @ts-expect-error originalError is readonly
+          // @ts-expect-error originalError is readonly but must be set to the actual trigger value
           event.originalError = messageOrEvent
 
           // include the raw input as metadata – it might contain more info than we extracted
@@ -87,9 +87,9 @@ const decorateStack = (stack: Stackframe[], url?: string, lineNo?: number, charN
   if (!culprit.columnNumber) {
     if (isActualNumber(charNo)) {
       culprit.columnNumber = charNo
-      // @ts-expect-error event.errorCharacter does not exist on type 'Event' (deprecated)
+      // @ts-expect-error errorCharacter is a deprecated IE-specific property not in Event type
     } else if (window.event && isActualNumber(window.event.errorCharacter)) {
-      // @ts-expect-error event.errorCharacter does not exist on type 'Event' (deprecated)
+      // @ts-expect-error errorCharacter is a deprecated IE-specific property not in Event type
       culprit.columnNumber = window.event.errorCharacter
     }
   }

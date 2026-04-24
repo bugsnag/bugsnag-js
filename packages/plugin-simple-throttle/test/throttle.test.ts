@@ -1,10 +1,10 @@
 import plugin from '../src/throttle'
 
-import { Client } from '@bugsnag/core'
+import { Client, EventDeliveryPayload } from '@bugsnag/core'
 
 describe('plugin: throttle', () => {
-  const payloads = []
-  const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa' }, undefined, [plugin])
+  const payloads: EventDeliveryPayload[] = []
+  const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', maxEvents: 10 } as any, undefined, [plugin])
   const mockWarn = jest.fn()
   c._logger.warn = mockWarn
   c._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))

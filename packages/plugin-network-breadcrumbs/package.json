@@ -1,13 +1,20 @@
 {
   "name": "@bugsnag/plugin-network-breadcrumbs",
   "version": "8.8.1",
-  "main": "dist/network-breadcrumbs.js",
-  "types": "dist/types/network-breadcrumbs.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/network-breadcrumbs.js",
+  "module": "./dist/esm/network-breadcrumbs.js",
+  "types": "./dist/cjs/network-breadcrumbs.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/network-breadcrumbs.d.ts",
-      "default": "./dist/network-breadcrumbs.js",
-      "import": "./dist/network-breadcrumbs.mjs"
+      "import": {
+        "types": "./dist/esm/network-breadcrumbs.d.ts",
+        "default": "./dist/esm/network-breadcrumbs.js"
+      },
+      "require": {
+        "types": "./dist/cjs/network-breadcrumbs.d.ts",
+        "default": "./dist/cjs/network-breadcrumbs.js"
+      }
     }
   },
   "description": "@bugsnag/js plugin to record browser requests as breadcrumbs",
@@ -34,8 +41,8 @@
     "@bugsnag/core": "^8.0.0"
   },
    "scripts": {
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

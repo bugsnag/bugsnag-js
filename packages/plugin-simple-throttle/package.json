@@ -1,13 +1,20 @@
 {
   "name": "@bugsnag/plugin-simple-throttle",
   "version": "8.8.0",
-  "main": "dist/throttle.js",
-  "types": "dist/types/throttle.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/throttle.js",
+  "module": "./dist/esm/throttle.js",
+  "types": "./dist/cjs/throttle.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/throttle.d.ts",
-      "default": "./dist/throttle.js",
-      "import": "./dist/throttle.mjs"
+      "import": {
+        "types": "./dist/esm/throttle.d.ts",
+        "default": "./dist/esm/throttle.js"
+      },
+      "require": {
+        "types": "./dist/cjs/throttle.d.ts",
+        "default": "./dist/cjs/throttle.js"
+      }
     }
   },
   "description": "@bugsnag/js plugin to prevent too many events from being sent",
@@ -31,8 +38,8 @@
     "@bugsnag/core": "^8.0.0"
   },
   "scripts": {
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

@@ -53,7 +53,7 @@ export default (win = window): Plugin => {
               [Object.prototype.toString.call(event.originalError)]: {
                 name: event.originalError.name,
                 message: event.originalError.message,
-                // @ts-expect-error optional error.code property
+                // @ts-expect-error code is a non-standard property that may exist on some Error subtypes
                 code: event.originalError.code
               }
             })

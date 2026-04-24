@@ -57,7 +57,7 @@ Lorem ipsum dolor sit amet.
     const window = { location: { href: 'https://app.bugsnag.com/errors' }, document } as unknown as Window &typeof globalThis
     function EventTarget () {}
     EventTarget.prototype.addEventListener = addEventListener
-    // @ts-ignore
+    // @ts-expect-error EventTarget not defined on mock window object
     window.EventTarget = EventTarget
     const client = new Client({ apiKey: 'API_KEY_YEAH', trackInlineScripts: false }, undefined, [plugin(document, window)])
     // check the addEventListener function was not wrapped
@@ -198,7 +198,7 @@ Lorem ipsum dolor sit amet.
     } as unknown as Window &typeof globalThis
 
     Object.setPrototypeOf(window, Window.prototype)
-    // @ts-ignore
+    // @ts-expect-error assigning Window constructor on mock window object
     window.Window = Window
 
     function myfun () {}

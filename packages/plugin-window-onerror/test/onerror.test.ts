@@ -2,7 +2,7 @@
 
 import plugin from '../src/onerror'
 
-import { Client } from '@bugsnag/core'
+import { Client, EventDeliveryPayload } from '@bugsnag/core'
 
 type EnhancedWindow = Window & typeof globalThis & { onerror: OnErrorEventHandlerNonNull }
 
@@ -211,7 +211,7 @@ describe('plugin: window onerror', () => {
       client._setDelivery(client => ({ sendEvent: (payload) => payloads.push(payload), sendSession: () => {} }))
 
       // call onerror as it would be when `throw 'hello' is run`
-      // @ts-expect-error
+      // @ts-expect-error passing string instead of Error to simulate browser behavior
       window.onerror('uncaught exception: hello', '', 0, 0, 'hello')
 
       try {

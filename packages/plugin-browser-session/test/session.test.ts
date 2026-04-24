@@ -36,7 +36,7 @@ describe('plugin: sessions', () => {
         done()
       }
     }))
-    const sessionClient = c.startSession()
+    const sessionClient = c.startSession()!
     const Event = c.Event
     sessionClient.notify(new Error('broke'))
     sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))

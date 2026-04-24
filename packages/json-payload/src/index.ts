@@ -11,7 +11,7 @@ const EVENT_REDACTION_PATHS = [
 ]
 
 export const event = (event: EventDeliveryPayload, redactedKeys?: RedactedKey[]) => {
-  let payload = jsonStringify(event, null, null, { redactedPaths: EVENT_REDACTION_PATHS, redactedKeys })
+  let payload = jsonStringify(event, undefined, undefined, { redactedPaths: EVENT_REDACTION_PATHS, redactedKeys })
   if (payload.length > 10e5) {
     event.events[0]._metadata = {
       notifier:
@@ -19,13 +19,13 @@ export const event = (event: EventDeliveryPayload, redactedKeys?: RedactedKey[])
 Serialized payload was ${payload.length / 10e5}MB (limit = 1MB)
 metadata was removed`
     }
-    payload = jsonStringify(event, null, null, { redactedPaths: EVENT_REDACTION_PATHS, redactedKeys })
+    payload = jsonStringify(event, undefined, undefined, { redactedPaths: EVENT_REDACTION_PATHS, redactedKeys })
   }
   return payload
 }
 
 export const session = (session: SessionDeliveryPayload, redactedKeys?: RedactedKey[]) => {
-  const payload = jsonStringify(session, null, null)
+  const payload = jsonStringify(session, undefined, undefined)
   return payload
 }
 

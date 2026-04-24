@@ -30,9 +30,9 @@ Scenario Outline: unhandled exceptions are reported
 
     Examples:
         | lambda                                         | type     | file                          | node-version | trace-length |
-        | AsyncUnhandledExceptionFunctionNode18          | async    | unhandled-exception.js        | 18           | 4            |
-        | CallbackUnhandledExceptionFunctionNode18       | callback | unhandled-exception.js        | 18           | 7            |
-        | CallbackThrownUnhandledExceptionFunctionNode18 | callback | thrown-unhandled-exception.js | 18           | 7            |
+        | AsyncUnhandledExceptionFunctionNode18          | async    | unhandled-exception.js        | 18           | 9            |
+        | CallbackUnhandledExceptionFunctionNode18       | callback | unhandled-exception.js        | 18           | 11           |
+        | CallbackThrownUnhandledExceptionFunctionNode18 | callback | thrown-unhandled-exception.js | 18           | 11           |
 
 @simple-app
 Scenario Outline: unhandled exceptions thrown async are reported

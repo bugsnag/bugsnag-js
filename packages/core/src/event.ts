@@ -1,4 +1,4 @@
-import { App, Device, FeatureFlag, Logger, Request, Stackframe, Thread, User, BugsnagError, NotifiableError } from "./common"
+import { App, Device, FeatureFlag, Logger, Request, Response, Stackframe, Thread, User, BugsnagError, NotifiableError } from "./common"
 
 import ErrorStackParser from 'error-stack-parser'
 import StackGenerator from 'stack-generator'
@@ -27,6 +27,7 @@ export default class Event {
   public app: App
   public device: Device
   public request: Request
+  public response: Response
 
   public errors: BugsnagError[];
   public breadcrumbs: Breadcrumb[]
@@ -375,8 +376,8 @@ const normaliseError = (maybeError: unknown, tolerateNonErrors: boolean, compone
 }
 
 const hasNecessaryFields = (error: unknown): error is { name?: string; errorClass?: string; message?: string; errorMessage?: string } =>
-  // @ts-expect-error - needs rewriting to be more type safe
+  // @ts-expect-error accessing properties on unknown type before type guard narrows it
   (typeof error.name === 'string' || typeof error.errorClass === 'string') &&
-  // @ts-expect-error - needs rewriting to be more type safe
+  // @ts-expect-error accessing properties on unknown type before type guard narrows it
   (typeof error.message === 'string' || typeof error.errorMessage === 'string')
 

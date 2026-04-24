@@ -1,13 +1,20 @@
 {
   "name": "@bugsnag/plugin-window-onerror",
   "version": "8.8.0",
-  "main": "dist/onerror.mjs",
-  "types": "dist/types/onerror.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/onerror.js",
+  "module": "./dist/esm/onerror.js",
+  "types": "./dist/cjs/onerror.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/onerror.d.ts",
-      "default": "./dist/onerror.js",
-      "import": "./dist/onerror.mjs"
+      "import": {
+        "types": "./dist/esm/onerror.d.ts",
+        "default": "./dist/esm/onerror.js"
+      },
+      "require": {
+        "types": "./dist/cjs/onerror.d.ts",
+        "default": "./dist/cjs/onerror.js"
+      }
     }
   },
   "description": "@bugsnag/js plugin to report unhandled exceptions in browsers",
@@ -31,8 +38,8 @@
     "@bugsnag/core": "^8.0.0"
   },
   "scripts": {
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

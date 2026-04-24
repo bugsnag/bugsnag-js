@@ -63,6 +63,7 @@ export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}):
 
     private readonly size: Size
     private readonly position: Position
+    private _isDestroyed: boolean = false
 
     readonly callbacks: { [event in BrowserWindowEvent]: Function[] } = {
       close: [],

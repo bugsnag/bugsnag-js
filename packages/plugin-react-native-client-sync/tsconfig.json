@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "include": ["."],
   "compilerOptions": {
-    "lib": ["es2015", "es2022", "esnext"],
+    "lib": ["es2015"],
     "types": ["jest", "react-native"],
   }
 }
