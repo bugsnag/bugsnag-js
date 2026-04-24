@@ -48,8 +48,7 @@ app.get('/rejection-async', (c) => {
     }, 100)
 })
 
-// This route does not work with local testing, not sure why it's running here
-app.get('/throw-non-error', async (c, next) => {
+app.get('/throw-non-error', async (c) => {
     throw 1 
 })
 
@@ -64,12 +63,3 @@ serve({
     fetch: app.fetch,
     port: 80
 });
-
-// Keep the process alive
-process.on('SIGTERM', () => {
-    process.exit(0)
-})
-
-process.on('SIGINT', () => {
-    process.exit(0)
-})
