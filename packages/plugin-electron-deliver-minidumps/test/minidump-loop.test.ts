@@ -1,12 +1,11 @@
 import EventEmitter from 'events'
-import Session from '@bugsnag/core/session'
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { Breadcrumb, Session } from '@bugsnag/core'
 import NetworkStatus from '@bugsnag/electron-network-status'
 import MinidumpDeliveryLoop from '../minidump-loop'
 
 const flushPromises = () => new Promise(setImmediate)
 
-jest.useFakeTimers()
+jest.useFakeTimers({ doNotFake: ['setImmediate'] })
 
 jest.mock('fs', () => ({
   promises: {
@@ -14,8 +13,8 @@ jest.mock('fs', () => ({
   }
 }))
 
-const createQueue = (...minidumps) => ({
-  peek: minidumps.reduce((fn, md) => fn.mockResolvedValueOnce(md), jest.fn()),
+const createQueue = (...minidumps: Array<{ minidumpPath: string, eventPath?: string }>) => ({
+  peek: minidumps.reduce((fn: jest.Mock, md) => fn.mockResolvedValueOnce(md), jest.fn()),
   remove: jest.fn().mockResolvedValue(true)
 })
 
@@ -29,7 +28,7 @@ const runDeliveryLoop = async (times: number = 1) => {
 }
 
 describe('electron-minidump-delivery: minidump-loop', () => {
-  const onSendCallbacks = []
+  const onSendCallbacks: Function[] = []
   const logger = {
     error: () => {}
   }
@@ -42,13 +41,13 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks as any, minidumpQueue as any, logger)
       loop.start()
 
       await runDeliveryLoop()
 
-      expect(sendMinidump).toBeCalledTimes(1)
-      expect(minidumpQueue.remove).toBeCalledTimes(1)
+      expect(sendMinidump).toHaveBeenCalledTimes(1)
+      expect(minidumpQueue.remove).toHaveBeenCalledTimes(1)
     })
 
     it('sends minidumps with no event', async () => {
@@ -58,13 +57,13 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks as any, minidumpQueue as any, logger)
       loop.start()
 
       await runDeliveryLoop()
 
-      expect(sendMinidump).toBeCalledTimes(1)
-      expect(minidumpQueue.remove).toBeCalledTimes(1)
+      expect(sendMinidump).toHaveBeenCalledTimes(1)
+      expect(minidumpQueue.remove).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -75,13 +74,13 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
     )
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, () => false, minidumpQueue, logger)
+    const loop = new MinidumpDeliveryLoop(sendMinidump, (() => false) as any, minidumpQueue as any, logger)
     loop.start()
 
     await runDeliveryLoop(2)
 
-    expect(sendMinidump).toBeCalledTimes(0)
-    expect(minidumpQueue.remove).toBeCalledTimes(2)
+    expect(sendMinidump).toHaveBeenCalledTimes(0)
+    expect(minidumpQueue.remove).toHaveBeenCalledTimes(2)
   })
 
   it('allows on send callback to mutate the event', async () => {
@@ -90,8 +89,8 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       { minidumpPath: 'minidump-path', eventPath: 'event-path' }
     )
 
-    let eventMinidumpPath
-    const onSendError = event => {
+    let eventMinidumpPath: string = ''
+    const onSendError = (event: any) => {
       event.addMetadata('abc', { x: 1, y: 2 })
       event.addMetadata('abc', 'z', 3)
       event.addMetadata('minidump', { path: event.minidumpPath })
@@ -102,8 +101,8 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       event.breadcrumbs.push(new Breadcrumb('crumby', { a: 1 }, 'manual', new Date('2020-01-01T00:00:00Z')))
 
       const session = new Session()
-      session.id = 'an session ID'
-      session.startedAt = new Date('2020-01-02T00:00:00Z')
+      ;(session as any).id = 'an session ID'
+      ;(session as any).startedAt = new Date('2020-01-02T00:00:00Z')
       session._handled = 0
       session._unhandled = 1
 
@@ -117,12 +116,12 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       eventMinidumpPath = event.minidumpPath
     }
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, onSendError, minidumpQueue, logger)
+    const loop = new MinidumpDeliveryLoop(sendMinidump, onSendError as any, minidumpQueue as any, logger)
     loop.start()
 
     await runDeliveryLoop(1)
 
-    expect(sendMinidump).toBeCalledWith('minidump-path', {
+    expect(sendMinidump).toHaveBeenCalledWith('minidump-path', {
       breadcrumbs: [
         {
           name: 'crumby',
@@ -157,7 +156,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     expect(eventMinidumpPath).toBe('minidump-path')
 
-    expect(minidumpQueue.remove).toBeCalledWith({
+    expect(minidumpQueue.remove).toHaveBeenCalledWith({
       minidumpPath: 'minidump-path',
       eventPath: 'event-path'
     })
@@ -172,13 +171,13 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     const callbacks = [jest.fn(() => true), jest.fn(() => false), jest.fn(() => true)]
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, callbacks, minidumpQueue, logger)
+    const loop = new MinidumpDeliveryLoop(sendMinidump, callbacks as any, minidumpQueue as any, logger)
     loop.start()
 
     await runDeliveryLoop(2)
 
-    expect(sendMinidump).toBeCalledTimes(0)
-    expect(minidumpQueue.remove).toBeCalledTimes(2)
+    expect(sendMinidump).toHaveBeenCalledTimes(0)
+    expect(minidumpQueue.remove).toHaveBeenCalledTimes(2)
 
     // the callbacks are called twice as there are two minidumps and are called
     // in order of most recently added -> least recently added
@@ -204,13 +203,13 @@ describe('electron-minidump-delivery: minidump-loop', () => {
 
     const logError = jest.fn()
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, callbacks, minidumpQueue, { error: logError })
+    const loop = new MinidumpDeliveryLoop(sendMinidump, callbacks as any, minidumpQueue as any, { error: logError })
     loop.start()
 
     await runDeliveryLoop(2)
 
-    expect(sendMinidump).toBeCalledTimes(2)
-    expect(minidumpQueue.remove).toBeCalledTimes(2)
+    expect(sendMinidump).toHaveBeenCalledTimes(2)
+    expect(minidumpQueue.remove).toHaveBeenCalledTimes(2)
 
     expect(callbacks[3]).toHaveBeenCalledTimes(2)
     expect(callbacks[2]).toHaveBeenCalledTimes(2)
@@ -233,13 +232,13 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
     )
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
+    const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks as any, minidumpQueue as any, logger)
     loop.start()
 
     await runDeliveryLoop(3)
 
-    expect(sendMinidump).toBeCalledTimes(2)
-    expect(minidumpQueue.remove).toBeCalledTimes(2)
+    expect(sendMinidump).toHaveBeenCalledTimes(2)
+    expect(minidumpQueue.remove).toHaveBeenCalledTimes(2)
 
     expect(jest.getTimerCount()).toBe(0)
   })
@@ -256,13 +255,13 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
     )
 
-    const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
+    const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks as any, minidumpQueue as any, logger)
     loop.start()
 
     await runDeliveryLoop(2)
 
-    expect(sendMinidump).toBeCalledTimes(2)
-    expect(minidumpQueue.remove).toBeCalledTimes(1)
+    expect(sendMinidump).toHaveBeenCalledTimes(2)
+    expect(minidumpQueue.remove).toHaveBeenCalledTimes(1)
   })
 
   describe('watchNetworkStatus', () => {
@@ -270,7 +269,7 @@ describe('electron-minidump-delivery: minidump-loop', () => {
     const emitter = new EventEmitter()
 
     it('should start delivery only when connected', async () => {
-      const statusWatcher = new NetworkStatus({ emitter }, { online: false }, app)
+      const statusWatcher = new NetworkStatus({ emitter } as any, { online: false }, app)
 
       const sendMinidump = createSendMinidump()
       const minidumpQueue = createQueue(
@@ -278,23 +277,23 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks as any, minidumpQueue as any, logger)
       loop.watchNetworkStatus(statusWatcher)
 
       // ensure that nothing is delivered while disconnected
       await runDeliveryLoop(1)
-      expect(sendMinidump).toBeCalledTimes(0)
+      expect(sendMinidump).toHaveBeenCalledTimes(0)
 
       // connect the network
       emitter.emit('MetadataUpdate', { section: 'device', values: { online: true } }, null)
 
       // check that we've started delivering minidumps
       await runDeliveryLoop(1)
-      expect(sendMinidump).toBeCalledTimes(1)
+      expect(sendMinidump).toHaveBeenCalledTimes(1)
     })
 
     it('should stop delivery when disconnected', async () => {
-      const statusWatcher = new NetworkStatus({ emitter }, { online: true }, app)
+      const statusWatcher = new NetworkStatus({ emitter } as any, { online: true }, app)
 
       const sendMinidump = createSendMinidump()
       const minidumpQueue = createQueue(
@@ -302,19 +301,19 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path2', eventPath: 'event-path2' }
       )
 
-      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
+      const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks as any, minidumpQueue as any, logger)
       loop.watchNetworkStatus(statusWatcher)
 
       // ensure that the first minidump is delivered
       await runDeliveryLoop(1)
-      expect(sendMinidump).toBeCalledTimes(1)
+      expect(sendMinidump).toHaveBeenCalledTimes(1)
 
       // disconnect the network
       emitter.emit('MetadataUpdate', { section: 'device', values: { online: false } }, null)
 
       // check that no more minidumps are delivered
       await runDeliveryLoop(2)
-      expect(sendMinidump).toBeCalledTimes(1)
+      expect(sendMinidump).toHaveBeenCalledTimes(1)
     })
   })
 })

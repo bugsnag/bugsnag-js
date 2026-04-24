@@ -1,5 +1,5 @@
 const { readFile } = require('fs').promises
-const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
+const { runSyncCallbacks } = require('@bugsnag/core')
 const { serialiseEvent, deserialiseEvent } = require('./event-serialisation')
 
 module.exports = class MinidumpDeliveryLoop {

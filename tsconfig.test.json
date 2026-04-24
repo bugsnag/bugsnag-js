@@ -1,0 +1,44 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,                          /* Allow javascript files to be compiled. */
+    "noEmit": true                            /* Do not emit outputs. */
+  },
+  "include": [
+    "packages/browser",
+    "packages/core",
+    "packages/delivery-electron",
+    "packages/delivery-fetch",
+    "packages/delivery-node",
+    "packages/delivery-react-native",
+    "packages/delivery-xml-http-request",
+    "packages/electron",
+    "packages/electron-filestore",
+    "packages/electron-network-status",
+    "packages/in-flight",
+    "packages/node",
+    "packages/plugin-app-duration",
+    "packages/plugin-aws-lambda",
+    "packages/plugin-browser-context",
+    "packages/plugin-browser-device",
+    "packages/plugin-browser-request",
+    "packages/plugin-browser-session",
+    "packages/plugin-client-ip",
+    "packages/plugin-cloudflare-workers",
+    "packages/plugin-console-breadcrumbs",
+    "packages/plugin-inline-script-content",
+    "packages/plugin-interaction-breadcrumbs",
+    "packages/plugin-navigation-breadcrumbs",
+    "packages/plugin-network-breadcrumbs",
+    "packages/plugin-simple-throttle",
+    "packages/plugin-strip-query-string",
+    "packages/plugin-vue",
+    "packages/react-native-cli",
+    "packages/request-tracker",
+    "packages/web-worker"
+  ],
+  "exclude": [
+    "packages/**/dist",
+    "packages/**/test"
+  ]
+}

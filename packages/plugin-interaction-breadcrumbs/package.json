@@ -1,7 +1,22 @@
 {
   "name": "@bugsnag/plugin-interaction-breadcrumbs",
   "version": "8.8.0",
-  "main": "interaction-breadcrumbs.js",
+  "type": "module",
+  "main": "./dist/cjs/interaction-breadcrumbs.js",
+  "module": "./dist/esm/interaction-breadcrumbs.js",
+  "types": "./dist/cjs/interaction-breadcrumbs.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/interaction-breadcrumbs.d.ts",
+        "default": "./dist/esm/interaction-breadcrumbs.js"
+      },
+      "require": {
+        "types": "./dist/cjs/interaction-breadcrumbs.d.ts",
+        "default": "./dist/cjs/interaction-breadcrumbs.js"
+      }
+    }
+  },
   "description": "@bugsnag/js plugin to record UI click events as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -11,10 +26,12 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "*.js"
-  ],
-  "scripts": {},
+  "files": ["dist"],
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
+  },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {

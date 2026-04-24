@@ -1,7 +1,6 @@
+import { schema } from '@bugsnag/core'
 import BugsnagIpcMain from '../bugsnag-ipc-main'
-import Client from '@bugsnag/core/client'
-import InternalEvent from '@bugsnag/core/event'
-import { User, Plugin, Event, FeatureFlag } from '@bugsnag/core'
+import { Client, User, Plugin, Event, FeatureFlag } from '@bugsnag/core'
 
 const mockClientStateManagerPlugin = {
   name: 'clientStateManager',
@@ -16,17 +15,20 @@ const Notifier = {
   url: 'https://github.com/bugsnag/bugsnag-js'
 }
 
+// @ts-expect-error invalid schema expected for testing
+const testSchema: typeof schema = {}
+
 describe('BugsnagIpcMain', () => {
   describe('constructor()', () => {
     it('should throw if the state manager plugin is not loaded first', () => {
-      const client = new Client({ apiKey: '123' }, {}, [], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [], Notifier)
       expect(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const bugsnagIpcMain = new BugsnagIpcMain(client)
       }).toThrowError('Expected @bugsnag/plugin-electron-client-state-manager to be loaded first')
     })
     it('should work when the state manager plugin is loaded first', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       expect(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const bugsnagIpcMain = new BugsnagIpcMain(client)
@@ -36,7 +38,7 @@ describe('BugsnagIpcMain', () => {
 
   describe('handle()', () => {
     it('works for updating context', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.setContext = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle({}, 'setContext', JSON.stringify('new context'))
@@ -44,7 +46,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns the current context', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.setContext('today')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
@@ -53,7 +55,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for updating grouping discriminator', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [mockClientStateManagerPlugin], Notifier)
       client.setGroupingDiscriminator = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle({}, 'setGroupingDiscriminator', JSON.stringify('grouping-discriminator'))
@@ -61,7 +63,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns the current grouping discriminator', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [mockClientStateManagerPlugin], Notifier)
       client.setGroupingDiscriminator('current-grouping-discriminator')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
@@ -70,7 +72,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for updating user', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.setUser = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       // all fields set
@@ -82,7 +84,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns the current user', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.setUser('81676', undefined, 'Cal')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
@@ -91,7 +93,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for adding metadata', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.addMetadata = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const stubWebContents = { /* this would be a WebContents instance */ }
@@ -101,7 +103,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for removing metadata', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.clearMetadata = jest.fn()
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       bugsnagIpcMain.handle({}, 'clearMetadata', JSON.stringify('section'))
@@ -109,7 +111,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('returns metadata content', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.addMetadata('section', 'content', 'X')
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const event = { returnValue: undefined }
@@ -123,7 +125,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for adding a single feature flag', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.addFeatureFlag = jest.fn()
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
@@ -135,7 +137,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for adding multiple feature flags', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.addFeatureFlags = jest.fn()
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
@@ -155,7 +157,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for clearing a single feature flag', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.clearFeatureFlag = jest.fn()
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
@@ -167,7 +169,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for clearing all feature flags', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.clearFeatureFlags = jest.fn()
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
@@ -179,7 +181,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for managing sessions', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client._sessionDelegate = { startSession: jest.fn(), resumeSession: jest.fn(), pauseSession: jest.fn() }
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       // start
@@ -194,7 +196,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for breadcrumbs', (done) => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       client.addOnBreadcrumb(b => {
         expect(b.message).toBe('hi IPC')
         expect(b.type).toBe('manual')
@@ -210,7 +212,7 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('works for bulk updates', done => {
-      const client = new Client({ apiKey: '123' }, {}, [{
+      const client = new Client({ apiKey: '123' }, testSchema, [{
         name: 'clientStateManager',
         load: () => ({
           bulkUpdate: ({ context, user, metadata, features }: { context?: string, user?: User, metadata: Record<string, unknown>, features: FeatureFlag | null[]}) => {
@@ -238,13 +240,13 @@ describe('BugsnagIpcMain', () => {
     })
 
     it('is resilient to unknown methods', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       expect(() => bugsnagIpcMain.handle({}, 'explodePlease', JSON.stringify({ data: 123 }))).not.toThrowError()
     })
 
     it('is resilient to bad JSON', () => {
-      const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
+      const client = new Client({ apiKey: '123' }, testSchema, [mockClientStateManagerPlugin], Notifier)
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       expect(() => bugsnagIpcMain.handle({}, 'leaveBreadcrumb', 'not json')).not.toThrowError()
     })
@@ -256,7 +258,7 @@ describe('BugsnagIpcMain', () => {
         {
           load: (client) => {
             // mock an internal plugin that adds app data
-            const cb = (event: Event) => {
+            const cb: any = (event: Event) => {
               event.app = { ...event.app, name: 'testApp', type: 'test' }
               event.addMetadata('app', 'testingMode', 'unit')
             }
@@ -267,7 +269,7 @@ describe('BugsnagIpcMain', () => {
         {
           load: (client) => {
             // mock an internal plugin that adds device data
-            const cb = (event: Event) => {
+            const cb: any = (event: Event) => {
               event.device = { ...event.device, id: '123' }
               event.addMetadata('device', 'isOutdated', true)
             }
@@ -294,7 +296,7 @@ describe('BugsnagIpcMain', () => {
       client.addFeatureFlags([
         { name: 'flag1' },
         { name: 'flag2', variant: null },
-        // @ts-ignore:
+        // @ts-expect-error intentionally passing number instead of string variant
         { name: 'flag3', variant: 1234 },
         { name: 'flag4', variant: 'abc' }
       ])
@@ -352,7 +354,7 @@ describe('BugsnagIpcMain', () => {
       const client = new Client({
         apiKey: '123',
         codeBundleId: 'test-bundle-456'
-      }, schema, [mockClientStateManagerPlugin], Notifier)
+      }, schema as any, [mockClientStateManagerPlugin], Notifier)
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
       const payloadInfo = await bugsnagIpcMain.getPayloadInfo()
@@ -402,7 +404,7 @@ describe('BugsnagIpcMain', () => {
       const internalCb = jest.fn((event) => {
         event.addMetadata('internal', 'ran', true)
       })
-      // @ts-expect-error
+      // @ts-expect-error _internal is not part of the public callback type
       internalCb._internal = true
       client.addOnError(internalCb)
 
@@ -416,7 +418,7 @@ describe('BugsnagIpcMain', () => {
       client._setDelivery(client => mockDelivery)
 
       const bugsnagIpcMain = new BugsnagIpcMain(client)
-      const event = new InternalEvent('Error', 'Something bad happened', [])
+      const event = new Event('Error', 'Something bad happened', [])
       bugsnagIpcMain.dispatch(Object.assign({}, event))
 
       expect(mockDelivery.sendEvent).toHaveBeenCalledWith(expect.objectContaining({

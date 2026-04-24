@@ -11,12 +11,12 @@ const schema = {
       nativeCrashes: true
     }),
     allowPartialObject: true,
-    validate: value => true
+    validate: (value: unknown) => true
   }
 }
 
 function makeClient (NativeClient: object, config?: object) {
-  return makeClientForPlugin({ plugins: [stateManager, plugin(NativeClient)], schema, config })
+  return makeClientForPlugin({ plugins: [stateManager, plugin(NativeClient)] as any, schema, config })
 }
 
 describe('plugin: electron client sync', () => {

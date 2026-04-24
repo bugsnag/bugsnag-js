@@ -19,10 +19,9 @@
   "author": "Bugsnag",
   "license": "MIT",
   "peerDependencies": {
-    "@bugsnag/core": "^8.0.0"
+    "@bugsnag/core": "^8.2.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.8.0",
-    "@types/express": "4.17.13"
+    "@bugsnag/core": "^8.6.0"
   }
 }

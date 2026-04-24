@@ -1,4 +1,4 @@
-import Event from '@bugsnag/core/event'
+import { Event } from '@bugsnag/core'
 import plugin from '..'
 import { makeClientForPlugin } from '@bugsnag/electron-test-helpers'
 

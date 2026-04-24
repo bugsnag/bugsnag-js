@@ -6,7 +6,6 @@ import BugsnagReactNativeStatic, {
   OnErrorCallback
 } from '..'
 
-// @ts-ignore
 import { NativeModules } from 'react-native'
 
 const NativeClient = NativeModules.BugsnagReactNative
@@ -41,12 +40,10 @@ describe('react native notifier', () => {
   beforeEach(() => {
     jest.isolateModules(() => {
       Bugsnag = require('..')
-    })
+    });
 
-    // @ts-expect-error Cannot find name 'window'
-    window.fetch = jest.fn()
-    // @ts-expect-error Cannot find name 'window'
-    window.XMLHttpRequest = jest.fn() as any
+    (global as any).fetch = jest.fn();
+    (global as any).XMLHttpRequest = jest.fn();
   })
 
   it('accepts plugins', () => {

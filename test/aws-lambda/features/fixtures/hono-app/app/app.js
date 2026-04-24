@@ -51,7 +51,6 @@ app.get('/promise-rejection', (c) => {
 })
 
 app.get('/throw-non-error', (c) => {
-  // eslint-disable-next-line no-throw-literal
   throw 1
 })
 

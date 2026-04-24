@@ -1,6 +1,6 @@
 import plugin from '../hermes'
 
-import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+import { Client, EventDeliveryPayload } from '@bugsnag/core'
 
 describe('plugin: react native hermes', () => {
   it('should add an onError callback which captures device information', () => {

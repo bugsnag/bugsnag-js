@@ -48,8 +48,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.0.0",
-    "tslint": "^5.12.1",
-    "typescript": "^3.3.3"
+    "tslint": "^5.12.1"
   },
   "dependencies": {
     "@bugsnag/core": "^8.8.0",
@@ -64,6 +63,9 @@
     "@bugsnag/plugin-react-native-session": "^8.8.0",
     "@bugsnag/plugin-react-native-unhandled-rejection": "^8.8.0",
     "iserror": "^0.0.2"
+  },
+  "peerDependencies": {
+    "react-native": "*"
   },
   "scripts": {
     "prepare": "bash prepare-android-vendor.sh",

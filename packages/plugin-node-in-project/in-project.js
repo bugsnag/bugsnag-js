@@ -1,4 +1,4 @@
-const normalizePath = require('@bugsnag/core/lib/path-normalizer')
+const normalizePath = require('@bugsnag/path-normalizer')
 
 module.exports = {
   load: client => client.addOnError(event => {

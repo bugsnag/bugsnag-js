@@ -1,5 +1,5 @@
 import clientStateUpdatesPlugin from '../client-state-updates'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 const Notifier = {
   name: 'Bugsnag Electron Test',
@@ -13,7 +13,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         setContext: jest.fn()
       }
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       client.setContext('ctx')
       expect(mockBugsnagIpcRenderer.setContext).toHaveBeenCalledWith('ctx')
@@ -23,7 +23,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         getContext: () => 'ctx'
       }
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       expect(client.getContext()).toBe('ctx')
     })
 
@@ -31,7 +31,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         setGroupingDiscriminator: jest.fn()
       }
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       client.setGroupingDiscriminator('discriminator')
       expect(mockBugsnagIpcRenderer.setGroupingDiscriminator).toHaveBeenCalledWith('discriminator')
@@ -41,7 +41,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         getGroupingDiscriminator: () => 'discriminator'
       }
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       expect(client.getGroupingDiscriminator()).toBe('discriminator')
     })
 
@@ -49,7 +49,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         setUser: jest.fn()
       }
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       client.setUser('123', 'jim@jim.com', 'Jim')
       expect(mockBugsnagIpcRenderer.setUser).toHaveBeenCalledWith('123', 'jim@jim.com', 'Jim')
@@ -59,7 +59,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         getUser: () => { return { id: '123', email: 'jim@jim.com', name: 'Jim' } }
       }
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       expect(client.getUser()).toEqual({ id: '123', email: 'jim@jim.com', name: 'Jim' })
     })
@@ -69,7 +69,7 @@ describe('clientStateUpdatesPlugin', () => {
         addMetadata: jest.fn(),
         clearMetadata: jest.fn()
       }
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       client.addMetadata('section', { key0: 123, key1: 234 })
       expect(mockBugsnagIpcRenderer.addMetadata).toHaveBeenCalledWith('section', { key0: 123, key1: 234 })
@@ -89,7 +89,7 @@ describe('clientStateUpdatesPlugin', () => {
           done()
         }
       }
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       client.getMetadata('layers', 'strawberry')
     })
 
@@ -101,7 +101,7 @@ describe('clientStateUpdatesPlugin', () => {
         clearFeatureFlags: jest.fn()
       }
 
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       client.addFeatureFlag('name', 'variant')
       expect(mockBugsnagIpcRenderer.addFeatureFlag).toHaveBeenCalledWith('name', 'variant')
@@ -120,7 +120,7 @@ describe('clientStateUpdatesPlugin', () => {
       const mockBugsnagIpcRenderer = {
         leaveBreadcrumb: jest.fn()
       }
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       client.leaveBreadcrumb('hi')
       expect(mockBugsnagIpcRenderer.leaveBreadcrumb).toHaveBeenCalledWith(expect.objectContaining({
         message: 'hi',
@@ -134,7 +134,7 @@ describe('clientStateUpdatesPlugin', () => {
         leaveBreadcrumb: jest.fn()
       }
 
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
 
       client.addOnBreadcrumb(breadcrumb => {
         if (breadcrumb.message === 'skip me') {
@@ -170,7 +170,7 @@ describe('clientStateUpdatesPlugin', () => {
         clearMetadata: jest.fn().mockImplementation(throwError),
         leaveBreadcrumb: jest.fn().mockImplementation(throwError)
       }
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       expect(() => {
         client.setContext('ctx')
         client.setUser('123')
@@ -192,7 +192,7 @@ describe('clientStateUpdatesPlugin', () => {
         featureFlags: [{ name: 'abc' }, { name: 'xyz', variant: '123' }],
         context: 'renderer config',
         user: { id: 'ab23' }
-      }, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
+      } as any, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
 
       expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
         metadata: { section: { key: 'value' } },
@@ -212,7 +212,7 @@ describe('clientStateUpdatesPlugin', () => {
         apiKey: '123',
         metadata: { section: { key: 'value' } },
         user: {}
-      }, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
+      } as any, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
 
       expect(mockBugsnagIpcRenderer.update).toHaveBeenCalledWith({
         metadata: { section: { key: 'value' } },
@@ -231,18 +231,18 @@ describe('clientStateUpdatesPlugin', () => {
         featureFlags: [{ name: 'abc' }, { name: 'xyz', variant: '123' }],
         context: 'renderer config',
         user: { id: 'ab23' }
-      }, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
+      } as any, undefined, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)])
 
       expect(client._metadata).toEqual({})
       expect(client._user).toEqual({})
       expect(client._features).toStrictEqual([])
-      expect(client._context).toEqual(undefined)
+      expect((client as any)._context).toEqual(undefined)
     })
 
     it('starts sessions', () => {
       const mockBugsnagIpcRenderer = { startSession: jest.fn() }
 
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       const returnValue = client.startSession()
       expect(mockBugsnagIpcRenderer.startSession).toHaveBeenCalled()
       expect(returnValue).toBe(client)
@@ -251,7 +251,7 @@ describe('clientStateUpdatesPlugin', () => {
     it('pauses sessions', () => {
       const mockBugsnagIpcRenderer = { pauseSession: jest.fn() }
 
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       client.pauseSession()
       expect(mockBugsnagIpcRenderer.pauseSession).toHaveBeenCalled()
     })
@@ -259,7 +259,7 @@ describe('clientStateUpdatesPlugin', () => {
     it('resumes sessions', () => {
       const mockBugsnagIpcRenderer = { resumeSession: jest.fn() }
 
-      const client = new Client({ apiKey: '123' }, {}, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
+      const client = new Client({ apiKey: '123' } as any, {} as any, [clientStateUpdatesPlugin(mockBugsnagIpcRenderer)], Notifier)
       const returnValue = client.resumeSession()
       expect(mockBugsnagIpcRenderer.resumeSession).toHaveBeenCalled()
       expect(returnValue).toBe(client)

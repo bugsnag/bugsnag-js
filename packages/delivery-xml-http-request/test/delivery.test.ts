@@ -1,6 +1,5 @@
-import delivery from '../'
-import { Client } from '@bugsnag/core'
-import { EventDeliveryPayload } from '@bugsnag/core/client'
+import delivery from '../src/delivery'
+import type { Client, EventDeliveryPayload } from '@bugsnag/core'
 
 interface MockXMLHttpRequest {
   method: string | null
@@ -58,7 +57,7 @@ describe('delivery:XMLHttpRequest', () => {
       sendPayloadChecksums: true
     }
 
-    delivery({ _logger: {}, _config: config } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: true } as unknown as Window).sendEvent(payload, (err: any) => {
+    delivery({ _logger: {}, _config: config } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: true } as any as Window & typeof globalThis).sendEvent(payload, (err: any) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -119,7 +118,7 @@ describe('delivery:XMLHttpRequest', () => {
       sendPayloadChecksums: false
     }
 
-    delivery({ _logger: { }, _config: config } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: true } as unknown as Window).sendEvent(payload, (err: any) => {
+    delivery({ _logger: { }, _config: config } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: true } as any as Window & typeof globalThis).sendEvent(payload, (err: any) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -174,7 +173,7 @@ describe('delivery:XMLHttpRequest', () => {
       redactedKeys: []
     }
 
-    delivery({ _logger: {}, _config: config } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: false } as unknown as Window).sendEvent(payload, (err: any) => {
+    delivery({ _logger: {}, _config: config } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: false } as any as Window & typeof globalThis).sendEvent(payload, (err: any) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -230,7 +229,7 @@ describe('delivery:XMLHttpRequest', () => {
       redactedKeys: []
     }
 
-    delivery({ _logger: logger, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err?: Error | null) => {
+    delivery({ _logger: logger, _config: config } as unknown as Client, { XMLHttpRequest } as any as Window & typeof globalThis).sendEvent(payload, (err?: Error | null) => {
       const expectedError = new Error('Request failed with status 500')
       expect(err).toStrictEqual(expectedError)
       expect(logger.error).toHaveBeenCalledWith('Event failed to send…', expectedError)
@@ -292,7 +291,7 @@ describe('delivery:XMLHttpRequest', () => {
     }
     const logger = { error: jest.fn(), warn: jest.fn() }
 
-    delivery({ _logger: logger, _config: config } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendEvent(payload, (err: any) => {
+    delivery({ _logger: logger, _config: config } as unknown as Client, { XMLHttpRequest } as any as Window & typeof globalThis).sendEvent(payload, (err: any) => {
       const expectedError = new Error('Request failed with status 400')
       expect(err).toStrictEqual(expectedError)
       expect(logger.error).toHaveBeenCalledWith('Event failed to send…', expectedError)
@@ -348,7 +347,7 @@ describe('delivery:XMLHttpRequest', () => {
       redactedKeys: [],
       sendPayloadChecksums: true
     }
-    delivery({ _config: config, _logger: {} } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: true } as unknown as Window).sendSession(payload, (err) => {
+    delivery({ _config: config, _logger: {} } as unknown as Client, { ...window, XMLHttpRequest, isSecureContext: true } as any as Window & typeof globalThis).sendSession(payload, (err) => {
       expect(err).toBe(null)
       expect(requests.length).toBe(1)
       expect(requests[0].method).toBe('POST')
@@ -395,7 +394,7 @@ describe('delivery:XMLHttpRequest', () => {
       endpoints: { notify: null, sessions: null },
       redactedKeys: []
     }
-    delivery({ _config: config, logger: {} } as unknown as Client, { XMLHttpRequest } as unknown as Window).sendSession(payload, (err) => {
+    delivery({ _config: config, logger: {} } as unknown as Client, { XMLHttpRequest } as any as Window & typeof globalThis).sendSession(payload, (err) => {
       expect(err).toStrictEqual(new Error('Session not sent due to incomplete endpoint configuration'))
       expect(requests.length).toBe(0)
       done()

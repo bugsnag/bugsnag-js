@@ -1,4 +1,4 @@
-const extractObject = require('@bugsnag/core/lib/extract-object')
+const { extractObject } = require('@bugsnag/core')
 
 module.exports = req => {
   const connection = req.connection

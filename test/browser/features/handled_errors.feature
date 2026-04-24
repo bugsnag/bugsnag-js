@@ -14,7 +14,6 @@ Feature: Reporting handled errors
     Examples:
       | type       |
       | script     |
-      | webpack3   |
       | webpack4   |
       | browserify |
       | rollup     |
@@ -31,7 +30,6 @@ Feature: Reporting handled errors
     Examples:
       | type       |
       | script     |
-      | webpack3   |
       | webpack4   |
       | browserify |
       | rollup     |
@@ -50,7 +48,6 @@ Feature: Reporting handled errors
     Examples:
       | type       |
       | script     |
-      | webpack3   |
       | webpack4   |
       | browserify |
       | rollup     |

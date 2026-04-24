@@ -1,5 +1,5 @@
 import { promises } from 'fs'
-import diff from 'jest-diff'
+import { diff } from 'jest-diff'
 
 const { access } = promises
 

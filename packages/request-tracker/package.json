@@ -1,8 +1,22 @@
 {
   "name": "@bugsnag/request-tracker",
   "version": "8.8.1",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
   "description": "Shared HTTP request tracking for Bugsnag JavaScript plugins",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -13,12 +27,19 @@
     "access": "public"
   },
   "files": [
-    "*.js",
-    "lib/"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "@bugsnag/core": "^8.8.0"
+  },
+  "peerDependencies": {
+    "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

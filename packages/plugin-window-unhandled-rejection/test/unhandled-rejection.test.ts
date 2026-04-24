@@ -1,7 +1,7 @@
 /* eslint-disable jest/no-commented-out-tests */
-import plugin from '../'
+import plugin from '../src/unhandled-rejection'
 
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 describe('plugin: unhandled rejection', () => {
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe('plugin: unhandled rejection', () => {
           expect(event.severity).toBe('error')
           expect(event.unhandled).toBe(true)
           expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
-          // @ts-ignore
+          // @ts-expect-error destroy is not in the public plugin type
           p.destroy(window)
           done()
         },
@@ -56,7 +56,7 @@ describe('plugin: unhandled rejection', () => {
           const event = payload.events[0].toJSON()
           expect(event.unhandled).toBe(false)
           expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
-          // @ts-ignore
+          // @ts-expect-error destroy is not in the public plugin type
           p.destroy(window)
           done()
         },
@@ -81,7 +81,7 @@ describe('plugin: unhandled rejection', () => {
           expect(event.exceptions[0].message).toBe('unhandledrejection handler received a non-error. See "unhandledrejection handler" tab for more detail.')
           expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
           expect(event.metaData['unhandledrejection handler']['non-error parameter']).toEqual('null')
-          // @ts-ignore
+          // @ts-expect-error destroy is not in the public plugin type
           p.destroy(window)
           done()
         },
@@ -147,7 +147,7 @@ describe('plugin: unhandled rejection', () => {
           expect(event.exceptions[0].errorClass).toBe('Error')
           expect(event.exceptions[0].message).toBe('blah')
           expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
-          // @ts-ignore
+          // @ts-expect-error destroy is not in the public plugin type
           p.destroy(window)
           done()
         },
@@ -157,7 +157,7 @@ describe('plugin: unhandled rejection', () => {
       const handler = getUnhandledRejectionHandler()
 
       const err = new Error('blah')
-      // @ts-expect-error
+      // @ts-expect-error intentionally setting stack to non-string for testing
       err.stack = true
       handler({ reason: err })
     })
@@ -173,7 +173,7 @@ describe('plugin: unhandled rejection', () => {
           expect(event.exceptions[0].errorClass).toBe('Error')
           expect(event.exceptions[0].message).toBe('blah')
           expect(event.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
-          // @ts-ignore
+          // @ts-expect-error destroy is not in the public plugin type
           p.destroy(window)
           done()
         },

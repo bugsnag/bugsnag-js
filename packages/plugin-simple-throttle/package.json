@@ -1,7 +1,22 @@
 {
   "name": "@bugsnag/plugin-simple-throttle",
   "version": "8.8.0",
-  "main": "throttle.js",
+  "type": "module",
+  "main": "./dist/cjs/throttle.js",
+  "module": "./dist/esm/throttle.js",
+  "types": "./dist/cjs/throttle.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/throttle.d.ts",
+        "default": "./dist/esm/throttle.js"
+      },
+      "require": {
+        "types": "./dist/cjs/throttle.d.ts",
+        "default": "./dist/cjs/throttle.js"
+      }
+    }
+  },
   "description": "@bugsnag/js plugin to prevent too many events from being sent",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,9 +27,8 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
-  "scripts": {},
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
@@ -22,5 +36,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

@@ -27,20 +27,20 @@ describe('delivery: electron -> queue', () => {
       expect(storagePath).toBeAFile()
     })
 
-    it('throws an error when the directory was not succesfully created', async (done) => {
+    it('throws an error when the directory was not succesfully created', async () => {
       const storagePath = join(invalidDir(), 'foooo')
       const queue = new PayloadQueue(storagePath, 'stuff')
-      let didErr = false
 
-      try {
-        await queue.init()
-      } catch (e) {
-        // eslint-disable-next-line jest/no-try-expect
-        expect(e).toBeTruthy()
-        didErr = true
+      const initQueueWithError = async () => {
+        try {
+          await queue.init()
+        } catch (e) {
+          return e
+        }
       }
-      expect(didErr).toBe(true)
-      done()
+
+      const error = await initQueueWithError() as Error
+      expect(error).toBeTruthy()
     })
 
     it('rejects all pending promises', async () => {
@@ -48,7 +48,7 @@ describe('delivery: electron -> queue', () => {
       const queue = new PayloadQueue(storagePath, 'stuff')
       const errs: any[] = []
 
-      // eslint-disable-next-line jest/valid-expect-in-promise
+       
       await Promise.all([
         queue.init().catch(err => errs.push(err)),
         queue.init().catch(err => errs.push(err)),
@@ -91,13 +91,12 @@ describe('delivery: electron -> queue', () => {
       })
     })
 
-    it('calls the onerror callback and returns null if there is an error', async (done) => {
-      const queue = new PayloadQueue(invalidDir(), 'stuff', err => {
-        expect(err).not.toBe(null)
-        done()
-      })
+    it('calls the onerror callback and returns null if there is an error', async () => {
+      const onerror = jest.fn()
+      const queue = new PayloadQueue(invalidDir(), 'stuff', onerror)
       const item = await queue.peek()
       expect(item).toBe(null)
+      expect(onerror).toHaveBeenCalledWith(expect.objectContaining({ code: 'ENOTDIR'}))
     })
 
     it('removes a file if it’s not valid JSON', async () => {
@@ -181,12 +180,11 @@ describe('delivery: electron -> queue', () => {
       })
     })
 
-    it('calls the onerror callback if there is an error', async (done) => {
-      const queue = new PayloadQueue(invalidDir(), 'stuff', (err) => {
-        expect(err).toBeTruthy()
-        done()
-      })
+    it('calls the onerror callback if there is an error', async () => {
+      const onerror = jest.fn()
+      const queue = new PayloadQueue(invalidDir(), 'stuff', onerror)
       await queue.enqueue({})
+      expect(onerror).toHaveBeenCalledWith(new Error('Invalid payload!'))
     })
 
     it('purges items that are over the limit', async () => {
@@ -246,12 +244,11 @@ describe('delivery: electron -> queue', () => {
       await expect(access(path, F_OK)).rejects.toBeTruthy()
     })
 
-    it('calls the onerror callback if there is an error', async (done) => {
-      const queue = new PayloadQueue(tempdir, 'stuff', (err) => {
-        expect(err).toBeTruthy()
-        done()
-      })
+    it('calls the onerror callback if there is an error', async () => {
+      const onerror = jest.fn()
+      const queue = new PayloadQueue(tempdir, 'stuff', onerror)
       await queue.remove(join(invalidDir(), 'somefile'))
+      expect(onerror).toHaveBeenCalledWith(expect.objectContaining({ code: 'ENOTDIR'}))
     })
   })
 })

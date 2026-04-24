@@ -1,5 +1,5 @@
 import BugsnagVuePlugin from '../src'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 
 describe('bugsnag vue', () => {
   beforeAll(() => {
@@ -21,7 +21,7 @@ describe('bugsnag vue', () => {
     const client = new Client({ apiKey: 'API_KEYYY' })
     jest.spyOn(client._logger, 'error')
     expect(() => {
-      // @ts-ignore
+      // @ts-expect-error testing install without providing Vue app
       new BugsnagVuePlugin().load(client).install()
     }).toThrow()
     expect(client._logger.error).toHaveBeenCalledWith(expect.objectContaining({ message: '@bugsnag/plugin-vue reference to Vue `app` was undefined' }))
@@ -300,7 +300,7 @@ describe('bugsnag vue', () => {
 
     const errorHandler = mockVue.config.errorHandler as unknown as Vue2ErrorHandler
 
-    // @ts-ignore
+    // @ts-expect-error passing string instead of Error to errorHandler
     errorHandler('oops', { $root: true, $options: {} }, 'callback for watcher "fooBarBaz"')
   })
 

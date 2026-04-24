@@ -1,5 +1,5 @@
 import stateManager from '../client-state-manager'
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import { User } from '@bugsnag/core'
 
 const Notifier = {
@@ -10,7 +10,7 @@ const Notifier = {
 
 describe('@bugsnag/plugin-electron-client-state-manager', () => {
   it('should emit events when user changes', done => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
     emitter.on('UserUpdate', (user: User) => {
       expect(user).toEqual({ id: '123', email: 'jim@jim.com', name: 'Jim' })
@@ -20,7 +20,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should emit events when context changes', done => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
     emitter.on('ContextUpdate', (context: string) => {
       expect(context).toBe('ctx')
@@ -30,7 +30,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should emit events when grouping discriminator changes', done => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
     emitter.on('GroupingDiscriminatorUpdate', (groupingDiscriminator: string) => {
       expect(groupingDiscriminator).toBe('discriminator')
@@ -45,7 +45,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   }
 
   it('should emit events when metadata is added', done => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
     emitter.on('MetadataUpdate', (payload: MetadataUpdatePayload) => {
       expect(payload.section).toBe('section')
@@ -56,7 +56,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should emit events when metadata is cleared', done => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
     emitter.on('MetadataUpdate', (payload: MetadataUpdatePayload) => {
       expect(payload.section).toBe('section')
@@ -67,10 +67,10 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should emit events when a feature flag is added', done => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
 
-    emitter.on('FeatureFlagUpdate', payload => {
+    emitter.on('FeatureFlagUpdate', (payload: any) => {
       expect(payload).toStrictEqual([
         { name: 'flag name', variant: 'variant name' }
       ])
@@ -82,13 +82,13 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should emit events when a feature flag is cleared', done => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
 
     client.addFeatureFlag('flag name 1', 'variant name 1')
     client.addFeatureFlag('flag name 2', 'variant name 2')
 
-    emitter.on('FeatureFlagUpdate', payload => {
+    emitter.on('FeatureFlagUpdate', (payload: any) => {
       expect(payload).toStrictEqual([
         null,
         { name: 'flag name 2', variant: 'variant name 2' }
@@ -101,10 +101,10 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should emit events when feature flags are added', done => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
 
-    emitter.on('FeatureFlagUpdate', payload => {
+    emitter.on('FeatureFlagUpdate', (payload: any) => {
       expect(payload).toStrictEqual([
         { name: 'flag name', variant: 'variant name' },
         { name: 'another flag name', variant: 'another variant name' },
@@ -122,7 +122,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should emit events when feature flags are cleared', done => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter } = client.getPlugin('clientStateManager')
 
     client.addFeatureFlags([
@@ -131,7 +131,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
       { name: 'etc etc', variant: 'etc' }
     ])
 
-    emitter.on('FeatureFlagUpdate', payload => {
+    emitter.on('FeatureFlagUpdate', (payload: any) => {
       expect(payload).toStrictEqual([])
       done()
     })
@@ -140,7 +140,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should support bulk updates (all values)', () => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
     const metadataCb = jest.fn()
@@ -183,7 +183,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should support bulk updates (only context)', () => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
     const metadataCb = jest.fn()
@@ -211,7 +211,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should support bulk updates (only user)', () => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
     const metadataCb = jest.fn()
@@ -239,7 +239,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should support bulk updates (only metadata)', () => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
     const metadataCb = jest.fn()
@@ -269,7 +269,7 @@ describe('@bugsnag/plugin-electron-client-state-manager', () => {
   })
 
   it('should support bulk updates (only grouping discriminator)', () => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' } as any, {} as any, [stateManager], Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
 
     const metadataCb = jest.fn()

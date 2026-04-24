@@ -1,7 +1,22 @@
 {
   "name": "@bugsnag/plugin-network-breadcrumbs",
   "version": "8.8.1",
-  "main": "network-breadcrumbs.js",
+  "type": "module",
+  "main": "./dist/cjs/network-breadcrumbs.js",
+  "module": "./dist/esm/network-breadcrumbs.js",
+  "types": "./dist/cjs/network-breadcrumbs.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/network-breadcrumbs.d.ts",
+        "default": "./dist/esm/network-breadcrumbs.js"
+      },
+      "require": {
+        "types": "./dist/cjs/network-breadcrumbs.d.ts",
+        "default": "./dist/cjs/network-breadcrumbs.js"
+      }
+    }
+  },
   "description": "@bugsnag/js plugin to record browser requests as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,7 +27,7 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -24,5 +39,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+   "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

@@ -1,7 +1,21 @@
 {
   "name": "@bugsnag/delivery-xml-http-request",
   "version": "8.8.0",
-  "main": "delivery.js",
+  "main": "./dist/cjs/delivery.js",
+  "module": "./dist/esm/delivery.js",
+  "types": "./dist/cjs/delivery.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/delivery.d.ts",
+        "default": "./dist/esm/delivery.js"
+      },
+      "require": {
+        "types": "./dist/cjs/delivery.d.ts",
+        "default": "./dist/cjs/delivery.js"
+      }
+    }
+  },
   "description": "@bugsnag/js delivery mechanism for most browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,14 +26,19 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
+  },
   "devDependencies": {
     "@bugsnag/core": "^8.8.0"
   },
-  "peerDependencies": {
-    "@bugsnag/core": "^8.0.0"
+  "dependencies": {
+    "@bugsnag/json-payload": "^8.4.0"
   }
 }

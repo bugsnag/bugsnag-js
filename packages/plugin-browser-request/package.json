@@ -1,7 +1,22 @@
 {
   "name": "@bugsnag/plugin-browser-request",
   "version": "8.8.0",
-  "main": "request.js",
+  "type": "module",
+  "main": "./dist/cjs/request.js",
+  "module": "./dist/esm/request.js",
+  "types": "./dist/cjs/request.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/request.d.ts",
+        "default": "./dist/esm/request.js"
+      },
+      "require": {
+        "types": "./dist/cjs/request.d.ts",
+        "default": "./dist/cjs/request.js"
+      }
+    }
+  },
   "description": "@bugsnag/js plugin to set request info in browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,9 +27,8 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
-  "scripts": {},
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
@@ -22,5 +36,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

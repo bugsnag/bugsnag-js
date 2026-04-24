@@ -1,5 +1,5 @@
 const cuid = require('@bugsnag/cuid')
-const clone = require('@bugsnag/core/lib/clone-client')
+const { cloneClient } = require('@bugsnag/core')
 
 const FLUSH_POLL_INTERVAL_MS = 50
 const inFlightRequests = new Map()
@@ -9,7 +9,7 @@ const noop = () => {}
 // when a client is cloned, make sure to patch the clone's notify method too
 // we don't need to patch delivery when a client is cloned because the
 // original client's delivery method will be copied over to the clone
-clone.registerCallback(patchNotify)
+cloneClient.registerCallback(patchNotify);
 
 module.exports = {
   trackInFlight (client) {

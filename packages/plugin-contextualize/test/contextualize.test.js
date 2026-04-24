@@ -1,4 +1,4 @@
-const Client = require('@bugsnag/core/client')
+const { Client } = require('@bugsnag/core')
 const plugin = require('../contextualize')
 const { AsyncLocalStorage } = require('async_hooks')
 

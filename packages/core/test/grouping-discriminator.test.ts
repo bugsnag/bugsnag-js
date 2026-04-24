@@ -1,4 +1,4 @@
-import Client from '../client'
+import Client from '../src/client'
 
 describe('@bugsnag/core/grouping discriminator', () => {
   describe('Client', () => {

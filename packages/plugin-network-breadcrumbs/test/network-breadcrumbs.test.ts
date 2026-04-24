@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import plugin from '../'
+import plugin from '../src/network-breadcrumbs'
 
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import { Config } from '@bugsnag/core'
 
 class XMLHttpRequest {

@@ -1,36 +1,32 @@
 {
   "name": "@bugsnag/browser",
   "version": "8.8.1",
-  "main": "dist/bugsnag.js",
-  "types": "types/bugsnag.d.ts",
+  "main": "dist/index-cjs.js",
+  "types": "dist/types/index-es.d.ts",
+  "browser": "./dist/bugsnag.js",
+  "sideEffects": false,
   "description": "Bugsnag error reporter for browser JavaScript",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
     "type": "git",
     "url": "git@github.com:bugsnag/bugsnag-js.git"
   },
-  "browser": {
-    "types/bugsnag": "./dist/bugsnag.js"
-  },
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "scripts": {
     "size": "../../bin/size dist/bugsnag.min.js",
     "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:dist && npm run build:dist:min",
-    "build:dist": "cross-env NODE_ENV=production bash -c '../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/extract-source-map dist/bugsnag.js'",
-    "build:dist:min": "cross-env NODE_ENV=production bash -c '../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/minify dist/bugsnag.min.js'",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs",
     "cdn-upload": "../../bin/cdn-upload dist/*"
   },
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-x-domain-request": "^8.8.0",
     "@bugsnag/delivery-xml-http-request": "^8.8.0",
     "@bugsnag/plugin-app-duration": "^8.8.0",
     "@bugsnag/plugin-browser-context": "^8.8.0",

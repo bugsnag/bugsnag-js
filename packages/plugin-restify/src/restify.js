@@ -1,5 +1,5 @@
 const extractRequestInfo = require('./request-info')
-const clone = require('@bugsnag/core/lib/clone-client')
+const { cloneClient } = require('@bugsnag/core')
 const handledState = {
   severity: 'error',
   unhandled: true,
@@ -14,7 +14,7 @@ module.exports = {
   load: client => {
     const requestHandler = (req, res, next) => {
       // clone the client to be scoped to this request. If sessions are enabled, start one
-      const requestClient = clone(client)
+      const requestClient = cloneClient(client)
       if (requestClient._config.autoTrackSessions) {
         requestClient.startSession()
       }

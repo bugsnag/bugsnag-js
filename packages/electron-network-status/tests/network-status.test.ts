@@ -1,4 +1,4 @@
-import Client from '@bugsnag/core/client'
+import { Client } from '@bugsnag/core'
 import stateManager from '@bugsnag/plugin-electron-client-state-manager'
 import EventEmitter from 'events'
 import NetworkStatus from '../network-status'
@@ -24,7 +24,7 @@ describe('delivery: electron -> NetworkStatus', () => {
   })
 
   it('alerts watchers when the connection value changes', async () => {
-    const client = new Client({ apiKey: '123' }, {}, [stateManager], Notifier)
+    const client = new Client({ apiKey: '123' }, {} as any, [stateManager] as any, Notifier)
     const { emitter, bulkUpdate } = client.getPlugin('clientStateManager')
     const checker = new NetworkStatus({ emitter }, { online: true }, appReady)
     const updates: boolean[] = []

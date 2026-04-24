@@ -1,7 +1,22 @@
 {
   "name": "@bugsnag/plugin-client-ip",
   "version": "8.8.0",
-  "main": "client-ip.js",
+  "type": "module",
+  "main": "./dist/cjs/client-ip.js",
+  "module": "./dist/esm/client-ip.js",
+  "types": "./dist/cjs/client-ip.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/client-ip.d.ts",
+        "default": "./dist/esm/client-ip.js"
+      },
+      "require": {
+        "types": "./dist/cjs/client-ip.d.ts",
+        "default": "./dist/cjs/client-ip.js"
+      }
+    }
+  },
   "description": "@bugsnag/js plugin to disable client IP from error reports",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,7 +27,7 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -21,5 +36,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

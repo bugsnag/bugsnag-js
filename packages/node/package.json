@@ -1,8 +1,21 @@
 {
   "name": "@bugsnag/node",
   "version": "8.8.0",
-  "main": "dist/bugsnag.js",
-  "types": "types/bugsnag.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/bugsnag.js",
+  "types": "./dist/cjs/bugsnag.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/bugsnag.d.ts",
+        "default": "./dist/esm/bugsnag.js"
+      },
+      "require": {
+        "types": "./dist/cjs/bugsnag.d.ts",
+        "default": "./dist/cjs/bugsnag.js"
+      }
+    }
+  },
   "description": "Bugsnag error reporter for Node.js",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -13,13 +26,12 @@
     "access": "public"
   },
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "scripts": {
-    "clean": "rm -fr dist && mkdir dist",
-    "build": "npm run clean && npm run build:dist",
-    "build:dist": "../../bin/bundle src/notifier.js --node --exclude=iserror,stack-generator,error-stack-parser,pump,byline,async_hooks --standalone=bugsnag | ../../bin/extract-source-map dist/bugsnag.js"
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   },
   "author": "Bugsnag",
   "license": "MIT",
@@ -42,7 +54,6 @@
     "@bugsnag/core": "^8.8.0",
     "byline": "^5.0.0",
     "error-stack-parser": "^2.0.3",
-    "iserror": "^0.0.2",
     "pump": "^3.0.0",
     "stack-generator": "^2.0.3"
   }

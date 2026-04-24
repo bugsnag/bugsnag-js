@@ -1,4 +1,4 @@
-import Bugsnag from '../src/notifier'
+import Bugsnag from '../src/bugsnag'
 
 describe('node notifier', () => {
   beforeAll(() => {
@@ -8,7 +8,7 @@ describe('node notifier', () => {
   })
 
   beforeEach(() => {
-    // @ts-ignore
+    // @ts-expect-error accessing private _client to reset state between tests
     Bugsnag._client = null
   })
 
@@ -38,6 +38,8 @@ describe('node notifier', () => {
       Bugsnag.leaveBreadcrumb('test')
 
       expect(spy).toHaveBeenCalledWith('Bugsnag.leaveBreadcrumb() was called before Bugsnag.start()')
+
+      spy.mockRestore()
     })
   })
 
@@ -45,7 +47,7 @@ describe('node notifier', () => {
     it('adds metadata to the client', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       Bugsnag.addMetadata('test', { meta: 'data' })
-      // @ts-ignore
+      // @ts-expect-error accessing private _client._metadata for test assertion
       expect(Bugsnag._client._metadata).toStrictEqual({ test: { meta: 'data' } })
     })
 
@@ -56,11 +58,11 @@ describe('node notifier', () => {
 
         contextualize(() => {
           Bugsnag.addMetadata('test', { meta: 'data' })
-          // @ts-ignore
+          // @ts-expect-error accessing private _client._clientContext for test assertion
           expect(Bugsnag._client._clientContext.getStore()._metadata).toStrictEqual({ test: { meta: 'data' } })
         })
 
-        // @ts-ignore
+        // @ts-expect-error accessing private _client._metadata for test assertion
         expect(Bugsnag._client._metadata).toStrictEqual({})
       })
     })
@@ -70,7 +72,7 @@ describe('node notifier', () => {
     it('retrieves metadata previously set on the client', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       Bugsnag.addMetadata('test', { meta: 'data' })
-      // @ts-ignore
+      // @ts-expect-error accessing private _client._metadata for test assertion
       expect(Bugsnag._client._metadata).toStrictEqual({ test: { meta: 'data' } })
 
       expect(Bugsnag.getMetadata('test')).toStrictEqual({ meta: 'data' })
@@ -83,13 +85,13 @@ describe('node notifier', () => {
 
         contextualize(() => {
           Bugsnag.addMetadata('test', { meta: 'data' })
-          // @ts-ignore
+          // @ts-expect-error accessing private _client._clientContext for test assertion
           expect(Bugsnag._client._clientContext.getStore()._metadata).toStrictEqual({ test: { meta: 'data' } })
 
           expect(Bugsnag.getMetadata('test')).toStrictEqual({ meta: 'data' })
         })
 
-        // @ts-ignore
+        // @ts-expect-error accessing private _client._metadata for test assertion
         expect(Bugsnag._client._metadata).toStrictEqual({})
         expect(Bugsnag.getMetadata('test')).toBeUndefined()
       })
@@ -102,7 +104,7 @@ describe('node notifier', () => {
       Bugsnag.addMetadata('test', { meta: 'data' })
       Bugsnag.clearMetadata('test')
 
-      // @ts-ignore
+      // @ts-expect-error accessing private _client._metadata for test assertion
       expect(Bugsnag._client._metadata).toStrictEqual({})
     })
 
@@ -115,11 +117,11 @@ describe('node notifier', () => {
         contextualize(() => {
           Bugsnag.addMetadata('test', { meta: 'data' })
           Bugsnag.clearMetadata('test')
-          // @ts-ignore
+          // @ts-expect-error accessing private _client._clientContext for test assertion
           expect(Bugsnag._client._clientContext.getStore()._metadata).toStrictEqual({})
         })
 
-        // @ts-ignore
+        // @ts-expect-error accessing private _client._metadata for test assertion
         expect(Bugsnag._client._metadata).toStrictEqual({ test: { meta: 'data' } })
       })
     })
@@ -129,7 +131,7 @@ describe('node notifier', () => {
     it('adds a feature flag to the client', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       Bugsnag.addFeatureFlag('test')
-      // @ts-ignore
+      // @ts-expect-error accessing private _client._features for test assertion
       expect(Bugsnag._client._features[0].name).toBe('test')
     })
 
@@ -140,11 +142,11 @@ describe('node notifier', () => {
 
         contextualize(() => {
           Bugsnag.addFeatureFlag('test')
-          // @ts-ignore
+          // @ts-expect-error accessing private _client._clientContext for test assertion
           expect(Bugsnag._client._clientContext.getStore()._features[0].name).toBe('test')
         })
 
-        // @ts-ignore
+        // @ts-expect-error accessing private _client._features for test assertion
         expect(Bugsnag._client._features.length).toBe(0)
       })
     })
@@ -154,7 +156,7 @@ describe('node notifier', () => {
     it('adds feature flags to the client', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       Bugsnag.addFeatureFlags([{ name: 'test' }, { name: 'other' }])
-      // @ts-ignore
+      // @ts-expect-error accessing private _client._features for test assertion
       expect(Bugsnag._client._features).toStrictEqual([
         { name: 'test', variant: null },
         { name: 'other', variant: null }
@@ -168,14 +170,14 @@ describe('node notifier', () => {
 
         contextualize(() => {
           Bugsnag.addFeatureFlags([{ name: 'test' }, { name: 'other' }])
-          // @ts-ignore
+          // @ts-expect-error accessing private _client._clientContext for test assertion
           expect(Bugsnag._client._clientContext.getStore()._features).toStrictEqual([
             { name: 'test', variant: null },
             { name: 'other', variant: null }
           ])
         })
 
-        // @ts-ignore
+        // @ts-expect-error accessing private _client._features for test assertion
         expect(Bugsnag._client._features).toStrictEqual([])
       })
     })
@@ -186,7 +188,7 @@ describe('node notifier', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       Bugsnag.addFeatureFlags([{ name: 'test' }, { name: 'other' }])
       Bugsnag.clearFeatureFlag('test')
-      // @ts-ignore
+      // @ts-expect-error accessing private _client._features for test assertion
       expect(Bugsnag._client._features).toStrictEqual([
         null,
         { name: 'other', variant: null }
@@ -202,14 +204,14 @@ describe('node notifier', () => {
         contextualize(() => {
           Bugsnag.addFeatureFlags([{ name: 'test' }, { name: 'other' }])
           Bugsnag.clearFeatureFlag('test')
-          // @ts-ignore
+          // @ts-expect-error accessing private _client._clientContext for test assertion
           expect(Bugsnag._client._clientContext.getStore()._features).toStrictEqual([
             null,
             { name: 'other', variant: null }
           ])
         })
 
-        // @ts-ignore
+        // @ts-expect-error accessing private _client._features for test assertion
         expect(Bugsnag._client._features).toStrictEqual([
           { name: 'test', variant: null },
           { name: 'other', variant: null }
@@ -223,7 +225,7 @@ describe('node notifier', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       Bugsnag.addFeatureFlags([{ name: 'test' }, { name: 'other' }])
       Bugsnag.clearFeatureFlags()
-      // @ts-ignore
+      // @ts-expect-error accessing private _client._features for test assertion
       expect(Bugsnag._client._features).toStrictEqual([])
     })
 
@@ -236,11 +238,11 @@ describe('node notifier', () => {
         contextualize(() => {
           Bugsnag.addFeatureFlags([{ name: 'test' }, { name: 'other' }])
           Bugsnag.clearFeatureFlags()
-          // @ts-ignore
+          // @ts-expect-error accessing private _client._clientContext for test assertion
           expect(Bugsnag._client._clientContext.getStore()._features).toStrictEqual([])
         })
 
-        // @ts-ignore
+        // @ts-expect-error accessing private _client._features for test assertion
         expect(Bugsnag._client._features).toStrictEqual([
           { name: 'test', variant: null },
           { name: 'other', variant: null }
@@ -299,7 +301,7 @@ describe('node notifier', () => {
     it('adds a breadcrumb to the client', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       Bugsnag.leaveBreadcrumb('test')
-      // @ts-ignore
+      // @ts-expect-error accessing private _client._breadcrumbs for test assertion
       expect(Bugsnag._client._breadcrumbs[0].message).toBe('test')
     })
 
@@ -310,11 +312,11 @@ describe('node notifier', () => {
 
         contextualize(() => {
           Bugsnag.leaveBreadcrumb('test')
-          // @ts-ignore
+          // @ts-expect-error accessing private _client._clientContext for test assertion
           expect(Bugsnag._client._clientContext.getStore()._breadcrumbs[0].message).toBe('test')
         })
 
-        // @ts-ignore
+        // @ts-expect-error accessing private _client._breadcrumbs for test assertion
         expect(Bugsnag._client._breadcrumbs.length).toBe(0)
       })
     })
@@ -324,7 +326,7 @@ describe('node notifier', () => {
     it('adds a breadcrumb to the client on console.log', () => {
       Bugsnag.start('abcd12abcd12abcd12abcd12abcd12abcd')
       console.log('test')
-      // @ts-ignore
+      // @ts-expect-error accessing private _client._breadcrumbs for test assertion
       expect(Bugsnag._client._breadcrumbs[0].message).toBe('Console output')
     })
 
@@ -335,11 +337,11 @@ describe('node notifier', () => {
 
         contextualize(() => {
           console.log('test')
-          // @ts-ignore
+          // @ts-expect-error accessing private _client._clientContext for test assertion
           expect(Bugsnag._client._clientContext.getStore()._breadcrumbs[0].message).toBe('Console output')
         })
 
-        // @ts-ignore
+        // @ts-expect-error accessing private _client._breadcrumbs for test assertion
         expect(Bugsnag._client._breadcrumbs).toHaveLength(0)
       })
     })

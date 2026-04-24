@@ -11,7 +11,7 @@ const schema = {
       nativeCrashes: true
     }),
     allowPartialObject: true,
-    validate: value => true
+    validate: (value: unknown) => true
   }
 }
 

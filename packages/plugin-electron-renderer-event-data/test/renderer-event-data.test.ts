@@ -1,5 +1,9 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { makeClientForPlugin } from '@bugsnag/electron-test-helpers'
-import Breadcrumb from '@bugsnag/core/breadcrumb'
+import { Breadcrumb } from '@bugsnag/core'
 import plugin from '../'
 
 describe('plugin: electron renderer event data', () => {
@@ -61,7 +65,7 @@ describe('plugin: electron renderer event data', () => {
   it('prefers pre-existing user from the event', async () => {
     const { client, sendEvent } = makeClient({ user: { id: 123 } })
 
-    client.addOnError(event => { event.setUser(456, 'abc@example.com', 'abc') }, true)
+    client.addOnError(event => { event.setUser(456 as any, 'abc@example.com', 'abc') }, true)
 
     const event = await sendEvent()
 
@@ -88,7 +92,7 @@ describe('plugin: electron renderer event data', () => {
 
     // Create client with no codeBundleId in renderer config (undefined)
     const { sendEvent } = makeClientForPlugin({
-      plugins: [plugin(makeIpcRenderer(mainProcessPayload))],
+      plugins: [plugin(makeIpcRenderer(mainProcessPayload))] as any,
       config: {
         // Explicitly omit codeBundleId to simulate renderer with no codeBundleId config
       }

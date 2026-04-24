@@ -1,5 +1,4 @@
-import clone from '@bugsnag/core/lib/clone-client'
-import Client, { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core/client'
+import { Client as ClientType, cloneClient as cloneClientType, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 
 // The in-flight package has module level state which can leak between tests
 // We can avoid this using jest's 'isolateModules' but need to type the
@@ -7,7 +6,14 @@ import Client, { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/c
 import BugsnagInFlightJustForTypescript from '../types/bugsnag-in-flight'
 
 let bugsnagInFlight: typeof BugsnagInFlightJustForTypescript
-jest.isolateModules(() => { bugsnagInFlight = require('../src/in-flight') })
+let Client: typeof ClientType
+let cloneClient: typeof cloneClientType
+jest.isolateModules(() => {
+  bugsnagInFlight = require('../src/in-flight')
+  const core = require('@bugsnag/core')
+  Client = core.Client
+  cloneClient = core.cloneClient
+})
 const noop = () => {}
 const id = <T>(a: T) => a
 
@@ -48,7 +54,7 @@ describe('@bugsnag/in-flight', () => {
     const client = new Client({ apiKey: 'AN_API_KEY' })
 
     // eslint thinks this is never reassigned, but it clearly is
-    let cloned: Client // eslint-disable-line prefer-const
+    let cloned: InstanceType<typeof Client> // eslint-disable-line prefer-const
 
     const payloads: EventDeliveryPayload[] = []
     const sendSession = jest.fn()
@@ -69,7 +75,7 @@ describe('@bugsnag/in-flight', () => {
     const onError = jest.fn()
     const callback = jest.fn()
 
-    cloned = clone(client)
+    cloned = cloneClient(client)
 
     expect(cloned._depth).toBe(1)
 
@@ -155,15 +161,15 @@ describe('@bugsnag/in-flight', () => {
     expect(client._sessionDelegate.pauseSession).not.toHaveBeenCalled()
     expect(client._sessionDelegate.resumeSession).not.toHaveBeenCalled()
 
-    const cloned = clone(client)
+    const cloned = cloneClient(client)
 
     cloned.startSession()
 
     expect(payloads.length).toBe(1)
     expect(callback).toHaveBeenCalledTimes(1)
-    expect(cloned._sessionDelegate.startSession).toHaveBeenCalledTimes(1)
-    expect(cloned._sessionDelegate.pauseSession).not.toHaveBeenCalled()
-    expect(cloned._sessionDelegate.resumeSession).not.toHaveBeenCalled()
+    expect(cloned._sessionDelegate?.startSession).toHaveBeenCalledTimes(1)
+    expect(cloned._sessionDelegate?.pauseSession).not.toHaveBeenCalled()
+    expect(cloned._sessionDelegate?.resumeSession).not.toHaveBeenCalled()
   })
 
   it('tracks all in-flight requests', () => {

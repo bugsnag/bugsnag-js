@@ -1,8 +1,22 @@
 {
   "name": "@bugsnag/plugin-aws-lambda",
   "version": "8.8.0",
-  "main": "src/index.js",
-  "types": "types/bugsnag-plugin-aws-lambda.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
   "description": "AWS Lambda support for @bugsnag/node",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -13,8 +27,7 @@
     "access": "public"
   },
   "files": [
-    "src",
-    "types"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -30,5 +43,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

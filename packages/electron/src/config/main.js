@@ -1,9 +1,8 @@
 const { schema } = require('./common')
-const stringWithLength = require('@bugsnag/core/lib/validators/string-with-length')
-const listOfFunctions = require('@bugsnag/core/lib/validators/list-of-functions')
+const { listOfFunctions, stringWithLength } = require('@bugsnag/core')
 const { inspect } = require('util')
 const { app } = require('electron')
-const normalizePath = require('@bugsnag/core/lib/path-normalizer')
+const normalizePath = require('@bugsnag/path-normalizer')
 
 module.exports.schema = {
   ...schema,

@@ -11,6 +11,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": ["*.js"],
   "author": "Bugsnag",
   "license": "MIT",
   "peerDependencies": {

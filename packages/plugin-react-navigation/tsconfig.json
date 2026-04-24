@@ -4,5 +4,6 @@
   "compilerOptions": {
     "lib": ["es2015"],
     "types": ["jest", "react-native"],
+    "skipLibCheck": true
   }
 }

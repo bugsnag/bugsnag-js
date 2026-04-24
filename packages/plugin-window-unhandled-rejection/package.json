@@ -1,7 +1,22 @@
 {
   "name": "@bugsnag/plugin-window-unhandled-rejection",
   "version": "8.8.0",
-  "main": "unhandled-rejection.js",
+  "type": "module",
+  "main": "./dist/cjs/unhandled-rejection.js",
+  "module": "./dist/esm/unhandled-rejection.js",
+  "types": "./dist/cjs/unhandled-rejection.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/unhandled-rejection.d.ts",
+        "default": "./dist/esm/unhandled-rejection.js"
+      },
+      "require": {
+        "types": "./dist/cjs/unhandled-rejection.d.ts",
+        "default": "./dist/cjs/unhandled-rejection.js"
+      }
+    }
+  },
   "description": "@bugsnag/js plugin to report unhandled promise rejections in browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,7 +27,7 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -21,5 +36,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
   }
 }

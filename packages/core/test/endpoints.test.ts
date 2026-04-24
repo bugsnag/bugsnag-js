@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-const Client = require('../client')
+import Client from '../src/client'
 
 /* --------------------------------------------------------------------------
  *  Constants – keep tests self-contained

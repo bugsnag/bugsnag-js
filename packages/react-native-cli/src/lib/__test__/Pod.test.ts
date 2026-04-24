@@ -30,7 +30,7 @@ test('install(): success', async () => {
   readdirMock.mockResolvedValue(['Pods', 'MyProject', 'MyProject.xcodeproj', 'Podfile'])
 
   const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
-  spawnMock.mockReturnValue({ status: 0 })
+  spawnMock.mockReturnValue({ status: 0 } as any)
 
   await install('/example/dir', logger)
   expect(spawnMock).toHaveBeenCalledWith('pod', ['install'], { cwd: '/example/dir/ios', stdio: 'inherit' })
@@ -42,7 +42,7 @@ test('install(): no podfile', async () => {
   readdirMock.mockResolvedValue(['Pods', 'MyProject', 'MyProject.xcodeproj'])
 
   const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
-  spawnMock.mockReturnValue({ status: 0 })
+  spawnMock.mockReturnValue({ status: 0 } as any)
 
   await install('/example/dir', logger)
   expect(spawnMock).not.toHaveBeenCalled()
@@ -55,7 +55,7 @@ test('install(): no ios dir', async () => {
   readdirMock.mockRejectedValue(await generateNotFoundError())
 
   const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
-  spawnMock.mockReturnValue({ status: 0 })
+  spawnMock.mockReturnValue({ status: 0 } as any)
 
   await install('/example/dir', logger)
   expect(spawnMock).not.toHaveBeenCalled()
@@ -68,7 +68,7 @@ test('install(): bad exit code', async () => {
   readdirMock.mockResolvedValue(['Pods', 'MyProject', 'MyProject.xcodeproj', 'Podfile'])
 
   const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
-  spawnMock.mockReturnValue({ status: 1 })
+  spawnMock.mockReturnValue({ status: 1 } as any)
 
   await expect(install('/example/dir', logger)).rejects.toThrow('Command "pod install" exited with non-zero exit code (1)')
   expect(spawnMock).toHaveBeenCalledWith('pod', ['install'], { cwd: '/example/dir/ios', stdio: 'inherit' })
@@ -79,11 +79,11 @@ test('install(): ENOENT error from cocoapods', async () => {
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
   readdirMock.mockResolvedValue(['Pods', 'MyProject', 'MyProject.xcodeproj', 'Podfile'])
 
-  const error = new Error('oh dear')
+  const error = new Error('oh dear') as Error & { code: string }
   error.code = 'ENOENT'
 
   const spawnMock = spawnSync as jest.MockedFunction<typeof spawnSync>
-  spawnMock.mockImplementation(() => ({ error, status: 255 }))
+  spawnMock.mockImplementation((() => ({ error, status: 255 })) as any)
 
   await install('/example/dir', logger)
 

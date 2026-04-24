@@ -1,4 +1,4 @@
-const { maybeUseFallbackStack } = require('@bugsnag/core/lib/node-fallback-stack')
+const { nodeFallbackStack } = require('@bugsnag/core')
 
 let _handler
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
 
       // check if the stacktrace has no context, if so append the frames we created earlier
       // see plugin-contextualize for where this is created
-      if (err.stack && c.fallbackStack) maybeUseFallbackStack(err, c.fallbackStack)
+      if (err.stack && c.fallbackStack) nodeFallbackStack.maybeUseFallbackStack(err, c.fallbackStack)
 
       const event = c.Event.create(err, false, {
         severity: 'error',

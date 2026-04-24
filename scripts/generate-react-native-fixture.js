@@ -40,6 +40,18 @@ const replacementFilesDir = resolve(ROOT_DIR, 'test/react-native/features/fixtur
 
 const INTERNAL_DEPENDENCIES = [
   '@bugsnag/react-native',
+  '@bugsnag/core',
+  '@bugsnag/delivery-react-native',
+  '@bugsnag/plugin-console-breadcrumbs',
+  '@bugsnag/plugin-network-breadcrumbs',
+  '@bugsnag/plugin-react',
+  '@bugsnag/plugin-react-native-client-sync',
+  '@bugsnag/plugin-react-native-event-sync',
+  '@bugsnag/plugin-react-native-global-error-handler',
+  '@bugsnag/plugin-react-native-hermes',
+  '@bugsnag/plugin-react-native-session',
+  '@bugsnag/plugin-react-native-unhandled-rejection',
+  '@bugsnag/derecursify',
   '@bugsnag/request-tracker',
   '@bugsnag/plugin-network-instrumentation'
 ]
@@ -184,13 +196,8 @@ if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
 }
 
 function installFixtureDependencies () {
-  // get the react native package plus all of it's dependencies
-  const bugsnagReactNativePkg = JSON.parse(fs.readFileSync(`${ROOT_DIR}/packages/react-native/package.json`, 'utf8'))
-  const bugsnagPackages = Object.keys(bugsnagReactNativePkg.dependencies)
-    .filter(dep => dep.startsWith('@bugsnag/')).concat(INTERNAL_DEPENDENCIES)
-
   // pack the bugsnag packages into the test fixture directory
-  const workSpaceArgs = bugsnagPackages.map(dep => `--workspace=${dep}`)
+  const workSpaceArgs = INTERNAL_DEPENDENCIES.map(dep => `--workspace=${dep}`)
   execFileSync('npm', ['pack', `--pack-destination=${fixtureDir}`, ...workSpaceArgs], { cwd: ROOT_DIR, stdio: 'inherit' })
 
   // pack the scenario launcher

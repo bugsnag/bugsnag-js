@@ -1,6 +1,6 @@
 const bugsnagInFlight = require('@bugsnag/in-flight')
 const BugsnagPluginBrowserSession = require('@bugsnag/plugin-browser-session')
-const clone = require('@bugsnag/core/lib/clone-client')
+const { cloneClient } = require('@bugsnag/core')
 
 const SERVER_PLUGIN_NAMES = ['express', 'koa', 'restify', 'hono']
 const isServerPluginLoaded = client => SERVER_PLUGIN_NAMES.some(name => client.getPlugin(name))
@@ -61,7 +61,7 @@ function wrapHandler (client, flushTimeoutMs, handler) {
     }
 
     // clone the client to be scoped to this request.
-    const requestClient = clone(client)
+    const requestClient = cloneClient(client)
 
     // only start a session and add request metadata if no server plugin is loaded,
     // as those plugins will handle this themselves

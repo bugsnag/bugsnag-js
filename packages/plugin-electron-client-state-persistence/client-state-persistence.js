@@ -1,4 +1,4 @@
-const featureFlagDelegate = require('@bugsnag/core/lib/feature-flag-delegate')
+const { featureFlagDelegate } = require('@bugsnag/core')
 
 const isEnabledFor = client => client._config.autoDetectErrors && client._config.enabledErrorTypes.nativeCrashes
 

@@ -9,7 +9,7 @@ import plugin from '../'
 const ONE_HOUR_IN_MS = 60 * 60 * 1000
 
 // expected data for 'session.app'
-const makeExpectedSessionApp = (customisations = {}) => ({
+const makeExpectedSessionApp = (customisations: Record<string, unknown> = {}) => ({
   releaseStage: 'production',
   type: undefined,
   version: '1.2.3',
@@ -18,7 +18,7 @@ const makeExpectedSessionApp = (customisations = {}) => ({
 })
 
 // expected data for 'event.app'
-const makeExpectedEventApp = (customisations = {}) => {
+const makeExpectedEventApp = (customisations: Record<string, unknown> = {}) => {
   const app = makeExpectedSessionApp()
   return {
     ...app,
@@ -29,14 +29,14 @@ const makeExpectedEventApp = (customisations = {}) => {
   }
 }
 // expected data synced to NativeClient
-const makeExpectedNativeClientApp = (customisations = {}) => {
+const makeExpectedNativeClientApp = (customisations: Record<string, unknown> = {}) => {
   const app = makeExpectedEventApp()
   delete app.duration
   return { ...app, ...customisations }
 }
 
 // expected data for 'event.metadata.app'
-const makeExpectedMetadataApp = (customisations = {}) => ({
+const makeExpectedMetadataApp = (customisations: Record<string, unknown> = {}) => ({
   name: 'my cool app :^)',
   ...customisations
 })
@@ -183,7 +183,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports app.codeBundleId when configured', async () => {
-    const config = { codeBundleId: 'test-bundle-123' }
+    const config = { codeBundleId: 'test-bundle-123', launchDurationMillis: 0 }
 
     const { sendEvent, sendSession } = makeClient({ config })
 
@@ -263,7 +263,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports the app.duration and app.durationInForeground', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -297,7 +297,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports the app.duration and app.durationInForeground when process.getCreationTime returns null', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -329,7 +329,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports the app.durationInForeground after backgrounding', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -381,7 +381,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports the app.durationInForeground after backgrounding when process.getCreationTime returns null', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -431,7 +431,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports durationInForeground correctly across multiple browser windows', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -625,7 +625,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('automatically marks the app as not launching after the default "launchDurationMillis" elapses', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -655,7 +655,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('automatically marks the app as not launching after the configured "launchDurationMillis" elapses', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -677,7 +677,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('does not sync "markLaunchComplete" calls after "launchDurationMillis" elapses', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -715,7 +715,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('does not sync "launchDurationMillis" elapsing after "markLaunchComplete" has been called', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers()
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -753,6 +753,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('validates "launchDurationMillis" must be >= 0', async () => {
+    jest.useFakeTimers()
     const config = { launchDurationMillis: -1234567890 }
 
     const { client } = makeClient({ config })
@@ -814,12 +815,12 @@ const schema = {
       nativeCrashes: true
     }),
     allowPartialObject: true,
-    validate: value => true
+    validate: (value: unknown) => true
   },
   codeBundleId: {
     defaultValue: () => undefined,
     message: 'should be a string',
-    validate: val => (val === undefined || typeof val === 'string')
+    validate: (val: unknown) => (val === undefined || typeof val === 'string')
   }
 }
 
