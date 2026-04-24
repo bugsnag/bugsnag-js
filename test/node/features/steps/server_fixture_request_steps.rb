@@ -1,8 +1,8 @@
 require 'net/http'
 
-# Attempts to POST a string of urlencoded data to a server.
+# Attempts to POST a string of request body data to a server.
 #
-# @step_input reqbody [String] urlencoded data to send.
+# @step_input reqbody [String] body data to send.
 # @step_input url [String] The URL to post data to.
 # @step_input content_type [String] The content type of the data being sent.
 When("I POST the data {string} to the URL {string} with the content type {string}") do |reqbody, url, content_type|
