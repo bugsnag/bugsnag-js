@@ -311,7 +311,7 @@ firefox_78:
     lineNumber: 18
     columnNumber: 25
 
-chrome_43:
+chrome_47:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: 'foo is not defined'
@@ -336,6 +336,33 @@ chrome_43:
     errorMessage: URI malformed
     lineNumber: 18
     columnNumber: 7
+
+chrome_53:
+  handled:
+    errorClass: 'ReferenceError'
+    errorMessage: 'foo is not defined'
+  unhandled_syntax:
+    errorClass: 'SyntaxError'
+    errorMessage: "Unexpected token !"
+    lineNumber: 18
+    columnNumber: 13
+    file: '/unhandled/script/syntax_error.html'
+  unhandled_thrown:
+    errorClass: 'Error'
+    errorMessage: "bad things"
+    lineNumber: 18
+    columnNumber: 13
+  unhandled_undefined_function:
+    errorClass: 'ReferenceError'
+    errorMessage: nevergoingtoexist_notinamillionyears is not defined
+    lineNumber: 18
+    columnNumber: 7
+  unhandled_malformed_uri:
+    errorClass: 'URIError'
+    errorMessage: URI malformed
+    lineNumber: 18
+    columnNumber: 7
+
 
 chrome_72:
   handled:
