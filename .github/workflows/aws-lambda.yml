@@ -38,3 +38,11 @@ jobs:
         cd test/aws-lambda
         bundle install
         bundle exec maze-runner
+
+    - name: Upload test artifacts
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: aws-lambda-test-results
+        path: test/aws-lambda/maze_output/
+        if-no-files-found: ignore
