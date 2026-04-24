@@ -37,15 +37,12 @@ module.exports = {
     })
 
     const errorHandler = createMiddleware(async (c, next) => {
-      let rethrow = false
-
       try {
         // Catch non-errors thrown in routes without causing the route to hang by awaiting the next() call inside a try/catch block.
         // The error is then attached to the context and processed in the same way as errors thrown in routes.
         await next()
       } catch (err) {
         c.error = err
-        rethrow = true
       }
 
       if (!c.error) return
@@ -65,8 +62,6 @@ module.exports = {
           client._notify(event)
         }
       }
-
-      if (rethrow) throw c.error
     })
 
     return { requestHandler, errorHandler }
