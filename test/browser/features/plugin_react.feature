@@ -1,4 +1,4 @@
-@plugin_react @skip_chrome_43
+@plugin_react @skip_chrome_47 @skip_chrome_53
 Feature: React support
 
   @requires_set
