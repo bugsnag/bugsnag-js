@@ -40,8 +40,8 @@ module.exports = {
       let rethrow = false
 
       try {
-        // Catch non-errors thrown in routes without causing the route to hang by awaiting the next() call inside a try/catch block.
-        // The error is then attached to the context and processed in the same way as errors thrown in routes.
+        // Catch all thrown values from routes by awaiting next() inside a try/catch block.
+        // This also ensures non-Error throws are attached to the context and processed without causing the route to hang.
         await next()
       } catch (err) {
         c.error = err
