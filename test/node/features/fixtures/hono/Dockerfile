@@ -10,7 +10,5 @@ COPY . ./
 
 RUN npm install --no-package-lock --no-save bugsnag-*.tgz
 
-EXPOSE 80
-
 ENV NODE_ENV production
 CMD node scenarios/app
