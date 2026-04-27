@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@babel/core": "^7.24.5",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
@@ -90,6 +91,7 @@
     "test:unit:electron-runner": "xvfb-maybe --auto-servernum -- jest -c config/electron-jest.config.js --rootDir .",
     "test:unit": "xvfb-maybe --auto-servernum -- jest",
     "test:coverage": "xvfb-maybe --auto-servernum -- jest -c config/full-suite-jest.config.js --rootDir . --coverage",
+    "test:attw": "lerna exec --concurrency 1 -- attw --pack . -f json",
     "test:types": "tsc -p tsconfig.test.json && lerna run test:types",
     "test:test-container-registry-login": "aws ecr get-login-password --profile=opensource --region=us-west-1 | docker login --username AWS --password-stdin 855461928731.dkr.ecr.us-west-1.amazonaws.com",
     "test:build-browser-container": "docker-compose up --build minimal-packager && docker-compose build --pull browser-maze-runner",
