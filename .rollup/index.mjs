@@ -4,6 +4,62 @@ import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import fs from 'fs'
+import path from 'path'
+
+// Plugin to add .js extensions to imports in .d.ts files for ESM compatibility
+function fixEsmTypeImports() {
+  return {
+    name: 'fix-esm-type-imports',
+    writeBundle(options) {
+      const outDir = options.dir
+      if (!outDir || !outDir.includes('esm')) return
+
+      const fixImportsInFile = (filePath) => {
+        let content = fs.readFileSync(filePath, 'utf8')
+        
+        // Replace relative imports in 'from' statements: from './file' or from "./file"
+        content = content.replace(
+          /from\s+(['"])(\.\.[\/\\].*?|\.\/.*?)\1/g,
+          (match, quote, importPath) => {
+            // Don't add extension if it already has one
+            if (/\.[a-z]+$/.test(importPath)) {
+              return match
+            }
+            return `from ${quote}${importPath}.js${quote}`
+          }
+        )
+        
+        // Replace relative imports in inline import() statements: import("./file")
+        content = content.replace(
+          /import\((['"])(\.\.[\/\\].*?|\.\/.*?)\1\)/g,
+          (match, quote, importPath) => {
+            // Don't add extension if it already has one
+            if (/\.[a-z]+$/.test(importPath)) {
+              return match
+            }
+            return `import(${quote}${importPath}.js${quote})`
+          }
+        )
+        
+        fs.writeFileSync(filePath, content, 'utf8')
+      }
+
+      const processDirectory = (dirPath) => {
+        const entries = fs.readdirSync(dirPath, { withFileTypes: true })
+        for (const entry of entries) {
+          const fullPath = path.join(dirPath, entry.name)
+          if (entry.isDirectory()) {
+            processDirectory(fullPath)
+          } else if (entry.name.endsWith('.d.ts')) {
+            fixImportsInFile(fullPath)
+          }
+        }
+      }
+
+      processDirectory(outDir)
+    }
+  }
+}
 
 const defaultOptions = () => ({
   // additional variables to define with '@rollup/plugin-replace'
@@ -52,6 +108,7 @@ function createRollupConfig (options = defaultOptions()) {
           outDir: 'dist/esm',
           noEmitOnError: true
         }),
+        fixEsmTypeImports(),
         ...(options.plugins ?? [])
       ]
     },
