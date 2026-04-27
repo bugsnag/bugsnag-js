@@ -12,7 +12,8 @@
     "private": true
   },
   "files": [
-    "helpers.ts"
+    "helpers.ts",
+    "src/*.ts"
   ],
   "devDependencies": {
     "@bugsnag/core": "^8.8.0"
