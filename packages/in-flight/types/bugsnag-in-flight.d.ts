@@ -1,4 +1,4 @@
-import { Client } from '@bugsnag/core'
+import type { Client } from '@bugsnag/core'
 
 interface BugsnagInFlight {
   trackInFlight (client: Client): void
@@ -7,4 +7,4 @@ interface BugsnagInFlight {
 
 declare const BugsnagInFlightPlugin: BugsnagInFlight
 
-export default BugsnagInFlightPlugin
+export = BugsnagInFlightPlugin
