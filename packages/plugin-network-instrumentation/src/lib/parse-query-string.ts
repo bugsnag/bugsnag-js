@@ -1,10 +1,10 @@
 /**
  * Parse a query string into an object
- * @param {string} queryString - Query string (e.g., "key=value&foo=bar")
- * @returns {Object<string, string>} Parsed query parameters as key-value pairs
+ * @param queryString - Query string (e.g., "key=value&foo=bar")
+ * @returns Parsed query parameters as key-value pairs
  */
-module.exports = function (queryString) {
-  const params = {}
+export default function parseQueryString(queryString: string): Record<string, string> {
+  const params: Record<string, string> = {}
   if (!queryString) {
     return params
   }

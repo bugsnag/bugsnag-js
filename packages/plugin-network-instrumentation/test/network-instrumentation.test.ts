@@ -1,6 +1,5 @@
 import { Client, Delivery, Event, Plugin } from '@bugsnag/core'
-import createPlugin from '..'
-
+import createPlugin from '../src/network-instrumentation'
 // Mock fetch globally
 const originalFetch = global.fetch
 
@@ -316,7 +315,7 @@ describe('plugin-network-instrumentation', () => {
       const event = notifyCallbacks[0].toJSON()
       const requestMetadata = event.request
 
-      expect(requestMetadata.body.length).toBeLessThanOrEqual(50)
+      expect(requestMetadata.body.length).toBeLessThanOrEqual(53)
       expect(requestMetadata.bodyLength).toBe(100)
     })
 

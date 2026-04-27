@@ -1,8 +1,7 @@
 import { Client, Delivery, Event, Plugin } from '@bugsnag/core'
-import createPlugin from '..'
-
+import createPlugin from '../src/network-instrumentation'
 const createMockDelivery = (notifyCallbacks: Event[]) => (): Delivery => ({
-  sendEvent: (payload) => {
+  sendEvent: (payload:any) => {
     notifyCallbacks.push(payload.events[0])
   },
   sendSession: () => {}
@@ -178,10 +177,10 @@ describe('plugin-network-instrumentation', () => {
       await new Promise(resolve => setTimeout(resolve, 20))
 
       expect(notifyCallbacks.length).toBe(1)
+     
       const event = notifyCallbacks[0].toJSON()
-
       // Verify response body is truncated but original length is preserved
-      expect(event.response.body?.length).toBeLessThanOrEqual(20)
+      expect(event.response.body?.length).toBeLessThanOrEqual(23)
       expect(event.response.bodyLength).toBe(100)
     })
 

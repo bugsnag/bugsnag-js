@@ -1,9 +1,9 @@
 /**
  * Parse a URL in a single pass to extract domain, clean URL, and query string
- * @param {string} url - URL string
- * @returns {{ domain: string, cleanUrl: string, queryString: string }} Object with domain, cleanUrl, and queryString
+ * @param url - URL string
+ * @returns Object with domain, cleanUrl, and queryString
  */
-module.exports = function (url) {
+export default function parseUrl(url: string): { domain: string, cleanUrl: string, queryString: string } {
   try {
     const isAbsolute = /^https?:\/\//i.test(url)
 

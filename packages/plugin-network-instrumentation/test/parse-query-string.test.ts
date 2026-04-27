@@ -1,4 +1,4 @@
-import parseQueryString from '../lib/parse-query-string'
+import parseQueryString from '../src/lib/parse-query-string'
 
 describe('parseQueryString', () => {
   it('should parse a query string into an object', () => {
