@@ -23,3 +23,7 @@ Gemfile.lock
 .idea/
 *.iml
 zscaler-root-ca.crt*
+
+# Log files
+*.log
+logs/

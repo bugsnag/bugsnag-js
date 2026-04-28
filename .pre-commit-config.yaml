@@ -1,0 +1,22 @@
+repos:
+  # Basic hygiene
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-added-large-files
+      - id: end-of-file-fixer
+
+  # Block .log files
+  - repo: local
+    hooks:
+      - id: block-log-files
+        name: Block .log files
+        entry: bash -c 'if git diff --cached --name-only | grep -E "\.log$"; then echo "❌ .log files are not allowed"; exit 1; fi'
+        language: system
+        stages: [pre-commit]
+
+  # Secret detection
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks

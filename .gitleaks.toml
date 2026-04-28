@@ -1,0 +1,11 @@
+title = "Gitleaks Config"
+
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key"
+regex = '''(?i)(api[_-]?key|apikey|secret|token)\s*[:=]\s*['"]?[A-Za-z0-9_-]{20,}['"]?'''
+
+[[rules]]
+id = "hardcoded-password"
+description = "Hardcoded password"
+regex = '''(?i)(password|passwd|pwd)\s*[:=]\s*['"][^'"\n]{4,}['"]'''
