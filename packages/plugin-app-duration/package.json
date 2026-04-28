@@ -1,6 +1,7 @@
 {
   "name": "@bugsnag/plugin-app-duration",
   "version": "8.8.0",
+  "type": "module",
   "main": "./dist/cjs/app-duration.js",
   "module": "./dist/esm/app-duration.js",
   "types": "./dist/cjs/app-duration.d.ts",
