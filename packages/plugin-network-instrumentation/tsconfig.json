@@ -5,5 +5,5 @@
     "outDir": "dist",
     "declarationDir": "dist/types"
   },
-  "include": ["src/**/*.ts", "src/lib/redact-values.ts"]
+  "include": ["src/**/*.ts"]
 }

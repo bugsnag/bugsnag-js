@@ -34,8 +34,9 @@ const networkInstrumentation = (
     onHttpError
   } = config
 
-  // Normalize httpErrorCodes to an array
-  const normalizedStatusCodes = Array.isArray(httpErrorCodes) ? httpErrorCodes : [httpErrorCodes]
+  // Normalize httpErrorCodes to an array of {min, max} objects
+  const normalizedStatusCodes = (Array.isArray(httpErrorCodes) ? httpErrorCodes : [httpErrorCodes])
+    .map(code => typeof code === 'number' ? { min: code, max: code } : code)
 
   let restoreFunctions: Array<() => void> = []
   const plugin: Plugin = {
@@ -47,14 +48,12 @@ const networkInstrumentation = (
       // Auto-load request tracker if not present
       if (!requestTrackerPlugin) {
         try {
-          // @ts-ignore
           const { createRequestTrackerPlugin } = require('@bugsnag/request-tracker')
           const trackerPlugin = createRequestTrackerPlugin([], global)
-          // @ts-ignore
           client._loadPlugin(trackerPlugin)
           requestTrackerPlugin = client.getPlugin && client.getPlugin('requestTracker')
         } catch (error: any) {
-          client._logger?.warn?.('Failed to auto-load request tracker, using direct fetch patching:', error.message)
+          client._logger?.warn?.('Failed to auto-load request tracker, using direct fetch patching: '+ error.message)
         }
       }
 
@@ -104,12 +103,14 @@ const networkInstrumentation = (
             httpMethod: method,
             headers: startContext.headers,
             params: redactValues(requestParams, client._config.redactedKeys),
-            bodyLength: startContext.body ? startContext.body.length : undefined
+            bodyLength: startContext.body ? startContext.body.length : undefined,
+            body: undefined as string | undefined
           }
           const responseObj = {
             statusCode: endContext.status,
             headers: endContext.headers,
-            bodyLength: endContext.body ? endContext.body.length : undefined
+            bodyLength: endContext.body ? endContext.body.length : undefined,
+            body: undefined as string | undefined
           }
 
           // Call onHttpError callback if provided
@@ -142,7 +143,6 @@ const networkInstrumentation = (
             severityReason: { type: 'httpError' }
           }
 
-          // @ts-ignore
           const event: Event = client.Event.create(
             error,
             true,
