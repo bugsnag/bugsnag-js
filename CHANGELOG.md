@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- (react-native-navigation) Add support for react-native-navigation v8 [#2741](https://github.com/bugsnag/bugsnag-js/pull/2741)
+
+
 ## [8.9.0] - 2026-04-08
 
 ### Fixed
