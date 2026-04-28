@@ -1,24 +1,13 @@
-import { Plugin } from '@bugsnag/core'
-
+import type { Plugin } from '@bugsnag/core'
 
 interface Config {
   collectUserIp: boolean
 }
 
-interface ExtendedPlugin extends Plugin {
-  configSchema: Record<string, ValidationOption>
-}
-
-interface ValidationOption {
-  validate: (value: unknown) => boolean
-  defaultValue: () => unknown
-  message: string
-}
-
 /*
  * Prevent collection of user IPs
  */
-const plugin: ExtendedPlugin = {
+const plugin: Plugin = {
   load: client => {
     if ((client._config as unknown as Config).collectUserIp) return
 
