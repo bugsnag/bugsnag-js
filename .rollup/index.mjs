@@ -19,7 +19,7 @@ function fixEsmTypeImports() {
         
         // Replace relative imports in 'from' statements: from './file' or from "./file"
         content = content.replace(
-          /from\s+(['"])(\.\.[\/\\].*?|\.\/.*?)\1/g,
+          /from\s+(['"])(\.\.[/\\].*?|\.\/.*?)\1/g,
           (match, quote, importPath) => {
             // Don't add extension if it already has one
             if (/\.[a-z]+$/.test(importPath)) {
@@ -31,7 +31,7 @@ function fixEsmTypeImports() {
         
         // Replace relative imports in inline import() statements: import("./file")
         content = content.replace(
-          /import\((['"])(\.\.[\/\\].*?|\.\/.*?)\1\)/g,
+          /import\((['"])(\.\.[/\\].*?|\.\/.*?)\1\)/g,
           (match, quote, importPath) => {
             // Don't add extension if it already has one
             if (/\.[a-z]+$/.test(importPath)) {
@@ -52,6 +52,44 @@ function fixEsmTypeImports() {
             processDirectory(fullPath)
           } else if (entry.name.endsWith('.d.ts')) {
             fixImportsInFile(fullPath)
+          }
+        }
+      }
+
+      processDirectory(outDir)
+    }
+  }
+}
+
+// Plugin to convert 'export default' to 'export =' in CJS .d.ts files for proper typing
+function fixCjsDefaultExport() {
+  return {
+    name: 'fix-cjs-default-export',
+    writeBundle(options) {
+      const outDir = options.dir
+      if (!outDir || !outDir.includes('cjs')) return
+
+      const fixExportInFile = (filePath) => {
+        let content = fs.readFileSync(filePath, 'utf8')
+        
+        // Replace 'export default' with 'export =' for CJS compatibility
+        // This matches the rollup footer: module.exports = Object.assign(exports.default || {}, exports);
+        content = content.replace(
+          /^export default /gm,
+          'export = '
+        )
+        
+        fs.writeFileSync(filePath, content, 'utf8')
+      }
+
+      const processDirectory = (dirPath) => {
+        const entries = fs.readdirSync(dirPath, { withFileTypes: true })
+        for (const entry of entries) {
+          const fullPath = path.join(dirPath, entry.name)
+          if (entry.isDirectory()) {
+            processDirectory(fullPath)
+          } else if (entry.name.endsWith('.d.ts')) {
+            fixExportInFile(fullPath)
           }
         }
       }
@@ -109,6 +147,16 @@ function createRollupConfig (options = defaultOptions()) {
           noEmitOnError: true
         }),
         fixEsmTypeImports(),
+        {
+          name: 'emit-esm-package-json',
+          generateBundle() {
+            this.emitFile({
+              type: 'asset',
+              fileName: 'package.json',
+              source: JSON.stringify({ type: 'module' }, null, 2)
+            });
+          }
+        },
         ...(options.plugins ?? [])
       ]
     },
@@ -146,6 +194,7 @@ function createRollupConfig (options = defaultOptions()) {
           outDir: 'dist/cjs',
           noEmitOnError: true
         }),
+        fixCjsDefaultExport(),
         {
           name: 'emit-cjs-package-json',
           generateBundle() {
