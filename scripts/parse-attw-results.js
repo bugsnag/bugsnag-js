@@ -10,50 +10,63 @@ const path = require('path');
 
 function parseResults(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
-  const lines = content.split('\n');
-  const results = [];
   
-  let currentJson = '';
-  let braceCount = 0;
-  let inJson = false;
-  
-  for (const line of lines) {
-    // Skip empty lines and lines that don't start a JSON object if we're not already in one
-    if (!inJson && !line.trim().startsWith('{')) {
-      continue;
+  try {
+    // Try parsing as a JSON array first (new format)
+    const parsed = JSON.parse(content);
+    if (Array.isArray(parsed)) {
+      return parsed;
     }
+    // If it's a single object, wrap it in an array
+    return [parsed];
+  } catch (error) {
+    // Fall back to parsing multiple JSON objects separated by newlines (legacy format)
+    console.warn('⚠️  Using legacy multi-object JSON parsing. Consider running with the new script.');
+    const lines = content.split('\n');
+    const results = [];
     
-    // Start tracking a new JSON object
-    if (line.trim().startsWith('{') && braceCount === 0) {
-      inJson = true;
-      currentJson = '';
-      braceCount = 0;
-    }
+    let currentJson = '';
+    let braceCount = 0;
+    let inJson = false;
     
-    if (inJson) {
-      currentJson += line + '\n';
-      
-      // Count braces to know when we've completed a JSON object
-      for (const char of line) {
-        if (char === '{') braceCount++;
-        if (char === '}') braceCount--;
+    for (const line of lines) {
+      // Skip empty lines and lines that don't start a JSON object if we're not already in one
+      if (!inJson && !line.trim().startsWith('{')) {
+        continue;
       }
       
-      // When braceCount returns to 0, we have a complete JSON object
-      if (braceCount === 0) {
-        try {
-          const parsed = JSON.parse(currentJson);
-          results.push(parsed);
-        } catch (err) {
-          console.error('Error parsing JSON object:', err.message);
-        }
-        inJson = false;
+      // Start tracking a new JSON object
+      if (line.trim().startsWith('{') && braceCount === 0) {
+        inJson = true;
         currentJson = '';
+        braceCount = 0;
+      }
+      
+      if (inJson) {
+        currentJson += line + '\n';
+        
+        // Count braces to know when we've completed a JSON object
+        for (const char of line) {
+          if (char === '{') braceCount++;
+          if (char === '}') braceCount--;
+        }
+        
+        // When braceCount returns to 0, we have a complete JSON object
+        if (braceCount === 0) {
+          try {
+            const parsed = JSON.parse(currentJson);
+            results.push(parsed);
+          } catch (err) {
+            console.error('Error parsing JSON object:', err.message);
+          }
+          inJson = false;
+          currentJson = '';
+        }
       }
     }
+    
+    return results;
   }
-  
-  return results;
 }
 
 function analyzeResults(results) {
