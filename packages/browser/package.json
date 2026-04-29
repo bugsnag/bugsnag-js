@@ -33,7 +33,6 @@
     "clean": "rm -fr dist && mkdir dist",
     "prebuild": "npm run clean",
     "build": "rollup --config rollup.config.mjs",
-    "postbuild": "node scripts/fix-cjs-types.js",
     "cdn-upload": "../../bin/cdn-upload dist/*"
   },
   "author": "Bugsnag",

@@ -5,6 +5,45 @@ import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
 import fs from 'fs'
+import path from 'path'
+
+// Plugin to fix TypeScript declaration files for proper module resolution
+function fixDeclarations(options = {}) {
+  const { format, declarationExt } = options
+  
+  return {
+    name: 'fix-declarations',
+    writeBundle() {
+      const typesDir = path.join(process.cwd(), 'dist/types')
+      
+      if (format === 'esm' && declarationExt === '.d.mts') {
+        // Fix ESM declarations: rename to .d.mts and add .js extensions
+        const sourceFile = path.join(typesDir, 'index-es.d.ts')
+        const targetFile = path.join(typesDir, 'index-es.d.mts')
+        
+        if (fs.existsSync(sourceFile)) {
+          let content = fs.readFileSync(sourceFile, 'utf8')
+          // Add .js extensions to relative imports for Node16 ESM resolution
+          content = content.replace(/from '(\.\/.+?)';/g, "from '$1.js';")
+          fs.writeFileSync(targetFile, content)
+          console.log('Created ESM type declaration: dist/types/index-es.d.mts')
+        }
+      } else if (format === 'cjs' && declarationExt === '.d.cts') {
+        // Fix CJS declarations: rename to .d.cts and change export default to export =
+        const sourceFile = path.join(typesDir, 'index-cjs.d.ts')
+        const targetFile = path.join(typesDir, 'index-cjs.d.cts')
+        
+        if (fs.existsSync(sourceFile)) {
+          let content = fs.readFileSync(sourceFile, 'utf8')
+          // Transform 'export default' to 'export ='
+          content = content.replace(/export default (_default);/, 'export = $1;')
+          fs.writeFileSync(targetFile, content)
+          console.log('Created CommonJS type declaration: dist/types/index-cjs.d.cts')
+        }
+      }
+    }
+  }
+}
 
 const packageJson = JSON.parse(fs.readFileSync('./package.json'))
 
@@ -96,7 +135,10 @@ export default [
         format: 'esm'
       }
     ],
-    plugins,
+    plugins: [
+      ...plugins,
+      fixDeclarations({ format: 'esm', declarationExt: '.d.mts' })
+    ],
     treeshake
   },
   {
@@ -111,7 +153,10 @@ export default [
         interop: 'compat'
       },
     ],
-    plugins,
+    plugins: [
+      ...plugins,
+      fixDeclarations({ format: 'cjs', declarationExt: '.d.cts' })
+    ],
     treeshake
   },
   {
