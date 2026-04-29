@@ -7,4 +7,4 @@ declare class BugsnagPluginReactNativeNavigation implements Plugin {
   load: (client: Client) => void
 }
 
-export default BugsnagPluginReactNativeNavigation
+export = BugsnagPluginReactNativeNavigation

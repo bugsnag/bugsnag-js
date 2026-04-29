@@ -54,4 +54,4 @@ declare function BugsnagPluginHttpErrors(
   config?: BugsnagPluginHttpErrorsConfiguration
 ): Plugin
 
-export default BugsnagPluginHttpErrors
+export = BugsnagPluginHttpErrors

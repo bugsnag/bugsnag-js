@@ -7,4 +7,4 @@ declare class NetworkStatus {
   isConnected: boolean
 }
 
-export default NetworkStatus
+export = NetworkStatus

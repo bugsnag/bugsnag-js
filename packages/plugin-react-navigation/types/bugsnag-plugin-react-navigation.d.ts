@@ -17,4 +17,4 @@ declare module '@bugsnag/core' {
   }
 }
 
-export default BugsnagPluginReactNavigation
+export = BugsnagPluginReactNavigation
