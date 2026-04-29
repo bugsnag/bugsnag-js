@@ -36,68 +36,24 @@ jobs:
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const fs = require('fs');
+            const { execSync } = require('child_process');
             
-            // Read and parse the results file
-            let results;
+            // Run the parse script to get markdown output
+            let commentBody;
             try {
-              const content = fs.readFileSync('attw-results.json', 'utf8');
-              // The file contains multiple JSON objects, one per line
-              const lines = content.trim().split('\n').filter(line => line.trim());
-              results = lines.map(line => JSON.parse(line));
+              commentBody = execSync('node scripts/parse-attw-results.js --format=markdown', {
+                encoding: 'utf8',
+                stdio: ['pipe', 'pipe', 'pipe']
+              });
             } catch (error) {
-              console.log('Error reading attw-results.json:', error.message);
+              // Script exits with code 1 if there are problems, but we still want the output
+              commentBody = error.stdout || error.message;
+            }
+            
+            if (!commentBody || !commentBody.includes('Are The Types Wrong? Report')) {
+              console.log('No valid output from parse script');
               return;
             }
-            
-            // Filter for packages with problems
-            const packagesWithProblems = results.filter(result => {
-              return result.problems && Object.keys(result.problems).length > 0;
-            });
-            
-            // Build comment body
-            let commentBody = '## 📦 Are The Types Wrong? Report\n\n';
-            
-            if (packagesWithProblems.length === 0) {
-              commentBody += '✅ All packages passed the type check!\n';
-            } else {
-              commentBody += `❌ Found issues in ${packagesWithProblems.length} package(s):\n\n`;
-              
-              for (const result of packagesWithProblems) {
-                const packageName = result.analysis.packageName;
-                const problemCount = Object.keys(result.problems).length;
-                
-                commentBody += `### \`${packageName}\`\n\n`;
-                commentBody += `**${problemCount} problem(s) detected:**\n\n`;
-                
-                // Group problems by kind
-                const problemsByKind = {};
-                for (const [entrypoint, issues] of Object.entries(result.problems)) {
-                  for (const issue of issues) {
-                    const kind = issue.kind;
-                    if (!problemsByKind[kind]) {
-                      problemsByKind[kind] = [];
-                    }
-                    problemsByKind[kind].push({ entrypoint, issue });
-                  }
-                }
-                
-                // Display problems by kind
-                for (const [kind, problems] of Object.entries(problemsByKind)) {
-                  commentBody += `**${kind}** (${problems.length} occurrence(s)):\n`;
-                  for (const { entrypoint, issue } of problems.slice(0, 5)) {
-                    commentBody += `- \`${entrypoint}\`: ${issue.message || 'No message'}\n`;
-                  }
-                  if (problems.length > 5) {
-                    commentBody += `- ... and ${problems.length - 5} more\n`;
-                  }
-                  commentBody += '\n';
-                }
-              }
-            }
-            
-            commentBody += '\n---\n';
-            commentBody += '*This check helps ensure TypeScript types are correctly exported and work across different module systems.*\n';
             
             // Post or update comment
             const { data: comments } = await github.rest.issues.listComments({
