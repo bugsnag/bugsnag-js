@@ -123,7 +123,7 @@ const REACT_NAVIGATION_PEER_DEPENDENCIES = [
 ]
 
 const REACT_NATIVE_NAVIGATION_PEER_DEPENDENCIES = [
-  'react-native-navigation@8.5.0' // Issue with 7.42.0
+  'react-native-navigation@8.5.0'
 ]
 
 // add packages and dependencies for react-native-navigation (wix)
