@@ -92,7 +92,7 @@ export default [
       {
         ...sharedOutput,
         preserveModules: false,
-        entryFileNames: '[name].js',
+        entryFileNames: '[name].mjs',
         format: 'esm'
       }
     ],
@@ -107,6 +107,8 @@ export default [
         ...sharedOutput,
         entryFileNames: '[name].js',
         format: 'cjs',
+        exports: 'default',
+        interop: 'compat'
       },
     ],
     plugins,

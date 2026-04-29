@@ -2,9 +2,20 @@
   "name": "@bugsnag/browser",
   "version": "8.8.1",
   "main": "dist/index-cjs.js",
-  "types": "dist/types/index-es.d.ts",
+  "module": "dist/index-es.mjs",
+  "types": "dist/types/index-cjs.d.cts",
   "browser": "./dist/bugsnag.js",
   "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/types/index-es.d.mts",
+        "require": "./dist/types/index-cjs.d.cts"
+      },
+      "import": "./dist/index-es.mjs",
+      "require": "./dist/index-cjs.js"
+    }
+  },
   "description": "Bugsnag error reporter for browser JavaScript",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -22,6 +33,7 @@
     "clean": "rm -fr dist && mkdir dist",
     "prebuild": "npm run clean",
     "build": "rollup --config rollup.config.mjs",
+    "postbuild": "node scripts/fix-cjs-types.js",
     "cdn-upload": "../../bin/cdn-upload dist/*"
   },
   "author": "Bugsnag",
