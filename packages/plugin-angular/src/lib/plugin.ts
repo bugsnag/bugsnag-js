@@ -1,5 +1,6 @@
-import { ErrorHandler } from '@angular/core'
-import { Client, Event, Plugin } from '@bugsnag/js'
+import type { ErrorHandler } from '@angular/core'
+import type { Plugin } from '@bugsnag/core'
+import type { Event } from '@bugsnag/js'
 import BugsnagErrorHandler from './bugsnag-error-handler'
 
 // angular uses zones to watch for changes in asynchronous tasks so it can
@@ -16,7 +17,7 @@ const isNgZoneEnabled = typeof Zone !== 'undefined' && !!Zone.current
 
 const plugin: Plugin = {
   name: 'Angular',
-  load: (client: Client): ErrorHandler => {
+  load: (client): ErrorHandler => {
     const originalNotify = client._notify
     client._notify = function () {
       const event = arguments as unknown as Event
