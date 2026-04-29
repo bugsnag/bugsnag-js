@@ -1,0 +1,84 @@
+name: "Are the types wrong?"
+on: [pull_request]
+permissions:
+  pull-requests: write
+
+jobs:
+  build:
+    name: Are the types wrong?
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 22
+
+      - name: Checkout PR branch
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install and build
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          ELECTRON_DISABLE_SANDBOX: 1
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run ATTW check
+        continue-on-error: true
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          ELECTRON_DISABLE_SANDBOX: 1
+        run: |
+          npm run test:attw || true
+
+      - name: Parse ATTW results and comment
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            
+            // Run the parse script to get markdown output
+            let commentBody;
+            try {
+              commentBody = execSync('node scripts/parse-attw-results.js --format=markdown', {
+                encoding: 'utf8',
+                stdio: ['pipe', 'pipe', 'pipe']
+              });
+            } catch (error) {
+              // Script exits with code 1 if there are problems, but we still want the output
+              commentBody = error.stdout || error.message;
+            }
+            
+            if (!commentBody || !commentBody.includes('Are The Types Wrong? Report')) {
+              console.log('No valid output from parse script');
+              return;
+            }
+            
+            // Post or update comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('Are The Types Wrong? Report')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }

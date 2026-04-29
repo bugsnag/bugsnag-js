@@ -2,6 +2,7 @@
   "name": "@bugsnag/react-native-cli",
   "version": "8.3.2",
   "description": "A tool to help integrate Bugsnag with a React Native app",
+  "types": "dist/bin/cli.d.ts",
   "bin": {
     "bugsnag-react-native-cli": "bin/cli"
   },

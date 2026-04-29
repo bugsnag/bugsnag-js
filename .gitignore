@@ -24,3 +24,5 @@ Gemfile.lock
 *.iml
 zscaler-root-ca.crt*
 .ts38-validation
+# Arethetypeswrong working files
+attw-results.json
