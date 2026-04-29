@@ -26,9 +26,7 @@
     "access": "public"
   },
   "files": [
-    "network-instrumentation.js",
-    "lib",
-    "types"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
