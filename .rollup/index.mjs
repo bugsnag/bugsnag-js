@@ -72,11 +72,48 @@ function fixCjsDefaultExport() {
       const fixExportInFile = (filePath) => {
         let content = fs.readFileSync(filePath, 'utf8')
         
-        // Replace 'export default' with 'export =' for CJS compatibility
-        // This matches the rollup footer: module.exports = Object.assign(exports.default || {}, exports);
+        // Check if there are any other exports (named exports, export interface, etc.)
+        const hasOtherExports = /^export (?!default)/m.test(content)
+        
+        if (hasOtherExports) {
+          // Don't convert to 'export =' if there are other exports
+          // Just leave it as 'export default' for compatibility
+          return
+        }
+        
+        // Handle 'export default class/function' declarations
+        // These need to be converted to 'declare class/function' + 'export ='
         content = content.replace(
-          /^export default /gm,
-          'export = '
+          /^export default (class|function)\s+(\w+)/gm,
+          (match, keyword, name) => {
+            return `declare ${keyword} ${name}`
+          }
+        )
+        
+        // Now add 'export =' for any class/function that was a default export
+        // Look for 'declare class X' or 'declare function X' and add export after the closing brace/declaration
+        const classOrFunctionPattern = /^declare (class|function)\s+(\w+)[\s\S]*?^}/gm
+        const matches = [...content.matchAll(classOrFunctionPattern)]
+        
+        // Process matches in reverse order to maintain correct positions
+        for (let i = matches.length - 1; i >= 0; i--) {
+          const match = matches[i]
+          const name = match[2]
+          const endIndex = match.index + match[0].length
+          
+          // Check if this class/function doesn't already have an export
+          const afterDeclaration = content.substring(endIndex, endIndex + 100)
+          if (!afterDeclaration.match(/^\s*export\s*=/)) {
+            content = content.substring(0, endIndex) + 
+                     '\nexport = ' + name + ';' +
+                     content.substring(endIndex)
+          }
+        }
+        
+        // For simple default exports (like 'export default identifier'), convert directly
+        content = content.replace(
+          /^export default (?!class|function)(\w+);?$/gm,
+          'export = $1;'
         )
         
         fs.writeFileSync(filePath, content, 'utf8')
