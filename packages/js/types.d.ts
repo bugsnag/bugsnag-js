@@ -8,5 +8,4 @@ interface UniversalBugsnagStatic extends BugsnagStatic {
 
 declare const Bugsnag: UniversalBugsnagStatic
 
-export default Bugsnag
-export * from '@bugsnag/browser'
+export = Bugsnag
