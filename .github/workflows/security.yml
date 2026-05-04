@@ -3,7 +3,7 @@ name: Security Enforcement
 on:
   pull_request:
   push:
-    branches: [ feature/pre-commit-test ]
+    branches: [ next, main ]
 
 jobs:
   security:
