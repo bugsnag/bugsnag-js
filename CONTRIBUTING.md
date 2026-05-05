@@ -143,6 +143,7 @@ GITHUB_USER=<your github username> \
 GITHUB_ACCESS_TOKEN=<generate a personal access token> \
 AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
+NPM_TOKEN = <generate a personal granular access token> \
 RELEASE_BRANCH=main \
 VERSION=preminor \
 DIST_TAG=next \
