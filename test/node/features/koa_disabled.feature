@@ -46,5 +46,5 @@ Scenario: A handled error with ctx.bugsnag.notify()
   And the event "request.clientIp" is not null
 
 Scenario: adding body to request metadata
-  When I POST the data "data=in_request_body" to the URL "http://koa-disabled/bodytest"
+  When I POST the data "data=in_request_body" to the URL "http://koa-disabled/bodytest" with the content type "application/x-www-form-urlencoded"
   And I should receive no errors

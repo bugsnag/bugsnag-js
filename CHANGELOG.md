@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- (plugin-hono) Fix issue where error handler middleware did not `await next()` [#2735](https://github.com/bugsnag/bugsnag-js/pull/2735)
+
 ### Added
 - (react-native-navigation) Add support for react-native-navigation v8 [#2741](https://github.com/bugsnag/bugsnag-js/pull/2741)
 - Requires React Native 0.78+ (New Architecture only)
