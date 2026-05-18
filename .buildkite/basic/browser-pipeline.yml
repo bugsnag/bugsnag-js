@@ -81,10 +81,8 @@ steps:
           - "edge_17"
           - "safari_10"
           - "ios_15"
-          - "android_9"
           - "chrome_53" # TODO: Revert to Chrome 47 when Maze Runner supports it again (see PLAT-16280)
           - "android_13"
-          - "chrome_43"
           - "chrome_72"
           - "firefox_78"
         depends_on: "browser-maze-runner-bs"
