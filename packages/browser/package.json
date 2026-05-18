@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browser",
-  "version": "8.10.1",
+  "version": "8.10.0",
   "main": "dist/index-cjs.js",
   "types": "dist/types/index-es.d.ts",
   "browser": "./dist/bugsnag.js",
@@ -36,19 +36,27 @@
     "@bugsnag/plugin-browser-session": "^8.9.0",
     "@bugsnag/plugin-client-ip": "^8.9.0",
     "@bugsnag/plugin-console-breadcrumbs": "^8.9.0",
+<<<<<<< HEAD
     "@bugsnag/plugin-inline-script-content": "^8.10.0",
+=======
+    "@bugsnag/plugin-inline-script-content": "^8.9.0",
+>>>>>>> e875fd9cf (Rebase integration v9 to next)
     "@bugsnag/plugin-interaction-breadcrumbs": "^8.9.0",
     "@bugsnag/plugin-navigation-breadcrumbs": "^8.9.0",
     "@bugsnag/plugin-network-breadcrumbs": "^8.9.0",
     "@bugsnag/plugin-simple-throttle": "^8.9.0",
     "@bugsnag/plugin-strip-query-string": "^8.9.0",
     "@bugsnag/plugin-window-onerror": "^8.9.0",
+<<<<<<< HEAD
     "@bugsnag/plugin-window-unhandled-rejection": "^8.9.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4"
+=======
+    "@bugsnag/plugin-window-unhandled-rejection": "^8.9.0"
+>>>>>>> e875fd9cf (Rebase integration v9 to next)
   },
   "dependencies": {
     "@bugsnag/core": "^8.9.0"

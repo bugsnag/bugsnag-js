@@ -36,8 +36,8 @@
     "build": "echo 'No build step required for @bugsnag/js'"
   },
   "dependencies": {
-    "@bugsnag/browser": "^8.10.0",
-    "@bugsnag/node": "^8.10.0"
+    "@bugsnag/browser": "^8.9.0",
+    "@bugsnag/node": "^8.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0"
