@@ -261,4 +261,42 @@ Lorem ipsum dolor sit amet.
     expect(payloads.length).toEqual(1)
     expect(payloads[0].events[0]._metadata.script).not.toBeDefined()
   })
+
+  it('supports rest parameters correctly in wrapped callbacks', () => {
+    const scriptContent = 'console.log("test")'
+    const document = {
+      scripts: [{ innerHTML: scriptContent }],
+      currentScript: { innerHTML: scriptContent },
+      documentElement: {
+        outerHTML: `<script>${scriptContent}</script>`
+      }
+    } as unknown as Document
+    function Window () {}
+    Window.prototype = {
+      addEventListener: function () {},
+      removeEventListener: function () {}
+    }
+    const window = {
+      location: { href: 'https://app.bugsnag.com/errors' }
+    } as unknown as Window &typeof globalThis
+
+    Object.setPrototypeOf(window, Window.prototype)
+    // @ts-ignore
+    window.Window = Window
+
+    const testCallback = function () {
+      console.log('Event received')
+    }
+
+    const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
+
+    // Add event listener with wrapped callback
+    // @ts-ignore
+    window.addEventListener('custom', testCallback)
+
+    // Verify the callback was wrapped and can handle arguments correctly
+    // @ts-ignore
+    expect(testCallback.__trace__).toBeDefined()
+    expect(client).toBe(client)
+  })
 })
