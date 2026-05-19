@@ -259,7 +259,7 @@ android_8:
     lineNumber: 18
     columnNumber: 7
 
-android_9:
+android_13:
   handled:
     errorClass: 'ReferenceError'
     errorMessage: 'foo is not defined'

@@ -281,7 +281,7 @@ Lorem ipsum dolor sit amet.
     } as unknown as Window &typeof globalThis
 
     Object.setPrototypeOf(window, Window.prototype)
-    // @ts-ignore
+    // @ts-expect-error assigning Window property to mock window object for test
     window.Window = Window
 
     const testCallback = function () {
@@ -290,12 +290,9 @@ Lorem ipsum dolor sit amet.
 
     const client = new Client({ apiKey: 'API_KEY_YEAH' }, undefined, [plugin(document, window)])
 
-    // Add event listener with wrapped callback
-    // @ts-ignore
     window.addEventListener('custom', testCallback)
 
-    // Verify the callback was wrapped and can handle arguments correctly
-    // @ts-ignore
+    // @ts-expect-error __trace__ is added by plugin for test verification
     expect(testCallback.__trace__).toBeDefined()
     expect(client).toBe(client)
   })
