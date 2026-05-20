@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/core",
-  "version": "8.8.0",
+  "version": "8.9.0",
   "description": "Core classes and utilities for Bugsnag notifiers",
   "homepage": "https://www.bugsnag.com/",
   "type": "module",

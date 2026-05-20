@@ -131,12 +131,14 @@ export default (doc = document, win = window) => ({
       )
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-    function __traceOriginalScript (fn: Function, callbackAccessor: Function, alsoCallOriginal = false) {
-      return function () {
+    function __traceOriginalScript<T extends (...args: any[]) => any> (
+      fn: T,
+      callbackAccessor: (args: Parameters<T>) => { get: () => any, replace: (fn: any) => void },
+      alsoCallOriginal = false
+    ) {
+      return function (...args: Parameters<T>) {
         // this is required for removeEventListener to remove anything added with
         // addEventListener before the functions started being wrapped by Bugsnag
-        const args = [].slice.call(arguments)
         try {
           const cba = callbackAccessor(args)
           const cb = cba.get()
@@ -151,14 +153,14 @@ export default (doc = document, win = window) => ({
             // this function mustn't be annonymous due to a bug in the stack
             // generation logic, meaning it gets tripped up
             // see: https://github.com/stacktracejs/stack-generator/issues/6
-            cb.__trace__ = function __trace__ () {
+            cb.__trace__ = function __trace__ (...cbArgs: any[]) {
               // set the script that called this function
               updateLastScript(script)
               // immediately unset the currentScript synchronously below, however
               // if this cb throws an error the line after will not get run so schedule
               // an almost-immediate aysnc update too
               _setTimeout(function () { updateLastScript(null) }, 0)
-              const ret = cb.apply(this, arguments)
+              const ret = cb.apply(this, cbArgs)
               updateLastScript(null)
               return ret
             }
@@ -190,9 +192,8 @@ export default (doc = document, win = window) => ({
   }
 })
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-function __proxy (host: any, name: string, replacer: (fn: Function) => Function) {
-  const original = host[name]
+function __proxy<T extends (...args: any[]) => any> (host: any, name: string, replacer: (fn: T) => T) {
+  const original = host[name] as T
   if (!original) return original
   const replacement = replacer(original)
   host[name] = replacement

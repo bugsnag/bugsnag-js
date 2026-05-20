@@ -105,6 +105,8 @@
     "@inquirer/figures": "1.0.13",
     "@types/babel__traverse": "7.17.1",
     "@types/node": "^18",
+    "axios": "^1.15.0",
+    "@types/express-serve-static-core": "4.17.28",
     "@types/prettier": "2.6.0",
     "@types/yargs": "17.0.10",
     "braces": "^3.0.3",

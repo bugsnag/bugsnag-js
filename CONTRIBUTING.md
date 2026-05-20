@@ -80,6 +80,7 @@ You are now ready to make the release. Releases are done using Docker and Docker
 
 - You will need to clone the repository and have Docker running on your local machine.
 - Ensure you are logged in to npm and that you have access to publish packages in the `@bugsnag` namespace
+- Generate a [granular access token](https://www.npmjs.com/settings/{username}/tokens/granular-access-tokens/new) on  NPM to bypass 2FA and store it somewhere secure
 - Ensure you have an AWS key pair with access to our S3 bucket and cloudfront distribution. Export these in your environment as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` (if you're going to publish to the CDN)
 - Ensure your `.gitconfig` file in your home directory is configured to contain your name and email address
 - Generate a [personal access token](https://github.com/settings/tokens/new) on GitHub and store it somewhere secure
@@ -95,13 +96,14 @@ GITHUB_USER=<your github username> \
 GITHUB_ACCESS_TOKEN=<generate a personal access token> \
 AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
+NPM_TOKEN = <generate a personal granular access token> \
 RELEASE_BRANCH=main \
 VERSION=patch \
 DIST_TAG=latest \
   docker-compose run release
 ```
 
-This process is interactive and will require you to confirm that you want to publish the changed packages. It will also prompt for 2FA.
+This process is interactive and will require you to confirm that you want to publish the changed packages.
 
 Browser bundles are automatically uploaded to the CDN if they have changed.
 
@@ -141,6 +143,7 @@ GITHUB_USER=<your github username> \
 GITHUB_ACCESS_TOKEN=<generate a personal access token> \
 AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
+NPM_TOKEN = <generate a personal granular access token> \
 RELEASE_BRANCH=main \
 VERSION=preminor \
 DIST_TAG=next \

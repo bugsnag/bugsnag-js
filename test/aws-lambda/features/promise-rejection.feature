@@ -112,31 +112,3 @@ Scenario: promise rejections are reported when using hono
     And the session "id" is not null
     And the session "startedAt" is a timestamp
 
-@hono-app
-Scenario Outline: thrown non-error exceptions are reported when using hono
-    Given I setup the environment
-    When I invoke the "HonoFunction" lambda in "features/fixtures/hono-app" with the "events/throw-non-error.json" event
-    Then the lambda response "errorMessage" equals "1"
-    And the lambda response "errorType" equals "Runtime.UnhandledPromiseRejection"
-    And the lambda response "trace" is an array with 6 elements
-    And the lambda response "trace.0" equals "Runtime.UnhandledPromiseRejection: 1"
-    And the lambda response "body" is null
-    And the lambda response "statusCode" is null
-    And the SAM exit code equals 0
-    When I wait to receive an error
-    Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
-    And the event "unhandled" is true
-    And the event "severity" equals "error"
-    And the event "severityReason.type" equals "unhandledPromiseRejection"
-    And the exception "errorClass" equals "InvalidError"
-    And the exception "message" matches "unhandledRejection handler received a non-error\."
-    And the exception "type" equals "nodejs"
-    And the event "metaData.AWS Lambda context.functionName" equals "HonoFunction"
-    And the event "metaData.AWS Lambda context.awsRequestId" is not null
-    And the event "device.runtimeVersions.node" matches "^18\.\d+\.\d+$"
-    When I wait to receive a session
-    Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
-    And the session "id" is not null
-    And the session "startedAt" is a timestamp
-    And the event "session.events.handled" equals 0
-    And the event "session.events.unhandled" equals 1

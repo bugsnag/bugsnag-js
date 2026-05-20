@@ -171,6 +171,7 @@ services:
       AWS_ACCESS_KEY_ID:
       AWS_SESSION_TOKEN:
       AWS_SECRET_ACCESS_KEY:
+      NPM_TOKEN:
       VERSION:
       DIST_TAG:
       NG_CLI_ANALYTICS: false

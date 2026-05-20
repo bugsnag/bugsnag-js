@@ -1,6 +1,5 @@
 {
   "name": "@bugsnag/node",
-  "version": "8.8.0",
   "type": "module",
   "main": "./dist/cjs/bugsnag.js",
   "types": "./dist/cjs/bugsnag.d.ts",
@@ -16,6 +15,7 @@
       }
     }
   },
+  "version": "8.9.0",
   "description": "Bugsnag error reporter for Node.js",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -36,22 +36,22 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-node": "^8.8.0",
-    "@bugsnag/plugin-app-duration": "^8.8.0",
-    "@bugsnag/plugin-console-breadcrumbs": "^8.8.0",
-    "@bugsnag/plugin-contextualize": "^8.8.0",
-    "@bugsnag/plugin-intercept": "^8.8.0",
-    "@bugsnag/plugin-node-device": "^8.8.0",
-    "@bugsnag/plugin-node-in-project": "^8.8.0",
-    "@bugsnag/plugin-node-surrounding-code": "^8.8.0",
-    "@bugsnag/plugin-node-uncaught-exception": "^8.8.0",
-    "@bugsnag/plugin-node-unhandled-rejection": "^8.8.0",
-    "@bugsnag/plugin-server-session": "^8.8.0",
-    "@bugsnag/plugin-stackframe-path-normaliser": "^8.8.0",
-    "@bugsnag/plugin-strip-project-root": "^8.8.0"
+    "@bugsnag/delivery-node": "^8.9.0",
+    "@bugsnag/plugin-app-duration": "^8.9.0",
+    "@bugsnag/plugin-console-breadcrumbs": "^8.9.0",
+    "@bugsnag/plugin-contextualize": "^8.9.0",
+    "@bugsnag/plugin-intercept": "^8.9.0",
+    "@bugsnag/plugin-node-device": "^8.9.0",
+    "@bugsnag/plugin-node-in-project": "^8.9.0",
+    "@bugsnag/plugin-node-surrounding-code": "^8.9.0",
+    "@bugsnag/plugin-node-uncaught-exception": "^8.9.0",
+    "@bugsnag/plugin-node-unhandled-rejection": "^8.9.0",
+    "@bugsnag/plugin-server-session": "^8.9.0",
+    "@bugsnag/plugin-stackframe-path-normaliser": "^8.9.0",
+    "@bugsnag/plugin-strip-project-root": "^8.9.0"
   },
   "dependencies": {
-    "@bugsnag/core": "^8.8.0",
+    "@bugsnag/core": "^8.9.0",
     "byline": "^5.0.0",
     "error-stack-parser": "^2.0.3",
     "pump": "^3.0.0",

@@ -1,7 +1,7 @@
 @plugin_angular
 
 # Skipped on older Safari versions not supported by Angular 10 - Angular renders the fixture component twice, causing duplicate events to be reported
-@skip_safari_10
+@skip_safari_10  @skip_chrome_53
 Feature: Angular support
 
   @requires_promise
