@@ -1,4 +1,4 @@
-import parseUrl from '../lib/parse-url'
+import { parseUrl } from '../src/lib/parse-url';
 
 describe('parseUrl', () => {
   it('should extract domain, clean URL, and query string from absolute URL', () => {
