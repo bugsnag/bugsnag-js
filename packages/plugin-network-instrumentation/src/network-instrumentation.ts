@@ -9,6 +9,7 @@ import { parseQueryString } from './lib/parse-query-string'
 import { redactValues } from './lib/redact-values'
 import { shouldCaptureStatusCode } from './lib/should-capture-status-code'
 import { truncate } from './lib/truncate'
+import { createRequestTrackerPlugin } from '@bugsnag/request-tracker'
 
 
 const DEFAULT_HTTP_ERROR_CODES = [{ min: 400, max: 599 }]
@@ -56,8 +57,6 @@ export function createNetworkInstrumentationPlugin(
 
       if (!requestTrackerPlugin) {
         try {
-          // @ts-ignore
-          const { createRequestTrackerPlugin } = require('@bugsnag/request-tracker')
           const trackerPlugin = createRequestTrackerPlugin([], global)
           client._loadPlugin(trackerPlugin)
           requestTrackerPlugin = client.getPlugin('requestTracker')

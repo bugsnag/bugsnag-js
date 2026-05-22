@@ -1,9 +1,10 @@
 {
   "name": "@bugsnag/plugin-network-instrumentation",
+  "version": "8.9.0",
+  "type": "module",
   "main": "./dist/cjs/network-instrumentation.js",
   "module": "./dist/esm/network-instrumentation.js",
   "types": "./dist/cjs/network-instrumentation.d.ts",
-  "version": "8.9.0",
   "exports": {
     ".": {
       "import": {
@@ -11,7 +12,7 @@
         "default": "./dist/esm/network-instrumentation.js"
       },
       "require": {
-        "types": "./dist/cjs/network-breadcrumbs.d.ts",
+        "types": "./dist/cjs/network-instrumentation.d.ts",
         "default": "./dist/cjs/network-instrumentation.js"
       }
     }
@@ -26,9 +27,7 @@
     "access": "public"
   },
   "files": [
-    "network-instrumentation.js",
-    "lib",
-    "types"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
