@@ -34,7 +34,8 @@
         "build:dist:esm": "webpack --config esm.config.js",
         "build:dist:esm.min": "webpack --config esm.config.js --optimization-minimize --output-filename=bugsnag.web-worker.min.mjs",
         "size": "../../bin/size dist/bugsnag.web-worker.min.js",
-        "cdn-upload": "../../bin/cdn-upload dist/*"
+        "cdn-upload": "../../bin/cdn-upload dist/*",
+        "type-check": "tsc --noEmit -p tsconfig.types.json"
     },
     "author": "Bugsnag",
     "license": "MIT",

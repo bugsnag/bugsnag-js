@@ -1,7 +1,7 @@
 import type { WorkerConfig } from '../types/notifier'
 
 describe('WorkerConfig type', () => {
-  it('should allow apiKey and known fields', () => {
+  it('should allow required fields', () => {
     // This should type-check without error
     const config: WorkerConfig = {
       apiKey: '123',
