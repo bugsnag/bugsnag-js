@@ -31,7 +31,7 @@
   ],
    "scripts": {
     "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.npm.mjs",
+    "build:npm": "rollup --config rollup.config.mjs",
     "clean": "rm -rf dist/*",
     "test:types": "tsc -p tsconfig.json"
   },
