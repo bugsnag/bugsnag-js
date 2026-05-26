@@ -11,13 +11,9 @@ const config: WorkerConfig = {
 const apiKey = config.apiKey
 const collectUserIp = config.collectUserIp
 const generateAnonymousId = config.generateAnonymousId
-void apiKey
-void collectUserIp
-void generateAnonymousId
 // @ts-expect-error: apiKey is required
 const invalidConfig: WorkerConfig = {
   collectUserIp: true,
   generateAnonymousId: false
 }
-void invalidConfig
 export {}
