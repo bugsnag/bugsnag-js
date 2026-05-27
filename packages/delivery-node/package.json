@@ -4,7 +4,7 @@
   "type": "module",
   "main": "./dist/cjs/delivery.js",
   "module": "./dist/esm/delivery.js",
-  "types": "dist/types/delivery.d.ts",
+  "types": "./dist/cjs/delivery.d.ts",
   "exports": {
     ".": {
       "import": {
