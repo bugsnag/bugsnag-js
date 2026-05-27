@@ -1,10 +1,17 @@
-const http = require('http')
-const https = require('https')
-const { parse } = require('url')
+import http from 'http'
+import https from 'https'
+import { parse } from 'url'
 
-module.exports = ({ url, headers, body, agent }, cb) => {
+interface RequestOptions {
+  url: string
+  headers?: http.OutgoingHttpHeaders
+  body?: string
+  agent?: http.Agent
+}
+
+const request = ({ url, headers, body, agent }: RequestOptions, cb: (err: Error | null, body?: string) => void) => {
   let didError = false
-  const onError = (err) => {
+  const onError = (err: Error) => {
     if (didError) return
     didError = true
     cb(err)
@@ -25,7 +32,7 @@ module.exports = ({ url, headers, body, agent }, cb) => {
   req.on('response', res => {
     bufferResponse(res, (err, body) => {
       if (err) return onError(err)
-      if (res.statusCode < 200 || res.statusCode >= 300) {
+      if (res.statusCode && (res.statusCode < 200 || res.statusCode >= 300)) {
         return onError(new Error(`Bad statusCode from API: ${res.statusCode}\n${body}`))
       }
       cb(null, body)
@@ -35,10 +42,12 @@ module.exports = ({ url, headers, body, agent }, cb) => {
   req.end()
 }
 
-const bufferResponse = (stream, cb) => {
+const bufferResponse = (stream: NodeJS.ReadableStream, cb: (err: Error | null, body?: string) => void) => {
   let data = ''
   stream.on('error', cb)
   stream.setEncoding('utf8')
   stream.on('data', d => { data += d })
   stream.on('end', () => cb(null, data))
 }
+
+export default request
