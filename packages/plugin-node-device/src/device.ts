@@ -1,9 +1,14 @@
-const os = require('os')
+import { Config, Plugin } from '@bugsnag/core'
+import os from 'os'
+
+export interface PluginConfig extends Config {
+  hostname?: string
+}
 
 /*
  * Automatically detects Node server details ('device' in the API)
  */
-module.exports = {
+const plugin: Plugin<PluginConfig> = {
   load: (client) => {
     const device = {
       osName: `${os.platform()} (${os.arch()})`,
@@ -31,3 +36,5 @@ module.exports = {
     }, true)
   }
 }
+
+export default plugin 
