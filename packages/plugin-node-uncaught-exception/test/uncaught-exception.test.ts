@@ -1,5 +1,5 @@
 import { Client, Event, schema } from '@bugsnag/core'
-import plugin from '../'
+import plugin from '../src/uncaught-exception'
 
 describe('plugin: node uncaught exception handler', () => {
   it('should listen to the process#uncaughtException event', () => {
@@ -8,7 +8,9 @@ describe('plugin: node uncaught exception handler', () => {
     const after = process.listeners('uncaughtException').length
     expect(after - before).toBe(1)
     expect(c).toBe(c)
-    plugin.destroy()
+    if (typeof plugin.destroy === 'function') {
+      plugin.destroy()
+    }
   })
 
   it('does not add a process#uncaughtException listener when autoDetectErrors=false', () => {
@@ -40,13 +42,15 @@ describe('plugin: node uncaught exception handler', () => {
         expect(event._handledState.unhandled).toBe(true)
         expect(event._handledState.severity).toBe('error')
         expect(event._handledState.severityReason).toEqual({ type: 'unhandledException' })
-        plugin.destroy()
+        if (typeof plugin.destroy === 'function') {
+          plugin.destroy()
+        }
         done()
       },
       plugins: [plugin]
     }, {
       ...schema,
-      // @ts-expect-error extending schema with onUncaughtException for testing
+      // @ts-expect-error
       onUncaughtException: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -69,13 +73,15 @@ describe('plugin: node uncaught exception handler', () => {
         expect(event._handledState.unhandled).toBe(true)
         expect(event._handledState.severity).toBe('error')
         expect(event._handledState.severityReason).toEqual({ type: 'unhandledException' })
-        plugin.destroy()
+        if (typeof plugin.destroy === 'function') {
+          plugin.destroy()
+        }
         done()
       },
       plugins: [plugin]
     }, {
       ...schema,
-      // @ts-expect-error extending schema with onUncaughtException for testing
+      // @ts-expect-error
       onUncaughtException: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
