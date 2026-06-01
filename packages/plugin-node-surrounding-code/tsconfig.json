@@ -4,6 +4,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
+    "declarationDir": "dist/types",
     "lib": ["es2017"],
     "types": ["node"]
   }
