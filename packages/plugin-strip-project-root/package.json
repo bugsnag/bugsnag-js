@@ -1,7 +1,22 @@
 {
   "name": "@bugsnag/plugin-strip-project-root",
   "version": "8.9.0",
-  "main": "strip-project-root.js",
+  "type": "module",
+  "main": "./dist/cjs/strip-project-root.js",
+  "module": "./dist/esm/strip-project-root.js",
+  "types": "./dist/cjs/strip-project-rootd.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/strip-project-rootd.ts",
+        "default": "./dist/esm/strip-project-root.js"
+      },
+      "require": {
+        "types": "./dist/cjs/strip-project-rootd.ts",
+        "default": "./dist/cjs/strip-project-root.js"
+      }
+    }
+  },
   "description": "@bugsnag/js plugin to remove common project root paths from stacktraces",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,7 +27,7 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -24,5 +39,10 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+   "scripts": {
+    "clean": "rm -fr dist",
+    "build": "rollup --config rollup.config.mjs",
+    "test:types": "tsc -p tsconfig.json"
   }
 }
