@@ -15,11 +15,25 @@ describe('WorkerConfig type', () => {
 
   it('should error if apiKey is missing', () => {
     // @ts-expect-error: apiKey is required
-    const invalidConfig: WorkerConfig = {
+    const missingApiKey: WorkerConfig = {
       collectUserIp: true,
       generateAnonymousId: false
     }
-    expect(invalidConfig).toBeDefined()
+    expect(missingApiKey).toBeDefined()
+
+    // @ts-expect-error: collectUserIp is required
+    const missingCollectUserIp: WorkerConfig = {
+      apiKey: '123',
+      generateAnonymousId: false
+    }
+    expect(missingCollectUserIp).toBeDefined()
+
+    // @ts-expect-error: generateAnonymousId is required
+    const missingGenerateAnonymousId: WorkerConfig = {
+      apiKey: '123',
+      collectUserIp: true
+    }
+    expect(missingGenerateAnonymousId).toBeDefined()
   })
 }
 )

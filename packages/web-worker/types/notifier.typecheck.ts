@@ -3,16 +3,16 @@
 // type entrypoints without depending on a test framework.
 import type { WorkerConfig } from './notifier'
 
-const config: WorkerConfig = {
+const _config: WorkerConfig = {
   apiKey: '123',
   collectUserIp: true,
   generateAnonymousId: false
 }
-const apiKey = config.apiKey
-const collectUserIp = config.collectUserIp
-const generateAnonymousId = config.generateAnonymousId
+const _apiKey = _config.apiKey
+const _collectUserIp = _config.collectUserIp
+const _generateAnonymousId = _config.generateAnonymousId
 // @ts-expect-error: apiKey is required
-const invalidConfig: WorkerConfig = {
+const _invalidConfig: WorkerConfig = {
   collectUserIp: true,
   generateAnonymousId: false
 }
