@@ -60,7 +60,7 @@ describe('plugin: node surrounding code', () => {
       { apiKey: 'api_key', projectRoot: __dirname },
       {
         ...defaultSchema,
-        // @ts-expect-error
+        // @ts-expect-error override schema type to allow null projectRoot for this test
         projectRoot: {
           defaultValue: () => null,
           validate: () => true,
