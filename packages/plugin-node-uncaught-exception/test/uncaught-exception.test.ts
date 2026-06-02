@@ -50,7 +50,7 @@ describe('plugin: node uncaught exception handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
-      // @ts-expect-error
+      // @ts-expect-error extending schema with onUncaughtException for testing
       onUncaughtException: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -81,7 +81,7 @@ describe('plugin: node uncaught exception handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
-      // @ts-expect-error
+      // @ts-expect-error extending schema with onUncaughtException for testing
       onUncaughtException: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
