@@ -7,11 +7,9 @@ interface PluginConfig extends Config {
   agent?: http.Agent
 }
 
-interface InternalClient extends Client {
-  _config: Required<PluginConfig>
-}
+interface InternalClient extends Client<PluginConfig> {}
 
-const delivery = (client: Client): Delivery => ({
+const delivery = (client: Client<PluginConfig>): Delivery => ({
   sendEvent: (event, cb = () => {}) => {
     const internalClient = client as InternalClient
     const body = jsonPayload.event(event, internalClient._config.redactedKeys)
