@@ -38,6 +38,7 @@
     "@bugsnag/core": "^8.0.0"
   },
   "scripts": {
+    "prebuild": "npm run clean",
     "build": "rollup --config rollup.config.mjs",
     "clean": "rm -rf dist",
     "test:types": "tsc -p tsconfig.json"
