@@ -16,4 +16,7 @@ const _invalidConfig: WorkerConfig = {
   collectUserIp: true,
   generateAnonymousId: false
 }
+;(function consume (...args: unknown[]) {
+  return args
+})(_apiKey, _collectUserIp, _generateAnonymousId, _invalidConfig)
 export {}
