@@ -4,7 +4,6 @@ const config = createRollupConfig({
   input: './src/session.ts',
   external: [
     '@bugsnag/core',
-    "events", 
     "backo"
   ]
 })
