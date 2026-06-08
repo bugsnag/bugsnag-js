@@ -4,7 +4,7 @@
   "type": "module",
   "main": "./dist/cjs/strip-project-root.js",
   "module": "./dist/esm/strip-project-root.js",
-  "types": "./dist/cjs/strip-project-rootd.ts",
+  "types": "./dist/cjs/strip-project-root.d.ts",
   "exports": {
     ".": {
       "import": {
