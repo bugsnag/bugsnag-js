@@ -1,5 +1,5 @@
 import { Client, Event, schema } from '@bugsnag/core'
-import plugin from '../'
+import plugin from '../src/unhandled-rejection'
 
 describe('plugin: node unhandled rejection handler', () => {
   it('should listen to the process#unhandledRejection event', () => {
@@ -8,7 +8,9 @@ describe('plugin: node unhandled rejection handler', () => {
     const after = process.listeners('unhandledRejection').length
     expect(before < after).toBe(true)
     expect(c).toBe(c)
-    plugin.destroy()
+    if (typeof plugin.destroy === 'function') {
+      plugin.destroy()
+    }
   })
 
   it('does not add a process#unhandledRejection listener if autoDetectErrors=false', () => {
@@ -40,13 +42,15 @@ describe('plugin: node unhandled rejection handler', () => {
         expect(event._handledState.unhandled).toBe(true)
         expect(event._handledState.severity).toBe('error')
         expect(event._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
-        plugin.destroy()
+        if (typeof plugin.destroy === 'function') {
+          plugin.destroy()
+        }
         done()
       },
       plugins: [plugin]
     }, {
       ...schema,
-      // @ts-expect-error extending schema with onUnhandledRejection for testing
+      // @ts-expect-error
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -69,13 +73,15 @@ describe('plugin: node unhandled rejection handler', () => {
         expect(event._handledState.unhandled).toBe(false)
         expect(event._handledState.severity).toBe('error')
         expect(event._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
-        plugin.destroy()
+        if (typeof plugin.destroy === 'function') {
+          plugin.destroy()
+        }
         done()
       },
       plugins: [plugin]
     }, {
       ...schema,
-      // @ts-expect-error extending schema with onUnhandledRejection for testing
+      // @ts-expect-error
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -98,13 +104,15 @@ describe('plugin: node unhandled rejection handler', () => {
         expect(event._handledState.unhandled).toBe(true)
         expect(event._handledState.severity).toBe('error')
         expect(event._handledState.severityReason).toEqual({ type: 'unhandledPromiseRejection' })
-        plugin.destroy()
+        if (typeof plugin.destroy === 'function') {
+          plugin.destroy()
+        }
         done()
       },
       plugins: [plugin]
     }, {
       ...schema,
-      // @ts-expect-error extending schema with onUnhandledRejection for testing
+      // @ts-expect-error
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -150,7 +158,9 @@ describe('plugin: node unhandled rejection handler', () => {
 
       expect(options.onUnhandledRejection).toHaveBeenCalledTimes(1)
     } finally {
-      plugin.destroy()
+      if (typeof plugin.destroy === 'function') {
+        plugin.destroy()
+      }
     }
   })
 
@@ -199,7 +209,9 @@ describe('plugin: node unhandled rejection handler', () => {
       expect(listenersAfter[1]).toBe(listener)
     } finally {
       process.removeListener('unhandledRejection', listener)
-      plugin.destroy()
+      if (typeof plugin.destroy === 'function') {
+        plugin.destroy()
+      }
     }
   })
 })
