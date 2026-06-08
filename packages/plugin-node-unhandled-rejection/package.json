@@ -40,6 +40,7 @@
     "scripts": {
     "build": "rollup --config rollup.config.mjs",
     "clean": "rm -rf dist/*",
-    "test:types": "tsc -p tsconfig.json"
+    "test:types": "tsc -p tsconfig.json",
+    "prebuild": "npm run clean"
   }
 }
