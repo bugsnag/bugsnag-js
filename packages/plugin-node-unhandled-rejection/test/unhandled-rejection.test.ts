@@ -50,7 +50,7 @@ describe('plugin: node unhandled rejection handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
-      // @ts-expect-error
+      // @ts-expect-error -- test schema is intentionally extended with plugin-only onUnhandledRejection
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -81,7 +81,7 @@ describe('plugin: node unhandled rejection handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
-      // @ts-expect-error
+      // @ts-expect-error -- test schema is intentionally extended with plugin-only onUnhandledRejection
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
@@ -112,7 +112,7 @@ describe('plugin: node unhandled rejection handler', () => {
       plugins: [plugin]
     }, {
       ...schema,
-      // @ts-expect-error
+      // @ts-expect-error -- test schema is intentionally extended with plugin-only onUnhandledRejection
       onUnhandledRejection: {
         validate: (val: unknown) => typeof val === 'function',
         message: 'should be a function',
