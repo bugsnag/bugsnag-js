@@ -1,12 +1,11 @@
+import { Client, Session } from '@bugsnag/core'
 import { EventEmitter } from 'events'
-import { Client } from '@bugsnag/core'
-import _Tracker from '../tracker'
-import plugin from '../session'
-import { Session } from '@bugsnag/core'
+import plugin from '../src/session'
+import _Tracker from '../src/tracker'
 
 const Tracker = _Tracker as jest.MockedClass<typeof _Tracker>
 
-jest.mock('../tracker')
+jest.mock('../src/tracker')
 
 describe('plugin: server sessions', () => {
   beforeEach(() => {
