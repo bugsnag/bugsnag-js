@@ -1,8 +1,21 @@
 {
   "name": "@bugsnag/plugin-restify",
   "version": "8.9.0",
-  "main": "src/restify.js",
-  "types": "types/bugsnag-restify.d.ts",
+  "main": "dist/restify.js",
+  "types": "dist/types/restify.d.ts",
+  "module": "./dist/esm/restify.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/restify.d.ts",
+        "default": "./dist/esm/restify.js"
+      },
+      "require": {
+        "types": "./dist/cjs/restify.d.ts",
+        "default": "./dist/cjs/restify.js"
+      }
+    }
+  },
   "description": "@bugsnag/js error handling middleware for Restify web servers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -13,8 +26,7 @@
     "access": "public"
   },
   "files": [
-    "src",
-    "types"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -24,5 +36,10 @@
   "devDependencies": {
     "@bugsnag/core": "^8.9.0",
     "@types/restify": "^8.4.2"
+  },
+   "scripts": {
+    "clean": "rm -fr dist",
+    "build": "rollup --config rollup.config.mjs",
+    "test:types": "tsc -p tsconfig.json"
   }
 }
