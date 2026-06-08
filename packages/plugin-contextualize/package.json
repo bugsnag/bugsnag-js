@@ -1,6 +1,7 @@
 {
   "name": "@bugsnag/plugin-contextualize",
   "version": "8.9.0",
+  "type": "module",
   "main": "./dist/cjs/contextualize.js",
   "module": "./dist/esm/contextualize.js",
   "types": "./dist/cjs/contextualize.d.ts",
@@ -38,7 +39,6 @@
   },
    "scripts": {
     "clean": "rm -fr dist",
-    "prebuild": "npm run clean",
     "build": "rollup --config rollup.config.mjs",
     "test:types": "tsc -p tsconfig.json"
   }
