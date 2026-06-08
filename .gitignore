@@ -21,6 +21,7 @@ compile_commands.json
 Gemfile.lock
 # IDE files
 .idea/
+.vscode/
 *.iml
 zscaler-root-ca.crt*
 .gitleaks-baseline.json
