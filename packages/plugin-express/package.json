@@ -8,11 +8,11 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/esm/expressd.ts",
+        "types": "./dist/esm/express.d.ts",
         "default": "./dist/esm/express.js"
       },
       "require": {
-        "types": "./dist/cjs/expressd.ts",
+        "types": "./dist/cjs/express.d.ts",
         "default": "./dist/cjs/express.js"
       }
     }
