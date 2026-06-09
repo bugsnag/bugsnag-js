@@ -2,7 +2,7 @@ import { Client, Event, Logger, nodeFallbackStack, Plugin } from '@bugsnag/core'
 import { AsyncLocalStorage } from 'async_hooks'
 
 interface InternalClient extends Client {
-  _clientContext: AsyncLocalStorage<Client>
+  _clientContext?: AsyncLocalStorage<Client>
   fallbackStack?: string
   _config: Client['_config'] & {
     onUncaughtException: (err: Error, event: Event, logger: Logger) => void
@@ -18,7 +18,9 @@ const plugin: Plugin = {
     if (!internalClient._config.enabledErrorTypes.unhandledExceptions) return
     _handler = (err: Error) => {
       // if we are in an async context, use the client from that context
-      const ctx = internalClient._clientContext && internalClient._clientContext.getStore()
+      const ctx = internalClient._clientContext && typeof internalClient._clientContext.getStore === 'function'
+         ? internalClient._clientContext.getStore()
+         : undefined
       const c = (ctx || internalClient) as InternalClient
 
       // check if the stacktrace has no context, if so append the frames we created earlier
