@@ -18,7 +18,6 @@ class SessionTracker extends EventEmitter {
     this._sessions = new Map()
     this._interval = null
     this._intervalLength = intervalLength ?? DEFAULT_SUMMARY_INTERVAL
-
     this._summarize = this._summarize.bind(this)
   }
 
