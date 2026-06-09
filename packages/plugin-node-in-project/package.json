@@ -30,6 +30,7 @@
     "dist"
   ],
    "scripts": {
+    "prebuild": "npm run clean",
     "build": "npm run build:npm",
     "build:npm": "rollup --config rollup.config.mjs",
     "clean": "rm -rf dist/*",
