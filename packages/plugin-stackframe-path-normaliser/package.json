@@ -1,7 +1,7 @@
 {
   "name": "@bugsnag/plugin-stackframe-path-normaliser",
   "version": "8.9.0",
-    "type": "module",
+  "type": "module",
   "main": "./dist/cjs/path-normaliser.js",
   "module": "./dist/esm/path-normaliser.js",
   "types": "./dist/cjs/path-normaliser.d.ts",
@@ -12,7 +12,7 @@
         "default": "./dist/esm/path-normaliser.js"
       },
       "require": {
-        "types": "./dist/cjs/network-breadcrumbs.d.ts",
+        "types": "./dist/cjs/path-normaliser.d.ts",
         "default": "./dist/cjs/path-normaliser.js"
       }
     }
@@ -37,6 +37,7 @@
   },
    "scripts": {
     "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
     "build": "rollup --config rollup.config.mjs",
     "test:types": "tsc -p tsconfig.json"
   }
