@@ -114,7 +114,7 @@ Scenario: A handled error with ctx.bugsnag.notify()
   And the event "metaData.error_handler.after" is null
 
 Scenario: adding body to request metadata
-  When I POST the data "data=in_request_body" to the URL "http://koa/bodytest"
+  When I POST the data "data=in_request_body" to the URL "http://koa/bodytest" with the content type "application/x-www-form-urlencoded"
   And I wait to receive an error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true

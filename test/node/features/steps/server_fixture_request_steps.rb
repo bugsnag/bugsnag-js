@@ -1,13 +1,14 @@
 require 'net/http'
 
-# Attempts to POST a string of urlencoded data to a server.
+# Attempts to POST a string of request body data to a server.
 #
-# @step_input reqbody [String] urlencoded data to send.
+# @step_input reqbody [String] body data to send.
 # @step_input url [String] The URL to post data to.
-When("I POST the data {string} to the URL {string}") do |reqbody, url|
+# @step_input content_type [String] The content type of the data being sent.
+When("I POST the data {string} to the URL {string} with the content type {string}") do |reqbody, url, content_type|
   Net::HTTP.post(URI(url),
                  reqbody,
-                 'Content-Type' => 'application/x-www-form-urlencoded')
+                 'Content-Type' => content_type)
 end
 
 When('I open the URL {string} tolerating any error') do |url|
