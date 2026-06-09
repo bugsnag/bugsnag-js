@@ -10,24 +10,24 @@ interface KoaRequest extends Context {
 }
 
 interface RequestInfo {
-    url?: string
-    path?: string
-    httpMethod?: string
-    headers?: Record<string, any>
-    httpVersion?: string
-    query?: Record<string, any>
-    body?: Record<string, any>
-    referer?: string
-    clientIp?: string
-    connection?: {
-      remoteAddress?: string
-      remotePort?: number
-      bytesRead?: number
-      bytesWritten?: number
-      localPort?: number
-      localAddress?: string
-      IPVersion?: string
-    }
+  url?: string
+  path?: string
+  httpMethod?: string
+  headers?: Record<string, any>
+  httpVersion?: string
+  query?: Record<string, any>
+  body?: Record<string, any>
+  referer?: string
+  clientIp?: string
+  connection?: {
+    remoteAddress?: string
+    remotePort?: number
+    bytesRead?: number
+    bytesWritten?: number
+    localPort?: number
+    localAddress?: string
+    IPVersion?: string
+  }
 }
 
 const isAddressInfo = (info: any): info is AddressInfo => {
@@ -57,12 +57,12 @@ const extractRequestInfo = (ctx?: KoaRequest): RequestInfo => {
     query: ctx.request.query,
     body: ctx.request.body,
     referer: getFirstHeader(request.headers.referer) || getFirstHeader(request.headers.referrer),
-    clientIp: ctx.ip || (request.socket ? request.socket.remoteAddress : undefined),
-    connection: request.socket ? {
-      remoteAddress: request.socket.remoteAddress,
-      remotePort: request.socket.remotePort,
-      bytesRead: request.socket.bytesRead,
-      bytesWritten: request.socket.bytesWritten,
+    clientIp: ctx.ip || (connection ? connection.remoteAddress : undefined),
+    connection: connection ? {
+      remoteAddress: connection.remoteAddress,
+      remotePort: connection.remotePort,
+      bytesRead: connection.bytesRead,
+      bytesWritten: connection.bytesWritten,
       localPort: portNumber,
       localAddress: isAddressInfo(address) ? address.address : undefined,
       IPVersion: isAddressInfo(address) ? address.family : undefined
