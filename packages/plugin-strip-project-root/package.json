@@ -8,11 +8,11 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/esm/strip-project-rootd.ts",
+        "types": "./dist/esm/strip-project-root.d.ts",
         "default": "./dist/esm/strip-project-root.js"
       },
       "require": {
-        "types": "./dist/cjs/strip-project-rootd.ts",
+        "types": "./dist/cjs/strip-project-root.d.ts",
         "default": "./dist/cjs/strip-project-root.js"
       }
     }
@@ -42,6 +42,7 @@
   },
    "scripts": {
     "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
     "build": "rollup --config rollup.config.mjs",
     "test:types": "tsc -p tsconfig.json"
   }

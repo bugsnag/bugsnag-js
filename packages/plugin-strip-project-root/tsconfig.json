@@ -4,7 +4,7 @@
     "rootDir": "src",
     "outDir": "dist",
     "declarationDir": "dist/types",
-     "lib": ["es2017"],
+    "lib": ["es2017"],
     "types": ["node"]
   },
   "include": ["src/**/*.ts"]
