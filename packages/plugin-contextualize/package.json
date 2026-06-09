@@ -37,8 +37,9 @@
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
   },
-   "scripts": {
+  "scripts": {
     "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
     "build": "rollup --config rollup.config.mjs",
     "test:types": "tsc -p tsconfig.json"
   }

@@ -8,7 +8,7 @@ type InternalClient = Client & {
   fallbackStack?: string
 }
 
-type ContextualizeFn = <T>(fn: () => T | Promise<T>, onError: OnErrorCallback) => T | Promise<T>
+type ContextualizeFn = <T>(fn: () => T | Promise<T>, onError?: OnErrorCallback) => T | Promise<T>
 
 const getContextualize = (client: Client): ContextualizeFn => {
   const contextualize = client.getPlugin('contextualize')
@@ -117,7 +117,7 @@ describe('plugin: contextualize', () => {
       expect(capturedClient?.fallbackStack).toBeDefined()
     })
 
-    it('returns undefined when callback is async', () => {
+    it('returns the callback promise when callback is async', async () => {
       const c = new Client({ apiKey: 'api_key', plugins: [plugin] }) as unknown as InternalClient
       c._clientContext = new AsyncLocalStorage()
       const contextualize = getContextualize(c)
@@ -126,7 +126,7 @@ describe('plugin: contextualize', () => {
         return 'async value'
       }, (_event: Event) => {})
 
-      expect(result).toBeUndefined()
+      await expect(result).resolves.toBe('async value')
     })
   })
 
@@ -157,7 +157,7 @@ describe('plugin: contextualize', () => {
   })
 
   describe('return value', () => {
-    it('returns undefined from contextualize', () => {
+    it('returns the callback result from contextualize', () => {
       const c = new Client({ apiKey: 'api_key', plugins: [plugin] }) as unknown as InternalClient
       c._clientContext = new AsyncLocalStorage()
       const contextualize = getContextualize(c)
@@ -168,7 +168,17 @@ describe('plugin: contextualize', () => {
         event.addMetadata('test', { key: 'value' })
       })
 
-      expect(result).toBeUndefined()
+      expect(result).toBe('test value')
+    })
+
+    it('allows contextualize without an onError callback', () => {
+      const c = new Client({ apiKey: 'api_key', plugins: [plugin] }) as unknown as InternalClient
+      c._clientContext = new AsyncLocalStorage()
+      const contextualize = getContextualize(c)
+
+      const result = contextualize(() => 'test value')
+
+      expect(result).toBe('test value')
     })
   })
 })
