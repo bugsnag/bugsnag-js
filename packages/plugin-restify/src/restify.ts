@@ -12,7 +12,6 @@ declare module 'restify' {
   }
 }
 
-// add a new call signature for the getPlugin() method that types the plugin result
 declare module '@bugsnag/core' {
   interface Client {
     getPlugin(id: 'restify'): BugsnagPluginRestifyResult | undefined
@@ -25,7 +24,7 @@ interface RestifyError extends Error {
 
 interface BugsnagPluginRestifyResult {
   requestHandler: restify.RequestHandler
-  errorHandler: (req: restify.Request, res: restify.Response, err: RestifyError, cb: (...args: any[]) => void) => void
+  errorHandler: (req: restify.Request, res: restify.Response, err: RestifyError, cb: Next) => void
 }
 
 interface ExtractedRequestData {
@@ -58,31 +57,28 @@ const plugin: Plugin = {
   load: (client: Client): BugsnagPluginRestifyResult => {
     const internalClient = client as InternalClient
 
-    const requestHandler = (req: Request, res: Response, next: Next) => {
-      // clone the client to be scoped to this request. If sessions are enabled, start one
+    const requestHandler: restify.RequestHandler = (req: Request, res: Response, next: Next) => {
       const requestClient = cloneClient(internalClient)
       if (requestClient._config.autoTrackSessions) {
         requestClient.startSession()
       }
 
-      // attach it to the request
       req.bugsnag = requestClient
 
-      // extract request info and pass it to the relevant bugsnag properties
       requestClient.addOnError((event) => {
         const { request, metadata } = getRequestAndMetadataFromReq(req)
         event.request = { ...event.request, ...request }
         event.addMetadata('request', metadata)
+
         if (event._handledState.severityReason.type === 'unhandledException') {
-          // @ts-expect-error override readonly property
-          event._handledState = handledState
+          ;(event as typeof event & { _handledState: typeof handledState })._handledState = handledState
         }
-      }, true);
+      }, true)
 
       internalClient._clientContext.run(requestClient, next)
     }
 
-    const errorHandler = (req: Request, res: Response, err: RestifyError, cb: () => void) => {
+    const errorHandler = (req: Request, res: Response, err: RestifyError, cb: Next): void => {
       if (!internalClient._config.autoDetectErrors) return cb()
       if (err.statusCode && err.statusCode < 500) return cb()
 
@@ -99,6 +95,7 @@ const plugin: Plugin = {
         )
         internalClient._notify(event)
       }
+
       cb()
     }
 
@@ -108,6 +105,7 @@ const plugin: Plugin = {
 
 const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
   const { body, ...requestInfo } = extractRequestInfo(req)
+
   return {
     metadata: requestInfo,
     request: {
@@ -116,7 +114,7 @@ const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
       headers: requestInfo.headers,
       httpMethod: requestInfo.httpMethod,
       url: requestInfo.url,
-      referer: requestInfo.referer // Not part of the notifier spec for request but leaving for backwards compatibility
+      referer: requestInfo.referer
     }
   }
 }
