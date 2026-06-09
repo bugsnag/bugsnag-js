@@ -22,9 +22,9 @@ describe('delivery: electron -> queue', () => {
       const storagePath = join(tempdir, 'foooo')
       const queue = new PayloadQueue(storagePath, 'stuff')
 
-      expect(storagePath).not.toBeAFile()
+      await expect(storagePath).not.toBeAFile()
       await queue.init()
-      expect(storagePath).toBeAFile()
+      await expect(storagePath).toBeAFile()
     })
 
     it('throws an error when the directory was not succesfully created', async () => {
