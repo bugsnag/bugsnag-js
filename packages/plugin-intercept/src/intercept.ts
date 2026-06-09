@@ -1,7 +1,6 @@
-import type { Plugin } from '@bugsnag/core'
-import { nodeFallbackStack } from '@bugsnag/core'
+import { nodeFallbackStack, type OnErrorCallback, type Plugin } from '@bugsnag/core'
 
-type ErrorCallback = () => void
+type ErrorCallback = OnErrorCallback
 type SuccessCallback<T extends unknown[]> = (...args: T) => void
 type NodeCallback<T extends unknown[]> = (err: Error | null, ...data: T) => void
 
@@ -30,7 +29,7 @@ const plugin: Plugin = {
 
       return (err: Error | null, ...data: T) => {
         if (err) {
-          // check if the stacktrace has no context, if so, if so append the frames we created earlier
+          // check if the stacktrace has no context, if so, append the frames we created earlier
           if (typeof err.stack === 'string' && fallbackStack) {
             nodeFallbackStack.maybeUseFallbackStack(err, fallbackStack)
           }
