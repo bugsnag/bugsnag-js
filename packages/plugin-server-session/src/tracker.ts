@@ -5,7 +5,7 @@ const DEFAULT_SUMMARY_INTERVAL = 10 * 1000
 
 class SessionTracker extends EventEmitter {
   private _sessions: Map<string, number>
-  private _interval: NodeJS.Timeout | null
+  private _interval: ReturnType<typeof setInterval> | null
   private _intervalLength?: number
 
   constructor (intervalLength?: number) {
@@ -19,7 +19,12 @@ class SessionTracker extends EventEmitter {
 
   start () {
     if (!this._interval) {
-      this._interval = setInterval(this._summarize, this._intervalLength).unref()
+      const interval = setInterval(this._summarize, this._intervalLength)
+      // In non-Node runtimes (e.g. Cloudflare Workers) setInterval returns a number.
+      if (typeof (interval as { unref?: () => unknown }).unref === 'function') {
+        (interval as { unref: () => unknown }).unref()
+      }
+      this._interval = interval
     }
   }
 
