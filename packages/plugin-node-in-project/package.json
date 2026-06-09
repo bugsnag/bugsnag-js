@@ -29,11 +29,10 @@
   "files": [
     "dist"
   ],
-   "scripts": {
-    "prebuild": "npm run clean",
-    "build": "npm run build:npm",
-    "build:npm": "rollup --config rollup.config.mjs",
+  "scripts": {
     "clean": "rm -rf dist/*",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs",
     "test:types": "tsc -p tsconfig.json"
   },
   "author": "Bugsnag",
