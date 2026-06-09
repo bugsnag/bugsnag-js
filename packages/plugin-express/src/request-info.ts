@@ -61,9 +61,9 @@ const extractRequestInfo = (req: Request): RequestInfo => {
     httpVersion: req.httpVersion
   }
 
-  request.params = extractObject(req, 'params')
-  request.query = extractObject(req, 'query')
-  request.body = extractObject(req, 'body')
+  request.params = extractObject(req, 'params') as Record<string, any> | undefined
+  request.query = extractObject(req, 'query') as Record<string, any> | undefined
+  request.body = extractObject(req, 'body') as Record<string, any> | undefined
 
   request.clientIp = req.ip || (connection ? connection.remoteAddress : undefined)
   request.referer = getFirstHeader(req.headers.referer) || getFirstHeader(req.headers.referrer)

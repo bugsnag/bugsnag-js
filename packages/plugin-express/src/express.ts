@@ -1,8 +1,8 @@
 import type { Client, Plugin } from '@bugsnag/core'
 import { cloneClient } from '@bugsnag/core'
-import { AsyncLocalStorage } from 'async_hooks'
+import type { AsyncLocalStorage } from 'async_hooks'
 import type { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
-import * as express from 'express'
+import type * as express from 'express'
 import extractRequestInfo from './request-info'
 import type { RequestInfo } from './request-info'
 
@@ -125,4 +125,3 @@ const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
 }
 
 export default plugin
-module.exports = plugin
