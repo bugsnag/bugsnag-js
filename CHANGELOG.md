@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- (delivery-node) Replace deprecated `url.parse()` with `URL` constructor [#2730](https://github.com/bugsnag/bugsnag-js/pull/2730)
 - (plugin-hono) Fix issue where error handler middleware did not `await next()` [#2735](https://github.com/bugsnag/bugsnag-js/pull/2735)
 
 ### Added
