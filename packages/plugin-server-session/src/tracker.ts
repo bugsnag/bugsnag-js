@@ -44,7 +44,7 @@ class SessionTracker extends EventEmitter {
   track (session: Session): Session {
     const key = dateToMsKey(session.startedAt)
     const cur = this._sessions.get(key)
-    this._sessions.set(key, cur === null || cur === undefined ? 1 : cur + 1)
+    this._sessions.set(key, (cur ?? 0) + 1)
     return session
   }
 

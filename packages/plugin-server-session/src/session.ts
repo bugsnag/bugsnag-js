@@ -21,12 +21,16 @@ interface SessionSummaryPayload {
 
 const plugin: Plugin<PluginConfig> = {
   load: (client: Client<PluginConfig>): void => {
-    const sessionTracker = new SessionTracker(client._config.sessionSummaryInterval)
-    sessionTracker.on('summary', sendSessionSummary(client))
-    sessionTracker.start()
+  let sessionTracker: SessionTracker | null = null
+  client._sessionDelegate = {
+       startSession: (sessionClient, session) => {
+         // Lazy initialization: only create and start the tracker on first use
+         if (!sessionTracker) {
+           sessionTracker = new SessionTracker(client._config.sessionSummaryInterval)
+           sessionTracker.on('summary', sendSessionSummary(client))
+           sessionTracker.start()
+         }
 
-    client._sessionDelegate = {
-      startSession: (sessionClient, session) => {
         sessionClient._session = session
         sessionClient._pausedSession = null
         sessionTracker.track(sessionClient._session)
@@ -107,7 +111,8 @@ const sendSessionSummary = (client: Client) => (sessionCounts: SessionCount[]): 
       },
       sessionCounts
     }
-
+     // onSessionPayload callbacks mutate delivery payloads, but runSyncCallbacks in
+    // @bugsnag/core is currently typed only for Session/Breadcrumb/Event values.
     const ignore = runSyncCallbacks(
       client._cbs.sp,
       payload as unknown as Session,

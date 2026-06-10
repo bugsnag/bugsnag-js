@@ -45,7 +45,8 @@ const handler: ExportedHandlerFetchHandler<Env> = async (request, env, ctx): Pro
 
 	return new Response('Hello World!')
 }
-
+let wrappedHandler: ExportedHandlerFetchHandler<Env> | undefined
+ const getWrappedHandler = () => (wrappedHandler ??= getBugsnagHandler()(handler))
 export default {
-	fetch: (request, env, ctx) => getBugsnagHandler()(handler)(request, env, ctx)
+	fetch: (request, env, ctx) => getWrappedHandler()(request, env, ctx)
 } satisfies ExportedHandler<Env>;
