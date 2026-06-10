@@ -16,7 +16,7 @@ interface RequestInfo {
   headers?: Record<string, any>
   httpVersion?: string
   query?: Record<string, any>
-  body?: Record<string, any>
+  body?: any
   referer?: string
   clientIp?: string
   connection?: {
