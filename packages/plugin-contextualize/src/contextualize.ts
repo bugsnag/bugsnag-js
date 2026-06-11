@@ -1,10 +1,10 @@
 import type { Client, OnErrorCallback, Plugin } from '@bugsnag/core'
 import { cloneClient, nodeFallbackStack } from '@bugsnag/core'
-import { AsyncLocalStorage } from 'async_hooks'
+import type { AsyncLocalStorage } from 'async_hooks'
 
 interface InternalClient extends Client {
   _clientContext: AsyncLocalStorage<Client>
-  fallbackStack?: string | undefined
+  fallbackStack?: string
 }
 
 const plugin: Plugin = {
@@ -13,7 +13,6 @@ const plugin: Plugin = {
     const internalClient = client as InternalClient
 
     const contextualize = <T>(fn: () => T | Promise<T>, onError?: OnErrorCallback): T | Promise<T> => {
-    //const contextualize = (fn: () => void, onError: OnErrorCallback) => {
       // capture a stacktrace in case a resulting error has nothing
       const fallbackStack = nodeFallbackStack.getStack()
 
@@ -24,7 +23,9 @@ const plugin: Plugin = {
       // handler does not need this because it gets a stacktrace
       clonedClient.fallbackStack = fallbackStack
 
-      if(onError) clonedClient.addOnError(onError)
+      if(onError) {
+          clonedClient.addOnError(onError)
+      }
 
       return internalClient._clientContext.run(clonedClient, fn)
     }

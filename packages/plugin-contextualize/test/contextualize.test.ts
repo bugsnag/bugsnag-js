@@ -106,12 +106,10 @@ describe('plugin: contextualize', () => {
       const contextualize = getContextualize(c)
 
       let capturedClient: InternalClient | undefined
-      contextualize(async () => {
+      await contextualize(async () => {
         await new Promise(resolve => setTimeout(resolve, 10))
         capturedClient = c._clientContext.getStore() as unknown as InternalClient
       }, (_event: Event) => {})
-
-      await new Promise(resolve => setTimeout(resolve, 20))
 
       expect(capturedClient).toBeTruthy()
       expect(capturedClient?.fallbackStack).toBeDefined()
