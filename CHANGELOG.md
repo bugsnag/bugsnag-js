@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- (plugin-electron-client-state-persistence) Fix Linux build failure by removing unused POSIX `once_flag` and `call_once` definitions from vendored tinycthread, resolving conflicts with glibc ≥ 2.28 during `node-gyp rebuild` [#2769]<https://github.com/bugsnag/bugsnag-js/pull/2769>
 - (delivery-node) Replace deprecated `url.parse()` with `URL` constructor [#2730](https://github.com/bugsnag/bugsnag-js/pull/2730)
 - (plugin-hono) Fix issue where error handler middleware did not `await next()` [#2735](https://github.com/bugsnag/bugsnag-js/pull/2735)
 
