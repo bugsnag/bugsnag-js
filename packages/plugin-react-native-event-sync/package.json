@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git@github.com:bugsnag/bugsnag-js.git"
   },
+  "bugs": {
+    "url": "https://github.com/bugsnag/bugsnag-js/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
