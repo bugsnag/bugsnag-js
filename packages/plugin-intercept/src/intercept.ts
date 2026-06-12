@@ -41,7 +41,7 @@ const plugin: Plugin = {
           client._notify(event, onError as ErrorCallback)
           return
         }
-        cb(...data)
+        ;(cb as SuccessCallback<T>)(...data)
       }
     }
 
