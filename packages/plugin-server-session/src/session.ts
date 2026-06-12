@@ -83,7 +83,7 @@ const sendSessionSummary = (client: Client) => (sessionCounts: SessionCount[]): 
   function handleRes (err?: Error | null): void {
     if (!err) {
       const sessionCount = sessionCounts.reduce((accum, s) => accum + s.sessionsStarted, 0)
-      client._logger.debug(String(sessionCount) + ' session(s) reported')
+      client._logger.debug(`${sessionCount} session(s) reported`)
       return
     }
 
