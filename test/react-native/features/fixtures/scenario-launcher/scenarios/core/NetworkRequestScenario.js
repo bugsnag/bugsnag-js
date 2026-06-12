@@ -1,6 +1,6 @@
 import Scenario from './Scenario'
 import Bugsnag from '@bugsnag/react-native'
-import BugsnagPluginNetworkInstrumentation from '@bugsnag/plugin-network-instrumentation'
+import {createNetworkInstrumentationPlugin as BugsnagPluginNetworkInstrumentation} from '@bugsnag/plugin-network-instrumentation'
 
 export class NetworkRequestScenario extends Scenario {
   constructor (nativeConfig, jsConfig, scenarioData) {
