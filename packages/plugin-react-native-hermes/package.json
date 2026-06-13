@@ -1,6 +1,9 @@
 {
   "name": "@bugsnag/plugin-react-native-hermes",
   "version": "8.9.0",
+  "bugs": {
+    "url": "https://github.com/bugsnag/bugsnag-js/issues"
+  },
   "main": "hermes.js",
   "description": "@bugsnag/react-native plugin to support Hermes",
   "homepage": "https://www.bugsnag.com/",
