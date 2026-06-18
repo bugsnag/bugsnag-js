@@ -8,10 +8,14 @@
 - (plugin-hono) Fix issue where error handler middleware did not `await next()` [#2735](https://github.com/bugsnag/bugsnag-js/pull/2735)
 
 ### Added
+
 - (react-native-navigation) Add support for react-native-navigation v8 [#2741](https://github.com/bugsnag/bugsnag-js/pull/2741)
 - Requires React Native 0.78+ (New Architecture only)
 - Peer dependency range updated: react-native-navigation 2.0.0 - 8.x
 
+### Dependencies
+
+Update bugsnag-android to [v.6.26.1](https//github.com/bugsnag/bugsnag-android/releases/tag/v.6.26.1) [#2774](https://github.com/bugsnag/bugsnag-js/pull/2774)
 
 ## [8.9.0] - 2026-04-08
 
@@ -19,7 +23,7 @@
 
 - (plugin-inline-script-content) Fix strict mode compatibility by replacing `arguments` usage with rest parameters [#2711](https://github.com/bugsnag/bugsnag-js/pull/2711)
 
-### Added 
+### Added
 
 - (delivery-react-native) Handle request and response parameters [#2667](https://github.com/bugsnag/bugsnag-js/pull/2667)
 
