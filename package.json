@@ -112,10 +112,10 @@
       "async": "^3.2.2"
     },
     "node-fetch": "^2.6.7",
-    "shell-quote": "^1.7.3",
+    "shell-quote": "1.8.4",
     "thenify": "^3.3.1",
     "tough-cookie": "5.1.1",
-  "tmp": "^0.2.6",
+    "tmp": "^0.2.6",
     "fast-uri": "^3.1.2",
     "@babel/plugin-transform-modules-systemjs": "^7.29.4",
     "@angular/common": "^19.2.20",
@@ -129,31 +129,6 @@
     "rollup": "^4.59.9", 
     "serialize-javascript": "7.0.5",
     "tar": "^7.5.11",
-    "learna": {
-      "minimatch": "^3.1.4",
-      "nx": {
-        "minimatch": "^9.0.9"
-      },
-      "@nx/devkit": {
-        "minimatch": "^9.0.9"
-      }
-    },
-    "@learna/create": {
-      "minimatch": "^3.1.4",
-      "nx": {
-        "minimatch": "^9.0.9"
-      }
-    },
-    "@nrwl/devkit": {
-      "nx": {
-        "minimatch": "^9.0.9"
-      }
-    },
-    "@nrwl/tao": {
-      "nx": {
-        "minimatch": "^9.0.9"
-      }
-    },
     "@verdaccio/local-storage-legacy": {
       "@verdaccio/core": {
           "minimatch": "^7.4.9"
