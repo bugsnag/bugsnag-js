@@ -1,7 +1,22 @@
 {
   "name": "@bugsnag/plugin-intercept",
   "version": "8.9.0",
-  "main": "intercept.js",
+  "type": "module",
+  "main": "./dist/cjs/intercept.js",
+  "module": "./dist/esm/intercept.js",
+  "types": "./dist/cjs/intercept.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/intercept.d.ts",
+        "default": "./dist/esm/intercept.js"
+      },
+      "require": {
+        "types": "./dist/cjs/intercept.d.ts",
+        "default": "./dist/cjs/intercept.js"
+      }
+    }
+  },
   "description": "@bugsnag/js plugin providing convenience functions for intercepting asynchronous errors",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,9 +27,8 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
-  "scripts": {},
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
@@ -22,5 +36,11 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs",
+    "test:types": "tsc -p tsconfig.json"
   }
 }
