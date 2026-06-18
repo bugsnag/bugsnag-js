@@ -1,4 +1,4 @@
-import { Client } from '@bugsnag/core'
+import { Client, Event } from '@bugsnag/core'
 import plugin from '../src/restify'
 
 describe('plugin: restify', () => {
