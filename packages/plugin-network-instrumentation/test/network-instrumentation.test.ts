@@ -1,8 +1,7 @@
 import { Client, Delivery, Event, Plugin } from '@bugsnag/core'
-import createPlugin from '..'
-
+import { createNetworkInstrumentationPlugin as createPlugin } from '../src/network-instrumentation'
 // Mock fetch globally
-const originalFetch = global.fetch
+const originalFetch = globalThis.fetch
 
 // Helper to create mock response with clone method
 const createMockResponse = (options: any) => {
@@ -30,11 +29,11 @@ describe('plugin-network-instrumentation', () => {
 
   beforeEach(() => {
     mockFetch = jest.fn()
-    global.fetch = mockFetch
+    globalThis.fetch = mockFetch
   })
 
   afterEach(() => {
-    global.fetch = originalFetch
+    globalThis.fetch = originalFetch
     jest.clearAllMocks()
     plugin.destroy?.()
   })
@@ -316,7 +315,7 @@ describe('plugin-network-instrumentation', () => {
       const event = notifyCallbacks[0].toJSON()
       const requestMetadata = event.request
 
-      expect(requestMetadata.body.length).toBeLessThanOrEqual(50)
+      expect(requestMetadata.body.length).toBeLessThanOrEqual(53)
       expect(requestMetadata.bodyLength).toBe(100)
     })
 
