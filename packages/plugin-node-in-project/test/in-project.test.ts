@@ -1,6 +1,7 @@
-import plugin from '../'
+import plugin from '../src/in-project'
 import { join } from 'path'
 import { Client, Event, schema } from '@bugsnag/core'
+
 
 describe('plugin: node in project', () => {
   it('should mark stackframes as "inProject" if it is a descendent of the "projectRoot"', done => {
