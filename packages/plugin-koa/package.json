@@ -1,8 +1,22 @@
 {
   "name": "@bugsnag/plugin-koa",
   "version": "8.9.0",
-  "main": "src/koa.js",
-  "types": "types/bugsnag-koa.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/koa.js",
+  "module": "./dist/esm/koa.js",
+  "types": "./dist/cjs/koa.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/koa.d.ts",
+        "default": "./dist/esm/koa.js"
+      },
+      "require": {
+        "types": "./dist/cjs/koa.d.ts",
+        "default": "./dist/cjs/koa.js"
+      }
+    }
+  },
   "description": "@bugsnag/js error handling middleware for Koa web servers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -13,8 +27,7 @@
     "access": "public"
   },
   "files": [
-    "src",
-    "types"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -24,5 +37,11 @@
   "devDependencies": {
     "@bugsnag/core": "^8.9.0",
     "@types/koa": "2.13.4"
+  },
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs",
+    "test:types": "tsc -p tsconfig.json"
   }
 }
