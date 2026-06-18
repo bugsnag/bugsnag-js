@@ -59,4 +59,10 @@ if [ ! -z "$ENDPOINT" ]; then
   ARGS+=("$ENDPOINT")
 fi
 
-../node_modules/.bin/bugsnag-cli upload react-native-ios "${ARGS[@]}"
+BUGSNAG_CLI="../node_modules/.bin/bugsnag-cli"
+if [ ! -x "$BUGSNAG_CLI" ]; then
+  echo "Error: Bugsnag CLI not found at $BUGSNAG_CLI. Install @bugsnag/cli to enable React Native source map uploads."
+  exit 1
+fi
+
+"$BUGSNAG_CLI" upload react-native-ios "${ARGS[@]}"
