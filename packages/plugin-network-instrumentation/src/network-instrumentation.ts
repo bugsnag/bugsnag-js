@@ -3,26 +3,37 @@
  * A plugin to automatically capture and report HTTP errors
  */
 
-const parseUrl = require('./lib/parse-url')
-const parseQueryString = require('./lib/parse-query-string')
-const redactValues = require('./lib/redact-values')
-const shouldCaptureStatusCode = require('./lib/should-capture-status-code')
-const truncate = require('./lib/truncate')
+
+import { parseUrl } from './lib/parse-url'
+import { parseQueryString } from './lib/parse-query-string'
+import { redactValues } from './lib/redact-values'
+import { shouldCaptureStatusCode } from './lib/should-capture-status-code'
+import { truncate } from './lib/truncate'
+import { createRequestTrackerPlugin } from '@bugsnag/request-tracker'
+
 
 const DEFAULT_HTTP_ERROR_CODES = [{ min: 400, max: 599 }]
 const DEFAULT_MAX_RESPONSE_SIZE = 0
 const DEFAULT_MAX_REQUEST_SIZE = 0
 
+
 /**
  * Creates the HTTP errors plugin with configuration
- * @param {Object} config - Plugin configuration
- * @param {Array|Object|number} config.httpErrorCodes - Error codes to capture
- * @param {number} config.maxResponseSize - Maximum response body size to capture
- * @param {number} config.maxRequestSize - Maximum request body size to capture
- * @param {Function} config.onHttpError - Callback for intercepting HTTP errors
- * @returns {Object} Bugsnag plugin
+ * @param config Plugin configuration
+ * @param global Global object (window or global)
+ * @returns Bugsnag plugin
  */
-module.exports = (config = {}, global = window) => {
+export interface NetworkInstrumentationConfig {
+  httpErrorCodes?: any[] | object | number
+  maxResponseSize?: number
+  maxRequestSize?: number
+  onHttpError?: (args: { request: any, response: any }) => boolean | void
+}
+
+export function createNetworkInstrumentationPlugin(
+  config: NetworkInstrumentationConfig = {},
+  global: any = (typeof window !== 'undefined' ? window : undefined)
+): any {
   const {
     httpErrorCodes = DEFAULT_HTTP_ERROR_CODES,
     maxResponseSize = DEFAULT_MAX_RESPONSE_SIZE,
@@ -30,37 +41,40 @@ module.exports = (config = {}, global = window) => {
     onHttpError
   } = config
 
+
   // Normalize httpErrorCodes to an array
   const normalizedStatusCodes = Array.isArray(httpErrorCodes) ? httpErrorCodes : [httpErrorCodes]
 
-  let restoreFunctions = []
+  let restoreFunctions: Array<() => void> = []
   const plugin = {
     name: 'httpErrors',
-    load: (client) => {
+    load: (client: any) => {
       // Try to get existing request tracker
+
       let requestTrackerPlugin = client.getPlugin('requestTracker')
 
       // Auto-load request tracker if not present
+
       if (!requestTrackerPlugin) {
         try {
-          const { createRequestTrackerPlugin } = require('@bugsnag/request-tracker')
           const trackerPlugin = createRequestTrackerPlugin([], global)
           client._loadPlugin(trackerPlugin)
           requestTrackerPlugin = client.getPlugin('requestTracker')
-        } catch (error) {
+        } catch (error: any) {
           client._logger.warn('Failed to auto-load request tracker, using direct fetch patching:', error.message)
         }
       }
 
       // Use shared request tracker if available
+
       if (requestTrackerPlugin) {
         const { fetchTracker, xhrTracker } = requestTrackerPlugin
 
         if (fetchTracker) {
           restoreFunctions.push(fetchTracker._restore)
-          fetchTracker.onStart((startContext) => {
+          fetchTracker.onStart((startContext: any) => {
             return {
-              onRequestEnd: (endContext) => {
+              onRequestEnd: (endContext: any) => {
                 handleHttpError(startContext, endContext)
               }
             }
@@ -68,9 +82,9 @@ module.exports = (config = {}, global = window) => {
         }
         if (xhrTracker) {
           restoreFunctions.push(xhrTracker._restore)
-          xhrTracker.onStart((startContext) => {
+          xhrTracker.onStart((startContext: any) => {
             return {
-              onRequestEnd: (endContext) => {
+              onRequestEnd: (endContext: any) => {
                 handleHttpError(startContext, endContext)
               }
             }
@@ -78,7 +92,7 @@ module.exports = (config = {}, global = window) => {
         }
       }
 
-      function handleHttpError (startContext, endContext) {
+      function handleHttpError(startContext: any, endContext: any) {
         // Check if we should capture this status code
         if (!shouldCaptureStatusCode(normalizedStatusCodes, endContext.status)) return
 
@@ -93,14 +107,14 @@ module.exports = (config = {}, global = window) => {
           const requestParams = parseQueryString(queryString)
 
           // Create request and response objects for callback
-          const requestObj = {
+          const requestObj: any = {
             url,
             httpMethod: method,
             headers: startContext.headers,
             params: redactValues(requestParams, client._config.redactedKeys),
             bodyLength: startContext.body ? startContext.body.length : undefined
           }
-          const responseObj = {
+          const responseObj: any = {
             statusCode: endContext.status,
             headers: endContext.headers,
             bodyLength: endContext.body ? endContext.body.length : undefined
@@ -150,15 +164,15 @@ module.exports = (config = {}, global = window) => {
           event.context = `${method} ${domain}`
 
           client._notify(event)
-        } catch (err) {
+        } catch (err: any) {
           client._logger.error('Failed to process HTTP error:', err.message)
         }
       }
     }
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    plugin.destroy = () => {
+   if (process.env.NODE_ENV !== 'production') {
+    (plugin as any).destroy = () => {
       restoreFunctions.forEach(fn => fn())
       restoreFunctions = []
     }

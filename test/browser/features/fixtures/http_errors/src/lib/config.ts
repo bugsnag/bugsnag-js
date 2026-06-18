@@ -1,4 +1,4 @@
-import BugsnagPluginNetworkInstrumentation from '@bugsnag/plugin-network-instrumentation'
+import { createNetworkInstrumentationPlugin } from '@bugsnag/plugin-network-instrumentation'
 
 function getQueryParam (key: string): string {
   const match = window.location.search.match(new RegExp(key + '=([^&]+)'))
@@ -14,9 +14,11 @@ export const endpoints = {
   sessions: getQueryParam('SESSIONS')
 }
 
+
 export const plugins = [
-  BugsnagPluginNetworkInstrumentation({
+  createNetworkInstrumentationPlugin({
     maxRequestSize: 5000,
     maxResponseSize: 5000
   })
 ]
+
