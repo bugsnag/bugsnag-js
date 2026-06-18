@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationDir": "dist/types",
+    "lib": ["es2017"],
+    "target": "ES2017", // Preserve async/await for Koa compatibility
+    "module": "ES2015",
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"]
+}
