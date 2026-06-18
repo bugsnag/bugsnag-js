@@ -1,0 +1,2 @@
+export const DEFAULT_SUMMARY_INTERVAL = 10000;
+export const MAX_ATTEMPTS = 10;

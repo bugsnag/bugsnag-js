@@ -1,6 +1,6 @@
-import Tracker from '../tracker'
 import { Session } from '@bugsnag/core'
 import timekeeper from 'timekeeper'
+import Tracker from '../src/tracker'
 
 describe('session tracker', () => {
   it('should track sessions and summarize per minute', done => {
@@ -28,13 +28,34 @@ describe('session tracker', () => {
   })
 
   it('should only start one interval', () => {
-    const t = new Tracker(5)
+    jest.useFakeTimers()
+    const t = new Tracker(100)
+    let summaryEmissionCount = 0
+    
+    t.track(new Session())
+    t.track(new Session())
+    
+    t.on('summary', () => {
+      summaryEmissionCount++
+    })
+
     t.start()
-    const i0 = t._interval
     t.start()
-    expect(i0).toBe(t._interval)
+    t.start()
+
+    jest.advanceTimersByTime(100)
+    expect(summaryEmissionCount).toBe(1)
+    
+    t.track(new Session())
+    jest.advanceTimersByTime(100)
+    expect(summaryEmissionCount).toBe(2)
+    
     t.stop()
-    expect(t._interval).toBe(null)
+    t.track(new Session())
+    jest.advanceTimersByTime(200)
+    expect(summaryEmissionCount).toBe(2)
+    
+    jest.useRealTimers()
   })
 
   afterEach(() => timekeeper.reset())
