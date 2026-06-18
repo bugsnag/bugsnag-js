@@ -1,8 +1,22 @@
 {
   "name": "@bugsnag/plugin-express",
   "version": "8.9.0",
-  "main": "src/express.js",
-  "types": "types/bugsnag-express.d.ts",
+  "type": "module",
+  "main": "./dist/cjs/express.js",
+  "module": "./dist/esm/express.js",
+  "types": "./dist/cjs/express.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/express.d.ts",
+        "default": "./dist/esm/express.js"
+      },
+      "require": {
+        "types": "./dist/cjs/express.d.ts",
+        "default": "./dist/cjs/express.js"
+      }
+    }
+  },
   "description": "@bugsnag/js error handling middleware for Express (and Connect) web servers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -13,8 +27,7 @@
     "access": "public"
   },
   "files": [
-    "src",
-    "types"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -24,5 +37,11 @@
   "devDependencies": {
     "@bugsnag/core": "^8.9.0",
     "@types/express": "4.17.13"
+  },
+  "scripts": {
+    "clean": "rm -fr dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs",
+    "test:types": "tsc -p tsconfig.json"
   }
 }
