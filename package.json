@@ -101,7 +101,7 @@
       "form-data": "^4.0.4"
     },
     "@types/babel__traverse": "7.17.1",
-    "axios": "^1.15.0",
+    "axios": "^1.15.1",
     "@types/express-serve-static-core": "4.17.28",
     "@types/prettier": "2.6.0",
     "@types/yargs": "17.0.10",
@@ -112,9 +112,28 @@
       "async": "^3.2.2"
     },
     "node-fetch": "^2.6.7",
-    "shell-quote": "^1.7.3",
+    "shell-quote": "1.8.4",
     "thenify": "^3.3.1",
-    "tough-cookie": "5.1.1"
+    "tough-cookie": "5.1.1",
+    "tmp": "^0.2.6",
+    "fast-uri": "^3.1.2",
+    "@babel/plugin-transform-modules-systemjs": "^7.29.4",
+    "@angular/common": "^19.2.20",
+    "@angular/core": "^19.2.20",
+    "@angular-devkit/build-angular": "^19.2.27",
+    "@angular/build": "^19.2.27",
+    "ip": "2.0.1",
+    "hono": "^4.12.4",
+    "flatted": "^3.4.2", 
+    "lodash": "^4.18.0", 
+    "rollup": "^4.59.9", 
+    "serialize-javascript": "7.0.5",
+    "tar": "^7.5.11",
+    "@verdaccio/local-storage-legacy": {
+      "@verdaccio/core": {
+          "minimatch": "^7.4.9"
+      }
+    }
   },
   "workspaces": [
     "packages/*"
