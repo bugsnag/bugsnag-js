@@ -107,12 +107,14 @@
     "@types/yargs": "17.0.10",
     "braces": "^3.0.3",
     "hermes-engine": "^0.10.0",
+    "hono": "^4.12.4",
     "json-schema": "^0.4.0",
     "metro": {
       "async": "^3.2.2"
     },
     "node-fetch": "^2.6.7",
     "shell-quote": "^1.7.3",
+    "tar": "^7.5.11",
     "thenify": "^3.3.1",
     "tough-cookie": "5.1.1"
   },
