@@ -56,6 +56,7 @@
     "form-data": "^4.0.6",
     "formidable": "^1.2.2",
     "glob": "^7.1.6",
+    "has": "^1.0.4",
     "jest": "^26.4.2",
     "lerna": "^8.1.8",
     "metro-react-native-babel-preset": "^0.58.0",
@@ -109,9 +110,6 @@
     "braces": "^3.0.3",
     "hermes-engine": "^0.10.0",
     "json-schema": "^0.4.0",
-    "metro": {
-      "async": "^3.2.2"
-    },
     "node-fetch": "^2.6.7",
     "shell-quote": "1.8.4",
     "thenify": "^3.3.1",
@@ -129,7 +127,13 @@
     "lodash": "4.18.1",
     "rollup": "^4.59.9",
     "serialize-javascript": "7.0.5",
-    "tar": "^6.2.1",
+    "react-native": {
+      "tar": "^6.2.1"
+    },
+    "metro": {
+      "async": "^3.2.2",
+      "tar": "^6.2.1"
+    },
     "@verdaccio/local-storage-legacy": {
       "@verdaccio/core": {
           "minimatch": "^7.4.9"
