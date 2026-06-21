@@ -114,7 +114,13 @@
     "node-fetch": "^2.6.7",
     "shell-quote": "^1.7.3",
     "thenify": "^3.3.1",
-    "tough-cookie": "5.1.1"
+    "tough-cookie": "5.1.1",
+    "vite": "^6.4.2",
+    "@babel/plugin-transform-modules-systemjs": "^7.29.4",
+    "@angular/common": "^19.2.20",
+    "@angular/core": "^19.2.20",
+    "@angular-devkit/build-angular": "^19.2.27",
+    "@angular/build": "^19.2.27"
   },
   "workspaces": [
     "packages/*"
