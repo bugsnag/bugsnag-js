@@ -114,7 +114,8 @@
     "node-fetch": "^2.6.7",
     "shell-quote": "1.8.4",
     "thenify": "^3.3.1",
-    "tough-cookie": "5.1.1"
+    "tough-cookie": "5.1.1",
+    "tmp": "^0.2.6"
   },
   "workspaces": [
     "packages/*"
