@@ -128,7 +128,10 @@
     "rollup": "^4.59.9",
     "serialize-javascript": "7.0.5",
     "tmp": "^0.2.6",
-    "hono": "^4.12.4"
+    "hono": "^4.12.4",
+    "react-native": {
+      "react": "$react"
+    }
   },
   "workspaces": [
     "packages/*"
