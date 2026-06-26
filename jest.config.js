@@ -74,6 +74,9 @@ module.exports = {
       preset: 'react-native',
       setupFiles: [
         '<rootDir>/packages/react-native/src/test/setup.js'
+      ],
+      transformIgnorePatterns: [
+        'node_modules/(?!(react-native|@react-native)/)'
       ]
     }),
     project('node plugins', [
