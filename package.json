@@ -136,7 +136,8 @@
       "react": "$react"
     },
     "ajv": "^8.17.1",
-    "ajv-keywords": "^5.1.0"
+    "ajv-keywords": "^5.1.0",
+    "picomatch": "^4.0.4"
   },
   "workspaces": [
     "packages/*"
