@@ -33,7 +33,7 @@
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
-    "ajv": "^8.20.0",
+    "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
     "aws-sdk": "^2.1303.0",
     "babel-jest": "^29.7.0",
@@ -73,7 +73,7 @@
     "source-map": "^0.5.7",
     "timekeeper": "^2.2.0",
     "ts-node": "^9.1.1",
-    "typescript": "^3.9.7",
+    "typescript": "5.6.3",
     "uglify-js": "^3.15.1",
     "verdaccio": "^6.0.5",
     "xvfb-maybe": "^0.2.1"
@@ -134,7 +134,9 @@
     "hono": "^4.12.4",
     "react-native": {
       "react": "$react"
-    }
+    },
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0"
   },
   "workspaces": [
     "packages/*"
