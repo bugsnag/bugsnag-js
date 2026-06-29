@@ -33,6 +33,8 @@
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
+    "ajv": "^8.20.0",
+    "ajv-keywords": "^5.1.0",
     "aws-sdk": "^2.1303.0",
     "babel-jest": "^29.7.0",
     "babelify": "^10.0.0",
