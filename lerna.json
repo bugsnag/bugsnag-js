@@ -3,5 +3,12 @@
     "packages/*"
   ],
   "version": "8.9.0",
-  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "command": {
+    "publish": {
+      "npmClientArgs": [
+        "--legacy-peer-deps"
+      ]
+    }
+  }
 }
