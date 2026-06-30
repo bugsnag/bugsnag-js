@@ -6,7 +6,7 @@ describe('@bugsnag/core/config', () => {
       Object.keys(config.schema).forEach(k => {
         const key = k as unknown as keyof typeof config.schema
         config.schema[key].defaultValue(undefined)
-        // @ts-expect-error
+        // @ts-ignore
         config.schema[key].validate()
         config.schema[key].validate(-1)
         config.schema[key].validate('stringy stringerson')

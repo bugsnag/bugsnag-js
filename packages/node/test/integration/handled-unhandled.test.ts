@@ -11,7 +11,7 @@ jest.mock('https', () => {
   const { Readable, Writable } = require('stream') // eslint-disable-line
 
   const requests: any[] = []
-  const httpsMock = jest.genMockFromModule('https') as any
+  const httpsMock = jest.createMockFromModule('https') as any
 
   httpsMock.request = (opts: any) => {
     const req = new Writable({

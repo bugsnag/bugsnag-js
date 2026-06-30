@@ -39,8 +39,10 @@ export function makeClientForPlugin ({
   client._sessionDelegate = {
     startSession (client: Client, session: Session) {
       client._delivery.sendSession(session, () => {})
+      return client
     },
     resumeSession () {
+      return client
     },
     pauseSession () {
     }

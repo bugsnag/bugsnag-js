@@ -56,6 +56,7 @@ const defaultPosition = { top: 2, left: 5 }
 
 export function makeBrowserWindow ({ windows = [], focusedWindow = null } = {}): BrowserWindowStatic {
   const FakeBrowserWindow: BrowserWindowStatic = class implements BrowserWindow {
+    private _isDestroyed = false
     public index: number
 
     public readonly title: string

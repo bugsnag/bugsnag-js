@@ -23,14 +23,14 @@ describe('BugsnagIpcMain', () => {
       expect(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const bugsnagIpcMain = new BugsnagIpcMain(client)
-      }).toThrowError('Expected @bugsnag/plugin-electron-client-state-manager to be loaded first')
+      }).toThrow('Expected @bugsnag/plugin-electron-client-state-manager to be loaded first')
     })
     it('should work when the state manager plugin is loaded first', () => {
       const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       expect(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const bugsnagIpcMain = new BugsnagIpcMain(client)
-      }).not.toThrowError('Expected @bugsnag/plugin-electron-client-state-manager to be loaded first')
+      }).not.toThrow('Expected @bugsnag/plugin-electron-client-state-manager to be loaded first')
     })
   })
 
@@ -213,7 +213,7 @@ describe('BugsnagIpcMain', () => {
       const client = new Client({ apiKey: '123' }, {}, [{
         name: 'clientStateManager',
         load: () => ({
-          bulkUpdate: ({ context, user, metadata, features }: { context?: string, user?: User, metadata: Record<string, unknown>, features: FeatureFlag | null[]}) => {
+          bulkUpdate: ({ context, user, metadata, features }: { context?: string, user?: User, metadata: Record<string, unknown>, features: FeatureFlag | null[] }) => {
             expect(context).toEqual('current context')
             expect(user).toEqual({ name: 'merrich' })
             expect(metadata).toEqual({ electron: { procs: 3 } })
@@ -240,13 +240,13 @@ describe('BugsnagIpcMain', () => {
     it('is resilient to unknown methods', () => {
       const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       const bugsnagIpcMain = new BugsnagIpcMain(client)
-      expect(() => bugsnagIpcMain.handle({}, 'explodePlease', JSON.stringify({ data: 123 }))).not.toThrowError()
+      expect(() => bugsnagIpcMain.handle({}, 'explodePlease', JSON.stringify({ data: 123 }))).not.toThrow()
     })
 
     it('is resilient to bad JSON', () => {
       const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       const bugsnagIpcMain = new BugsnagIpcMain(client)
-      expect(() => bugsnagIpcMain.handle({}, 'leaveBreadcrumb', 'not json')).not.toThrowError()
+      expect(() => bugsnagIpcMain.handle({}, 'leaveBreadcrumb', 'not json')).not.toThrow()
     })
   })
 

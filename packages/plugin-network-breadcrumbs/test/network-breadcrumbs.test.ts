@@ -6,7 +6,7 @@ import { Config } from '@bugsnag/core'
 
 class XMLHttpRequest {
   _listeners: { load: Array<() => void>, error: Array<() => void> }
-  status: number | null;
+  status: number | null
 
   constructor () {
     this._listeners = { load: [], error: [] }
