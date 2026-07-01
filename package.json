@@ -103,6 +103,7 @@
     "typescript": "~5.6.2",
     "@angular/compiler": "^19.0.0",
     "@inquirer/figures": "1.0.13",
+    "request": "npm:@cypress/request@^3.0.10",
     "@jest-runner/electron": {
       "form-data": "^4.0.6"
     },
@@ -112,6 +113,7 @@
     "@types/prettier": "2.6.0",
     "@types/yargs": "17.0.10",
     "braces": "^3.0.3",
+    "micromatch": "^4.0.8",
     "hermes-engine": "^0.10.0",
     "json-schema": "^0.4.0",
     "metro": {
@@ -141,7 +143,8 @@
     "picomatch": "^4.0.4",
     "eslint": {
       "ajv": "^6.12.6"
-    }
+    },
+    "piscina": "^4.9.3"
     
   },
   "workspaces": [
