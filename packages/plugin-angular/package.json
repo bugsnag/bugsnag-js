@@ -13,7 +13,7 @@
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "npm run clean && ng build",
+    "build": "npm run clean && npx ng build",
     "test:types": "npm run build",
     "prepack": "npm run build"
   },
@@ -34,13 +34,13 @@
     "@angular/core": "^19.0.0",
     "@bugsnag/js": "^8.9.0",
     "esbuild": "^0.21.5",
-    "ng-packagr": "^19.1.0",
+    "estree-walker": "^2.0.2",
+    "injection-js": "^2.6.1",
+    "ng-packagr": "^19.2.2",
     "rxjs": "~7.8.0",
     "typescript": "~5.6.2",
     "yoctocolors-cjs": "2.1.2",
-    "zone.js": "~0.15.0",
-    "estree-walker": "^2.0.2",
-    "injection-js": "^2.6.1"
+    "zone.js": "~0.15.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
