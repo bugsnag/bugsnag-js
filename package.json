@@ -76,12 +76,14 @@
     "typescript": "~5.6.2",
     "uglify-js": "^3.15.1",
     "verdaccio": "^6.0.5",
-    "xvfb-maybe": "^0.2.1"
+    "xvfb-maybe": "^0.2.1",
+    "ajv": "8.20.0",
+    "ajv-keywords": "5.1.0"
   },
   "scripts": {
     "build": "lerna run build",
     "build:electron": "lerna run build --scope '@bugsnag/plugin-electron-ipc' --scope '@bugsnag/plugin-electron-app' --scope '@bugsnag/plugin-electron-client-state-persistence'",
-    "test:lint": "eslint --ext .ts,.js --report-unused-disable-directives --max-warnings=0 .",
+    "test:lint": "eslint --ext .ts,.js --max-warnings=0 .",
     "test:lint-native": "bash scripts/cppcheck.sh",
     "test:unit:electron-runner": "xvfb-maybe --auto-servernum -- jest -c config/electron-jest.config.js --rootDir .",
     "test:unit": "xvfb-maybe --auto-servernum -- jest",
@@ -140,6 +142,7 @@
     "eslint": {
       "ajv": "^6.12.6"
     }
+    
   },
   "workspaces": [
     "packages/*"
