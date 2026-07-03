@@ -1,0 +1,75 @@
+name: '@bugsnag/electron'
+
+on: push
+permissions: read-all
+
+jobs:
+  test:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        electron: [ '^20.0.0', '^24.0.0', '^26.0.0', '^28.0.0', '^30.0.0' ]
+        node-version: [22]
+        os: [ ubuntu-latest ]
+
+    steps:
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+    - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: (Act) install build tools and dependencies
+      run: |
+        sudo apt-get --assume-yes update
+        sudo apt-get --assume-yes install build-essential xvfb libnss3 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libasound2 libgbm1
+        # electron-forge requires yarn for some reason
+        npm install --global yarn
+      if: ${{ env.ACT && contains(matrix.os, 'ubuntu-20.04') }}
+    - name: Get npm cache directory
+      id: npm-cache-dir
+      if: ${{ !env.ACT }}
+      run: |
+        echo "::set-output name=dir::$(npm config get cache)"
+    - uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      id: npm-cache
+      if: ${{ !env.ACT }}
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - run: npm ci --no-audit --progress=false
+      env:
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+    - run: npm install electron@${{ matrix.electron }} --no-audit --progress=false --no-save
+      env:
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+    - run: npx install-electron --no
+    - run: npm run build:electron
+      shell: bash
+    - run: sudo apt-get install cppcheck --assume-yes
+      name: Install cppcheck
+      if: contains(matrix.os, 'ubuntu')
+    - run: npm run test:lint-native
+      name: Lint C/C++ extensions
+      if: contains(matrix.os, 'ubuntu')
+    - name: (macOS) disable crash dialog
+      if: contains(matrix.os, 'macos')
+      run: defaults write com.apple.CrashReporter DialogType none
+    - name: run unit tests
+      run: npm run test:unit:electron-runner
+      env:
+        ELECTRON_DISABLE_SANDBOX: 1
+    - name: run integration tests
+      run: npm run test:electron
+      shell: bash
+      env:
+        START_LOCAL_NPM: 1
+        VERBOSE: 1
+        ELECTRON_VERSION: ${{ matrix.electron }}
+    - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      if: failure()
+      with:
+        name: cucumber-failures
+        path: test/.cucumber-failures/
+        include-hidden-files: true
