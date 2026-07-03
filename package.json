@@ -144,8 +144,8 @@
     "eslint": {
       "ajv": "^6.12.6"
     },
-    "piscina": "^4.9.3"
-    
+    "piscina": "^4.9.3",
+    "http-proxy-middleware": "^3.0.7"
   },
   "workspaces": [
     "packages/*"
