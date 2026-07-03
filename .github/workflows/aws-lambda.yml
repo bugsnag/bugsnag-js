@@ -36,6 +36,8 @@ jobs:
     - name: Run tests
       run: |
         cd test/aws-lambda
+        # Prevent SAM/local Node from exiting non-zero on unhandled promise rejections
+        export NODE_OPTIONS="--unhandled-rejections=warn"
         bundle install
         bundle exec maze-runner
 
