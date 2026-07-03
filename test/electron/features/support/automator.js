@@ -63,10 +63,8 @@ class Automator {
       await this.window.click(`id=${elementID}`)
     } catch (e) {
       const errorMsg = e.toString()
-      if (errorMsg.includes('Browser closed') || 
-          errorMsg.includes('has been closed' ||
-          this.window.isClosed())) {
-          this.crashed = true
+      if (errorMsg.includes('Browser closed') || errorMsg.includes('has been closed')) {
+        this.crashed = true
       } else {
         throw e
       }
