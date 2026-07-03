@@ -75,6 +75,11 @@ Before('@not_macos', () => {
 })
 
 Before(async () => {
+  // Clear cache before each test to prevent leftover minidumps from affecting counts
+  await global.automator.clearCache()
+})
+
+Before(async () => {
   await global.server.start()
 })
 
