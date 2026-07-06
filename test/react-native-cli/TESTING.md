@@ -80,7 +80,7 @@ particular, these commands need the `BrowserStackLocal` binary (available
     ```shell script
     bundle exec maze-runner --app=./build/rn0_63.apk \
                             --farm=bs \
-                            --device=ANDROID_9_0 \
+                            --device=ANDROID_16 \
                             --bs-local=~/BrowserStackLocal \
                             features/run-app-tests
     ```

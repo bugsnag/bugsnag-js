@@ -96,7 +96,7 @@ particular, these commands need the `BrowserStackLocal` binary (available
     ```shell script
     bundle exec maze-runner --app=<PATH_TO_TEST_FIXTURE_APK> \
                             --farm=bs \
-                            --device=ANDROID_9_0 \
+                            --device=ANDROID_16 \
                             features/app.feature
     ```
 1. Or on iOS:

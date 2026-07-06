@@ -40,6 +40,7 @@ Scenario: a synchronous thrown error in a route
   And the event "metaData.request.query.a" equals "1"
   And the event "metaData.request.query.b" equals "2c"
 
+# This route will cause the app to crash
 Scenario: an asynchronous thrown error in a route
   Then I open the URL "http://hono/async" tolerating any error
   And I wait to receive an error
@@ -90,9 +91,22 @@ Scenario: throwing non-Error error
   Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
   And the event "unhandled" is true
   And the event "severity" equals "error"
-  And the event "severityReason.type" equals "unhandledPromiseRejection"
+  And the event "severityReason.type" equals "unhandledErrorMiddleware"
   And the exception "errorClass" equals "InvalidError"
-  And the exception "message" matches "unhandledRejection handler received a non-error\."
+  And the exception "message" matches "hono middleware received a non-error\."
   And the exception "type" equals "nodejs"
   And the event "request.url" equals "http://hono/throw-non-error"
   And the event "request.httpMethod" equals "GET"
+
+Scenario: error handler awaits next()
+  When I POST the data "{\"a\":1,\"b\":2}" to the URL "http://hono/post-body" with the content type "application/json"
+  Then I wait to receive an error
+  Then the error is valid for the error reporting API version "4" for the "Bugsnag Node" notifier
+  And the event "unhandled" is false
+  And the event "severity" equals "warning"
+  And the exception "errorClass" equals "Error"
+  And the exception "message" matches "error in post body route"
+  And the exception "type" equals "nodejs"
+  And the "file" of stack frame 0 equals "scenarios/app.js"
+  And the event "request.url" equals "http://hono/post-body"
+  And the event "request.httpMethod" equals "POST"

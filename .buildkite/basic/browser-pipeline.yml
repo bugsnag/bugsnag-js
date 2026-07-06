@@ -82,7 +82,7 @@ steps:
           - "edge_17"
           - "safari_10"
           - "ios_15"
-          - "android_9"
+          - "android_13"
           - "chrome_43"
           - "chrome_72"
           - "firefox_78"
