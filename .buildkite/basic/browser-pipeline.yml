@@ -113,7 +113,7 @@ steps:
       #
       # BitBar tests
       #
-      - label: ":bitbar: {{matrix}} Browser tests (EU hub)"
+      - label: ":bitbar: {{matrix}} Browser tests (US hub)"
         matrix:
           - "firefox_latest"
           - "chrome_latest"
@@ -144,8 +144,11 @@ steps:
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: "eager"
+        env:
+          MAZE_SELENIUM_SERVER: "https://us-west-desktop-hub.bitbar.com/wd/hub"
 
-      - label: ":bitbar: ie_11 Browser tests (EU hub)"
+
+      - label: ":bitbar: ie_11 Browser tests (US hub)"
         depends_on: "browser-maze-runner-bb"
         timeout_in_minutes: 30
         plugins:
@@ -173,3 +176,4 @@ steps:
         concurrency_method: "eager"
         env:
           HOST: "localhost" # IE11 needs the host set to localhost
+          MAZE_SELENIUM_SERVER: "https://us-west-desktop-hub.bitbar.com/wd/hub"
