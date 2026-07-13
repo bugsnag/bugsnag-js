@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-inline-script-content",
-  "version": "8.9.0",
+  "version": "8.10.0",
   "main": "inline-script-content.js",
   "description": "@bugsnag/js plugin to attach inline script content to error events",
   "homepage": "https://www.bugsnag.com/",
