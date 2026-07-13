@@ -30,6 +30,10 @@ jobs:
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-before-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-before-gzipped
           cp coverage/coverage-summary.json .diff/coverage-before.json
+          # Clean up to prevent file locks on Electron binary
+          sleep 2
+          rm -rf node_modules/electron
+          rm -rf node_modules/.bin
 
       - name: Checkout PR branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -40,10 +44,11 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
           ELECTRON_DISABLE_SANDBOX: 1
+          NODE_OPTIONS: --max-old-space-size=4096
         run: |
           npm ci
           npm run build
-          npm run test:coverage
+          npm run test:coverage -- --maxWorkers=1
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-after-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-after-gzipped
           cp coverage/coverage-summary.json .diff/coverage-after.json
