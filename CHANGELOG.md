@@ -1,12 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+- (plugin-electron-client-state-persistence) Fix Linux build failure by removing unused POSIX `once_flag` and `call_once` definitions from vendored tinycthread, resolving conflicts with glibc ≥ 2.28 during `node-gyp rebuild` [#2769]<https://github.com/bugsnag/bugsnag-js/pull/2769>
+
 ## [8.10.0] - 2026-07-10
 
 ### Fixed
 
-- (plugin-electron-client-state-persistence) Fix Linux build failure by removing unused POSIX `once_flag` and `call_once` definitions from vendored tinycthread, resolving conflicts with glibc ≥ 2.28 during `node-gyp rebuild` [#2769]<https://github.com/bugsnag/bugsnag-js/pull/2769>
 - (delivery-node) Replace deprecated `url.parse()` with `URL` constructor [#2730](https://github.com/bugsnag/bugsnag-js/pull/2730)
 - (plugin-hono) Fix issue where error handler middleware did not `await next()` [#2735](https://github.com/bugsnag/bugsnag-js/pull/2735)
+- (react-native) Fix issue related to uploading source map [#2773](https://github.com/bugsnag/bugsnag-js/pull/2773)
 
 ### Added
 - (react-native-navigation) Add support for react-native-navigation v8 [#2741](https://github.com/bugsnag/bugsnag-js/pull/2741)
