@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/node",
-  "version": "8.9.0",
+  "version": "8.10.0",
   "main": "dist/bugsnag.js",
   "types": "types/bugsnag.d.ts",
   "description": "Bugsnag error reporter for Node.js",
@@ -24,7 +24,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-node": "^8.9.0",
+    "@bugsnag/delivery-node": "^8.10.0",
     "@bugsnag/plugin-app-duration": "^8.9.0",
     "@bugsnag/plugin-console-breadcrumbs": "^8.9.0",
     "@bugsnag/plugin-contextualize": "^8.9.0",
