@@ -21,14 +21,12 @@ describe('BugsnagIpcMain', () => {
     it('should throw if the state manager plugin is not loaded first', () => {
       const client = new Client({ apiKey: '123' }, {}, [], Notifier)
       expect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const bugsnagIpcMain = new BugsnagIpcMain(client)
       }).toThrow('Expected @bugsnag/plugin-electron-client-state-manager to be loaded first')
     })
     it('should work when the state manager plugin is loaded first', () => {
       const client = new Client({ apiKey: '123' }, {}, [mockClientStateManagerPlugin], Notifier)
       expect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const bugsnagIpcMain = new BugsnagIpcMain(client)
       }).not.toThrow('Expected @bugsnag/plugin-electron-client-state-manager to be loaded first')
     })

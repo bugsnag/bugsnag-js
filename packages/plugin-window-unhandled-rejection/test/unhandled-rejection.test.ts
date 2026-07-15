@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-commented-out-tests */
 import plugin from '../'
 
 import Client from '@bugsnag/core/client'

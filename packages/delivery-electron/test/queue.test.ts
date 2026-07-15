@@ -30,7 +30,7 @@ describe('delivery: electron -> queue', () => {
       expect(storagePath).toBeAFile()
     })
 
-    it('throws an error when the directory was not succesfully created', async () => {
+    it('throws an error when the directory was not successfully created', async () => {
       const storagePath = join(invalidDir(), 'foooo')
       const queue = new PayloadQueue(storagePath, 'stuff')
 
@@ -123,6 +123,12 @@ describe('delivery: electron -> queue', () => {
       const items = await readdir(path)
 
       expect(items.length).toBe(1)
+
+      const contents = await readFile(join(path, items[0]))
+      expect(JSON.parse(contents.toString())).toEqual({
+        body: JSON.stringify({ colour: 'yellow' }),
+        opts: { url: 'example.com', method: 'POST', headers: {} }
+      })
     })
 
     it('calls onerror callback if error occurs', async () => {
@@ -134,6 +140,54 @@ describe('delivery: electron -> queue', () => {
 
         queue.enqueue({})
       })
+    })
+
+    it('purges items that are over the limit', async () => {
+      const uid = (index: number) => index.toString().padStart(2, '0')
+      await Promise.all(
+        Array(70).fill(1).map((_, index) =>
+          writeFile(join(tempdir, `bugsnag-stuff-${uid(index)}.json`), '{}')
+        )
+      )
+
+      const queue = new PayloadQueue(tempdir, 'stuff')
+      await queue.enqueue({
+        body: JSON.stringify({ colour: 'yellow' }),
+        opts: { url: 'example.com', method: 'POST', headers: {} }
+      })
+
+      const items = await readdir(tempdir)
+      expect(items.length).toBe(64)
+
+      for (let index = 7; index < 70; index++) {
+        await access(join(tempdir, `bugsnag-stuff-${uid(index)}.json`), F_OK)
+      }
+    })
+
+    it('does not queue the payload if it is invalid', async () => {
+      const onerror = jest.fn()
+      const queue = new PayloadQueue(tempdir, 'stuff', onerror)
+
+      await queue.enqueue({
+        body: JSON.stringify({ colour: 'yellow' }),
+        opts: { url: 'example.com', method: 'POST', headers: {} }
+      })
+
+      await queue.enqueue({
+        body: JSON.stringify({ colour: 'red' }),
+        opts: { url: 'example.com', headers: {} }
+      })
+
+      const items = await readdir(tempdir)
+      expect(items).toHaveLength(1)
+
+      const contents = await readFile(join(tempdir, items[0]))
+      expect(JSON.parse(contents.toString())).toEqual({
+        body: JSON.stringify({ colour: 'yellow' }),
+        opts: { url: 'example.com', method: 'POST', headers: {} }
+      })
+
+      expect(onerror).toHaveBeenCalledWith(new Error('Invalid payload!'))
     })
   })
 

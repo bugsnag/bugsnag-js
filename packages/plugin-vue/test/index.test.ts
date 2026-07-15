@@ -35,7 +35,6 @@ describe('bugsnag vue', () => {
       config: { errorHandler: undefined }
     }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
-    // eslint-disable-next-line
     mockVueApp.use(client.getPlugin('vue')!)
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -62,7 +61,6 @@ describe('bugsnag vue', () => {
       config: { errorHandler: undefined }
     }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
-    // eslint-disable-next-line
     mockVueApp.use(client.getPlugin('vue')!)
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -88,7 +86,6 @@ describe('bugsnag vue', () => {
       config: { errorHandler: undefined }
     }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
-    // eslint-disable-next-line
     mockVueApp.use(client.getPlugin('vue')!)
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -114,7 +111,6 @@ describe('bugsnag vue', () => {
       config: { errorHandler: undefined }
     }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
-    // eslint-disable-next-line
     mockVueApp.use(client.getPlugin('vue')!)
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -140,7 +136,6 @@ describe('bugsnag vue', () => {
       config: { errorHandler: undefined }
     }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
-    // eslint-disable-next-line
     mockVueApp.use(client.getPlugin('vue')!)
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -168,7 +163,6 @@ describe('bugsnag vue', () => {
 
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
 
-    // eslint-disable-next-line
     mockVueApp.use(client.getPlugin('vue')!)
 
     client._setDelivery(client => ({
@@ -206,7 +200,6 @@ describe('bugsnag vue', () => {
       config: { errorHandler: undefined }
     }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin(mockVue)] })
-    // eslint-disable-next-line
     const plugin = client.getPlugin('vue')!
     expect(typeof plugin.install).toBe('function')
 
@@ -261,7 +254,6 @@ describe('bugsnag vue', () => {
   it('supports Vue being passed later', done => {
     const mockVue = { config: { errorHandler: undefined } }
     const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
-    // eslint-disable-next-line
     client.getPlugin('vue')!.installVueErrorHandler(mockVue)
     client._setDelivery(client => ({
       sendEvent: (payload) => {
@@ -344,7 +336,6 @@ describe('bugsnag vue', () => {
 
       const client = new Client({ apiKey: 'API_KEYYY', plugins: [new BugsnagVuePlugin()] })
 
-      // eslint-disable-next-line
       client.getPlugin('vue')!.installVueErrorHandler(mockVue)
 
       client._setDelivery(client => ({

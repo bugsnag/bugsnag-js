@@ -37,10 +37,10 @@ export async function updateXcodeProject (projectRoot: string, endpoint: string|
     })
   })
 
-  const buildPhaseMap = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase || []
+  const buildPhaseMap: Record<string, Record<string, unknown>> = proj?.hash?.project?.objects?.PBXShellScriptBuildPhase ?? {}
   logger.info('Ensuring React Native build phase outputs source maps')
 
-  const didUpdate = await updateBuildReactNativeTask(buildPhaseMap as Record<string, Record<string, unknown>>, iosDir, reactNativeVersion, logger)
+  const didUpdate = await updateBuildReactNativeTask(buildPhaseMap, iosDir, reactNativeVersion, logger)
 
   if (!didUpdate) return
 
