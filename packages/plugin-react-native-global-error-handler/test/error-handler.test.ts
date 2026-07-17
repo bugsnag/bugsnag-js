@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import plugin from '../'
 
 import Client from '@bugsnag/core/client'
 
 class MockErrorUtils {
-  _globalHandler: ((err: Error) => void) | null;
+  _globalHandler: ((err: Error) => void) | null
 
   constructor () {
     this._globalHandler = null

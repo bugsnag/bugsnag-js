@@ -22,5 +22,5 @@ export const noopLogger: Logger = {
   warn: () => {},
   error: () => {},
   fatal: () => {},
-  level: -1
+  level: LogLevel.Silent
 }

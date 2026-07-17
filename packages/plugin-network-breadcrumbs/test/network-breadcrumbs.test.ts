@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import plugin from '../'
 
 import Client from '@bugsnag/core/client'
@@ -6,7 +5,7 @@ import { Config } from '@bugsnag/core'
 
 class XMLHttpRequest {
   _listeners: { load: Array<() => void>, error: Array<() => void> }
-  status: number | null;
+  status: number | null
 
   constructor () {
     this._listeners = { load: [], error: [] }

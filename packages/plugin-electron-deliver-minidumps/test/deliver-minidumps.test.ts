@@ -54,9 +54,9 @@ describe('electron-minidump-delivery: load', () => {
 
     plugin.load(client)
 
-    expect(nativeClient.install).toBeCalledTimes(1)
+    expect(nativeClient.install).toHaveBeenCalledTimes(1)
     expect(whenReadyCallback).toBeInstanceOf(Function)
-    expect(client._logger.warn).not.toBeCalled()
+    expect(client._logger.warn).not.toHaveBeenCalled()
   })
 
   it('should not install when autoDetectErrors disabled', () => {
@@ -83,9 +83,9 @@ describe('electron-minidump-delivery: load', () => {
 
     plugin.load(client)
 
-    expect(nativeClient.install).not.toBeCalled()
+    expect(nativeClient.install).not.toHaveBeenCalled()
     expect(whenReadyCallback).toBeUndefined()
-    expect(client._logger.warn).not.toBeCalled()
+    expect(client._logger.warn).not.toHaveBeenCalled()
   })
 
   it('should not install when nativeCrashes disabled', () => {
@@ -112,8 +112,8 @@ describe('electron-minidump-delivery: load', () => {
 
     plugin.load(client)
 
-    expect(nativeClient.install).not.toBeCalled()
-    expect(client._logger.warn).not.toBeCalled()
+    expect(nativeClient.install).not.toHaveBeenCalled()
+    expect(client._logger.warn).not.toHaveBeenCalled()
   })
 
   it('should not install when the minidumps endpoint is not configured', () => {
@@ -139,7 +139,7 @@ describe('electron-minidump-delivery: load', () => {
 
     plugin.load(client)
 
-    expect(nativeClient.install).not.toBeCalled()
+    expect(nativeClient.install).not.toHaveBeenCalled()
     expect(whenReadyCallback).toBeUndefined()
     expect(client._logger.warn).toHaveBeenCalledTimes(1)
     expect(client._logger.warn).toHaveBeenCalledWith(

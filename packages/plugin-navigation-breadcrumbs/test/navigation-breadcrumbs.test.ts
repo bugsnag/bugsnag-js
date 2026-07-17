@@ -97,7 +97,7 @@ describe('plugin: navigation breadcrumbs', () => {
 })
 
 const getMockWindow = () => {
-  const winHandlers: { [eventName: string]: Array<() => void>} = { load: [] }
+  const winHandlers: { [eventName: string]: Array<() => void> } = { load: [] }
   const docHandlers: { [eventName: string]: Array<() => void> } = { DOMContentLoaded: [] }
 
   // mock the window stuff this plugin uses

@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect, jest/no-disabled-tests */
 
 import Bugsnag, {
   Breadcrumb,
