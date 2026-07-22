@@ -8,10 +8,10 @@
     "jsx": "preserve",
     "noEmit": true,
 
-    /* Temporary migration setting: strict flags are relaxed to keep CI stable while legacy type issues are being cleaned up. */
-    "strict": false,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
+    /* Strict type-safety checks */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "noImplicitReturns": false,
 
     "skipLibCheck": true,

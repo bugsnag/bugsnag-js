@@ -22,11 +22,18 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
           ELECTRON_DISABLE_SANDBOX: 1
+          ELECTRON_CACHE: ${{ runner.temp }}/electron-cache
+          NODE_OPTIONS: --max-old-space-size=4096
         run: |
           mkdir .diff
+          mkdir -p "${ELECTRON_CACHE}"
           npm ci
           npm run build
-          npm run test:coverage
+          # Ensure the Electron binary is fully written and closed before jest spawns it (avoids spawn ETXTBSY on Linux runners)
+          node node_modules/electron/install.js
+          sync
+          sleep 2
+          npm run test:coverage -- --maxWorkers=1
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-before-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-before-gzipped
           cp coverage/coverage-summary.json .diff/coverage-before.json
@@ -45,9 +52,15 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
           ELECTRON_DISABLE_SANDBOX: 1
           NODE_OPTIONS: --max-old-space-size=4096
+          ELECTRON_CACHE: ${{ runner.temp }}/electron-cache
         run: |
+          mkdir -p "${ELECTRON_CACHE}"
           npm ci
           npm run build
+          # Ensure the Electron binary is fully written and closed before jest spawns it (avoids spawn ETXTBSY on Linux runners)
+          node node_modules/electron/install.js
+          sync
+          sleep 2
           npm run test:coverage -- --maxWorkers=1
           cat packages/browser/dist/bugsnag.min.js | wc -c > .diff/size-after-minified
           cat packages/browser/dist/bugsnag.min.js | gzip | wc -c > .diff/size-after-gzipped

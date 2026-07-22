@@ -10,6 +10,9 @@ const project = (displayName, packageNames, config = {}) => ({
 const extensions = 'js,jsx,ts,tsx'
 
 module.exports = {
+  modulePathIgnorePatterns: [
+    '<rootDir>/packages/[^/]+/dist/'
+  ],
   collectCoverageFrom: [
     `**/packages/*/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,
