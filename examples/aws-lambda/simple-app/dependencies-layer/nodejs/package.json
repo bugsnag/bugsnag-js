@@ -1,0 +1,9 @@
+{
+    "name": "simple-app-dependencies",
+    "version": "1.0.0",
+    "dependencies": {
+      "@bugsnag/js": "^7.16.1",
+      "@bugsnag/plugin-aws-lambda": "^7.16.1"
+    }
+  }
+  
