@@ -1,0 +1,8 @@
+on:
+  issues:
+    types: [closed]
+jobs:
+  issue_created:
+    uses: bugsnag/support-zendesk-integration/.github/workflows/issue_closed.yml@main
+    secrets:
+      ZENDESK_BASIC_AUTH: ${{ secrets.ZENDESK_BASIC_AUTH }}
