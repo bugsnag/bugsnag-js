@@ -117,7 +117,7 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":bitbar: :android: RN {{matrix}} Android 12 (Old Arch) end-to-end tests"
+      - label: ":bitbar: :android: RN {{matrix}} Android 14 (Old Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-old-arch-full"
         timeout_in_minutes: 30
         plugins:
@@ -131,7 +131,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk
               - --farm=bb
-              - --device=ANDROID_12
+              - --device=ANDROID_14
               - --appium-version=2.19
               - --fail-fast
               - --no-tunnel
@@ -166,7 +166,7 @@ steps:
       # current latest version (v7.40.1) of react-native-navigation's autolinking tool doesn't support RN 0.73+,
       # causing a build failure - see https://github.com/wix/react-native-navigation/issues/7821
       # TODO: Investigate and try to re-enable when we add tests for more recent React Native versions
-      - label: ":bitbar: :android: RN {{matrix.reactnative}} Android 12 (New Arch) end-to-end tests"
+      - label: ":bitbar: :android: RN {{matrix.reactnative}} Android 14 (New Arch) end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch-full"
         timeout_in_minutes: 30
         plugins:
@@ -180,7 +180,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix.reactnative}}/reactnative.apk
               - --farm=bb
-              - --device=ANDROID_12
+              - --device=ANDROID_14
               - --appium-version=2.19
               - --fail-fast
               - --no-tunnel
@@ -220,9 +220,9 @@ steps:
                 reactnavigation: "false"
 
 
-      - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 12 (New Arch) end-to-end tests"
+      - label: ":bitbar: :android: react-native-navigation {{matrix}} Android 14 (New Arch) end-to-end tests"
         depends_on: "build-react-native-navigation-android-fixture-new-arch"
-        timeout_in_minutes: 10
+        timeout_in_minutes: 30
         plugins:
           artifacts#v1.9.0:
             download: "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/reactnative.apk"
@@ -234,7 +234,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/reactnative.apk
               - --farm=bb
-              - --device=ANDROID_12
+              - --device=ANDROID_14
               - --appium-version=2.19
               - --fail-fast
               - --no-tunnel
@@ -257,6 +257,147 @@ steps:
           REACT_NATIVE_NAVIGATION: "true"
         concurrency: 25
         concurrency_group: "bitbar"
+        concurrency_method: eager
+        matrix:
+          - "0.78"
+
+      #
+      # BrowserStack end-to-end tests
+      #
+      - label: ":browserstack: :android: RN {{matrix}} Android 12 (Old Arch) end-to-end tests"
+        depends_on: "build-react-native-android-fixture-old-arch-full"
+        timeout_in_minutes: 30
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk
+              - --farm=bs
+              - --device=ANDROID_12
+              - --fail-fast
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
+        retry:
+          automatic:
+            - exit_status: -1  # Agent was lost
+              limit: 2
+            - exit_status: 104 # App hang related error
+              limit: 2
+            - exit_status: 103  # Appium session failed
+              limit: 2
+        env:
+          RN_VERSION: "{{matrix}}"
+          RCT_NEW_ARCH_ENABLED: "0"
+          REACT_NAVIGATION: "true"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+        matrix:
+          - "0.68"
+          - "0.69"
+          - "0.72"
+          - "0.74"
+          - "0.76"
+          - "0.78"
+          - "0.80"
+          - "0.81"
+
+      - label: ":browserstack: :android: RN {{matrix.reactnative}} Android 12 (New Arch) end-to-end tests"
+        depends_on: "build-react-native-android-fixture-new-arch-full"
+        timeout_in_minutes: 30
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native/features/fixtures/generated/new-arch/{{matrix.reactnative}}/reactnative.apk"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=/app/features/fixtures/generated/new-arch/{{matrix.reactnative}}/reactnative.apk
+              - --farm=bs
+              - --device=ANDROID_12
+              - --fail-fast
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
+        retry:
+          automatic:
+            - exit_status: -1  # Agent was lost
+              limit: 2
+            - exit_status: 104 # App hang related error
+              limit: 2
+            - exit_status: 103  # Appium session failed
+              limit: 2
+        env:
+          RCT_NEW_ARCH_ENABLED: "1"
+          RN_VERSION: "{{matrix.reactnative}}"
+          REACT_NAVIGATION: "{{matrix.reactnavigation}}"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+        matrix:
+          setup:
+            reactnative:
+              - "0.74"
+              - "0.76"
+              - "0.78"
+              - "0.80"
+              - "0.82"
+              - "0.83"
+            reactnavigation:
+              - "true"
+          adjustments:
+            - with:
+                reactnative: "0.72"
+                reactnavigation: "false"
+
+      - label: ":browserstack: :android: react-native-navigation {{matrix}} Android 12 (New Arch) end-to-end tests"
+        depends_on: "build-react-native-navigation-android-fixture-new-arch"
+        timeout_in_minutes: 30
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/reactnative.apk"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=/app/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/reactnative.apk
+              - --farm=bs
+              - --device=ANDROID_12
+              - --fail-fast
+              - features/react-native-navigation.feature
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
+        retry:
+          automatic:
+            - exit_status: -1  # Agent was lost
+              limit: 2
+            - exit_status: 104 # App hang related error
+              limit: 2
+            - exit_status: 103  # Appium session failed
+              limit: 2
+        env:
+          RCT_NEW_ARCH_ENABLED: "1"
+          RN_VERSION: "{{matrix}}"
+          REACT_NATIVE_NAVIGATION: "true"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
         concurrency_method: eager
         matrix:
           - "0.78"

@@ -30,9 +30,9 @@ steps:
           - "0.84"
 
       #
-      # End-to-end tests
+      # Bitbar End-to-end tests
       #
-      - label: ":bitbar: :android: RN {{matrix}} Android 12 end-to-end tests"
+      - label: ":bitbar: :android: RN {{matrix}} Android 14 end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch"
         timeout_in_minutes: 30
         plugins:
@@ -46,7 +46,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk
               - --farm=bb
-              - --device=ANDROID_12
+              - --device=ANDROID_14
               - --appium-version=2.19
               - --fail-fast
               - --no-tunnel
@@ -71,4 +71,47 @@ steps:
         concurrency_method: eager
         matrix:
           - "0.84"
+
+
+      #
+      # BrowserStack End-to-end tests
+      #
+      - label: ":browserstack: :android: RN {{matrix}} Android 12 end-to-end tests"
+        depends_on: "build-react-native-android-fixture-new-arch"
+        timeout_in_minutes: 30
+        plugins:
+          artifacts#v1.9.0:
+            download: "test/react-native/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk"
+            upload: ./test/react-native/maze_output/**/*
+          docker-compose#v4.12.0:
+            pull: react-native-maze-runner
+            run: react-native-maze-runner
+            service-ports: true
+            command:
+              - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk
+              - --farm=bs
+              - --device=ANDROID_12
+              - --fail-fast
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "REACT_NATIVE_BUILDKITE_ANALYTICS_TOKEN"
+        retry:
+          automatic:
+            - exit_status: -1  # Agent was lost
+              limit: 2
+            - exit_status: 104 # App hang related error
+              limit: 2
+            - exit_status: 103  # Appium session failed
+              limit: 2
+        env:
+          RCT_NEW_ARCH_ENABLED: "1"
+          RN_VERSION: "{{matrix}}"
+          REACT_NAVIGATION: "true"
+        concurrency: 5
+        concurrency_group: "browserstack-app"
+        concurrency_method: eager
+        matrix:
+          - "0.84"    
 
