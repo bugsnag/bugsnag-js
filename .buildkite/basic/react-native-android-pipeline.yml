@@ -92,6 +92,7 @@ steps:
               - --farm=bs
               - --device=ANDROID_12
               - --fail-fast
+              - --capabilities='{"bstack:options":{"idleTimeout":120}}'
           test-collector#v1.10.2:
             files: "reports/TEST-*.xml"
             format: "junit"
