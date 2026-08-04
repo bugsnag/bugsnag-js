@@ -19,6 +19,7 @@
     "@babel/plugin-transform-template-literals": "^7.23.3",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
+    "@babel/runtime": "^7.26.10",
     "@cucumber/cucumber": "^7.2.1",
     "@jest-runner/electron": "^3.0.1",
     "@types/jest": "^26.0.14",
@@ -35,6 +36,8 @@
     "@types/xcode": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
+    "ajv": "8.20.0",
+    "ajv-keywords": "5.1.0",
     "aws-sdk": "^2.1303.0",
     "babel-jest": "^29.7.0",
     "babelify": "^10.0.0",
@@ -76,9 +79,7 @@
     "typescript": "~5.6.2",
     "uglify-js": "^3.15.1",
     "verdaccio": "^6.0.5",
-    "xvfb-maybe": "^0.2.1",
-    "ajv": "8.20.0",
-    "ajv-keywords": "5.1.0"
+    "xvfb-maybe": "^0.2.1"
   },
   "scripts": {
     "build": "lerna run build",
@@ -147,11 +148,12 @@
     "piscina": "^4.9.3",
     "http-proxy-middleware": "^3.0.7",
     "webpack-dev-server": {
-    "http-proxy-middleware": "^3.0.7"
+      "http-proxy-middleware": "^3.0.7"
     },
     "sigstore": "^4.1.1",
-    "js-yaml": "^4.3.0"
-    },
+    "js-yaml": "^4.3.0",
+    "brace-expansion": "^2.1.2"
+  },
   "workspaces": [
     "packages/*"
   ]
