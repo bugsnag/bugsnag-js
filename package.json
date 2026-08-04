@@ -139,7 +139,7 @@
     "tmp": "^0.2.6",
     "hono": "^4.12.4",
     "react-native": {
-      "react": "^16.13.1"
+      "react": "$react"
     },
     "picomatch": "^4.0.4",
     "eslint": {
