@@ -152,6 +152,7 @@
     },
     "sigstore": "^4.1.1",
     "js-yaml": "^4.3.0",
+    "tar": "^7.5.16",
     "minimatch@>=10": {
       "brace-expansion": "^5.0.8"
     }
