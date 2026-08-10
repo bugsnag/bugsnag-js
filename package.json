@@ -19,6 +19,7 @@
     "@babel/plugin-transform-template-literals": "^7.23.3",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
+    "@babel/runtime": "^7.26.10",
     "@cucumber/cucumber": "^7.2.1",
     "@jest-runner/electron": "^3.0.1",
     "@types/jest": "^26.0.14",
@@ -35,6 +36,8 @@
     "@types/xcode": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
+    "ajv": "8.20.0",
+    "ajv-keywords": "5.1.0",
     "aws-sdk": "^2.1303.0",
     "babel-jest": "^29.7.0",
     "babelify": "^10.0.0",
@@ -76,9 +79,7 @@
     "typescript": "~5.6.2",
     "uglify-js": "^3.15.1",
     "verdaccio": "^6.0.5",
-    "xvfb-maybe": "^0.2.1",
-    "ajv": "8.20.0",
-    "ajv-keywords": "5.1.0"
+    "xvfb-maybe": "^0.2.1"
   },
   "scripts": {
     "build": "lerna run build",
@@ -120,7 +121,7 @@
       "async": "^3.2.2"
     },
     "node-fetch": "^2.6.7",
-    "shell-quote": "1.8.4",
+    "shell-quote": "^1.9.0",
     "thenify": "^3.3.1",
     "tough-cookie": "5.1.1",
     "vite": "^6.4.2",
@@ -129,7 +130,7 @@
     "@angular/core": "^19.2.20",
     "@angular-devkit/build-angular": "^19.2.27",
     "@angular/build": "^19.2.27",
-    "fast-uri": "^3.1.2",
+    "fast-uri": "3.1.4",
     "ip": "2.0.1",
     "flatted": "^3.4.2",
     "lodash": "^4.18.0",
@@ -149,7 +150,9 @@
     "webpack-dev-server": {
       "http-proxy-middleware": "^3.0.7"
     },
-    "sigstore": "^4.1.1"
+    "sigstore": "^4.1.1",
+    "js-yaml": "^4.3.0",
+    "brace-expansion": "^2.1.2"
   },
   "workspaces": [
     "packages/*"
