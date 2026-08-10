@@ -59,7 +59,7 @@
     "formidable": "^1.2.2",
     "glob": "^7.1.6",
     "jest": "^26.4.2",
-    "lerna": "^8.1.8",
+    "lerna": "^10.0.0",
     "metro-react-native-babel-preset": "^0.64.0",
     "ncp": "^2.0.0",
     "playwright": "^1.10.0",
@@ -149,8 +149,7 @@
     "webpack-dev-server": {
       "http-proxy-middleware": "^3.0.7"
     },
-    "sigstore": "^4.1.1",
-    "tar": "^7.5.16"
+    "sigstore": "^4.1.1"
   },
   "workspaces": [
     "packages/*"
