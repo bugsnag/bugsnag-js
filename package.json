@@ -152,7 +152,10 @@
     },
     "sigstore": "^4.1.1",
     "js-yaml": "^4.3.0",
-    "brace-expansion": "^2.1.2"
+    "brace-expansion": "^2.1.2",
+    "ignore-walk": {
+      "brace-expansion": "^5.0.8"
+    }
   },
   "workspaces": [
     "packages/*"
