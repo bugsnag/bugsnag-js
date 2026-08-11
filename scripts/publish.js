@@ -32,4 +32,5 @@ if (process.argv.length !== 3) {
   console.error('Usage: publish.js <registry url>')
   process.exit(1)
 }
+
 publish(process.argv[2])
