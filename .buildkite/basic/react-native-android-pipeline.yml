@@ -9,7 +9,7 @@ steps:
         key: "build-react-native-android-fixture-new-arch"
         timeout_in_minutes: 15
         agents:
-          queue: macos-15
+          queue: macos-15-isolated
         env:
           JAVA_VERSION: "17"
           RN_VERSION: "{{matrix}}"

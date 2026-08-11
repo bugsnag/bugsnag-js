@@ -13,7 +13,7 @@ steps:
         key: "build-react-native-ios-fixture-old-arch-full"
         timeout_in_minutes: 30
         agents:
-          queue: "macos-15"
+          queue: "macos-15-isolated"
         env:
           NODE_VERSION: "{{matrix.node}}"
           RN_VERSION: "{{matrix.reactnative}}"
@@ -54,7 +54,7 @@ steps:
         key: "build-react-native-ios-fixture-new-arch-full"
         timeout_in_minutes: 30
         agents:
-          queue: "macos-15"
+          queue: "macos-15-isolated"
         env:
           NODE_VERSION: "22"
           RN_VERSION: "{{matrix.reactnative}}"
@@ -93,7 +93,7 @@ steps:
       #   key: "build-react-native-navigation-ios-fixture-new-arch"
       #   timeout_in_minutes: 30
       #   agents:
-      #     queue: "macos-15"
+      #     queue: "macos-15-isolated"
       #   env:
       #     NODE_VERSION: "18"
       #     RN_VERSION: "{{matrix}}"
