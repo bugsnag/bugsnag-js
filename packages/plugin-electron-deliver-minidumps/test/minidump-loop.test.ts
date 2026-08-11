@@ -566,6 +566,10 @@ describe('electron-minidump-delivery: minidump-loop', () => {
         { minidumpPath: 'minidump-path1', eventPath: 'event-path1' }
       )
 
+      // Pin Math.random so the jittered backoff is deterministic and > 500ms.
+      // calculateBackoff(1) = floor(random * min(1000*2, 60000)) = floor(0.9999 * 2000) ≈ 1999ms
+      const mockRandom = jest.spyOn(Math, 'random').mockReturnValue(0.9999)
+
       const loop = new MinidumpDeliveryLoop(sendMinidump, onSendCallbacks, minidumpQueue, logger)
       loop.start()
 
@@ -573,13 +577,13 @@ describe('electron-minidump-delivery: minidump-loop', () => {
       await stepLoop()
       expect(sendMinidump).toHaveBeenCalledTimes(1)
 
-      // Advance only 500ms — less than BACKOFF_BASE_MS (1000ms minimum)
-      // No retry should have fired yet
+      // Advance only 500ms — less than the pinned ~1999ms backoff, so no retry should have fired yet
       jest.advanceTimersByTime(500)
       await flushAll()
       expect(sendMinidump).toHaveBeenCalledTimes(1)
 
       loop.stop()
+      mockRandom.mockRestore()
     })
   })
 })
