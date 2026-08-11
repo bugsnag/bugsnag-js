@@ -151,7 +151,9 @@
       "http-proxy-middleware": "^3.0.7"
     },
     "sigstore": "^4.1.1",
-    "js-yaml": "^4.3.0"
+    "tslint": {
+      "js-yaml": "3.15.1"
+    }
   },
   "workspaces": [
     "packages/*"
