@@ -18,8 +18,12 @@ function publish (publishUrl) {
     // Build and publish packages
     console.log(`Publishing as '${version}'`)
 
-    common.run('npm install', true)
+    common.run('npm ci', true)
+
+    // Disable the Nx daemon to avoid stale project-graph state in CI.
+    process.env.NX_DAEMON = 'false'
     common.run('npm run build', true)
+
     common.run('git checkout .')
     common.run(`./node_modules/.bin/lerna publish ${version} --dist-tag ${distTag} --exact --yes --force-publish --no-push --no-git-tag-version --registry ${publishUrl}`, true)
     console.log(`Publishing of version '${version}' complete`)
@@ -32,4 +36,5 @@ if (process.argv.length !== 3) {
   console.error('Usage: publish.js <registry url>')
   process.exit(1)
 }
+
 publish(process.argv[2])
