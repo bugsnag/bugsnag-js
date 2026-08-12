@@ -12,6 +12,6 @@ steps:
         VERBOSE: "1"
       commands:
         - ". ~/.nvm/nvm.sh && nvm use $NODE_VERSION"
-          - "cd test/cloudflare-workers"
+        - "cd test/cloudflare-workers"
         - "bundle install"
         - "bundle exec maze-runner"
