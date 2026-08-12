@@ -13,7 +13,7 @@ steps:
         key: "build-react-native-ios-fixture-new-arch"
         timeout_in_minutes: 20
         agents:
-          queue: "macos-15-isolated"
+          queue: "macos-15"
         env:
           RN_VERSION: "{{matrix}}"
           NODE_VERSION: "22"
@@ -25,7 +25,6 @@ steps:
           - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
           - "bundle install"
-          - ". ~/.nvm/nvm.sh && nvm use $$NODE_VERSION"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           - "0.84"

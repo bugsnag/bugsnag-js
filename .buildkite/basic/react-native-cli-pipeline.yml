@@ -21,7 +21,6 @@ steps:
         artifact_paths:
           - "test/react-native-cli/features/fixtures/generated/new-arch/**/reactnative.apk"
         commands:
-          - ". ~/.nvm/nvm.sh && nvm use $$NODE_VERSION"
           - "cd test/react-native-cli"
           - "bundle install"
           - "bundle exec maze-runner features/build-app-tests/build-android-app.feature"
@@ -51,7 +50,6 @@ steps:
         artifact_paths:
           - "test/react-native-cli/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
-          - ". ~/.nvm/nvm.sh && nvm use $$NODE_VERSION"
           - "cd test/react-native-cli"
           - "bundle install"
           - "bundle exec maze-runner features/build-app-tests/build-ios-app.feature"

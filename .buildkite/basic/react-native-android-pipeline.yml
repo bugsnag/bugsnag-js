@@ -9,7 +9,7 @@ steps:
         key: "build-react-native-android-fixture-new-arch"
         timeout_in_minutes: 15
         agents:
-          queue: macos-15-isolated
+          queue: macos-15
         env:
           JAVA_VERSION: "17"
           RN_VERSION: "{{matrix}}"
@@ -21,7 +21,6 @@ steps:
           - "test/react-native/features/fixtures/generated/new-arch/**/reactnative.apk"
         commands:
           - "bundle install"
-          - ". ~/.nvm/nvm.sh && nvm use $$NODE_VERSION"
           - "node scripts/generate-react-native-fixture.js"
         retry:
           automatic:

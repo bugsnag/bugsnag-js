@@ -11,7 +11,6 @@ steps:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
         VERBOSE: "1"
       commands:
-        - ". ~/.nvm/nvm.sh && nvm use $$NODE_VERSION"
         - "cd test/cloudflare-workers"
         - "bundle install"
         - "bundle exec maze-runner"
