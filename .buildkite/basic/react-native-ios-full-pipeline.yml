@@ -25,6 +25,7 @@ steps:
           - "test/react-native/features/fixtures/generated/old-arch/**/output/reactnative.ipa"
         commands:
           - "bundle install"
+          - ". ~/.nvm/nvm.sh && nvm use $NODE_VERSION"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           setup:
@@ -66,6 +67,7 @@ steps:
           - "test/react-native/features/fixtures/generated/new-arch/**/output/reactnative.ipa"
         commands:
           - "bundle install"
+          - ". ~/.nvm/nvm.sh && nvm use $NODE_VERSION"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           setup:
