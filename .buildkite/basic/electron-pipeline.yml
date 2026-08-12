@@ -26,7 +26,8 @@ steps:
           node_version:
             - "22"
       commands:
-        - echo "Running on Node `node -v`"
+        - ". ~/.nvm/nvm.sh && nvm use $NODE_VERSION"
+        - "echo Running on Node $(node -v)"
         - npm ci --no-audit --progress=false
         - npm install electron@${ELECTRON_VERSION} --no-audit --progress=false --no-save
         - npx install-electron --no
