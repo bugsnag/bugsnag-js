@@ -160,5 +160,5 @@
   },
   "workspaces": [
     "packages/*"
-  ],
+  ]
 }
