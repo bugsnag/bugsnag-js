@@ -24,7 +24,7 @@ steps:
           - "test/react-native/features/fixtures/generated/old-arch/**/reactnative.apk"
         commands:
           - "bundle install"
-          - ". ~/.nvm/nvm.sh && nvm use $NODE_VERSION"
+          - ". ~/.nvm/nvm.sh && nvm use $$NODE_VERSION"
           - "node scripts/generate-react-native-fixture.js"
         matrix:
           setup:
@@ -69,7 +69,7 @@ steps:
           - "test/react-native/features/fixtures/generated/new-arch/**/reactnative.apk"
         commands:
           - "bundle install"
-          - ". ~/.nvm/nvm.sh && nvm use $NODE_VERSION"
+          - ". ~/.nvm/nvm.sh && nvm use $$NODE_VERSION"
           - "node scripts/generate-react-native-fixture.js"
         retry:
           automatic:
@@ -108,7 +108,7 @@ steps:
           - "test/react-native/features/fixtures/generated/react-native-navigation/new-arch/**/reactnative.apk"
         commands:
           - "bundle install"
-          - ". ~/.nvm/nvm.sh && nvm use $NODE_VERSION"
+          - ". ~/.nvm/nvm.sh && nvm use $$NODE_VERSION"
           - "node scripts/generate-react-native-fixture.js"
         retry:
           automatic:
