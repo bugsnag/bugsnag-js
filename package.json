@@ -62,7 +62,7 @@
     "formidable": "^1.2.2",
     "glob": "^7.1.6",
     "jest": "^26.4.2",
-    "lerna": "^8.1.8",
+    "lerna": "^10.0.0",
     "metro-react-native-babel-preset": "^0.64.0",
     "ncp": "^2.0.0",
     "playwright": "^1.10.0",
@@ -104,6 +104,7 @@
     "typescript": "~5.6.2",
     "@angular/compiler": "^19.0.0",
     "@inquirer/figures": "1.0.13",
+    "brace-expansion": "2.0.2",
     "request": "npm:@cypress/request@^3.0.10",
     "@jest-runner/electron": {
       "form-data": "^4.0.6"
@@ -139,11 +140,12 @@
     "tmp": "^0.2.6",
     "hono": "^4.12.4",
     "react-native": {
-      "react": "$react"
+      "react": "^16.13.1"
     },
     "picomatch": "^4.0.4",
     "eslint": {
-      "ajv": "^6.12.6"
+      "ajv": "^6.12.6",
+      "js-yaml": "4.3.1"
     },
     "piscina": "^4.9.3",
     "http-proxy-middleware": "^3.0.7",
@@ -151,8 +153,10 @@
       "http-proxy-middleware": "^3.0.7"
     },
     "sigstore": "^4.1.1",
-    "js-yaml": "^4.3.0",
-    "brace-expansion": "^2.1.2"
+    "tar": "^7.5.16",
+    "minimatch@>=10": {
+      "brace-expansion": "^5.0.8"
+    }
   },
   "workspaces": [
     "packages/*"
