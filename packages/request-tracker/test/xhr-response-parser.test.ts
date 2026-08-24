@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import xhrResponseParser from '../src/xhr-response-parser'
 
 describe('xhr-response-parser', () => {
@@ -39,6 +43,7 @@ describe('xhr-response-parser', () => {
         responseType: 'arraybuffer',
         response: buffer
       }
+
       const result = xhrResponseParser(xhr as unknown as XMLHttpRequest)
       expect(result).toBe('[Binary Data]')
     })
@@ -123,6 +128,7 @@ describe('xhr-response-parser', () => {
       const doc = {
         XMLDocument: mockXMLDoc
       }
+
       const xhr = {
         responseType: 'document',
         response: doc

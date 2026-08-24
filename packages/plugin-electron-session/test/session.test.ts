@@ -69,7 +69,7 @@ describe('plugin: electron sessions', () => {
     }
 
     expect(session).toEqual(expectedSession)
-    expect(NativeClient.setSession).toBeCalledWith({
+    expect(NativeClient.setSession).toHaveBeenCalledWith({
       id: expectCuid,
       startedAt: expect.any(Date),
       events: { handled: 0, unhandled: 1 }
@@ -226,13 +226,13 @@ describe('plugin: electron sessions', () => {
     )
 
     await createSession(client)
-    expect(NativeClient.setSession).toBeCalledWith({
+    expect(NativeClient.setSession).toHaveBeenCalledWith({
       id: expectCuid,
       startedAt: expect.any(Date),
       events: { handled: 0, unhandled: 1 }
     })
     client.notify(new Error('oh no'))
-    expect(NativeClient.setSession).toBeCalledWith({
+    expect(NativeClient.setSession).toHaveBeenCalledWith({
       id: expectCuid,
       startedAt: expect.any(Date),
       events: { handled: 1, unhandled: 1 }
@@ -251,7 +251,7 @@ describe('plugin: electron sessions', () => {
 
     await createSession(client)
     client.pauseSession()
-    expect(NativeClient.setSession).toBeCalledWith(null)
+    expect(NativeClient.setSession).toHaveBeenCalledWith(null)
   })
 
   it('restores the native session on resume', async () => {
@@ -266,10 +266,10 @@ describe('plugin: electron sessions', () => {
 
     await createSession(client)
     client.pauseSession()
-    expect(NativeClient.setSession).toBeCalledWith(null)
+    expect(NativeClient.setSession).toHaveBeenCalledWith(null)
 
     client.resumeSession()
-    expect(NativeClient.setSession).toBeCalledWith({
+    expect(NativeClient.setSession).toHaveBeenCalledWith({
       id: expectCuid,
       startedAt: expect.any(Date),
       events: { handled: 0, unhandled: 1 }

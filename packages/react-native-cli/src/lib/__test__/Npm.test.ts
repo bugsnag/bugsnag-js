@@ -58,7 +58,7 @@ test('detectInstalled(): error reading JSON', async () => {
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   readFileMock.mockResolvedValue('not json')
   await expect(detectInstalled('@bugsnag/test-package', '/example/dir'))
-    .rejects.toThrowError('Could not load package.json. Is this the project root?')
+    .rejects.toThrow('Could not load package.json. Is this the project root?')
   expect(readFileMock).toHaveBeenCalledWith('/example/dir/package.json', 'utf8')
 })
 
@@ -131,5 +131,5 @@ test('install(): yarn success - dev', async () => {
 
 test('install(): unknown package manager', async () => {
   await expect(install('noopm' as PackageManager, '@bugsnag/test-package', '1.2.3', false, '/example/dir'))
-    .rejects.toThrowError('Don’t know what command to use for noopm')
+    .rejects.toThrow('Don’t know what command to use for noopm')
 })

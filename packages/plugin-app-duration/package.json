@@ -1,5 +1,6 @@
 {
   "name": "@bugsnag/plugin-app-duration",
+  "version": "8.9.0",
   "main": "./dist/cjs/app-duration.js",
   "module": "./dist/esm/app-duration.js",
   "types": "./dist/cjs/app-duration.d.ts",
@@ -15,7 +16,6 @@
       }
     }
   },
-  "version": "8.9.0",
   "description": "@bugsnag/js plugin to set app duration in browsers and node",
   "homepage": "https://www.bugsnag.com/",
   "repository": {

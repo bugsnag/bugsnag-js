@@ -1,6 +1,5 @@
 import http from 'http'
 import https from 'https'
-import { parse } from 'url'
 
 interface RequestOptions {
   url: string
@@ -17,14 +16,14 @@ const request = ({ url, headers, body, agent }: RequestOptions, cb: (err: Error 
     cb(err)
   }
 
-  const parsedUrl = parse(url)
+  const parsedUrl = new URL(url)
   const secure = parsedUrl.protocol === 'https:'
   const transport = secure ? https : http
   const req = transport.request({
     method: 'POST',
     hostname: parsedUrl.hostname,
     port: parsedUrl.port,
-    path: parsedUrl.path,
+    path: parsedUrl.pathname + parsedUrl.search,
     headers,
     agent
   })

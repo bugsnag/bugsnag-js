@@ -78,7 +78,7 @@ interface MockWindow {
   _turnOnInternet: () => void
 }
 
-function makeWindow ({ online }: { online: boolean}): MockWindow {
+function makeWindow ({ online }: { online: boolean }): MockWindow {
   let _online = online
   const callbacks: { [event: string]: Function[] } = {
     online: [],

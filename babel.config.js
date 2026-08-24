@@ -1,12 +1,11 @@
 module.exports = api => {
   // NB: This function can be called without an api argument
-
   const presets = []
   const plugins = []
   const overrides = []
 
   if (api && api.env('test')) {
-    presets.push(['@babel/preset-env', {targets: {node: 'current'}}])
+    presets.push(['@babel/preset-env', { targets: { node: 'current' } }])
     presets.push('@babel/preset-typescript')
     overrides.push({
       test: ['node_modules/react-native/**/*', 'node_modules/@react-native/**/*'],

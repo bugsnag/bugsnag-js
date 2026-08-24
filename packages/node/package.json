@@ -1,5 +1,6 @@
 {
   "name": "@bugsnag/node",
+  "version": "8.10.0",
   "type": "module",
   "main": "./dist/cjs/bugsnag.js",
   "types": "./dist/cjs/bugsnag.d.ts",
@@ -15,7 +16,6 @@
       }
     }
   },
-  "version": "8.9.0",
   "description": "Bugsnag error reporter for Node.js",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -36,7 +36,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-node": "^8.9.0",
+    "@bugsnag/delivery-node": "^8.10.0",
     "@bugsnag/plugin-app-duration": "^8.9.0",
     "@bugsnag/plugin-console-breadcrumbs": "^8.9.0",
     "@bugsnag/plugin-contextualize": "^8.9.0",

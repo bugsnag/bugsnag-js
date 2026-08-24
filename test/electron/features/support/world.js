@@ -75,6 +75,11 @@ Before('@not_macos', () => {
 })
 
 Before(async () => {
+  // Clear cache before each test to prevent leftover minidumps from affecting counts
+  await global.automator.clearCache()
+})
+
+Before(async () => {
   await global.server.start()
 })
 
@@ -90,10 +95,8 @@ After({ timeout: 15_000 }, async ({ result, pickle }) => {
     await writeFile(join(output, 'renderer.log'), global.automator.rendererLogs)
   }
   await global.automator.stop() // start the app fresh every scenario
-  // clear caches once the app stops running, to avoid sneaky requests in
   // future tests
   global.server.clear()
-  await global.automator.clearCache()
 })
 
 AfterAll(async () => {

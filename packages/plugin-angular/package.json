@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-angular",
-  "version": "8.9.0",
+  "version": "8.10.0",
   "description": "Angular integration for bugsnag-js",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -13,7 +13,7 @@
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "npm run clean && ng build",
+    "build": "npm run clean && npx ng build",
     "test:types": "npm run build",
     "prepack": "npm run build"
   },
@@ -21,22 +21,24 @@
   "license": "MIT",
   "peerDependencies": {
     "@angular/common": ">= 12",
+    "@angular/compiler": ">= 12",
     "@angular/core": ">= 12",
     "@bugsnag/js": "^8.0.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "19.2.14",
-    "@angular-devkit/core": "19.2.14",
+    "@angular-devkit/build-angular": "19.2.27",
+    "@angular/build": "^19.2.27",
     "@angular/cli": "^19.0.5",
     "@angular/common": "^19.0.0",
     "@angular/compiler": "^19.0.0",
-    "@angular/compiler-cli": "^19.0.0",
+    "@angular/compiler-cli": "^19.2.25",
     "@angular/core": "^19.0.0",
+    "@bugsnag/js": "^8.10.0",
     "dependency-graph": "^1.0.0",
     "esbuild": "^0.24.2",
-    "injection-js": "^2.5.0",
-    "@bugsnag/js": "^8.9.0",
-    "ng-packagr": "^19.1.0",
+    "estree-walker": "^2.0.2",
+    "injection-js": "^2.6.1",
+    "ng-packagr": "^19.2.2",
     "rxjs": "~7.8.0",
     "yoctocolors-cjs": "2.1.2",
     "zone.js": "~0.15.0"

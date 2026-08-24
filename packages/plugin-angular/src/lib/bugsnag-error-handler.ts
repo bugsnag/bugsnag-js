@@ -6,7 +6,7 @@ type BugsnagWithInternals = typeof Bugsnag & {
 }
 
 class BugsnagErrorHandler implements ErrorHandler {
-  public bugsnagClient: Client | null;
+  public bugsnagClient: Client | null
 
   constructor (client?: Client) {
     if (client) {

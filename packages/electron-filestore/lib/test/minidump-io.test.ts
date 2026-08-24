@@ -75,7 +75,7 @@ describe('minidump i/o', () => {
       const sequence = `name=bugsnag_crash_id\n\n${fakeId}\n------`
       const contents = Buffer.from(`${'\0'.repeat(442)}${sequence}c\0\0\0`)
       await writeFile(filepath, contents)
-      await expect(getIdentifier(filepath)).rejects.toThrowError(/^detected invalid identifier/)
+      await expect(getIdentifier(filepath)).rejects.toThrow(/^detected invalid identifier/)
     })
 
     it('fails without the key being present in the file', async () => {

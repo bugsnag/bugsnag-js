@@ -36,13 +36,15 @@ const extensions = 'js,jsx,ts,tsx'
 module.exports = {
   testTimeout: 10000,
   workerIdleMemoryLimit: '1GB',
+  modulePathIgnorePatterns: [
+    '<rootDir>/packages/[^/]+/dist/'
+  ],
   collectCoverageFrom: [
-    `**/packages/*/src/**/*.{${extensions}}`,
+    `**/packages/*/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,
     `!**/*.test-*.{${extensions}}`,
     '!**/*.d.ts',
     '!**/dist/**',
-    '!**/node_modules/**',
     '!**/packages/js/**',
     '!<rootDir>/packages/plugin-angular/**/*',
     '!<rootDir>/packages/react-native/src/test/setup.js',
@@ -61,9 +63,10 @@ module.exports = {
     project('web workers', ['web-worker'], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),
-    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
+    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser', 'request-tracker']),
     project('browser', [
       'browser',
+      'delivery-x-domain-request',
       'delivery-xml-http-request',
       'delivery-fetch',
       'plugin-react',
@@ -82,8 +85,7 @@ module.exports = {
       'plugin-simple-throttle',
       'plugin-console-breadcrumbs',
       'plugin-browser-session',
-      'plugin-network-instrumentation',
-      'request-tracker'
+      'plugin-network-instrumentation'
     ], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js',
       modulePathIgnorePatterns: ['.verdaccio', 'dist', 'examples', 'fixtures']
@@ -128,7 +130,7 @@ module.exports = {
         '^.+\\.(bmp|gif|jpg|jpeg|mp4|png|psd|svg|webp)$': require.resolve('react-native/jest/assetFileTransformer.js')
       },
       transformIgnorePatterns: [
-        'node_modules/(?!(react-native|@react-native|@bugsnag)/)'
+        'node_modules/(?!(react-native|@react-native|jest-react-native|@react-native-community|@bugsnag)/)'
       ]
     }),
     project('node plugins', [
@@ -140,7 +142,7 @@ module.exports = {
       'plugin-hono',
       'plugin-restify',
       'plugin-contextualize',
-      'plugin-server-*',
+      'plugin-server-session',
       'plugin-strip-project-root',
       'plugin-intercept',
       'plugin-node-unhandled-rejection',
@@ -151,8 +153,7 @@ module.exports = {
     ], {
       testEnvironment: 'node'
     }),
-    project('node integration tests', [
-    ], {
+    project('node integration tests', [], {
       testEnvironment: 'node',
       testMatch: [
         '<rootDir>/packages/node/test/**/*.test.[jt]s',
@@ -188,8 +189,8 @@ module.exports = {
       clearMocks: true,
       modulePathIgnorePatterns: ['.verdaccio', 'fixtures']
     }),
-    project('react native cli', ['react-native-cli'], { 
-      testEnvironment: 'node' 
+    project('react native cli', ['react-native-cli'], {
+      testEnvironment: 'node'
     }),
     project('cloudflare-workers', ['plugin-cloudflare-workers'], {
       testEnvironment: 'node',
