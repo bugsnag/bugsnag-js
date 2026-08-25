@@ -111,4 +111,3 @@ Scenario: promise rejections are reported when using hono
     Then the session is valid for the session reporting API version "1" for the "Bugsnag Node" notifier
     And the session "id" is not null
     And the session "startedAt" is a timestamp
-

@@ -1,5 +1,6 @@
 {
   "name": "@bugsnag/request-tracker",
+  "version": "8.9.0",
   "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -16,7 +17,6 @@
       }
     }
   },
-  "version": "8.9.0",
   "description": "Shared HTTP request tracking for Bugsnag JavaScript plugins",
   "homepage": "https://www.bugsnag.com/",
   "repository": {

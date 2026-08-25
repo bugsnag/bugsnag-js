@@ -6,7 +6,13 @@ const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
 describe('plugin: sessions', () => {
   it('notifies the session endpoint', (done) => {
-    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }, undefined, [plugin], VALID_NOTIFIER)
+    const c = new Client(
+      { apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' },
+      undefined,
+      [plugin],
+      VALID_NOTIFIER
+    )
+
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(typeof session).toBe('object')
@@ -19,39 +25,75 @@ describe('plugin: sessions', () => {
       },
       sendEvent: () => {}
     }))
+
     c.startSession()
   })
 
   it('tracks handled/unhandled error counts and sends them in error payloads', (done) => {
-    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }, undefined, [plugin], VALID_NOTIFIER)
+    const c = new Client(
+      { apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' },
+      undefined,
+      [plugin],
+      VALID_NOTIFIER
+    )
+
     let i = 0
+
     c._setDelivery(client => ({
       sendSession: () => {},
       sendEvent: (payload, cb) => {
         if (++i < 10) return
+
         const r = JSON.parse(JSON.stringify(payload.events[0]))
+
         expect(r.session).toBeDefined()
         expect(r.session.events.handled).toBe(6)
         expect(r.session.events.unhandled).toBe(4)
         done()
       }
     }))
+
     const sessionClient = c.startSession()!
     const Event = c.Event
+
     sessionClient.notify(new Error('broke'))
-    sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient._notify(new Event('err', 'bad', [], {
+      unhandled: true,
+      severity: 'error',
+      severityReason: { type: 'unhandledException' }
+    }))
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new Error('broke'))
-    sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient._notify(new Event('err', 'bad', [], {
+      unhandled: true,
+      severity: 'error',
+      severityReason: { type: 'unhandledException' }
+    }))
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new Error('broke'))
     sessionClient.notify(new Error('broke'))
-    sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
-    sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
+    sessionClient._notify(new Event('err', 'bad', [], {
+      unhandled: true,
+      severity: 'error',
+      severityReason: { type: 'unhandledException' }
+    }))
+    sessionClient._notify(new Event('err', 'bad', [], {
+      unhandled: true,
+      severity: 'error',
+      severityReason: { type: 'unhandledException' }
+    }))
   })
 
   it('correctly infers releaseStage', (done) => {
-    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', releaseStage: 'foo' }, undefined, [plugin], VALID_NOTIFIER)
+    const c = new Client(
+      {
+        apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+        releaseStage: 'foo'
+      },
+      undefined,
+      [plugin],
+      VALID_NOTIFIER
+    )
 
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
@@ -61,26 +103,43 @@ describe('plugin: sessions', () => {
       },
       sendEvent: () => {}
     }))
+
     c.startSession()
   })
 
-  it('doesn’t send when releaseStage is not in enabledReleaseStages', (done) => {
-    const c = new Client({ apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', releaseStage: 'foo', enabledReleaseStages: ['baz'] }, undefined, [plugin], VALID_NOTIFIER)
+  it('doesn\'t send when releaseStage is not in enabledReleaseStages', (done) => {
+    const c = new Client(
+      {
+        apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+        releaseStage: 'foo',
+        enabledReleaseStages: ['baz']
+      },
+      undefined,
+      [plugin],
+      VALID_NOTIFIER
+    )
+
     c._setDelivery(client => ({
       sendSession: (session, cb) => {
         expect(true).toBe(false)
       },
       sendEvent: () => {}
     }))
+
     c.startSession()
     setTimeout(done, 150)
   })
 
   it('supports pausing and resuming sessions', (done) => {
     const payloads: EventDeliveryPayload[] = []
-    const c = new Client({
-      apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-    }, undefined, [plugin], VALID_NOTIFIER)
+
+    const c = new Client(
+      { apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' },
+      undefined,
+      [plugin],
+      VALID_NOTIFIER
+    )
+
     c._setDelivery(client => ({
       sendEvent: (p, cb = () => {}) => {
         payloads.push(p)
@@ -88,6 +147,7 @@ describe('plugin: sessions', () => {
       },
       sendSession: (p, cb = () => {}) => cb()
     }))
+
     c.notify(new Error('1'))
     c.startSession()
     c.notify(new Error('2'))

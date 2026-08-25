@@ -131,12 +131,8 @@ export default (doc = document, win = window) => ({
       )
     })
 
-    function __traceOriginalScript<T extends (...args: any[]) => any> (
-      fn: T,
-      callbackAccessor: (args: Parameters<T>) => { get: () => any, replace: (fn: any) => void },
-      alsoCallOriginal = false
-    ) {
-      return function (...args: Parameters<T>) {
+    function __traceOriginalScript (fn:any, callbackAccessor:any, alsoCallOriginal = false) {
+      return function (...args:any[]) {
         // this is required for removeEventListener to remove anything added with
         // addEventListener before the functions started being wrapped by Bugsnag
         try {
@@ -153,7 +149,7 @@ export default (doc = document, win = window) => ({
             // this function mustn't be annonymous due to a bug in the stack
             // generation logic, meaning it gets tripped up
             // see: https://github.com/stacktracejs/stack-generator/issues/6
-            cb.__trace__ = function __trace__ (...cbArgs: any[]) {
+            cb.__trace__ = function __trace__ (...cbArgs:any[]) {
               // set the script that called this function
               updateLastScript(script)
               // immediately unset the currentScript synchronously below, however

@@ -1,10 +1,19 @@
-export default function headersToObject (headers: Headers): Record<string, string> {
+type HeadersWithEntries = Headers & {
+  entries?: () => Iterator<[string, string]>
+}
+
+export default function headersToObject (
+  headers: Headers | null | undefined
+): Record<string, string> {
   if (!headers) return {}
 
   const obj: Record<string, string> = {}
-  if (typeof headers.entries === 'function') {
-    const iterator = headers.entries()
+  const headersWithEntries = headers as HeadersWithEntries
+
+  if (typeof headersWithEntries.entries === 'function') {
+    const iterator = headersWithEntries.entries()
     let entry = iterator.next()
+
     while (!entry.done) {
       const [key, value] = entry.value
       obj[key] = value
@@ -15,5 +24,6 @@ export default function headersToObject (headers: Headers): Record<string, strin
       obj[key] = value
     })
   }
+
   return obj
 }

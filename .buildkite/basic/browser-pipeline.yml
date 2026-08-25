@@ -81,8 +81,8 @@ steps:
           - "edge_17"
           - "safari_10"
           - "ios_15"
-          - "chrome_53" # TODO: Revert to Chrome 47 when Maze Runner supports it again (see PLAT-16280)
           - "android_13"
+          - "chrome_43"
           - "chrome_72"
           - "firefox_78"
         depends_on: "browser-maze-runner-bs"
@@ -111,7 +111,7 @@ steps:
       #
       # BitBar tests
       #
-      - label: ":bitbar: {{matrix}} Browser tests (EU hub)"
+      - label: ":bitbar: {{matrix}} Browser tests (US hub)"
         matrix:
           - "firefox_latest"
           - "chrome_latest"
@@ -141,4 +141,36 @@ steps:
         concurrency: 25
         concurrency_group: "bitbar"
         concurrency_method: "eager"
+        env:
+          MAZE_SELENIUM_SERVER: "https://us-west-desktop-hub.bitbar.com/wd/hub"
 
+
+      - label: ":bitbar: ie_11 Browser tests (US hub)"
+        depends_on: "browser-maze-runner-bb"
+        timeout_in_minutes: 30
+        plugins:
+          docker-compose#v4.12.0:
+            pull: "browser-maze-runner-bb"
+            run: "browser-maze-runner-bb"
+            service-ports: true
+            use-aliases: true
+            command:
+              - "--fail-fast"
+              - "--farm=bb"
+              - "--browser=ie_11"
+              - "--no-tunnel"
+              - "--aws-public-ip"
+          artifacts#v1.5.0:
+            upload:
+              - "./test/browser/maze_output/failed/**/*"
+          test-collector#v1.10.2:
+            files: "reports/TEST-*.xml"
+            format: "junit"
+            branch: "^main|next$$"
+            api-token-env-name: "BROWSER_BUILDKITE_ANALYTICS_TOKEN"
+        concurrency: 25
+        concurrency_group: "bitbar"
+        concurrency_method: "eager"
+        env:
+          HOST: "localhost" # IE11 needs the host set to localhost
+          MAZE_SELENIUM_SERVER: "https://us-west-desktop-hub.bitbar.com/wd/hub"

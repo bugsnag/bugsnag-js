@@ -185,7 +185,6 @@ describe('clientStateUpdatesPlugin', () => {
         update: jest.fn()
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const client = new Client({
         apiKey: '123',
         metadata: { section: { key: 'value' } },
@@ -207,7 +206,6 @@ describe('clientStateUpdatesPlugin', () => {
         update: jest.fn()
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const client = new Client({
         apiKey: '123',
         metadata: { section: { key: 'value' } },

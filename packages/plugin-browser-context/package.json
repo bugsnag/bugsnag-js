@@ -1,5 +1,6 @@
 {
   "name": "@bugsnag/plugin-browser-context",
+  "version": "8.9.0",
   "type": "module",
   "main": "./dist/cjs/context.js",
   "module": "./dist/esm/context.js",
@@ -16,7 +17,6 @@
       }
     }
   },
-  "version": "8.9.0",
   "description": "@bugsnag/js plugin to set event context in browsers",
   "homepage": "https://www.bugsnag.com/",
   "repository": {

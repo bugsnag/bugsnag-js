@@ -14,7 +14,6 @@ describe('plugin: interaction breadcrumbs', () => {
   it('should be enabled by default', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
 
     expect(c._breadcrumbs).toHaveLength(1)
@@ -23,7 +22,6 @@ describe('plugin: interaction breadcrumbs', () => {
   it('should not be enabled when enabledBreadcrumbTypes=[]', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: [], plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
 
     expect(c._breadcrumbs).toHaveLength(0)
@@ -32,7 +30,6 @@ describe('plugin: interaction breadcrumbs', () => {
   it('should be enabled when enabledBreadcrumbTypes=["user"]', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: ['user'], plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
 
     expect(c._breadcrumbs).toHaveLength(1)
@@ -41,7 +38,6 @@ describe('plugin: interaction breadcrumbs', () => {
   it('should be enabled when enabledBreadcrumbTypes=null', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
 
     expect(c._breadcrumbs).toHaveLength(1)
@@ -50,7 +46,6 @@ describe('plugin: interaction breadcrumbs', () => {
   it("includes the target's text and selector", () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
 
     expect(c._breadcrumbs).toStrictEqual([
@@ -74,7 +69,6 @@ describe('plugin: interaction breadcrumbs', () => {
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
     expect(c._breadcrumbs[0].metadata.targetText).toBe('hello there')
   })
@@ -90,7 +84,6 @@ describe('plugin: interaction breadcrumbs', () => {
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
     expect(c._breadcrumbs[0].metadata.targetText).toBe('a'.repeat(140))
   })
@@ -106,7 +99,6 @@ describe('plugin: interaction breadcrumbs', () => {
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
     expect(c._breadcrumbs[0].metadata.targetText).toBe('a'.repeat(135) + '(...)')
   })
@@ -122,7 +114,6 @@ describe('plugin: interaction breadcrumbs', () => {
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
     expect(c._breadcrumbs[0].metadata.targetText).toBe('a          b          c')
   })
@@ -132,7 +123,6 @@ describe('plugin: interaction breadcrumbs', () => {
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
     expect(c._breadcrumbs[0].metadata.targetText).toBe('')
   })
@@ -142,7 +132,6 @@ describe('plugin: interaction breadcrumbs', () => {
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
     expect(c._breadcrumbs[0].metadata.targetText).toBe('')
   })
@@ -152,7 +141,6 @@ describe('plugin: interaction breadcrumbs', () => {
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('button')!.click()
     expect(c._breadcrumbs[0].metadata.targetText).toBe('a'.repeat(135) + '(...)')
   })
@@ -162,7 +150,6 @@ describe('plugin: interaction breadcrumbs', () => {
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('input')!.click()
     expect(c._breadcrumbs[0].metadata.targetText).toBe('some text')
   })
@@ -172,7 +159,6 @@ describe('plugin: interaction breadcrumbs', () => {
 
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', enabledBreadcrumbTypes: null, plugins: [plugin(window)] })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     document.querySelector('input')!.click()
     expect(c._breadcrumbs[0].metadata.targetText).toBe('some text')
   })

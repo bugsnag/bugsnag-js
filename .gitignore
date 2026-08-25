@@ -1,7 +1,7 @@
 build
 docker-temp
 node_modules
-lerna-debug.log
+*.log
 coverage
 .nyc_output
 dist
@@ -21,6 +21,10 @@ compile_commands.json
 Gemfile.lock
 # IDE files
 .idea/
+.vscode/
 *.iml
 zscaler-root-ca.crt*
 .ts38-validation
+.gitleaks-baseline.json
+.gitleaks.toml
+.pre-commit-config.yaml

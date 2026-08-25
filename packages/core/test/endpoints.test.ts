@@ -1,4 +1,4 @@
-import Client from '../src/client'
+
 
 /* --------------------------------------------------------------------------
  *  Constants – keep tests self-contained
@@ -10,6 +10,8 @@ const BUGSNAG_NOTIFY = 'https://notify.bugsnag.com'
 const BUGSNAG_SESSION = 'https://sessions.bugsnag.com'
 const PREFIXED_KEY = `${SECONDARY_ENDPOINT_API_KEY_PREFIX}abcdef0123456789abcdef012345`
 const NORMAL_KEY = 'abcdef0123456789abcdef0123456789'
+const clientModule = require('../src/client')
+const Client = clientModule.default || clientModule
 
 describe('endpoint selection', () => {
   describe('Client → automatic BugSnag switch', () => {

@@ -1,22 +1,49 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
+    "target": "es2018",
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "lib": ["dom", "es2022"],
+    "allowJs": true,
+    "jsx": "preserve",
+
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "jsx": "preserve",
+
     "strict": true,
-    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitReturns": false,
+
     "skipLibCheck": true,
-    "lib": [ "dom", "es2022" ]
+    "skipDefaultLibCheck": true,
+
+    "moduleResolution": "bundler",
+
+    "types": ["jest", "node"],
+
+    "esModuleInterop": true,
+
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
+  "include": [
+    "packages/*/src",
+    "packages/**/*.ts",
+    "packages/**/*.tsx"
+  ],
   "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "jest/**/*.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "packages/**/test",
     "packages/*/test/**/*.ts",
     "packages/*/test/**/*.tsx",
     "packages/*/src/**/*.test.ts",
     "packages/*/src/test/**/*.ts",
-    "jest/**/*.ts"
-  ],
+    "packages/react-native/src/NativeBugsnag.ts"
+  ]
 }

@@ -6,7 +6,7 @@
   "module": "./dist/esm/surrounding-code.js",
   "types": "./dist/cjs/surrounding-code.d.ts",
   "exports": {
-      ".": {
+    ".": {
       "import": {
         "types": "./dist/esm/surrounding-code.d.ts",
         "default": "./dist/esm/surrounding-code.js"

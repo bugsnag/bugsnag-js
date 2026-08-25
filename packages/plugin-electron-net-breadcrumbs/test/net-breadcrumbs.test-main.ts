@@ -136,7 +136,7 @@ describe.skip('plugin: electron net breadcrumbs', () => {
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
   })
 
-  it('it leaves a breadcrumb when the request is aborted', async () => {
+  it('leaves a breadcrumb when the request is aborted', async () => {
     const client = makeClient()
 
     currentServer = await startServer(200)
@@ -161,7 +161,7 @@ describe.skip('plugin: electron net breadcrumbs', () => {
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
   })
 
-  it('it leaves breadcrumbs when enabledBreadcrumbTypes=null', async () => {
+  it('leaves breadcrumbs when enabledBreadcrumbTypes=null', async () => {
     const client = makeClient({ enabledBreadcrumbTypes: null })
 
     currentServer = await startServer(200)
@@ -186,7 +186,7 @@ describe.skip('plugin: electron net breadcrumbs', () => {
     expect(client._breadcrumbs[0]).toMatchBreadcrumb(expected)
   })
 
-  it('it leaves a breadcrumb when the request errors', async () => {
+  it('leaves a breadcrumb when the request errors', async () => {
     const client = makeClient()
 
     currentServer = await startServer(0, (req, res) => {
