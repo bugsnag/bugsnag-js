@@ -1,6 +1,5 @@
-import plugin from '../'
-import Event from '@bugsnag/core/event'
-import Client from '@bugsnag/core/client'
+import plugin from '../src/path-normaliser'
+import { Client, Event } from '@bugsnag/core'
 
 describe('plugin: stackframe path normaliser', () => {
   it('does not change frames with no file path', done => {

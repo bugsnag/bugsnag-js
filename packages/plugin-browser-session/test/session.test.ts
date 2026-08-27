@@ -1,6 +1,8 @@
-import plugin from '../'
-import Client, { EventDeliveryPayload } from '@bugsnag/core/client'
+
 import EventWithInternals from '@bugsnag/core/event'
+ 
+import plugin from '../src/session'
+import { Client, EventDeliveryPayload } from '@bugsnag/core'
 
 const VALID_NOTIFIER = { name: 't', version: '0', url: 'http://' }
 
@@ -36,8 +38,8 @@ describe('plugin: sessions', () => {
         done()
       }
     }))
-    const sessionClient = c.startSession()
-    const Event = c.Event as unknown as typeof EventWithInternals
+    const sessionClient = c.startSession()!
+    const Event = c.Event
     sessionClient.notify(new Error('broke'))
     sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))
     sessionClient.notify(new Error('broke'))

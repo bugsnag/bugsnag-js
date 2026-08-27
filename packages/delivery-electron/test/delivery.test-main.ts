@@ -2,8 +2,7 @@ import { createServer, IncomingHttpHeaders, STATUS_CODES } from 'http'
 import { app, net } from 'electron'
 import { AddressInfo } from 'net'
 import delivery from '../delivery'
-import { EventDeliveryPayload } from '@bugsnag/core/client'
-import { Client } from '@bugsnag/core'
+import type { Client, EventDeliveryPayload } from '@bugsnag/core'
 import PayloadQueue from '../queue'
 import PayloadDeliveryLoop from '../payload-loop'
 import { mkdtemp, rm } from 'fs/promises'
@@ -588,24 +587,34 @@ describe('delivery: electron', () => {
     })
   })
 
-  it('starts the redelivery loop if there is a connection', done => {
-    PayloadDeliveryLoopMock.mockImplementation(() => ({
-      start: done,
-      stop: () => {}
-    } as any))
+  it('starts the redelivery loop if there is a connection', async () => {
+    const start = jest.fn()
+    const stop = jest.fn()
+
+    PayloadDeliveryLoopMock.mockImplementation(() => ({ start, stop } as any))
 
     const net = { online: true }
     delivery(filestore, net, app)(makeClient())
+
+    await nextTick()
+
+    expect(start).toHaveBeenCalledTimes(2)
+    expect(stop).not.toHaveBeenCalled()
   })
 
-  it('does not start the redelivery loop if there is no connection', done => {
-    PayloadDeliveryLoopMock.mockImplementation(() => ({
-      start: done.fail,
-      stop: done
-    } as any))
+  it('does not start the redelivery loop if there is no connection', async () => {
+    const start = jest.fn()
+    const stop = jest.fn()
+
+    PayloadDeliveryLoopMock.mockImplementation(() => ({ start, stop } as any))
 
     const net = { online: false }
     delivery(filestore, net, app)(makeClient())
+
+    await nextTick()
+
+    expect(start).not.toHaveBeenCalled()
+    expect(stop).toHaveBeenCalledTimes(2)
   })
 
   it('starts the redelivery loop when a connection becomes available', async () => {

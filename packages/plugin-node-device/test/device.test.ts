@@ -1,8 +1,8 @@
-import plugin from '../device'
-import Client from '@bugsnag/core/client'
+import plugin from '../src/device'
+import { Client, schema as coreSchema } from '@bugsnag/core'
 
 const schema = {
-  ...require('@bugsnag/core/config').schema,
+  ...coreSchema,
   hostname: {
     defaultValue: () => 'test-machine.local',
     validate: () => true,
@@ -17,7 +17,7 @@ describe('plugin: node device', () => {
     expect(client._cbs.sp.length).toBe(1)
     expect(client._cbs.e.length).toBe(1)
 
-    client._setDelivery(client => ({
+    client._setDelivery(() => ({
       sendEvent: (payload) => {
         expect(payload.events[0].device).toBeDefined()
         expect(payload.events[0].device.time instanceof Date).toBe(true)

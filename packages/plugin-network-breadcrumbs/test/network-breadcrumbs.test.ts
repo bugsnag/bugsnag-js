@@ -1,7 +1,7 @@
-import plugin from '../'
+ 
+import plugin from '../src/network-breadcrumbs'
 
-import Client from '@bugsnag/core/client'
-import { Config } from '@bugsnag/core'
+import { Client, Config } from '@bugsnag/core'
 
 class XMLHttpRequest {
   _listeners: { load: Array<() => void>, error: Array<() => void> }

@@ -18,51 +18,46 @@ describe('persisting changes to disk', () => {
     lastRunInfoFilePath = join(tempdir, 'last-run-info.json')
   })
 
-  afterEach(async (done) => {
+  afterEach(async () => {
     NativeClient.uninstall()
     await rm(tempdir, { recursive: true })
-    done()
   })
 
-  it('sets context', async (done) => {
+  it('sets context', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateContext('silverfish')
     NativeClient.persistState()
     const state = await readTempFile()
     expect(state.context).toBe('silverfish')
-    done()
   })
 
-  it('sets user fields', async (done) => {
+  it('sets user fields', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateUser('456', 'jo@example.com', 'jo')
     NativeClient.persistState()
     const state = await readTempFile()
     expect(state.user).toEqual({ id: '456', name: 'jo', email: 'jo@example.com' })
-    done()
   })
 
-  it('clears user fields', async (done) => {
+  it('clears user fields', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateUser('456', 'jo@example.com', 'jo')
     NativeClient.updateUser('456', 'jo@example.com', null)
     NativeClient.persistState()
     const state = await readTempFile()
     expect(state.user).toEqual({ id: '456', email: 'jo@example.com' })
-    done()
   })
 
-  it('clears context', async (done) => {
+  it('clears context', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateContext('silverfish')
     NativeClient.updateContext(null)
     NativeClient.persistState()
     const state = await readTempFile()
     expect(state.context).toBeUndefined()
-    done()
   })
 
-  it('adds breadcrumbs', async (done) => {
+  it('adds breadcrumbs', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.leaveBreadcrumb({ name: 'launch app' })
     NativeClient.leaveBreadcrumb({ name: 'click start' })
@@ -80,7 +75,6 @@ describe('persisting changes to disk', () => {
       { name: 'go to foreground' },
       { name: 'resume' }
     ])
-    done()
   })
 
   it('sets metadata', async () => {
@@ -98,7 +92,7 @@ describe('persisting changes to disk', () => {
     })
   })
 
-  it('set metadata tab contents', async (done) => {
+  it('set metadata tab contents', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateMetadata('terrain', { spawn: 'desert', current: 'cave' })
     NativeClient.persistState()
@@ -110,10 +104,9 @@ describe('persisting changes to disk', () => {
         spawn: 'desert'
       }
     })
-    done()
   })
 
-  it('clears metadata tab', async (done) => {
+  it('clears metadata tab', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.updateMetadata('terrain', { spawn: 'desert', current: 'cave' })
     NativeClient.updateMetadata('device', { size: 256 })
@@ -124,8 +117,6 @@ describe('persisting changes to disk', () => {
     expect(state.metadata).toEqual({
       device: { size: 256 }
     })
-
-    done()
   })
 
   it('sets feature flags', async () => {
@@ -169,7 +160,7 @@ describe('persisting changes to disk', () => {
     expect(state.featureFlags).toStrictEqual([])
   })
 
-  it('sets session', async (done) => {
+  it('sets session', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.setSession({
       id: '9f65c975-8155-456f-91e5-c4c4b3db0555',
@@ -190,20 +181,16 @@ describe('persisting changes to disk', () => {
 
     state = await readTempFile()
     expect(state.session).toBeUndefined()
-
-    done()
   })
 
-  it('has no session by default', async (done) => {
+  it('has no session by default', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.persistState()
     const state = await readTempFile()
     expect(state.session).toBeUndefined()
-
-    done()
   })
 
-  it('sets app info', async (done) => {
+  it('sets app info', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.setApp({
       releaseStage: 'beta1',
@@ -216,11 +203,9 @@ describe('persisting changes to disk', () => {
       releaseStage: 'beta1',
       version: '1.0.22'
     })
-
-    done()
   })
 
-  it('sets device info', async (done) => {
+  it('sets device info', async () => {
     NativeClient.install(filepath, lastRunInfoFilePath, 5)
     NativeClient.setDevice({
       online: true,
@@ -237,8 +222,6 @@ describe('persisting changes to disk', () => {
       osVersion: 'R6',
       totalMemory: 65536
     })
-
-    done()
   })
 
   it('initializes with provided state', async () => {

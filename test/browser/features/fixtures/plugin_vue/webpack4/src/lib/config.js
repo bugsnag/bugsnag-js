@@ -1,5 +1,5 @@
 var Vue = require('vue/dist/vue.common.js')
-var BugsnagVuePlugin = require('@bugsnag/plugin-vue')
+var BugsnagVuePlugin = require('@bugsnag/plugin-vue').default
 
 var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
 var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])

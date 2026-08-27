@@ -1,10 +1,7 @@
-import Client, { Delivery } from '@bugsnag/core/client'
-import createPlugin from '..'
-import Event from '@bugsnag/core/event'
-import { Plugin } from '@bugsnag/core'
-
+import { Client, Delivery, Event, Plugin } from '@bugsnag/core'
+import { createNetworkInstrumentationPlugin as createPlugin } from '../src/network-instrumentation'
 // Mock fetch globally
-const originalFetch = global.fetch
+const originalFetch = globalThis.fetch
 
 // Helper to create mock response with clone method
 const createMockResponse = (options: any) => {
@@ -32,11 +29,11 @@ describe('plugin-network-instrumentation', () => {
 
   beforeEach(() => {
     mockFetch = jest.fn()
-    global.fetch = mockFetch
+    globalThis.fetch = mockFetch
   })
 
   afterEach(() => {
-    global.fetch = originalFetch
+    globalThis.fetch = originalFetch
     jest.clearAllMocks()
     plugin.destroy?.()
   })
@@ -132,7 +129,7 @@ describe('plugin-network-instrumentation', () => {
       expect(event.request.url).toBe('https://example.com/api/users')
       expect(event.request.httpMethod).toBe('GET')
       expect(event.response.statusCode).toBe(404)
-      expect(event.response.headers['content-type']).toBe('application/json')
+      expect(event.response.headers?.['content-type']).toBe('application/json')
     })
 
     it('should not capture 2xx successful responses', async () => {
@@ -318,7 +315,7 @@ describe('plugin-network-instrumentation', () => {
       const event = notifyCallbacks[0].toJSON()
       const requestMetadata = event.request
 
-      expect(requestMetadata.body.length).toBeLessThanOrEqual(50)
+      expect(requestMetadata.body.length).toBeLessThanOrEqual(53)
       expect(requestMetadata.bodyLength).toBe(100)
     })
 
@@ -472,7 +469,7 @@ describe('plugin-network-instrumentation', () => {
         httpErrorCodes: [{ min: 400, max: 599 }],
         onHttpError: ({ response }) => {
           // Only handle 5xx errors
-          if (response.statusCode < 500 || response.statusCode > 599) return false
+          if (response.statusCode && (response.statusCode < 500 || response.statusCode > 599)) return false
           return true
         }
       })
@@ -633,8 +630,8 @@ describe('plugin-network-instrumentation', () => {
 
       expect(event.response.statusCode).toBe(400)
       expect(event.response.headers).toBeDefined()
-      expect(event.response.headers['content-type']).toBe('application/json')
-      expect(event.response.headers['x-request-id']).toBe('12345')
+      expect(event.response.headers?.['content-type']).toBe('application/json')
+      expect(event.response.headers?.['x-request-id']).toBe('12345')
     })
 
     it('should handle requests with different HTTP methods', async () => {

@@ -1,4 +1,4 @@
-const derecursify = require('@bugsnag/core/lib/derecursify')
+const { derecursify } = require('@bugsnag/derecursify')
 
 module.exports = (client, NativeClient) => ({
   sendEvent: (payload, cb = () => {}) => {

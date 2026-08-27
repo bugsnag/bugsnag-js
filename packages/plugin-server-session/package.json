@@ -1,7 +1,22 @@
 {
   "name": "@bugsnag/plugin-server-session",
   "version": "8.9.0",
-  "main": "session.js",
+  "type": "module",
+  "main": "./dist/cjs/session.js",
+  "module": "./dist/esm/session.js",
+  "types": "./dist/cjs/session.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/session.d.ts",
+        "default": "./dist/esm/session.js"
+      },
+      "require": {
+        "types": "./dist/cjs/session.d.ts",
+        "default": "./dist/cjs/session.js"
+      }
+    }
+  },
   "description": "@bugsnag/js plugin to enable session tracking in server applications",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -12,7 +27,7 @@
     "access": "public"
   },
   "files": [
-    "*.js"
+    "dist"
   ],
   "author": "Bugsnag",
   "license": "MIT",
@@ -24,5 +39,11 @@
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"
+  },
+  "scripts": {
+    "clean": "rm -fr dist",
+    "build": "rollup --config rollup.config.mjs",
+    "test:types": "tsc -p tsconfig.json",
+    "prebuild": "npm run clean"
   }
 }

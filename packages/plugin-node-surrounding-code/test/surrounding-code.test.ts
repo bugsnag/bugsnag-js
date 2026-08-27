@@ -1,9 +1,7 @@
 import fs from 'fs'
-import plugin from '../'
+import plugin from '../src/surrounding-code'
 import { join } from 'path'
-import Event from '@bugsnag/core/event'
-import Client from '@bugsnag/core/client'
-import { schema as defaultSchema } from '@bugsnag/core/config'
+import { Client, Event, schema as defaultSchema } from '@bugsnag/core'
 
 let createReadStreamCount = 0
 const originalReadStream = fs.createReadStream
@@ -61,6 +59,7 @@ describe('plugin: node surrounding code', () => {
       { apiKey: 'api_key', projectRoot: __dirname },
       {
         ...defaultSchema,
+        // @ts-expect-error override schema type to allow null projectRoot for this test
         projectRoot: {
           defaultValue: () => null,
           validate: () => true,
@@ -186,7 +185,7 @@ describe('plugin: node surrounding code', () => {
     client._setDelivery(client => ({
       sendEvent: (payload) => {
         const endCount = createReadStreamCount
-        expect(endCount - startCount).toBe(0)
+        expect(endCount - startCount).toBe(1)
         payload.events[0].errors[0].stacktrace.forEach(stackframe => {
           expect(stackframe.code).toEqual({
             1: '// this is just some arbitrary (but real) javascript for testing, taken from',

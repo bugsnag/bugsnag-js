@@ -18,8 +18,8 @@
     "@bugsnag/core": "^8.9.0",
     "@bugsnag/electron-test-helpers": "^8.9.0"
   },
-  "peerDependencies": {
-    "@bugsnag/core": "^8.0.0"
+  "dependencies": {
+    "@bugsnag/path-normalizer": "^8.4.0"
   },
   "author": "Bugsnag",
   "license": "MIT"

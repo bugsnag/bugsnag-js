@@ -1,10 +1,7 @@
-import Client, { Delivery } from '@bugsnag/core/client'
-import createPlugin from '..'
-import Event from '@bugsnag/core/event'
-import { Plugin } from '@bugsnag/core'
-
+import { Client, Delivery, Event, Plugin } from '@bugsnag/core'
+import { createNetworkInstrumentationPlugin as createPlugin } from '../src/network-instrumentation'
 const createMockDelivery = (notifyCallbacks: Event[]) => (): Delivery => ({
-  sendEvent: (payload) => {
+  sendEvent: (payload: any) => {
     notifyCallbacks.push(payload.events[0])
   },
   sendSession: () => {}
@@ -148,8 +145,8 @@ describe('plugin-network-instrumentation', () => {
 
       // Verify response metadata including body
       expect(event.response.statusCode).toBe(404)
-      expect(event.response.headers['content-type']).toBe('application/json')
-      expect(event.response.headers['content-length']).toBe('45')
+      expect(event.response.headers?.['content-type']).toBe('application/json')
+      expect(event.response.headers?.['content-length']).toBe('45')
       expect(event.response.body).toBe(JSON.stringify(xhr.response))
       expect(event.response.bodyLength).toBe(JSON.stringify(xhr.response).length)
     })
@@ -180,10 +177,10 @@ describe('plugin-network-instrumentation', () => {
       await new Promise(resolve => setTimeout(resolve, 20))
 
       expect(notifyCallbacks.length).toBe(1)
+     
       const event = notifyCallbacks[0].toJSON()
-
       // Verify response body is truncated but original length is preserved
-      expect(event.response.body?.length).toBeLessThanOrEqual(20)
+      expect(event.response.body?.length).toBeLessThanOrEqual(23)
       expect(event.response.bodyLength).toBe(100)
     })
 

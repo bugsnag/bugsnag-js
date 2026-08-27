@@ -1,17 +1,24 @@
 import Plugin from '../'
-import Client from '@bugsnag/core/client'
-import TestRenderer from 'react-test-renderer'
+import { Client } from '@bugsnag/core'
+import ReactTestRenderer from 'react-test-renderer'
 import * as React from 'react'
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native'
 
-jest.mock('@react-navigation/native')
+jest.mock('@react-navigation/native', () => {
+  // @eslint-disable-next-line @typescript-eslint/no-var-requires
+  const React = require('react')
+  return {
+    NavigationContainer: React.forwardRef(jest.fn().mockImplementation((props, ref) => null)),
+    NavigationContainerRef: {}
+  }
+})
 
 afterEach(() => jest.clearAllMocks())
 
 describe('plugin: react navigation', () => {
   it('should pass through props and ref to the underlying NavigationContainer', done => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()] })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
     expect(BugsnagNavigationContainer).toBeTruthy()
     const onReady = jest.fn()
@@ -27,7 +34,7 @@ describe('plugin: react navigation', () => {
     }
 
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
-    TestRenderer.create(<App/>)
+    ReactTestRenderer.create(<App/>)
 
     expect(MockedNavigationContainerRender).toHaveBeenCalledTimes(1)
 
@@ -47,7 +54,7 @@ describe('plugin: react navigation', () => {
 
   it('should update context when the screen changes', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()] })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
     let ref
     let currentRouteName = 'home'
@@ -65,7 +72,7 @@ describe('plugin: react navigation', () => {
     }
 
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
-    TestRenderer.create(<App/>)
+    ReactTestRenderer.create(<App/>)
 
     expect(MockedNavigationContainerRender).toHaveBeenCalledTimes(1)
 
@@ -86,7 +93,7 @@ describe('plugin: react navigation', () => {
 
   it('should leave breacrumbs when the screen changes', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()] })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
     let ref
     let currentRouteName = 'home'
@@ -104,7 +111,7 @@ describe('plugin: react navigation', () => {
     }
 
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
-    TestRenderer.create(<App/>)
+    ReactTestRenderer.create(<App/>)
 
     expect(MockedNavigationContainerRender).toHaveBeenCalledTimes(1)
 
@@ -140,7 +147,7 @@ describe('plugin: react navigation', () => {
 
   it('should leave breacrumbs when enabledBreadcrumbTypes=null', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()], enabledBreadcrumbTypes: null })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
     let ref
     let currentRouteName = 'home'
@@ -158,7 +165,7 @@ describe('plugin: react navigation', () => {
     }
 
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
-    TestRenderer.create(<App/>)
+    ReactTestRenderer.create(<App/>)
 
     expect(MockedNavigationContainerRender).toHaveBeenCalledTimes(1)
 
@@ -179,7 +186,7 @@ describe('plugin: react navigation', () => {
 
   it('should leave no breacrumbs when navigation breadcrumbs are disabled', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()], enabledBreadcrumbTypes: [] })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
     let ref
     let currentRouteName = 'home'
@@ -197,7 +204,7 @@ describe('plugin: react navigation', () => {
     }
 
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
-    TestRenderer.create(<App/>)
+    ReactTestRenderer.create(<App/>)
 
     expect(MockedNavigationContainerRender).toHaveBeenCalledTimes(1)
 

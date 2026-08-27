@@ -1,11 +1,11 @@
 import ErrorStackParser from 'error-stack-parser'
-import Event from '../event'
+import Event from '../src/event'
 
 jest.mock('stack-generator', () => ({
   backtrace: () => [{}, {}]
 }))
 
-describe('@bugsnag/core/event', () => {
+describe('Event', () => {
   describe('constructor', () => {
     it('sets default handledState', () => {
       const err = new Error('noooooo')
@@ -57,16 +57,15 @@ describe('@bugsnag/core/event', () => {
     it('handles bad input', () => {
       const r = new Event('Err', 'bad', [])
       const before = Object.assign({}, r._metadata)
-      // @ts-ignore
+      // @ts-expect-error testing addMetadata with no arguments
       r.addMetadata()
       expect(r._metadata).toEqual(before)
-      // @ts-ignore
+      // @ts-expect-error testing addMetadata with number argument
       r.addMetadata(123)
       expect(r._metadata).toEqual(before)
-      // @ts-ignore
+      // @ts-expect-error testing addMetadata with Date argument
       r.addMetadata(new Date())
       expect(r._metadata).toEqual(before)
-      // @ts-ignore
       r.addMetadata('strrrr')
       expect(r._metadata).toEqual(before)
     })
@@ -76,7 +75,7 @@ describe('@bugsnag/core/event', () => {
       r.addMetadata('metaaaaa', 'flip', 'flop')
       r.addMetadata('specific detail', { extra: 'stuff', more: 'things' })
 
-      // @ts-ignore
+      // @ts-expect-error passing null to clear metadata section
       r.addMetadata('metaaaaa', null)
       expect((r._metadata).metaaaaa).toBe(undefined)
 
@@ -117,13 +116,13 @@ describe('@bugsnag/core/event', () => {
 
       // calling with bad input
       const before = Object.assign({}, r._metadata)
-      // @ts-ignore
+      // @ts-expect-error testing clearMetadata with no arguments
       r.clearMetadata()
       expect(r._metadata).toEqual(before)
-      // @ts-ignore
+      // @ts-expect-error testing clearMetadata with number argument
       r.clearMetadata(123)
       expect(r._metadata).toEqual(before)
-      // @ts-ignore
+      // @ts-expect-error testing clearMetadata with Date argument
       r.clearMetadata(new Date())
       expect(r._metadata).toEqual(before)
 
@@ -148,7 +147,7 @@ describe('@bugsnag/core/event', () => {
     it('handles bad input', () => {
       const r = new Event('Err', 'bad', [])
       expect(r.getMetadata('nothing here')).toBe(undefined)
-      // @ts-ignore
+      // @ts-expect-error testing getMetadata with undefined argument
       expect(r.getMetadata(undefined)).toBe(undefined)
       expect(r.getMetadata('nothing here', 'or here')).toBe(undefined)
       r.addMetadata('specific detail', { extra: 'stuff' })
@@ -228,7 +227,7 @@ describe('@bugsnag/core/event', () => {
       it('does not add the flag if no name is passed', () => {
         const event = new Event('Err', 'bad', [])
 
-        // @ts-expect-error
+        // @ts-expect-error testing with missing required argument
         event.addFeatureFlag()
 
         expect(event._features).toStrictEqual([])
@@ -267,7 +266,7 @@ describe('@bugsnag/core/event', () => {
       it('does not add flags if nothing is passed', () => {
         const event = new Event('Err', 'bad', [])
 
-        // @ts-expect-error
+        // @ts-expect-error testing with missing required argument
         event.addFeatureFlags()
 
         expect(event._features).toStrictEqual([])
@@ -302,7 +301,7 @@ describe('@bugsnag/core/event', () => {
       it('does nothing if not given a flag', () => {
         const event = new Event('Err', 'bad', [])
 
-        // @ts-expect-error
+        // @ts-expect-error testing with missing required argument
         event.clearFeatureFlag()
 
         expect(event._features).toStrictEqual([])
@@ -350,9 +349,7 @@ describe('@bugsnag/core/event', () => {
   describe('Event.create()', () => {
     it('includes causes in the exceptions array', () => {
       const err = new Error('I am the error')
-      // @ts-ignore
       err.cause = new Error('I am the cause')
-      // @ts-ignore
       const event = Event.create(err, true, undefined, 'notify()', 0)
       expect(event.errors.length).toBe(2)
       expect(event.errors).toContainEqual(
@@ -373,9 +370,7 @@ describe('@bugsnag/core/event', () => {
 
     it('converts a string cause into an exception', () => {
       const err = new Error('I am the error')
-      // @ts-ignore
       err.cause = 'I am the cause'
-      // @ts-ignore
       const event = Event.create(err, true, undefined, 'notify()', 0)
       expect(event.errors.length).toBe(2)
       expect(event.errors).toContainEqual({
@@ -388,9 +383,7 @@ describe('@bugsnag/core/event', () => {
 
     it('handles invalid cause errors', () => {
       const err = new Error('I am an error')
-      // @ts-ignore
       err.cause = { error: 'I am not an Error' }
-      // @ts-ignore
       const event = Event.create(err, true, undefined, '', 0)
       expect(event.errors.length).toBe(2)
       expect(event.errors).toContainEqual({
@@ -404,10 +397,8 @@ describe('@bugsnag/core/event', () => {
 
     it('tolerates non-error causes regardless of tolerateNonErrors being true/false', () => {
       const err = new Error('I am an error')
-      // @ts-ignore
       err.cause = 'I am not an Error'
 
-      // @ts-ignore
       const event = Event.create(err, false, undefined, '', 0)
       expect(event.getMetadata('error cause')).toBeUndefined()
       expect(event.errors.length).toBe(2)

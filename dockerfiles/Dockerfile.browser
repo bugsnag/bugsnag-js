@@ -6,15 +6,17 @@ RUN apk add --update bash python3 make gcc g++ musl-dev xvfb-run curl
 WORKDIR /app
 
 COPY package*.json ./
-COPY babel.config.js lerna.json .eslintignore .eslintrc.js jest.config.js tsconfig.json ./
+COPY babel.config.js lerna.json eslint.config.mjs jest.config.js tsconfig.json ./
 COPY jest ./jest
 ADD min_packages.tar .
+COPY .rollup ./.rollup
 COPY bin ./bin
 COPY packages ./packages
 
 RUN npm ci
 RUN npm run build
 
+RUN npm pack --verbose packages/core/
 RUN npm pack --verbose packages/js/
 RUN npm pack --verbose packages/browser/
 RUN npm pack --verbose packages/node/
@@ -26,13 +28,15 @@ RUN npm pack --verbose packages/web-worker/
 COPY test/browser/features test/browser/features
 WORKDIR /app/test/browser/features/fixtures
 RUN npm install --no-package-lock --no-save \
-../../../../bugsnag-browser-*.tgz \
-../../../../bugsnag-plugin-react-*.tgz \
-../../../../bugsnag-plugin-vue-*.tgz \
-../../../../bugsnag-web-worker-*.tgz
+  ../../../../bugsnag-core-*.tgz \
+  ../../../../bugsnag-browser-*.tgz \
+  ../../../../bugsnag-plugin-react-*.tgz \
+  ../../../../bugsnag-plugin-vue-*.tgz \
+  ../../../../bugsnag-web-worker-*.tgz
 
 WORKDIR /app/test/browser/features/fixtures/plugin_angular/angular_12
 RUN npm install --no-package-lock --no-save \
+  ../../../../../../bugsnag-core-*.tgz \
   ../../../../../../bugsnag-plugin-angular-*.tgz  \
   ../../../../../../bugsnag-node-*.tgz \
   ../../../../../../bugsnag-browser-*.tgz \
@@ -40,10 +44,15 @@ RUN npm install --no-package-lock --no-save \
 
 WORKDIR /app/test/browser/features/fixtures/plugin_angular/angular_17
 RUN npm install --no-package-lock --no-save \
+  ../../../../../../bugsnag-core-*.tgz \
   ../../../../../../bugsnag-plugin-angular-*.tgz  \
   ../../../../../../bugsnag-node-*.tgz \
   ../../../../../../bugsnag-browser-*.tgz \
   ../../../../../../bugsnag-js-*.tgz
+
+WORKDIR /app/test/browser/features/fixtures/typescript/3_8
+RUN npm install --no-package-lock --no-save \
+  ../../../../../../bugsnag-browser-*.tgz
 
 # install the dependencies and build each fixture
 WORKDIR /app/test/browser/features/fixtures

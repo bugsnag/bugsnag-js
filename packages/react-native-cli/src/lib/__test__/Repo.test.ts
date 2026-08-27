@@ -90,7 +90,7 @@ test('detectState(): unknown error', async () => {
 
 test('detectState(): ENOENT error should not log a warning', async () => {
   const spawnSyncMock = (spawnSync as unknown as jest.MockedFunction<spawnSyncFn>)
-  const error = new Error('fail')
+  const error = new Error('fail') as Error & { code: string }
   error.code = 'ENOENT'
 
   spawnSyncMock.mockReturnValue({

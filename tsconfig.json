@@ -1,52 +1,22 @@
 {
   "compilerOptions": {
-    /* Basic Options */
-    "target": "es2018",
-    "module": "commonjs",
-    "lib": ["dom", "es2018"],
-    "allowJs": true,
+    "target": "ES2015",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "jsx": "preserve",
-    "noEmit": true,
-
-    /* Strict type-safety checks */
     "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noImplicitReturns": false,
-
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-
-    /* Module Resolution */
-    "moduleResolution": "node",
-    "baseUrl": "./",
-
-    /* Types */
-    "types": ["jest", "node"],
-
-    /* Interop */
     "esModuleInterop": true,
-
-    /* Tooling support */
-    "resolveJsonModule": true,
-    "isolatedModules": true
+    "skipLibCheck": true,
+    "lib": [ "dom", "es2022" ]
   },
-
-  "include": [
-    "packages/*/src",
-    "packages/**/*.ts",
-    "packages/**/*.tsx"
-  ],
-
   "exclude": [
-    "node_modules",
-    "dist",
-
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "test",
-    "packages/**/test",
-
-    "packages/react-native/src/NativeBugsnag.ts"
-  ]
+    "packages/*/test/**/*.ts",
+    "packages/*/test/**/*.tsx",
+    "packages/*/src/**/*.test.ts",
+    "packages/*/src/test/**/*.ts",
+    "jest/**/*.ts"
+  ],
 }

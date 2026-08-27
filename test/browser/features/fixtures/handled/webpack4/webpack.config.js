@@ -1,5 +1,4 @@
 const path = require('path')
-const es3ifyPlugin = require('es3ify-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
