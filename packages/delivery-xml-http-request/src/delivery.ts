@@ -34,7 +34,7 @@ const delivery = (client: Client, win = window): Delivery => ({
         if (req.readyState === win.XMLHttpRequest.DONE) {
           const status = req.status
           if (status === 0 || status >= 400) {
-            const err = new Error(`Request failed with status ${status}`);
+            const err = new Error(`Request failed with status ${status}`)
             logger.error('Event failed to send…', err)
             if (body.length > 10e5) {
               logger.warn(`Event oversized (${(body.length / 10e5).toFixed(2)} MB)`)
@@ -86,7 +86,7 @@ const delivery = (client: Client, win = window): Delivery => ({
         if (req.readyState === win.XMLHttpRequest.DONE) {
           const status = req.status
           if (status === 0 || status >= 400) {
-            const err = new Error(`Request failed with status ${status}`);
+            const err = new Error(`Request failed with status ${status}`)
             logger.error('Session failed to send…', err)
             cb(err)
           } else {

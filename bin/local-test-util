@@ -121,11 +121,7 @@ async function buildNotifiers (notifier) {
 async function packNotifiers (notifier) {
   const notifiers = notifier
     ? [ notifier ]
-<<<<<<< HEAD
     : [ 'js', 'browser', 'node', 'web-worker', 'plugin-angular', 'plugin-react', 'plugin-vue', 'plugin-network-instrumentation' ]
-=======
-    : [ 'core', 'js', 'browser', 'node', 'web-worker', 'plugin-angular', 'plugin-react', 'plugin-vue' ]
->>>>>>> 3a1e1d652 (refactor core package)
   for (const n of notifiers) {
     let packageLocation = `packages/${n}/`
     if (n === 'plugin-angular') packageLocation += 'dist/'

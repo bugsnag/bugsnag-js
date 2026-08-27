@@ -76,7 +76,7 @@ const notifier: NodeClient = {
     if (typeof opts === 'string') opts = { apiKey: opts }
     if (!opts) opts = {} as unknown as Config
 
-    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url });
+    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
     /**
      * Patch all calls to the client in order to forwards them to the context client if it exists

@@ -22,7 +22,7 @@ const runCallbacks = <T>(
         if (ret && typeof ret.then === 'function') {
           return ret.then(
             // resolve
-            (val: boolean | undefined ) => setTimeout(() => cb(null, val)),
+            (val: boolean | undefined) => setTimeout(() => cb(null, val)),
             // reject
             (err: Error) => {
               setTimeout(() => {

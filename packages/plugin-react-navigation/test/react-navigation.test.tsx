@@ -18,7 +18,7 @@ afterEach(() => jest.clearAllMocks())
 describe('plugin: react navigation', () => {
   it('should pass through props and ref to the underlying NavigationContainer', done => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()] })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
     expect(BugsnagNavigationContainer).toBeTruthy()
     const onReady = jest.fn()
@@ -54,7 +54,7 @@ describe('plugin: react navigation', () => {
 
   it('should update context when the screen changes', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()] })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
     let ref
     let currentRouteName = 'home'
@@ -93,7 +93,7 @@ describe('plugin: react navigation', () => {
 
   it('should leave breacrumbs when the screen changes', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()] })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
     let ref
     let currentRouteName = 'home'
@@ -147,7 +147,7 @@ describe('plugin: react navigation', () => {
 
   it('should leave breacrumbs when enabledBreadcrumbTypes=null', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()], enabledBreadcrumbTypes: null })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
     let ref
     let currentRouteName = 'home'
@@ -186,7 +186,7 @@ describe('plugin: react navigation', () => {
 
   it('should leave no breacrumbs when navigation breadcrumbs are disabled', () => {
     const c = new Client({ apiKey: 'aaaa-aaaa-aaaa-aaaa', plugins: [new Plugin()], enabledBreadcrumbTypes: [] })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const BugsnagNavigationContainer = c.getPlugin('reactNavigation')!.createNavigationContainer(NavigationContainer)
     let ref
     let currentRouteName = 'home'

@@ -1,5 +1,5 @@
 import type { Plugin } from '@bugsnag/core'
-import { createRequestTrackerPlugin, RequestTrackerPluginResult, RequestStartContext, RequestEndContext} from '@bugsnag/request-tracker'
+import { createRequestTrackerPlugin, RequestTrackerPluginResult, RequestStartContext, RequestEndContext } from '@bugsnag/request-tracker'
 
 const BREADCRUMB_TYPE = 'request'
 

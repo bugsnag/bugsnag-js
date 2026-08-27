@@ -16,7 +16,7 @@ interface FallbackComponentProps {
 }
 type FallbackComponentType = React.ComponentType<FallbackComponentProps>;
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+ 
 const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
 beforeAll(() => {
@@ -183,7 +183,7 @@ it('supports passing reference to React when the error boundary is created', () 
     { apiKey: '123', plugins: [new BugsnagPluginReact()] },
     undefined
   )
-  // eslint-disable-next-line
+   
   const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
   expect(ErrorBoundary).toBeTruthy()
 })
@@ -207,7 +207,7 @@ describe('global React', () => {
       plugins: [new BugsnagPluginReact()]
     })
 
-    // eslint-disable-next-line
+     
     const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
     expect(ErrorBoundary).toBeTruthy()
@@ -222,7 +222,7 @@ describe('global React', () => {
       plugins: [new BugsnagPluginReact()]
     })
 
-    // eslint-disable-next-line
+     
     const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
 
     expect(ErrorBoundary).toBeTruthy()

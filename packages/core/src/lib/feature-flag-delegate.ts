@@ -1,5 +1,5 @@
 import jsonStringify from '@bugsnag/safe-json-stringify'
-import type { FeatureFlag } from "../common";
+import type { FeatureFlag } from '../common'
 
 type FeatureFlagEventApi = {
   featureFlag: string
@@ -7,7 +7,7 @@ type FeatureFlagEventApi = {
 }
 
 interface FeatureFlagDelegate{
-  add: (existingFeatures: Array<FeatureFlag | null>, existingFeatureKeys: { [key: string]: number }, name?: string | null, variant?: any ) => void
+  add: (existingFeatures: Array<FeatureFlag | null>, existingFeatureKeys: { [key: string]: number }, name?: string | null, variant?: any) => void
   merge: (
     existingFeatures: Array<{ name: string; variant?: any } | null>,
     newFeatures: any,
@@ -31,11 +31,11 @@ const featureFlagDelegate: FeatureFlagDelegate = {
 
     const existingIndex = existingFeatureKeys[name]
     if (typeof existingIndex === 'number') {
-      existingFeatures[existingIndex] = {name, variant}
+      existingFeatures[existingIndex] = { name, variant }
       return
     }
 
-    existingFeatures.push({name, variant})
+    existingFeatures.push({ name, variant })
     existingFeatureKeys[name] = existingFeatures.length - 1
   },
 
@@ -66,19 +66,19 @@ const featureFlagDelegate: FeatureFlagDelegate = {
     return (featureFlags || [])
       .filter((flag): flag is FeatureFlag => flag !== null && typeof flag === 'object')
       .map((flag) => {
-        const result: FeatureFlagEventApi = { featureFlag: flag.name };
+        const result: FeatureFlagEventApi = { featureFlag: flag.name }
         if (typeof flag.variant === 'string') {
-          result.variant = flag.variant;
+          result.variant = flag.variant
         }
-        return result;
-      });
+        return result
+      })
   },
   
   clear: (features, featuresIndex, name) => {
     const existingIndex = featuresIndex[name]
     if (typeof existingIndex === 'number') {
       features[existingIndex] = null
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+       
       delete featuresIndex[name]
     }
   }

@@ -102,7 +102,6 @@ export default (doc = document, win = window) => ({
       __proxy(win, fn, original =>
         __traceOriginalScript(original, (args: any) => ({
           get: () => args[0],
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
           replace: (fn: Function) => { args[0] = fn }
         }))
       )
@@ -130,8 +129,8 @@ export default (doc = document, win = window) => ({
       )
     })
 
-    function __traceOriginalScript (fn:any, callbackAccessor:any, alsoCallOriginal = false) {
-      return function (...args:any[]) {
+    function __traceOriginalScript (fn: any, callbackAccessor: any, alsoCallOriginal = false) {
+      return function (...args: any[]) {
         // this is required for removeEventListener to remove anything added with
         // addEventListener before the functions started being wrapped by Bugsnag
         try {
@@ -148,7 +147,7 @@ export default (doc = document, win = window) => ({
             // this function mustn't be annonymous due to a bug in the stack
             // generation logic, meaning it gets tripped up
             // see: https://github.com/stacktracejs/stack-generator/issues/6
-            cb.__trace__ = function __trace__ (...cbArgs:any[]) {
+            cb.__trace__ = function __trace__ (...cbArgs: any[]) {
               // set the script that called this function
               updateLastScript(script)
               // immediately unset the currentScript synchronously below, however

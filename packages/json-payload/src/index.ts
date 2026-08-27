@@ -1,5 +1,5 @@
-import type { EventDeliveryPayload, SessionDeliveryPayload } from "@bugsnag/core";
-import jsonStringify from '@bugsnag/safe-json-stringify';
+import type { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
+import jsonStringify from '@bugsnag/safe-json-stringify'
 
 type RedactedKey = string | RegExp
 

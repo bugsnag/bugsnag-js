@@ -4,7 +4,7 @@ module.exports = api => {
   const overrides = []
 
   if (api && api.env('test')) {
-    presets.push(['@babel/preset-env', {targets: {node: 'current'}}])
+    presets.push(['@babel/preset-env', { targets: { node: 'current' } }])
     presets.push('@babel/preset-typescript')
     plugins.push(['@babel/plugin-transform-class-properties', { loose: true }])
     plugins.push('@babel/plugin-transform-modules-commonjs')
@@ -42,21 +42,6 @@ module.exports = api => {
       ['@babel/syntax-object-rest-spread']
     )
   }
-
-  plugins.push(
-    ['@babel/plugin-transform-arrow-functions'],
-    ['@babel/plugin-transform-block-scoping'],
-    ['@babel/plugin-transform-classes', { loose: true }],
-    ['@babel/plugin-transform-computed-properties', { loose: true }],
-    ['@babel/plugin-transform-destructuring', { loose: true }],
-    ['@babel/plugin-transform-member-expression-literals'],
-    ['@babel/plugin-transform-property-literals'],
-    ['@babel/plugin-transform-parameters', { loose: true }],
-    ['@babel/plugin-transform-shorthand-properties'],
-    ['@babel/plugin-transform-spread', { loose: true }],
-    ['@babel/plugin-transform-template-literals', { loose: true }],
-    ['@babel/plugin-transform-object-rest-spread', { loose: true }]
-  )
 
   if (api && !api.env('test')) {
     api.cache(false)

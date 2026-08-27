@@ -1,4 +1,5 @@
-import { nodeFallbackStack, type OnErrorCallback, type Plugin } from '@bugsnag/core'
+import { nodeFallbackStack } from '@bugsnag/core'
+import type { OnErrorCallback, Plugin } from '@bugsnag/core'
 
 type ErrorCallback = OnErrorCallback
 type SuccessCallback<T extends unknown[]> = (...args: T) => void

@@ -12,7 +12,7 @@ const metadataDelegate: MetadataDelegate = {
     let updates
 
     // addMetadata("section", null) -> clears section
-    if (keyOrObj === null) return metadataDelegate.clear(state, section);
+    if (keyOrObj === null) return metadataDelegate.clear(state, section)
 
     // normalise the two supported input types into object form
     if (typeof keyOrObj === 'object') updates = keyOrObj
@@ -49,7 +49,6 @@ const metadataDelegate: MetadataDelegate = {
 
     // clear an entire section
     if (!key) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete state[section]
       return
     }
@@ -61,10 +60,9 @@ const metadataDelegate: MetadataDelegate = {
 
     // clear a single value from a section
     if (state[section]) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete state[section][key]
     }
   }
 }
 
-export default metadataDelegate;
+export default metadataDelegate

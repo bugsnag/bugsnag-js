@@ -700,7 +700,7 @@ describe('Client', () => {
           done()
         }
       }))
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+       
       const sessionClient = client.startSession()!
       sessionClient.notify(new Error('broke'))
       sessionClient._notify(new Event('err', 'bad', [], { unhandled: true, severity: 'error', severityReason: { type: 'unhandledException' } }))

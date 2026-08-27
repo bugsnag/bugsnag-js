@@ -1,6 +1,5 @@
-import { schema } from '@bugsnag/core'
+import { schema, Client, User, Plugin, Event, FeatureFlag } from '@bugsnag/core'
 import BugsnagIpcMain from '../bugsnag-ipc-main'
-import { Client, User, Plugin, Event, FeatureFlag } from '@bugsnag/core'
 
 const mockClientStateManagerPlugin = {
   name: 'clientStateManager',

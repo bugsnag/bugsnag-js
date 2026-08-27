@@ -27,7 +27,7 @@ describe('delivery: react native makeSafe', () => {
 
     const result = derecursify(data)
 
-    /* eslint-disable-next-line @typescript-eslint/no-dynamic-delete */
+     
     delete data[symbol] // we don't copy Symbol keys over
     expect(result).toStrictEqual({
       ...data,

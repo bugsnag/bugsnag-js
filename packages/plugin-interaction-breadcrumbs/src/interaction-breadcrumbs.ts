@@ -15,7 +15,7 @@ export default (win = window): Plugin => ({
         targetSelector = getNodeSelector(event.target, win)
       } catch (e) {
         targetText = '[hidden]'
-        targetSelector = '[hidden]';
+        targetSelector = '[hidden]'
         client._logger.error('Cross domain error when tracking click event. See docs: https://tinyurl.com/yy3rn63z')
       }
       client.leaveBreadcrumb('UI click', { targetText, targetSelector }, 'user')

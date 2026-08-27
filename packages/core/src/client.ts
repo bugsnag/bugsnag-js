@@ -1,23 +1,3 @@
-<<<<<<< HEAD:packages/core/client.js
-const config = require('./config')
-const Event = require('./event')
-const Breadcrumb = require('./breadcrumb')
-const Session = require('./session')
-const map = require('./lib/es-utils/map')
-const includes = require('./lib/es-utils/includes')
-const filter = require('./lib/es-utils/filter')
-const reduce = require('./lib/es-utils/reduce')
-const keys = require('./lib/es-utils/keys')
-const assign = require('./lib/es-utils/assign')
-const runCallbacks = require('./lib/callback-runner')
-const metadataDelegate = require('./lib/metadata-delegate')
-const runSyncCallbacks = require('./lib/sync-callback-runner')
-const BREADCRUMB_TYPES = require('./lib/breadcrumb-types')
-const { add, clear, merge } = require('./lib/feature-flag-delegate')
-const SECONDARY_ENDPOINT_API_KEY_PREFIX = '00000'
-const SECONDARY_NOTIFY_ENDPOINT = 'https://notify.bugsnag.smartbear.com'
-const SECONDARY_SESSIONS_ENDPOINT = 'https://sessions.bugsnag.smartbear.com'
-=======
 import configSchema from './config'
 import Event from './event'
 import Breadcrumb from './breadcrumb'
@@ -26,13 +6,14 @@ import runCallbacks from './lib/callback-runner'
 import metadataDelegate from './lib/metadata-delegate'
 import runSyncCallbacks from './lib/sync-callback-runner'
 import featureFlagDelegate from './lib/feature-flag-delegate'
-
 import { BreadcrumbType, BREADCRUMB_TYPES, Config, Delivery, FeatureFlag, LoggerConfig, NotifiableError, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
+const SECONDARY_ENDPOINT_API_KEY_PREFIX = '00000'
+const SECONDARY_NOTIFY_ENDPOINT = 'https://notify.bugsnag.smartbear.com'
+const SECONDARY_SESSIONS_ENDPOINT = 'https://sessions.bugsnag.smartbear.com'
 
 const HUB_PREFIX = '00000'
 const HUB_NOTIFY = 'https://notify.insighthub.smartbear.com'
 const HUB_SESSION = 'https://sessions.insighthub.smartbear.com'
->>>>>>> 3a1e1d652 (refactor core package):packages/core/src/client.ts
 
 const noop = () => { }
 
@@ -307,7 +288,7 @@ export default class Client<T extends Config = Config> {
   }
 
   removeOnError (fn: OnErrorCallback) {
-    this._cbs.e = this._cbs.e.filter( f => f !== fn)
+    this._cbs.e = this._cbs.e.filter(f => f !== fn)
   }
 
   _addOnSessionPayload (fn: OnSessionCallback) {
@@ -319,7 +300,7 @@ export default class Client<T extends Config = Config> {
   }
 
   removeOnSession (fn: OnSessionCallback) {
-    this._cbs.s = this._cbs.s.filter( f => f !== fn)
+    this._cbs.s = this._cbs.s.filter(f => f !== fn)
   }
 
   addOnBreadcrumb (fn: OnBreadcrumbCallback, front = false) {
@@ -327,7 +308,7 @@ export default class Client<T extends Config = Config> {
   }
 
   removeOnBreadcrumb (fn: OnBreadcrumbCallback) {
-    this._cbs.b = this._cbs.b.filter( f => f !== fn)
+    this._cbs.b = this._cbs.b.filter(f => f !== fn)
   }
 
   pauseSession () {
@@ -436,7 +417,7 @@ export default class Client<T extends Config = Config> {
 
       this._delivery.sendEvent({
         apiKey: event.apiKey || this._config.apiKey,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+         
         notifier: this._notifier!,
         events: [event]
       }, (err) => postReportCallback(err, event))

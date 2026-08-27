@@ -23,11 +23,8 @@ Gemfile.lock
 .idea/
 .vscode/
 *.iml
-<<<<<<< HEAD
 zscaler-root-ca.crt*
 .gitleaks-baseline.json
 .gitleaks.toml
 .pre-commit-config.yaml
-=======
 .ts38-validation
->>>>>>> 3a1e1d652 (refactor core package)

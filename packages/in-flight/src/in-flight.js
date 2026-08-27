@@ -9,7 +9,7 @@ const noop = () => {}
 // when a client is cloned, make sure to patch the clone's notify method too
 // we don't need to patch delivery when a client is cloned because the
 // original client's delivery method will be copied over to the clone
-cloneClient.registerCallback(patchNotify);
+cloneClient.registerCallback(patchNotify)
 
 module.exports = {
   trackInFlight (client) {

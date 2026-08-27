@@ -1,6 +1,6 @@
 
 import EventWithInternals from '@bugsnag/core/event'
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+ 
 import plugin from '../src/session'
 import { Client, EventDeliveryPayload } from '@bugsnag/core'
 

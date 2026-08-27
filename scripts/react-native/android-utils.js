@@ -10,7 +10,6 @@ module.exports = {
     // RN 0.82+ uses a manifest placeholder that's autoconfigured by the RN gradle plugin
      
     if (androidManifestContents.includes('${usesCleartextTraffic}')) {
-       
       androidManifestContents = androidManifestContents.replace('${usesCleartextTraffic}', 'true')
     } else {
       androidManifestContents = androidManifestContents.replace('<application', '<application android:usesCleartextTraffic="true"')

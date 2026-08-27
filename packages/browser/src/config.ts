@@ -3,7 +3,8 @@ import getPrefixedConsole from './get-prefixed-console'
 
 const config = {
   releaseStage: {
-    ...schema.releaseStage, ...{
+    ...schema.releaseStage,
+...{
       defaultValue: () => {
         if (/^localhost(:\d+)?$/.test(window.location.host)) return 'development'
         return 'production'
@@ -11,12 +12,14 @@ const config = {
     }
   },
   appType: {
-    ...schema.appType, ...{
+    ...schema.appType,
+...{
       defaultValue: () => 'browser'
     }
   },
   logger: {
-    ...schema.logger, ...{
+    ...schema.logger,
+...{
       defaultValue: () =>
         // set logger based on browser capability
         (typeof console !== 'undefined' && typeof console.debug === 'function')

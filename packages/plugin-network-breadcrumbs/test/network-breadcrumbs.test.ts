@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+ 
 import plugin from '../src/network-breadcrumbs'
 
-import { Client } from '@bugsnag/core'
-import { Config } from '@bugsnag/core'
+import { Client, Config } from '@bugsnag/core'
 
 class XMLHttpRequest {
   _listeners: { load: Array<() => void>, error: Array<() => void> }

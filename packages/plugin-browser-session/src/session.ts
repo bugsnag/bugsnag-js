@@ -47,7 +47,7 @@ const sessionDelegate: SessionDelegate = {
     }
 
     // Otherwise start a new session
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     return client.startSession()!
   },
   pauseSession: (client: Client) => {

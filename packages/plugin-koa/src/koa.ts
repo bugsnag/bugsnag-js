@@ -59,7 +59,7 @@ const plugin: Plugin = {
         event.request = { ...event.request, ...request }
         event.addMetadata('request', metadata)
         if (event._handledState.severityReason.type === 'unhandledException') {
-          event.severity = 'error';
+          event.severity = 'error'
           // @ts-expect-error override readonly property
           event._handledState = handledState
         }

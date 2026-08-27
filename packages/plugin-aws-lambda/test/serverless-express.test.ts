@@ -167,7 +167,7 @@ function makeClient () {
 
 function makeExpressApp (client: Client) {
   const app = express()
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+   
   const middleware = client.getPlugin('express')!
 
   app.use(middleware.requestHandler)
@@ -201,7 +201,7 @@ function makeExpressApp (client: Client) {
 
 function makeLambdaHandler (client: Client) {
   const app = makeExpressApp(client)
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+   
   const bugsnagHandler = client.getPlugin('awsLambda')!.createHandler()
 
   return bugsnagHandler(serverlessExpress({ app }))

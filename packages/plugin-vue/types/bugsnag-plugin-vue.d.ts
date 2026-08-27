@@ -17,7 +17,7 @@ type VueErrorHandler = (err: any, instance: any, info: any) => void
 
  
 interface BugsnagPluginVue extends Plugin { }
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+ 
 declare class BugsnagPluginVue {
   constructor(Vue?: VueConstructor)
 }

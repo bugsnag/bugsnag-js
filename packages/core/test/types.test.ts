@@ -45,7 +45,7 @@ describe('Type definitions', () => {
 
   it('works for reporting sessions', () => {
     const client = createClient({ apiKey: 'API_KEY' })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const sessionClient = client.startSession()!
     sessionClient.notify(new Error('oh'))
     client.pauseSession()

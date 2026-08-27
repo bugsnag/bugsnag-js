@@ -12,7 +12,10 @@ const plugin: Plugin = {
   load: client => {
     const internalClient = client as InternalClient
 
-    const contextualize = <T>(fn: () => T | Promise<T>, onError?: OnErrorCallback): T | Promise<T> => {
+    const contextualize = <T>(
+      fn: () => T | Promise<T>,
+      onError?: OnErrorCallback
+    ): T | Promise<T> => {
       // capture a stacktrace in case a resulting error has nothing
       const fallbackStack = nodeFallbackStack.getStack()
 
@@ -23,11 +26,17 @@ const plugin: Plugin = {
       // handler does not need this because it gets a stacktrace
       clonedClient.fallbackStack = fallbackStack
 
-      if(onError) {
-          clonedClient.addOnError(onError)
+      if (onError) {
+        clonedClient.addOnError(onError)
       }
 
-      return internalClient._clientContext.run(clonedClient, fn)
+      let result: T | Promise<T> | undefined
+
+      internalClient._clientContext.run(clonedClient, () => {
+        result = fn()
+      })
+
+      return result as T | Promise<T>
     }
 
     return contextualize
