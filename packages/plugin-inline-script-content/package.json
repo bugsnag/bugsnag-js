@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-inline-script-content",
-  "version": "8.9.0",
+  "version": "8.10.0",
   "type": "module",
   "main": "./dist/cjs/inline-script-content.js",
   "module": "./dist/esm/inline-script-content.js",
