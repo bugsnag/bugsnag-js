@@ -31,9 +31,9 @@ export interface Spec extends TurboModule {
 
   dispatchAsync(payload: UnsafeObject): Promise<boolean>
 
-  getPayloadInfo(payload: UnsafeObject): object
+  getPayloadInfo(payload: UnsafeObject): UnsafeObject
 
-  getPayloadInfoAsync(payload: UnsafeObject): Promise<unknown>
+  getPayloadInfoAsync(payload: UnsafeObject): Promise<UnsafeObject>
 
   addFeatureFlag(name: string, variant: string | undefined | null): void
 

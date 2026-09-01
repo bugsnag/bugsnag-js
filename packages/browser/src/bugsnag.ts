@@ -85,10 +85,10 @@ const notifier: BrowserClient = {
 
     // configure a client with user supplied options
     // @ts-expect-error schema includes browser-specific keys not in the base Config type
-    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
+    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url });
 
     // @ts-expect-error _setDelivery is not in Partial<Client> but exists on the Client instance
-    ;(bugsnag as BrowserClient)._setDelivery?.(dXMLHttpRequest)
+    (bugsnag as BrowserClient)._setDelivery?.(dXMLHttpRequest)
 
     bugsnag._logger.debug('Loaded!')
     bugsnag.leaveBreadcrumb('Bugsnag loaded', {}, 'state')
