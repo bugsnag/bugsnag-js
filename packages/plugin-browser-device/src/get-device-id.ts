@@ -8,9 +8,8 @@ const getDeviceId = (win: Window) => {
 
     let id = storage.getItem(BUGSNAG_ANONYMOUS_ID_KEY)
 
-    // If we get an ID, make sure it looks like a valid cuid. The length can
-    // fluctuate slightly, so some leeway is built in
-    if (id && /^c[a-z0-9]{20,32}$/.test(id)) {
+    // If we get an ID, make sure it looks like a valid cuid
+    if (id && cuid.isCuid(id)) {
       return id
     }
 

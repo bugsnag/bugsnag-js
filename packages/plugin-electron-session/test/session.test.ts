@@ -77,7 +77,7 @@ describe('plugin: electron sessions', () => {
   })
 
   it('starts a session when the app returns to the foreground after being in the background for 60 seconds', () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const BrowserWindow = makeBrowserWindow()
     const app = makeApp({ BrowserWindow })
@@ -127,7 +127,7 @@ describe('plugin: electron sessions', () => {
   })
 
   it('does not start a session when the app switches between foreground and background', () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const BrowserWindow = makeBrowserWindow()
     const app = makeApp({ BrowserWindow })
@@ -183,7 +183,7 @@ describe('plugin: electron sessions', () => {
   })
 
   it('does not start a session when autoTrackSessions is disabled', () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const BrowserWindow = makeBrowserWindow()
     const app = makeApp({ BrowserWindow })
@@ -277,7 +277,7 @@ describe('plugin: electron sessions', () => {
   })
 
   it('does not update the native session when nativeCrashes is disabled', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
     const BrowserWindow = makeBrowserWindow()
     const app = makeApp({ BrowserWindow })
 
@@ -313,7 +313,7 @@ describe('plugin: electron sessions', () => {
   })
 
   it('does not update the native session when autoDetectErrors is disabled', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
     const BrowserWindow = makeBrowserWindow()
     const app = makeApp({ BrowserWindow })
 

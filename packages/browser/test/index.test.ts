@@ -1,4 +1,4 @@
-import BugsnagBrowserStatic, { Breadcrumb, BrowserConfig, Session } from '../'
+import BugsnagBrowserStatic, { Breadcrumb, BrowserConfig, Session } from '../src/notifier'
 
 const DONE = window.XMLHttpRequest.DONE
 
@@ -31,12 +31,12 @@ function mockFetch (onSessionSend?: SendCallback, onNotifySend?: SendCallback) {
   const session = makeMockXHR(onSessionSend)
   const notify = makeMockXHR(onNotifySend)
 
-  // @ts-expect-error assigning mock to readonly XMLHttpRequest property
+  // @ts-ignore
   window.XMLHttpRequest = jest.fn()
     .mockImplementationOnce(() => session)
     .mockImplementationOnce(() => notify)
     .mockImplementation(() => makeMockXHR(() => {}))
-  // @ts-expect-error assigning DONE constant to mock XMLHttpRequest
+  // @ts-ignore
   window.XMLHttpRequest.DONE = DONE
 
   return { session, notify }
@@ -55,10 +55,11 @@ describe('browser notifier', () => {
     jest.resetModules()
   })
 
-  function getBugsnag (): typeof BugsnagBrowserStatic {
-    const Bugsnag = require('../src/bugsnag').default
-    return Bugsnag
-  }
+function getBugsnag (): typeof BugsnagBrowserStatic {
+  // Update path from '../src/notifier' to '../src/bugsnag'
+  const Bugsnag = (require('../src/bugsnag').default || require('../src/bugsnag')) as typeof BugsnagBrowserStatic
+  return Bugsnag
+}
 
   it('accepts plugins', () => {
     const Bugsnag = getBugsnag()
@@ -102,7 +103,7 @@ describe('browser notifier', () => {
         type: 'state',
         message: 'Bugsnag loaded'
       }))
-      expect((event.originalError as Error).message).toBe('123')
+      expect(event.originalError.message).toBe('123')
     })
   })
 
@@ -110,7 +111,7 @@ describe('browser notifier', () => {
     mockFetch(onSessionSend, onNotifySend)
 
     const Bugsnag = getBugsnag()
-    // @ts-expect-error intentionally passing incomplete endpoints config
+    // @ts-expect-error
     Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
     Bugsnag.notify(new Error('123'), undefined, (err, event) => {
       expect(err).toStrictEqual(new Error('Event not sent due to incomplete endpoint configuration'))
@@ -120,7 +121,7 @@ describe('browser notifier', () => {
   it('does not send a session with invalid configuration', (done) => {
     const { session } = mockFetch()
     const Bugsnag = getBugsnag()
-    // @ts-expect-error intentionally passing incomplete endpoints config
+    // @ts-expect-error
     Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
     Bugsnag.startSession()
 
@@ -155,7 +156,7 @@ describe('browser notifier', () => {
   it('accepts all config options', (done) => {
     const Bugsnag = getBugsnag()
 
-    const completeConfig: BrowserConfig = {
+    const completeConfig: Required<BrowserConfig> = {
       apiKey: API_KEY,
       appVersion: '1.2.3',
       appType: 'worker',
@@ -165,7 +166,7 @@ describe('browser notifier', () => {
         unhandledRejections: true
       },
       onError: [
-        () => true
+        event => true
       ],
       onBreadcrumb: (b: Breadcrumb) => {
         return false
@@ -204,7 +205,7 @@ describe('browser notifier', () => {
         done(err)
       }
       expect(event.breadcrumbs.length).toBe(0)
-      expect((event.originalError as Error).message).toBe('123')
+      expect(event.originalError.message).toBe('123')
       expect(event.getMetadata('debug')).toEqual({ foo: 'bar' })
       done()
     })
@@ -235,7 +236,6 @@ describe('browser notifier', () => {
     it('resets events on pushState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
-      // @ts-expect-error accessing private method for test spying
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.pushState('', '', 'new-url')
@@ -248,7 +248,6 @@ describe('browser notifier', () => {
     it('does not reset events on replaceState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
-      // @ts-expect-error accessing private method for test spying
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.replaceState('', '', 'new-url')
@@ -276,10 +275,12 @@ describe('browser notifier', () => {
 
   describe('payload checksum behavior (Bugsnag-Integrity header)', () => {
     beforeEach(() => {
+      // @ts-ignore
       window.isSecureContext = true
     })
 
     afterEach(() => {
+      // @ts-ignore
       window.isSecureContext = false
     })
 

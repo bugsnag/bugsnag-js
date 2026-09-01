@@ -26,7 +26,8 @@ const safelyGetProp = (obj: object, propName: string) => {
  * @returns a safe version of the given `data`
  */
 const derecursify = (data: unknown): object => {
-  const seen: Array<object | []> = []
+  // empty tuple type annotation crashes @typescript-eslint/parser here, use any[] instead
+  const seen: any[] = []
 
   const visit = (obj: unknown): any => {
     if (obj === null || obj === undefined) return obj
@@ -102,4 +103,3 @@ const derecursify = (data: unknown): object => {
 }
 
 export { derecursify }
-

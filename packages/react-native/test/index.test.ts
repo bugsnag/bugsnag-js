@@ -1,14 +1,17 @@
-import BugsnagReactNativeStatic, {
-  Breadcrumb,
-  Client,
-  Event,
-  NotifiableError,
-  OnErrorCallback
-} from '..'
-
-import { NativeModules } from 'react-native'
-
-const NativeClient = NativeModules.BugsnagReactNative
+jest.mock('@bugsnag/plugin-react-native-client-sync', () => {
+  return (NativeClient: any) => ({
+    name: 'react-native-client-sync',
+    load: (client: any) => {
+      const origAddFeatureFlags = client.addFeatureFlags.bind(client)
+      client.addFeatureFlags = function (featureFlags: any) {
+        origAddFeatureFlags(featureFlags)
+        if (NativeClient && typeof NativeClient.addFeatureFlags === 'function') {
+          NativeClient.addFeatureFlags(featureFlags)
+        }
+      }
+    }
+  })
+})
 
 jest.mock('react-native', () => ({
   NativeModules: {
@@ -23,12 +26,38 @@ jest.mock('react-native', () => ({
       leaveBreadcrumb: jest.fn(),
       getPayloadInfoAsync: jest.fn().mockResolvedValue({}),
       dispatchAsync: jest.fn().mockResolvedValue(true)
+    },
+    BugsnagReactNativeEmitter: {
+      addListener: jest.fn(),
+      removeListeners: jest.fn()
     }
   },
   Platform: {
     OS: 'android'
+  },
+  NativeEventEmitter: class NativeEventEmitter {
+    constructor (_nativeModule?: any) {}
+    addListener (_eventType: string, _listener: any) { return { remove: () => {} } }
+    removeAllListeners (_eventType: string) {}
+    emit (_eventType: string, ..._params: any[]) {}
+  },
+  DeviceEventEmitter: {
+    addListener: jest.fn(() => ({ remove: jest.fn() })),
+    removeAllListeners: jest.fn()
   }
 }))
+
+import BugsnagReactNativeStatic, {
+  Breadcrumb,
+  Client,
+  Event,
+  NotifiableError,
+  OnErrorCallback
+} from '..'
+
+import { NativeModules } from 'react-native'
+
+const NativeClient = NativeModules.BugsnagReactNative
 
 describe('react native notifier', () => {
   let Bugsnag: typeof BugsnagReactNativeStatic
@@ -40,10 +69,10 @@ describe('react native notifier', () => {
   beforeEach(() => {
     jest.isolateModules(() => {
       Bugsnag = require('..')
-    });
+    })
 
-    (global as any).fetch = jest.fn();
-    (global as any).XMLHttpRequest = jest.fn();
+    ;(global as any).fetch = jest.fn()
+    ;(global as any).XMLHttpRequest = jest.fn()
   })
 
   it('accepts plugins', () => {

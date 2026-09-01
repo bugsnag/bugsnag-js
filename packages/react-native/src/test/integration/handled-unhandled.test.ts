@@ -1,4 +1,10 @@
-import { NativeClient } from '../../native'
+// FIX: Mock plugin-react-native-client-sync as a factory function before imports
+jest.mock('@bugsnag/plugin-react-native-client-sync', () => {
+  return () => ({
+    name: 'react-native-client-sync',
+    load: () => {}
+  })
+})
 
 jest.mock('react-native', () => {
   const events: any[] = []
@@ -25,19 +31,33 @@ jest.mock('react-native', () => {
         resumeSessionOnStartup: () => {},
         pauseSession: () => {},
         startSession: () => {}
+      },
+      BugsnagReactNativeEmitter: {
+        addListener: () => {},
+        removeListeners: () => {}
       }
     },
     Platform: {
       OS: 'android'
     },
-    NativeEventEmitter: function () {},
-    DeviceEventEmitter: { addListener: () => {} }
+    NativeEventEmitter: class NativeEventEmitter {
+      constructor (_nativeModule?: any) {}
+      addListener (_eventType: string, _listener: any) { return { remove: () => {} } }
+      removeAllListeners (_eventType: string) {}
+      emit (_eventType: string, ..._params: any[]) {}
+    },
+    DeviceEventEmitter: {
+      addListener: () => ({ remove: () => {} }),
+      removeAllListeners: () => {}
+    }
   }
 })
 
+import { NativeClient } from '../../native'
+
 // @ts-expect-error no type declarations for promise/setimmediate
-import rnPromise from 'promise/setimmediate'  
- 
+import rnPromise from 'promise/setimmediate'
+
 import Bugsnag from '../../..'
 
 declare global {
@@ -63,7 +83,7 @@ beforeAll(() => {
   Bugsnag.start()
 })
 
-// clear the https mock's record of requests between tests
+// clear the native mock's record of events between tests
 beforeEach(() => NativeClient._clear())
 
 describe('@bugsnag/react-native: handled and unhandled errors', () => {
@@ -94,7 +114,7 @@ describe('@bugsnag/react-native: handled and unhandled errors', () => {
 
   it('should send an unhandled rejection', (done) => {
     // we can't actually reject an error because that will fail the test, but we
-    // can send an mocked promise rejection event
+    // can send a mocked promise rejection event
     try {
       // @ts-expect-error calling non-existent method to trigger TypeError
       'sdf'.sdflkj()

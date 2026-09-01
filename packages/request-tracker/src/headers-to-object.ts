@@ -1,10 +1,10 @@
-export default function headersToObject(headers: Headers): Record<string, string> {
+export default function headersToObject (headers: Headers): Record<string, string> {
   if (!headers) return {}
 
   const obj: Record<string, string> = {}
 
   const entries = (headers as Headers & {
-    entries?: () => IterableIterator<[string, string]>
+    entries?: () => IterableIterator<string[]>
   }).entries
 
   if (typeof entries === 'function') {

@@ -1,33 +1,10 @@
 const testsForPackage = (packageName) => `<rootDir>/packages/${packageName}/**/*.test.[jt]s?(x)`
 
-const defaultModuleConfig = {
-  preset: 'ts-jest/presets/js-with-ts',
-
-  transform: {
-    '^.+\\.m?[tj]sx?$': [
-      'ts-jest',
-      {
-        isolatedModules: true,
-        tsconfig: {
-          module: 'commonjs',
-          target: 'ES2019',
-          esModuleInterop: true,
-          allowSyntheticDefaultImports: true,
-          allowJs: true,
-          skipLibCheck: true,
-          jsx: 'react'
-        }
-      }
-    ]
-  }
-}
-
-const project = (displayName, packageNames, customConfig = {}) => ({
-  ...defaultModuleConfig,
+const project = (displayName, packageNames, config = {}) => ({
   roots: ['<rootDir>/packages'],
   displayName,
   testMatch: packageNames.map(testsForPackage),
-  ...customConfig
+  ...config
 })
 
 const extensions = 'js,jsx,ts,tsx'
@@ -36,52 +13,29 @@ module.exports = {
   modulePathIgnorePatterns: [
     '<rootDir>/packages/[^/]+/dist/'
   ],
-
-  testTimeout: 10000,
-
-  workerIdleMemoryLimit: '1GB',
-
   collectCoverageFrom: [
-    `**/packages/*/src/**/*.{${extensions}}`,
+    `**/packages/*/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,
     `!**/*.test-*.{${extensions}}`,
     '!**/*.d.ts',
     '!**/dist/**',
-    '!**/node_modules/**',
     '!**/packages/js/**',
     '!<rootDir>/packages/plugin-angular/**/*',
     '!<rootDir>/packages/react-native/src/test/setup.js',
     '!<rootDir>/packages/plugin-node-surrounding-code/test/fixtures/**/*'
   ],
-
   coverageReporters: [
-    'json-summary',
-    'json',
-    'lcov',
-    'text',
-    'clover'
+    'json-summary', 'json', 'lcov', 'text', 'clover'
   ],
-
   projects: [
-    project('core', ['core'], {
-      testEnvironment: 'node'
-    }),
-
-    project('utilities', ['derecursify', 'json-payload'], {
-      testEnvironment: 'node'
-    }),
-
+    project('core', ['core']),
     project('web workers', ['web-worker'], {
       testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js'
     }),
-
-    project('shared plugins', [
-      'plugin-app-duration',
-      'plugin-stackframe-path-normaliser'
-    ]),
-
+    project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser', 'request-tracker']),
     project('browser', [
       'browser',
+      'delivery-x-domain-request',
       'delivery-xml-http-request',
       'delivery-fetch',
       'plugin-react',
@@ -100,12 +54,11 @@ module.exports = {
       'plugin-simple-throttle',
       'plugin-console-breadcrumbs',
       'plugin-browser-session',
-      'plugin-network-instrumentation',
-      'request-tracker'
+      'plugin-network-instrumentation'
     ], {
-      testEnvironment: 'jsdom'
+      testEnvironment: '<rootDir>/jest/FixJSDOMEnvironment.js',
+      modulePathIgnorePatterns: ['.verdaccio', 'dist', 'examples', 'fixtures']
     }),
-
     project('react native', [
       'react-native',
       'delivery-react-native',
@@ -122,30 +75,13 @@ module.exports = {
       'plugin-react-native-navigation'
     ], {
       preset: 'react-native',
-
-      testEnvironment: 'node',
-
       setupFiles: [
         '<rootDir>/packages/react-native/src/test/setup.js'
       ],
-
-      /*
-       * React Native packages contain Flow syntax and must be processed
-       * with Babel. Do not use ts-jest for this project.
-       */
-      transform: {
-        '^.+\\.[jt]sx?$': 'babel-jest'
-      },
-
-      /*
-       * Jest normally ignores node_modules. These React Native packages
-       * must be transformed because they contain Flow/React Native syntax.
-       */
       transformIgnorePatterns: [
-        'node_modules/(?!(react-native|@react-native|@react-navigation|jest-react-native|@react-native-community)/)'
+        'node_modules/(?!(react-native|@react-native|jest-react-native|@react-native-community)/)'
       ]
     }),
-
     project('node plugins', [
       'delivery-node',
       'in-flight',
@@ -166,16 +102,14 @@ module.exports = {
     ], {
       testEnvironment: 'node'
     }),
-
-    project('node integration tests', [], {
+    project('node integration tests', [
+    ], {
       testEnvironment: 'node',
-
       testMatch: [
         '<rootDir>/packages/node/test/**/*.test.[jt]s',
         '<rootDir>/packages/node/test/integration/**/*.test.[jt]s'
       ]
     }),
-
     project('electron', [
       'delivery-electron',
       'electron',
@@ -201,24 +135,14 @@ module.exports = {
       'plugin-electron-session',
       'plugin-internal-callback-marker'
     ], {
-      setupFilesAfterEnv: [
-        '<rootDir>/test/electron/setup.ts'
-      ],
-
-      testEnvironment: 'node',
-      clearMocks: true
+      setupFilesAfterEnv: ['<rootDir>/test/electron/setup.ts'],
+      clearMocks: true,
+      modulePathIgnorePatterns: ['.verdaccio', 'fixtures']
     }),
-
-    project('react native cli', ['react-native-cli'], {
-      testEnvironment: 'node'
-    }),
-
+    project('react native cli', ['react-native-cli'], { testEnvironment: 'node' }),
     project('cloudflare-workers', ['plugin-cloudflare-workers'], {
       testEnvironment: 'node',
-
-      setupFilesAfterEnv: [
-        '<rootDir>/packages/plugin-cloudflare-workers/test/setup.ts'
-      ]
+      setupFilesAfterEnv: ['<rootDir>/packages/plugin-cloudflare-workers/test/setup.ts']
     })
   ]
 }

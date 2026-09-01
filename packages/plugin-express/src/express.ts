@@ -1,7 +1,6 @@
 import type { Client, Plugin } from '@bugsnag/core'
 import { cloneClient } from '@bugsnag/core'
 import type { AsyncLocalStorage } from 'async_hooks'
-import type { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
 import type * as express from 'express'
 import extractRequestInfo from './request-info'
 import type { RequestInfo } from './request-info'
@@ -21,7 +20,7 @@ declare module '@bugsnag/core' {
 }
 
 interface BugsnagPluginExpressResult {
-  errorHandler: ErrorRequestHandler
+  errorHandler: express.ErrorRequestHandler
   requestHandler: express.RequestHandler
   runInContext: express.RequestHandler
 }
@@ -55,7 +54,7 @@ const plugin: Plugin = {
   name: 'express',
   load: (client: Client): BugsnagPluginExpressResult => {
     const internalClient = client as InternalClient
-    const requestHandler = (req: Request, res: Response, next: NextFunction) => {
+    const requestHandler: express.RequestHandler = (req, res, next) => {
       // clone the client to be scoped to this request. If sessions are enabled, start one
       const requestClient = cloneClient(internalClient)
       if (requestClient._config.autoTrackSessions) {
@@ -80,7 +79,7 @@ const plugin: Plugin = {
       internalClient._clientContext.run(requestClient, next)
     }
 
-    const errorHandler: ErrorRequestHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+    const errorHandler: express.ErrorRequestHandler = (err, req, res, next) => {
       if (!internalClient._config.autoDetectErrors) return next(err)
 
       const event = internalClient.Event.create(err, false, handledState, 'express middleware', 1)
@@ -101,7 +100,7 @@ const plugin: Plugin = {
       next(err)
     }
 
-    const runInContext = (req: Request, res: Response, next: NextFunction) => {
+    const runInContext: express.RequestHandler = (req, res, next) => {
       (client as InternalClient)._clientContext.run(req.bugsnag as Client, next)
     }
 
@@ -109,8 +108,8 @@ const plugin: Plugin = {
   }
 }
 
-const getRequestAndMetadataFromReq = (req: Request): ExtractedRequestData => {
-  const { body, ...requestInfo } = extractRequestInfo(req as Request)
+const getRequestAndMetadataFromReq = (req: express.Request): ExtractedRequestData => {
+  const { body, ...requestInfo } = extractRequestInfo(req)
   return {
     metadata: requestInfo,
     request: {

@@ -1,6 +1,11 @@
 const { execFileSync } = require('child_process')
 const fs = require('fs')
 
+// The literal Gradle placeholder text written in AndroidManifest.xml by RN 0.82+.
+// Stored as a concatenation to avoid triggering the no-template-curly-in-string lint rule,
+// which would otherwise flag ${...} inside a plain string as a likely template-literal mistake.
+const CLEARTEXT_PLACEHOLDER = '$' + '{usesCleartextTraffic}'
+
 module.exports = {
   configureAndroidProject: function configureAndroidProject (fixtureDir, newArchEnabled) {
     // set android:usesCleartextTraffic="true" in AndroidManifest.xml
@@ -8,9 +13,8 @@ module.exports = {
     let androidManifestContents = fs.readFileSync(androidManifestPath, 'utf8')
 
     // RN 0.82+ uses a manifest placeholder that's autoconfigured by the RN gradle plugin
-     
-    if (androidManifestContents.includes('${usesCleartextTraffic}')) {
-      androidManifestContents = androidManifestContents.replace('${usesCleartextTraffic}', 'true')
+    if (androidManifestContents.includes(CLEARTEXT_PLACEHOLDER)) {
+      androidManifestContents = androidManifestContents.replace(CLEARTEXT_PLACEHOLDER, 'true')
     } else {
       androidManifestContents = androidManifestContents.replace('<application', '<application android:usesCleartextTraffic="true"')
     }

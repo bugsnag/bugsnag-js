@@ -109,12 +109,10 @@ export default class Client<T extends Config = Config> {
     // bound to have the client as its `this` value – see below.
     this._depth = 1
 
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
     const notify = this.notify
     this.notify = function () {
       // @ts-expect-error arguments object is not assignable to the typed notify parameters
-      // eslint-disable-next-line prefer-rest-params
       return notify.apply(self, arguments)
     }
   }

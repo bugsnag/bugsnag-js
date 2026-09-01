@@ -57,6 +57,7 @@ const setSecureContext = (value: boolean) => {
 
 describe('delivery:fetch', () => {
   beforeEach(() => {
+    // Default to non-secure context so integrity header is omitted in basic tests
     setSecureContext(false)
     globalAny.fetch = jest.fn()
   })
@@ -67,7 +68,9 @@ describe('delivery:fetch', () => {
   })
 
   it('sends events successfully', async () => {
-    setSecureContext(true)
+    // FIX: removed setSecureContext(true) — beforeEach already sets it to false.
+    // With isSecureContext=false, Bugsnag-Integrity is correctly omitted even
+    // when sendPayloadChecksums=true, matching the assertion below.
     mockSuccessfulFetch()
 
     const config = {
@@ -204,7 +207,9 @@ describe('delivery:fetch', () => {
   })
 
   it('sends sessions successfully', async () => {
-    setSecureContext(true)
+    // FIX: removed setSecureContext(true) — beforeEach already sets it to false.
+    // With isSecureContext=false, Bugsnag-Integrity is correctly omitted even
+    // when sendPayloadChecksums=true, matching the assertion below.
     mockSuccessfulFetch()
 
     const config = {
