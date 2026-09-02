@@ -13,7 +13,6 @@ module.exports = {
     filename: '[name].js'
   },
   plugins: [
-    new es3ifyPlugin(),
     new UglifyJsPlugin({ sourceMap: true, uglifyOptions: { compress: false, mangle: false } })
   ]
 }
