@@ -44,6 +44,7 @@ const INTERNAL_DEPENDENCIES = [
   '@bugsnag/delivery-react-native',
   '@bugsnag/plugin-console-breadcrumbs',
   '@bugsnag/plugin-network-breadcrumbs',
+  '@bugsnag/plugin-network-instrumentation',
   '@bugsnag/plugin-react',
   '@bugsnag/plugin-react-native-client-sync',
   '@bugsnag/plugin-react-native-event-sync',

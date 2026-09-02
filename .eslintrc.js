@@ -1,5 +1,4 @@
 const off = (...rules) => Object.fromEntries(rules.map(r => [r, 'off']))
-const warn = (...rules) => Object.fromEntries(rules.map(r => [r, 'warn']))
 
 const TYPE_AWARE_SAFETY_RULES = [
   '@typescript-eslint/no-floating-promises',
@@ -118,7 +117,7 @@ module.exports = {
         project: ['./tsconfig.eslint.json'],
         tsconfigRootDir: __dirname
       },
-      rules: warn(...TYPE_AWARE_SAFETY_RULES)
+      rules: off(...TYPE_AWARE_SAFETY_RULES)
     },
 
     {

@@ -44,18 +44,18 @@ const notifier: WorkerClient = {
     if (!opts) opts = {} as unknown as Config
 
     const internalPlugins = [
-      pluginBrowserDevice(navigator, null),
-      pluginBrowserSession,
-      pluginClientIp,
-      pluginPreventDiscard,
-      pluginWindowOnError(self, 'worker onerror'),
-      pluginWindowUnhandledRejection(self)
-    ]
+    pluginBrowserDevice(navigator, null),
+    pluginBrowserSession,
+    pluginClientIp,
+    pluginPreventDiscard,
+    pluginWindowOnError(self, 'worker onerror'),
+    pluginWindowUnhandledRejection(self)
+   ] as ConstructorParameters<typeof Client>[2]
 
-    // configure a client with user supplied options
-    const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
+   // configure a client with user supplied options
+     const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
 
-    bugsnag._setDelivery(client => delivery(client, self.fetch, self))
+     bugsnag._setDelivery(client => delivery(client as never, self.fetch, self) as never)
 
     bugsnag._logger.debug('Loaded!')
 

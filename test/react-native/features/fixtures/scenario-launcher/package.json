@@ -19,6 +19,7 @@
   "author": "BugSnag",
   "license": "MIT",
   "peerDependencies": {
+    "@bugsnag/plugin-network-instrumentation": "*",
     "react": "*",
     "react-native": "*",
     "react-native-file-access": "*"
