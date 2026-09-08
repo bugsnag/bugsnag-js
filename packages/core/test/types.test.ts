@@ -43,9 +43,10 @@ describe('Type definitions', () => {
     })
   })
 
+  // eslint-disable-next-line jest/expect-expect
   it('works for reporting sessions', () => {
     const client = createClient({ apiKey: 'API_KEY' })
-     
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const sessionClient = client.startSession()!
     sessionClient.notify(new Error('oh'))
     client.pauseSession()
@@ -59,18 +60,21 @@ describe('Type definitions', () => {
     expect((client as any)._breadcrumbs[0].message).toBe('testing 123')
   })
 
+  // eslint-disable-next-line jest/expect-expect
   it('works adding and removing onError callbacks', () => {
     const client = createClient({ apiKey: 'API_KEY' })
     client.addOnError(() => {})
     client.removeOnError(() => {})
   })
 
+  // eslint-disable-next-line jest/expect-expect
   it('works adding and removing onSession callbacks', () => {
     const client = createClient({ apiKey: 'API_KEY' })
     client.addOnSession(() => {})
     client.removeOnSession(() => {})
   })
 
+  // eslint-disable-next-line jest/expect-expect
   it('works adding and removing onBreadcrumb callbacks', () => {
     const client = createClient({ apiKey: 'API_KEY' })
     client.addOnBreadcrumb(() => {})

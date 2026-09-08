@@ -62,8 +62,7 @@
     "@bugsnag/plugin-react-native-hermes": "^8.9.0",
     "@bugsnag/plugin-react-native-session": "^8.9.0",
     "@bugsnag/plugin-react-native-unhandled-rejection": "^8.9.0",
-    "iserror": "^0.0.2",
-    "react-native": "^0.63.4"
+    "iserror": "^0.0.2"
   },
   "peerDependencies": {
     "react-native": "*"

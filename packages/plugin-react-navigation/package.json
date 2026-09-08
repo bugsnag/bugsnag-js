@@ -22,11 +22,12 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/core": "^8.9.0",
     "@react-navigation/native": "^5.7.3",
-    "react": "^18.2.0",
-    "react-native": "^0.75.0",
-    "react-test-renderer": "^18.2.0"
+    "@bugsnag/core": "^8.9.0",
+    "@types/react": "^16.9.49",
+    "@types/react-test-renderer": "^16.9.3",
+    "react": "^16.13.1",
+    "react-test-renderer": "^16.13.1"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0",
