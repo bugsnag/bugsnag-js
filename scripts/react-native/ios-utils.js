@@ -30,7 +30,7 @@ module.exports = {
         gemfileContents += '\ngem \'concurrent-ruby\', \'<= 1.3.4\''
       }
       if (!gemfileContents.includes('json')) {
-        gemfileContents += '\ngem \'json\', \'< 3.0.0\''
+        gemfileContents += '\ngem \'json\', \'< 2.7\''
       }
       fs.writeFileSync(gemfilePath, gemfileContents)
     }
