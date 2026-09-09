@@ -73,9 +73,16 @@ module.exports = {
       // enable hermes
       podfileContents = podfileContents.replace(':hermes_enabled => flags[:hermes_enabled]', ':hermes_enabled => true')
 
-      // fix boost issues - apply patch to fix the boost download url
-      const applyPatch = ['apply', '--ignore-whitespace', resolve(replacementFilesDir, 'patches/react-native-boost.patch')]
-      execFileSync('git', applyPatch, { cwd: fixtureDir, stdio: 'inherit' })
+      // fix boost issues - update the boost download URL directly
+      const boostPodspecPath = resolve(fixtureDir, 'node_modules/react-native/third-party-podspecs/boost.podspec')
+      if (fs.existsSync(boostPodspecPath)) {
+        let boostPodspecContents = fs.readFileSync(boostPodspecPath, 'utf8')
+        boostPodspecContents = boostPodspecContents.replace(
+          'https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.bz2',
+          'https://archives.boost.io/release/1.76.0/source/boost_1_76_0.tar.bz2'
+        )
+        fs.writeFileSync(boostPodspecPath, boostPodspecContents)
+      }
 
       // apply this build configuration to work around a boost issue in modern xcode versions: https://github.com/facebook/react-native/issues/37748#issuecomment-1580589448
       const boostPostInstallFix = `installer.pods_project.targets.each do |target|
