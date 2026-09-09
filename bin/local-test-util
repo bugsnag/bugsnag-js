@@ -121,7 +121,7 @@ async function buildNotifiers (notifier) {
 async function packNotifiers (notifier) {
   const notifiers = notifier
     ? [ notifier ]
-    : [ 'js', 'browser', 'node', 'web-worker', 'plugin-angular', 'plugin-react', 'plugin-vue', 'plugin-network-instrumentation' ]
+    : [ 'js', 'browser', 'browserlite', 'node', 'web-worker', 'plugin-angular', 'plugin-react', 'plugin-vue', 'plugin-network-instrumentation' ]
   for (const n of notifiers) {
     let packageLocation = `packages/${n}/`
     if (n === 'plugin-angular') packageLocation += 'dist/'
@@ -142,6 +142,7 @@ async function installNotifiers (notifier) {
     ]
     : [
       `../../../../bugsnag-browser-${require('../packages/browser/package.json').version}.tgz`,
+      `../../../../bugsnag-browserlite-${require('../packages/browserlite/package.json').version}.tgz`,
       `../../../../bugsnag-web-worker-${require('../packages/web-worker/package.json').version}.tgz`,
       `../../../../bugsnag-plugin-react-${require('../packages/plugin-react/package.json').version}.tgz`,
       `../../../../bugsnag-plugin-vue-${require('../packages/plugin-vue/package.json').version}.tgz`,

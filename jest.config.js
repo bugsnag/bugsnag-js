@@ -35,6 +35,7 @@ module.exports = {
     project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser', 'request-tracker']),
     project('browser', [
       'browser',
+      'browserlite',
       'delivery-x-domain-request',
       'delivery-xml-http-request',
       'delivery-fetch',
