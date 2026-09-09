@@ -1,13 +1,10 @@
-import { getMazeRunnerAddress, FALLBACK_ADDRESS } from './ConfigFileReader'
+import { getMazeRunnerAddress, readMazeRunnerAddress } from './ConfigFileReader'
 
 const INTERVAL = 500
 
-// On Android maze runner pushes the config file to /data/local/tmp, which is outside
-// the app sandbox and so survives reinstalls. The app can therefore start up holding
-// an address left behind by a previous session. That address may be dead, or - since
-// agents publish maze runner on a port range - may even be a live but unrelated maze
-// runner, which answers 'noop' forever. So keep re-reading the config file until a
-// real command arrives, rather than trusting the address we started with.
+// Until maze runner has given us a scenario to run we cannot be certain the address
+// we hold is this session's, so keep an eye on the config file. This is cheap and
+// stops once the first command arrives.
 const POLLS_BETWEEN_REREADS = 8
 
 let mazeAddress
@@ -44,15 +41,12 @@ export async function getCurrentCommand () {
       console.error(`[Bugsnag CommandRunner] Error fetching command from maze runner: ${err.message}`, err)
     }
 
-    // We have not been given a scenario yet, so the address we hold may be stale
-    // whether or not it is answering. Re-read the config file periodically until
-    // maze runner tells us what to run.
     if (++pollsSinceReread >= POLLS_BETWEEN_REREADS) {
       pollsSinceReread = 0
 
-      const currentAddress = await getMazeRunnerAddress(0)
+      const currentAddress = await readMazeRunnerAddress()
 
-      if (currentAddress !== mazeAddress && currentAddress !== FALLBACK_ADDRESS) {
+      if (currentAddress !== null && currentAddress !== mazeAddress) {
         console.error(`[Bugsnag CommandRunner] maze runner address changed from '${mazeAddress}' to '${currentAddress}', retrying there`)
         mazeAddress = currentAddress
       }
