@@ -1,4 +1,4 @@
-import BugsnagBrowserStatic, { Breadcrumb, BrowserConfig, Session } from '../src/notifier'
+import BugsnagBrowserStatic, { Breadcrumb, BrowserConfig, Session } from '../'
 
 const DONE = window.XMLHttpRequest.DONE
 
@@ -31,12 +31,12 @@ function mockFetch (onSessionSend?: SendCallback, onNotifySend?: SendCallback) {
   const session = makeMockXHR(onSessionSend)
   const notify = makeMockXHR(onNotifySend)
 
-  // @ts-ignore
+  // @ts-expect-error assigning mock to readonly XMLHttpRequest property
   window.XMLHttpRequest = jest.fn()
     .mockImplementationOnce(() => session)
     .mockImplementationOnce(() => notify)
     .mockImplementation(() => makeMockXHR(() => {}))
-  // @ts-ignore
+  // @ts-expect-error assigning DONE constant to mock XMLHttpRequest
   window.XMLHttpRequest.DONE = DONE
 
   return { session, notify }
@@ -55,11 +55,10 @@ describe('browser notifier', () => {
     jest.resetModules()
   })
 
-function getBugsnag (): typeof BugsnagBrowserStatic {
-  // Update path from '../src/notifier' to '../src/bugsnag'
-  const Bugsnag = (require('../src/bugsnag').default || require('../src/bugsnag')) as typeof BugsnagBrowserStatic
-  return Bugsnag
-}
+  function getBugsnag (): typeof BugsnagBrowserStatic {
+    const Bugsnag = require('../src/bugsnag').default
+    return Bugsnag
+  }
 
   it('accepts plugins', () => {
     const Bugsnag = getBugsnag()
@@ -103,7 +102,7 @@ function getBugsnag (): typeof BugsnagBrowserStatic {
         type: 'state',
         message: 'Bugsnag loaded'
       }))
-      expect(event.originalError.message).toBe('123')
+      expect((event.originalError as Error).message).toBe('123')
     })
   })
 
@@ -111,7 +110,7 @@ function getBugsnag (): typeof BugsnagBrowserStatic {
     mockFetch(onSessionSend, onNotifySend)
 
     const Bugsnag = getBugsnag()
-    // @ts-expect-error
+    // @ts-expect-error intentionally passing incomplete endpoints config
     Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
     Bugsnag.notify(new Error('123'), undefined, (err, event) => {
       expect(err).toStrictEqual(new Error('Event not sent due to incomplete endpoint configuration'))
@@ -121,7 +120,7 @@ function getBugsnag (): typeof BugsnagBrowserStatic {
   it('does not send a session with invalid configuration', (done) => {
     const { session } = mockFetch()
     const Bugsnag = getBugsnag()
-    // @ts-expect-error
+    // @ts-expect-error intentionally passing incomplete endpoints config
     Bugsnag.start({ apiKey: API_KEY, endpoints: { notify: 'https://notify.bugsnag.com' } })
     Bugsnag.startSession()
 
@@ -156,7 +155,7 @@ function getBugsnag (): typeof BugsnagBrowserStatic {
   it('accepts all config options', (done) => {
     const Bugsnag = getBugsnag()
 
-    const completeConfig: Required<BrowserConfig> = {
+    const completeConfig: BrowserConfig = {
       apiKey: API_KEY,
       appVersion: '1.2.3',
       appType: 'worker',
@@ -166,7 +165,7 @@ function getBugsnag (): typeof BugsnagBrowserStatic {
         unhandledRejections: true
       },
       onError: [
-        event => true
+        () => true
       ],
       onBreadcrumb: (b: Breadcrumb) => {
         return false
@@ -205,7 +204,7 @@ function getBugsnag (): typeof BugsnagBrowserStatic {
         done(err)
       }
       expect(event.breadcrumbs.length).toBe(0)
-      expect(event.originalError.message).toBe('123')
+      expect((event.originalError as Error).message).toBe('123')
       expect(event.getMetadata('debug')).toEqual({ foo: 'bar' })
       done()
     })
@@ -236,6 +235,7 @@ function getBugsnag (): typeof BugsnagBrowserStatic {
     it('resets events on pushState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
+      // @ts-expect-error accessing private method for test spying
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.pushState('', '', 'new-url')
@@ -248,6 +248,7 @@ function getBugsnag (): typeof BugsnagBrowserStatic {
     it('does not reset events on replaceState', () => {
       const Bugsnag = getBugsnag()
       const client = Bugsnag.createClient('API_KEY')
+      // @ts-expect-error accessing private method for test spying
       const resetEventCount = jest.spyOn(client, 'resetEventCount')
 
       window.history.replaceState('', '', 'new-url')
@@ -275,12 +276,10 @@ function getBugsnag (): typeof BugsnagBrowserStatic {
 
   describe('payload checksum behavior (Bugsnag-Integrity header)', () => {
     beforeEach(() => {
-      // @ts-ignore
       window.isSecureContext = true
     })
 
     afterEach(() => {
-      // @ts-ignore
       window.isSecureContext = false
     })
 
