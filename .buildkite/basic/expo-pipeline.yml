@@ -8,7 +8,7 @@ steps:
       depends_on: "publish-js"
       trigger: "bugsnag-expo"
       build:
-        branch: "v57/next"
+        branch: "v56/next"
         env:
           BUGSNAG_JS_BRANCH: "${BUILDKITE_BRANCH}"
           BUGSNAG_JS_COMMIT: "${BUILDKITE_COMMIT}"
