@@ -87,7 +87,7 @@
   },
   "scripts": {
     "build": "lerna run build",
-    "build:electron": "lerna run build --scope '@bugsnag/core' --scope '@bugsnag/json-payload' --scope '@bugsnag/path-normalizer' --scope '@bugsnag/delivery-electron' --scope '@bugsnag/electron-network-status' --scope '@bugsnag/plugin-electron-ipc' --scope '@bugsnag/plugin-electron-app' --scope '@bugsnag/plugin-electron-client-state-persistence' --scope '@bugsnag/plugin-electron-preload-error'",
+    "build:electron": "lerna run build --scope '@bugsnag/core' --scope '@bugsnag/json-payload' --scope '@bugsnag/path-normalizer' --scope '@bugsnag/delivery-electron' --scope '@bugsnag/electron-network-status' --scope '@bugsnag/plugin-electron-ipc' --scope '@bugsnag/plugin-electron-app' --scope '@bugsnag/plugin-electron-client-state-persistence' --scope '@bugsnag/plugin-electron-preload-error' --scope '@bugsnag/plugin-console-breadcrumbs' --scope '@bugsnag/plugin-strip-project-root' --scope '@bugsnag/plugin-stackframe-path-normaliser' --scope '@bugsnag/plugin-node-surrounding-code' --scope '@bugsnag/plugin-browser-session' --scope '@bugsnag/plugin-node-unhandled-rejection' --scope '@bugsnag/plugin-node-uncaught-exception'",
     "test:lint": "eslint --report-unused-disable-directives .",
     "test:lint-native": "bash scripts/cppcheck.sh",
     "test:unit:electron-runner": "xvfb-maybe --auto-servernum -- jest -c config/electron-jest.config.js --rootDir .",
