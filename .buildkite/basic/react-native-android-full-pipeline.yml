@@ -131,7 +131,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/old-arch/{{matrix}}/reactnative.apk
               - --farm=bb
-              - --device=ANDROID_12
+              - --device=ANDROID_15
               - --appium-version=2.19
               - --fail-fast
               - --no-tunnel
@@ -180,7 +180,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix.reactnative}}/reactnative.apk
               - --farm=bb
-              - --device=ANDROID_12
+              - --device=ANDROID_15
               - --appium-version=2.19
               - --fail-fast
               - --no-tunnel
@@ -234,7 +234,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/react-native-navigation/new-arch/{{matrix}}/reactnative.apk
               - --farm=bb
-              - --device=ANDROID_12
+              - --device=ANDROID_15
               - --appium-version=2.19
               - --fail-fast
               - --no-tunnel
