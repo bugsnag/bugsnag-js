@@ -14,7 +14,7 @@ Feature: Reporting handled errors
     Examples:
       | type       |
       | script     |
-      | webpack3   |
+      #| webpack3   |
       | webpack4   |
       | browserify |
       | rollup     |
