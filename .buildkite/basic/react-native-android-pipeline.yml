@@ -32,7 +32,7 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":bitbar: :android: RN {{matrix}} Android 12 end-to-end tests"
+      - label: ":bitbar: :android: RN {{matrix}} Android 15 end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch"
         timeout_in_minutes: 30
         plugins:
