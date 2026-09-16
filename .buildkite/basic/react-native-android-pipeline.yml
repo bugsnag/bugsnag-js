@@ -32,7 +32,7 @@ steps:
       #
       # End-to-end tests
       #
-      - label: ":bitbar: :android: RN {{matrix}} Android 12 end-to-end tests"
+      - label: ":bitbar: :android: RN {{matrix}} Android 15 end-to-end tests"
         depends_on: "build-react-native-android-fixture-new-arch"
         timeout_in_minutes: 30
         plugins:
@@ -46,7 +46,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk
               - --farm=bb
-              - --device=ANDROID_12
+              - --device=ANDROID_15
               - --appium-version=2.19
               - --fail-fast
               - --no-tunnel
