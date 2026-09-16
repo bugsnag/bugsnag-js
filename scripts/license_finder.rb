@@ -11,6 +11,7 @@ paths.each do |path|
   output = `#{cmd}`
   success = $? == 0
   all_ok = false unless success
+  warn "License check failed for #{path}" unless success
 
   puts output
   puts "Success: #{success}\n"
