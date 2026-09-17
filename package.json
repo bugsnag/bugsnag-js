@@ -21,6 +21,7 @@
     "@babel/preset-typescript": "^7.23.3",
     "@babel/runtime": "^7.26.10",
     "@cucumber/cucumber": "^7.2.1",
+    "@google-cloud/storage": "^8.1.0",
     "@jest-runner/electron": "^3.0.1",
     "@types/jest": "^26.0.14",
     "@types/ncp": "^2.0.4",
