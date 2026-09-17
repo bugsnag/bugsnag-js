@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'cocoapods', '~> 1.15.2'
+gem 'cocoapods'
 gem 'xcodeproj', '< 1.26.0'
+gem 'bugsnag-maze-runner', '~>11.2'
 
 # Use a branch of Maze Runner
 #gem 'bugsnag-maze-runner', git: 'https://github.com/bugsnag/maze-runner', branch: 'tms/use-maze-check'
