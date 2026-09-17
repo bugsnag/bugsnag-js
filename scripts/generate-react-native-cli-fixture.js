@@ -80,10 +80,13 @@ if (process.env.BUILD_ANDROID === 'true' || process.env.BUILD_ANDROID === '1') {
 
 // Build the iOS fixture
 if (process.env.BUILD_IOS === 'true' || process.env.BUILD_IOS === '1') {
-  if (process.env.EXPORT_ARCHIVE !== 'true' || process.env.EXPORT_ARCHIVE !== '1') {
-    exportArchive = false
+  if (process.env.EXPORT_ARCHIVE !== undefined) {
+    exportArchive = process.env.EXPORT_ARCHIVE === 'true' || process.env.EXPORT_ARCHIVE === '1'
   }
-  iosUtils.buildIPA(fixtureDir, exportArchive)
+  iosUtils.buildIPA(fixtureDir, exportArchive).catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
 }
 
 function enableSourceMaps () {

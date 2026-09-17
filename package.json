@@ -21,6 +21,7 @@
     "@babel/preset-typescript": "^7.23.3",
     "@babel/runtime": "^7.29.2",
     "@cucumber/cucumber": "^7.2.1",
+    "@google-cloud/storage": "^8.2.0",
     "@kayahr/jest-electron-runner": "^29.15.0",
     "@rollup/plugin-babel": "^6.1.0",
     "@rollup/plugin-commonjs": "^28.0.0",
