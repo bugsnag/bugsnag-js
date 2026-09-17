@@ -78,7 +78,7 @@ steps:
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk
               - --farm=bs
-              - --device=ANDROID_12
+              - --device=ANDROID_15
               - features/run-app-tests
           test-collector#v1.10.2:
             files: "reports/TEST-*.xml"
