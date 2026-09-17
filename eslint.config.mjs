@@ -61,11 +61,11 @@ const c = tseslint.config(
   },
   // Base linting config
   {
-    files: ['**/*.json', '**/*.[tj]s?(x)', '**/*.cjs', '**/*.mjs'],
+    files: ['**/*.[tj]s?(x)', '**/*.cjs', '**/*.mjs'],
   },
   // Node environment
   {
-    files: ['jest/**/*.[js|mjs]', '**/*/babel.config.js', '**/*/rollup.config.mjs', '.rollup/index.mjs', 'scripts/**/*.js', 'dangerfile.js', '*.config.{js,mjs,cjs}'],
+    files: ['jest/**/*.{js,mjs}', '**/*/babel.config.js', '**/*/rollup.config.mjs', '.rollup/index.mjs', 'scripts/**/*.js', 'dangerfile.js', '*.config.{js,mjs,cjs}'],
     languageOptions: {
       globals: {
         ...globals.node,
