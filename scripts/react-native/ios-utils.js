@@ -1,7 +1,6 @@
 const { execFileSync } = require('child_process')
 const fs = require('fs')
 const { resolve } = require('path')
-const { Storage } = require('@google-cloud/storage')
 
 const BOOST_PODSPEC_PATH = ['node_modules', 'react-native', 'third-party-podspecs', 'boost.podspec']
 const BOOST_GCS_BUCKET = 'bugsnag-platforms-dependencies'
@@ -17,6 +16,8 @@ async function getBoostSignedUrl () {
     return null
   }
 
+  // Lazy-load @google-cloud/storage after npm ci has executed
+  const { Storage } = require('@google-cloud/storage')
   const storage = new Storage()
   const bucketName = process.env.BOOST_GCS_BUCKET || BOOST_GCS_BUCKET
   const objectName = process.env.BOOST_GCS_OBJECT || BOOST_GCS_OBJECT
