@@ -56,18 +56,18 @@ module.exports = {
  
     // Older RN versions require some additional setup
     if (parseFloat(reactNativeVersion) <= 0.72) {
-    // Fix Boost 1.76.0 download mirror URL for older RN (0.68/0.69)
+    // Fix Boost 1.76.0 download mirror URL and checksum for older RN (0.68/0.69)
     if (parseFloat(reactNativeVersion) <= 0.69) {
       const boostPodspecPath = resolve(fixtureDir, 'node_modules/react-native/third-party-podspecs/boost.podspec')
       if (fs.existsSync(boostPodspecPath)) {
         let boostPodspec = fs.readFileSync(boostPodspecPath, 'utf8')
-        // Replace JFrog or default source URL with GCP bucket mirror
+        // Point to internal GCP mirror and update sha256 to match the GCP archive
         boostPodspec = boostPodspec.replace(
           /:https*=>s*['"][^'"]*boost_1_76_0.tar.bz2['"]/g,
           ":http => 'https://storage.googleapis.com/bugsnag-platforms-dependencies/boost/1.76.0/source/boost_1_76_0.tar.bz2'"
         ).replace(
-          '71c32f4085e3adef4fffc90674a01079665d281d1de2aea6c6955db8567deae1',
-          'f0397ba6e982c4450f27bf32a2a83292aba035b827a5623a14636ea583318c41'
+          /f0397ba6e982c4450f27bf32a2a83292aba035b827a5623a14636ea583318c41/g,
+          '71c32f4085e3adef4fffc90674a01079665d281d1de2aea6c6955db8567deae1'
         )
         fs.writeFileSync(boostPodspecPath, boostPodspec)
       }
