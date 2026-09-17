@@ -17,6 +17,7 @@ RUN npm run build
 
 RUN npm pack --verbose packages/js/
 RUN npm pack --verbose packages/browser/
+RUN npm pack --verbose packages/browserlite/
 RUN npm pack --verbose packages/node/
 RUN npm pack --verbose packages/plugin-angular/dist/
 RUN npm pack --verbose packages/plugin-react/
@@ -27,6 +28,7 @@ COPY test/browser/features test/browser/features
 WORKDIR /app/test/browser/features/fixtures
 RUN npm install --no-package-lock --no-save \
 ../../../../bugsnag-browser-*.tgz \
+../../../../bugsnag-browserlite-*.tgz \
 ../../../../bugsnag-plugin-react-*.tgz \
 ../../../../bugsnag-plugin-vue-*.tgz \
 ../../../../bugsnag-web-worker-*.tgz

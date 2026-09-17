@@ -1,0 +1,41 @@
+{
+  "name": "@bugsnag/browserlite",
+  "version": "8.10.0",
+  "main": "dist/bugsnag.js",
+  "types": "types/bugsnag.d.ts",
+  "description": "A lightweight build of the Bugsnag error reporter for browser JavaScript, with only core error reporting enabled by default. Additional functionality (breadcrumbs, device/context metadata, sessions, etc.) can be opted into via the `plugins` config option.",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "browser": {
+    "types/bugsnag": "./dist/bugsnag.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "size": "../../bin/size dist/bugsnag.min.js",
+    "clean": "rm -fr dist && mkdir dist",
+    "build": "npm run clean && npm run build:dist && npm run build:dist:min",
+    "build:dist": "cross-env NODE_ENV=production bash -c '../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/extract-source-map dist/bugsnag.js'",
+    "build:dist:min": "cross-env NODE_ENV=production bash -c '../../bin/bundle src/notifier.js --standalone=Bugsnag | ../../bin/minify dist/bugsnag.min.js'",
+    "cdn-upload": "../../bin/cdn-upload dist/*"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@bugsnag/delivery-x-domain-request": "^8.9.0",
+    "@bugsnag/delivery-xml-http-request": "^8.9.0",
+    "@bugsnag/plugin-window-onerror": "^8.9.0",
+    "@bugsnag/plugin-window-unhandled-rejection": "^8.9.0"
+  },
+  "dependencies": {
+    "@bugsnag/core": "^8.9.0"
+  }
+}
