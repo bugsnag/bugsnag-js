@@ -39,7 +39,7 @@ module.exports = api => {
       ['@babel/plugin-transform-spread', { loose: true }],
       ['@babel/plugin-transform-template-literals', { loose: true }],
       ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
-      ['@babel/syntax-object-rest-spread']
+      ['@babel/plugin-transform-object-rest-spread', { loose: true }]
     )
   }
 

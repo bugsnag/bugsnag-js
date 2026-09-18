@@ -1,5 +1,5 @@
 import { ErrorHandler } from '@angular/core'
-import { Client, Event, Plugin } from '@bugsnag/js'
+import { Client, Event, Plugin } from '@bugsnag/core'
 import BugsnagErrorHandler from './bugsnag-error-handler'
 
 // angular uses zones to watch for changes in asynchronous tasks so it can
