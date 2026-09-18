@@ -23,7 +23,7 @@
     "@angular/common": ">= 12",
     "@angular/compiler": ">= 12",
     "@angular/core": ">= 12",
-    "@bugsnag/js": "^8.0.0"
+    "@bugsnag/core": "^8.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^20.3.27",
@@ -34,7 +34,7 @@
     "@angular/compiler": "^20.3.27",
     "@angular/compiler-cli": "^20.3.27",
     "@angular/core": "^20.3.27",
-    "@bugsnag/js": "^8.10.0",
+    "@bugsnag/core": "^8.9.0",
     "estree-walker": "^2.0.2",
     "injection-js": "^2.6.1",
     "ng-packagr": "^20.2.0",
