@@ -45,7 +45,7 @@ steps:
             service-ports: true
             command:
               - --app=/app/features/fixtures/generated/new-arch/{{matrix}}/reactnative.apk
-              - --farm=bb
+              - --farm=bs
               - --device=ANDROID_15
               - --appium-version=2.19
               - --fail-fast
