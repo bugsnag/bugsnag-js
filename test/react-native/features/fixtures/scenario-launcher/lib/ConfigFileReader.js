@@ -9,26 +9,45 @@ const FALLBACK_ADDRESS = 'localhost:9339'
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+const getCandidatePaths = () => {
+  if (Platform.OS === 'ios') {
+    return [`${Dirs.DocumentDir}/fixture_config.json`]
+  }
+
+  return [
+    '/sdcard/Android/data/com.reactnative/files/fixture_config.json',
+    '/storage/emulated/0/Android/data/com.reactnative/files/fixture_config.json',
+    `${Dirs.SDCardDir}/Android/data/com.reactnative/files/fixture_config.json`,
+    '/data/local/tmp/fixture_config.json',
+    `${Dirs.SDCardDir}/fixture_config.json`,
+    `${Dirs.DocumentDir}/fixture_config.json`,
+    `${Dirs.CacheDir}/fixture_config.json`
+  ]
+}
+
 // Reads the maze runner address that maze runner pushes to the device. Waits up to
 // `timeout` ms for the file to appear; pass 0 to read whatever is on disk right now.
 const getMazeRunnerAddress = async (timeout = TIMEOUT) => {
-  const configFileDir = Platform.OS === 'android' ? '/data/local/tmp' : Dirs.DocumentDir
-  const configFilePath = `${configFileDir}/fixture_config.json`
+  const candidatePaths = getCandidatePaths()
   const startTime = Date.now()
 
   // poll for the config file to exist
   while (true) {
-    try {
-      const configFileExists = await FileSystem.exists(configFilePath)
+    for (const path of candidatePaths) {
+      try {
+        const configFileExists = await FileSystem.exists(path)
 
-      if (configFileExists) {
-        const configFile = await FileSystem.readFile(configFilePath)
-        console.error(`[Bugsnag ConfigFileReader] found config file at '${configFilePath}'. contents: ${configFile}`)
-        const config = JSON.parse(configFile)
-        return `${config.maze_address}`
+        if (configFileExists) {
+          const configFile = await FileSystem.readFile(path)
+          console.error(`[Bugsnag ConfigFileReader] found config file at '${path}'. contents: ${configFile}`)
+          const config = JSON.parse(configFile)
+          if (config && config.maze_address) {
+            return `${config.maze_address}`
+          }
+        }
+      } catch (err) {
+        // Continue searching other candidate paths
       }
-    } catch (err) {
-      console.error(`[Bugsnag ConfigFileReader] Error checking/reading config file: ${err.message}`)
     }
 
     if (Date.now() - startTime >= timeout) break
@@ -36,7 +55,7 @@ const getMazeRunnerAddress = async (timeout = TIMEOUT) => {
     await delay(500)
   }
 
-  console.error(`[Bugsnag ConfigFileReader] no config file found at ${configFilePath}, falling back to '${FALLBACK_ADDRESS}'`)
+  console.error(`[Bugsnag ConfigFileReader] no config file found in candidate paths, falling back to '${FALLBACK_ADDRESS}'`)
   return FALLBACK_ADDRESS
 }
 
