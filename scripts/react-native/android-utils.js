@@ -3,37 +3,48 @@ const fs = require('fs')
 
 module.exports = {
   configureAndroidProject: function configureAndroidProject (fixtureDir, newArchEnabled) {
-    // set android:usesCleartextTraffic="true" in AndroidManifest.xml
     const androidManifestPath = `${fixtureDir}/android/app/src/main/AndroidManifest.xml`
     let androidManifestContents = fs.readFileSync(androidManifestPath, 'utf8')
 
-    // RN 0.82+ uses a manifest placeholder that's autoconfigured by the RN gradle plugin
+    // 1. Ensure usesCleartextTraffic="true"
     // eslint-disable-next-line no-template-curly-in-string
     if (androidManifestContents.includes('${usesCleartextTraffic}')) {
       // eslint-disable-next-line no-template-curly-in-string
       androidManifestContents = androidManifestContents.replace('${usesCleartextTraffic}', 'true')
-    } else {
+    } else if (androidManifestContents.includes('android:usesCleartextTraffic="false"')) {
+      androidManifestContents = androidManifestContents.replace('android:usesCleartextTraffic="false"', 'android:usesCleartextTraffic="true"')
+    } else if (!androidManifestContents.includes('android:usesCleartextTraffic')) {
       androidManifestContents = androidManifestContents.replace('<application', '<application android:usesCleartextTraffic="true"')
+    }
+
+    // 2. Ensure INTERNET and ACCESS_NETWORK_STATE permissions exist
+    if (!androidManifestContents.includes('android.permission.INTERNET')) {
+      androidManifestContents = androidManifestContents.replace(
+        '<application',
+        '<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />\n    <application'
+      )
     }
 
     fs.writeFileSync(androidManifestPath, androidManifestContents)
 
-    // enable/disable the new architecture in gradle.properties
+    // 3. Enable or disable the new architecture in gradle.properties
     const gradlePropertiesPath = `${fixtureDir}/android/gradle.properties`
     let gradlePropertiesContents = fs.readFileSync(gradlePropertiesPath, 'utf8')
     gradlePropertiesContents = gradlePropertiesContents.replace(/newArchEnabled\s*=\s*(true|false)/, `newArchEnabled=${newArchEnabled}`)
     fs.writeFileSync(gradlePropertiesPath, gradlePropertiesContents)
   },
+
   configureReactNavigationAndroid: function configureReactNavigationAndroid (fixtureDir, reactNativeVersion) {
     const fileExtension = parseFloat(reactNativeVersion) < 0.73 ? 'java' : 'kt'
     let mainActivityPattern, mainActivityReplacement
+
     if (fileExtension === 'java') {
       mainActivityPattern = 'public class MainActivity extends ReactActivity {'
       mainActivityReplacement = `
   import android.os.Bundle;
-  
+
   public class MainActivity extends ReactActivity {
-  
+
     /**
      * Required for react-navigation/native implementation
      * https://reactnavigation.org/docs/getting-started/#installing-dependencies-into-a-bare-react-native-project
@@ -47,9 +58,9 @@ module.exports = {
       mainActivityPattern = 'class MainActivity : ReactActivity() {'
       mainActivityReplacement = `
   import android.os.Bundle
-  
+
   class MainActivity : ReactActivity() {
-  
+
     /**
      * Required for react-navigation/native implementation
      * https://reactnavigation.org/docs/getting-started/#installing-dependencies-into-a-bare-react-native-project
@@ -61,10 +72,15 @@ module.exports = {
     }
 
     const mainActivityPath = `${fixtureDir}/android/app/src/main/java/com/reactnative/MainActivity.${fileExtension}`
-    let mainActivityContents = fs.readFileSync(mainActivityPath, 'utf8')
-    mainActivityContents = mainActivityContents.replace(mainActivityPattern, mainActivityReplacement)
-    fs.writeFileSync(mainActivityPath, mainActivityContents)
+    if (fs.existsSync(mainActivityPath)) {
+      let mainActivityContents = fs.readFileSync(mainActivityPath, 'utf8')
+      if (!mainActivityContents.includes('super.onCreate(null)')) {
+        mainActivityContents = mainActivityContents.replace(mainActivityPattern, mainActivityReplacement)
+        fs.writeFileSync(mainActivityPath, mainActivityContents)
+      }
+    }
   },
+
   buildAPK: function buildAPK (fixtureDir, newArchEnabled) {
     if (newArchEnabled) {
       execFileSync('./gradlew', ['generateCodegenArtifactsFromSchema'], { cwd: `${fixtureDir}/android`, stdio: 'inherit' })

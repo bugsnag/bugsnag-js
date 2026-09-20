@@ -18,13 +18,17 @@ const getMazeRunnerAddress = async (timeout = TIMEOUT) => {
 
   // poll for the config file to exist
   while (true) {
-    const configFileExists = await FileSystem.exists(configFilePath)
+    try {
+      const configFileExists = await FileSystem.exists(configFilePath)
 
-    if (configFileExists) {
-      const configFile = await FileSystem.readFile(configFilePath)
-      console.error(`[Bugsnag ConfigFileReader] found config file at '${configFilePath}'. contents: ${configFile}`)
-      const config = JSON.parse(configFile)
-      return `${config.maze_address}`
+      if (configFileExists) {
+        const configFile = await FileSystem.readFile(configFilePath)
+        console.error(`[Bugsnag ConfigFileReader] found config file at '${configFilePath}'. contents: ${configFile}`)
+        const config = JSON.parse(configFile)
+        return `${config.maze_address}`
+      }
+    } catch (err) {
+      console.error(`[Bugsnag ConfigFileReader] Error checking/reading config file: ${err.message}`)
     }
 
     if (Date.now() - startTime >= timeout) break
