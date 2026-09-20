@@ -6,7 +6,7 @@ module.exports = {
     const androidManifestPath = `${fixtureDir}/android/app/src/main/AndroidManifest.xml`
     let androidManifestContents = fs.readFileSync(androidManifestPath, 'utf8')
 
-    // 1. Ensure usesCleartextTraffic="true"
+    // 1. Ensure usesCleartextTraffic="true" and requestLegacyExternalStorage="true"
     // eslint-disable-next-line no-template-curly-in-string
     if (androidManifestContents.includes('${usesCleartextTraffic}')) {
       // eslint-disable-next-line no-template-curly-in-string
@@ -17,11 +17,27 @@ module.exports = {
       androidManifestContents = androidManifestContents.replace('<application', '<application android:usesCleartextTraffic="true"')
     }
 
-    // 2. Ensure INTERNET and ACCESS_NETWORK_STATE permissions exist
-    if (!androidManifestContents.includes('android.permission.INTERNET')) {
+    if (!androidManifestContents.includes('android:requestLegacyExternalStorage')) {
+      androidManifestContents = androidManifestContents.replace('<application', '<application android:requestLegacyExternalStorage="true"')
+    }
+
+    // 2. Ensure all required network and storage permissions exist
+    const permissionsToAdd = [
+      'android.permission.INTERNET',
+      'android.permission.ACCESS_NETWORK_STATE',
+      'android.permission.READ_EXTERNAL_STORAGE',
+      'android.permission.WRITE_EXTERNAL_STORAGE'
+    ]
+
+    const missingPermissions = permissionsToAdd
+      .filter(perm => !androidManifestContents.includes(perm))
+      .map(perm => `    <uses-permission android:name="${perm}" />`)
+      .join('\n')
+
+    if (missingPermissions) {
       androidManifestContents = androidManifestContents.replace(
         '<application',
-        '<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />\n    <application'
+        `${missingPermissions}\n    <application`
       )
     }
 
