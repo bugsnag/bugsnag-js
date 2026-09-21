@@ -168,23 +168,26 @@ end`
     execFileSync('bundle', ['install'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
     execFileSync('bundle', ['exec', 'pod', 'install', '--repo-update'], { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
 
-    // build the ios app
+    // build the ios app with indexing and asset symbol generation disabled for faster CI compilation
     const archiveArgs = [
       'xcodebuild',
       'DEVELOPMENT_TEAM=7W9PZ27Y5F',
+      'COMPILER_INDEX_STORE_ENABLE=NO',
+      'ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS=NO',
       '-workspace',
       'reactnative.xcworkspace',
       '-scheme',
       'reactnative',
       '-configuration',
       'Release',
-      '-allowProvisioningUpdates',
-      'archive'
+      '-allowProvisioningUpdates'
     ]
 
     if (exportArchive) {
-      archiveArgs.splice(8, 0, '-archivePath', `${fixtureDir}/reactnative.xcarchive`)
+      archiveArgs.push('-archivePath', `${fixtureDir}/reactnative.xcarchive`)
     }
+
+    archiveArgs.push('archive')
 
     execFileSync('xcrun', archiveArgs, { cwd: `${fixtureDir}/ios`, stdio: 'inherit' })
 
