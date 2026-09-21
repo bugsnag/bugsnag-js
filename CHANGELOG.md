@@ -6,12 +6,12 @@
 Major release **v9.0.0** includes React Native New Architecture compatibility updates (including Android 15 and iOS build optimization), Electron delivery resilience enhancements, critical Linux compilation fixes for GLIBC ≥ 2.28, and essential SCA/dependency upgrades.
 
 ### Fixed
-* (plugin-electron-client-state-persistence) Fix Linux build failure by removing unused POSIX `once_flag` and `call_once` definitions from vendored `tinycthread`, resolving conflicts with glibc ≥ 2.28 during `node-gyp rebuild` [#2769](https://github.com/bugsnag/bugsnag-js/pull/2769)
-* (delivery-electron, plugin-electron-deliver-minidumps) Prevent tight retry loops on unreachable endpoints during minidump delivery queue processing [#2822](https://github.com/bugsnag/bugsnag-js/pull/2822)
-* (react-native) Fix React Navigation crash on New Architecture (React Native 0.84+) by ensuring `super.onCreate(null)` executes in `MainActivity` [#2820](https://github.com/bugsnag/bugsnag-js/pull/2820)
+- (plugin-electron-client-state-persistence) Fix Linux build failure by removing unused POSIX `once_flag` and `call_once` definitions from vendored `tinycthread`, resolving conflicts with glibc ≥ 2.28 during `node-gyp rebuild` [#2769](https://github.com/bugsnag/bugsnag-js/pull/2769)
+- (delivery-electron, plugin-electron-deliver-minidumps) Prevent tight retry loops on unreachable endpoints during minidump delivery queue processing [#2822](https://github.com/bugsnag/bugsnag-js/pull/2822)
+- (react-native) Fix React Navigation crash on New Architecture (React Native 0.84+) by ensuring `super.onCreate(null)` executes in `MainActivity` [#2820](https://github.com/bugsnag/bugsnag-js/pull/2820)
 
 ### Added
-* (react-native) Support dynamic Boost 1.76.0 podspec downloading with pre-signed Google Cloud Storage URLs for React Native ≤ 0.72 [#2820](https://github.com/bugsnag/bugsnag-js/pull/2820)
+- (react-native) Support dynamic Boost 1.76.0 podspec downloading with pre-signed Google Cloud Storage URLs for React Native ≤ 0.72 [#2820](https://github.com/bugsnag/bugsnag-js/pull/2820)
 
 ## [8.10.0] - 2026-07-10
 
