@@ -1,0 +1,41 @@
+const { schema } = require('@bugsnag/core/config')
+const map = require('@bugsnag/core/lib/es-utils/map')
+const assign = require('@bugsnag/core/lib/es-utils/assign')
+
+module.exports = {
+  // session tracking requires @bugsnag/plugin-browser-session, which is not
+  // bundled by default, so auto tracking is disabled unless the plugin is
+  // explicitly added via the `plugins` config option
+  autoTrackSessions: assign({}, schema.autoTrackSessions, {
+    defaultValue: () => false
+  }),
+  releaseStage: assign({}, schema.releaseStage, {
+    defaultValue: () => {
+      if (/^localhost(:\d+)?$/.test(window.location.host)) return 'development'
+      return 'production'
+    }
+  }),
+  appType: {
+    ...schema.appType,
+    defaultValue: () => 'browser'
+  },
+  logger: assign({}, schema.logger, {
+    defaultValue: () =>
+      // set logger based on browser capability
+      (typeof console !== 'undefined' && typeof console.debug === 'function')
+        ? getPrefixedConsole()
+        : undefined
+  })
+}
+
+const getPrefixedConsole = () => {
+  const logger = {}
+  const consoleLog = console.log
+  map(['debug', 'info', 'warn', 'error'], (method) => {
+    const consoleMethod = console[method]
+    logger[method] = typeof consoleMethod === 'function'
+      ? consoleMethod.bind(console, '[bugsnag]')
+      : consoleLog.bind(console, '[bugsnag]')
+  })
+  return logger
+}
