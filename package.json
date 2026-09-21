@@ -109,7 +109,7 @@
     "@inquirer/figures": "1.0.13",
     "@types/babel__traverse": "7.17.1",
     "@types/node": "^18",
-    "axios": "^1.15.0",
+    "axios": "^1.15.1",
     "@types/express-serve-static-core": "4.17.28",
     "@types/prettier": "2.6.0",
     "@types/yargs": "17.0.10",
@@ -120,7 +120,7 @@
       "async": "^3.2.2"
     },
     "node-fetch": "^2.6.7",
-    "shell-quote": "^1.7.3",
+    "shell-quote": "^1.9.0",
     "thenify": "^3.3.1",
     "tough-cookie": "5.1.1"
   },
