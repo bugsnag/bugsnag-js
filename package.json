@@ -64,7 +64,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-runner": "^29.7.0",
     "jest-util": "^29.7.0",
-    "lerna": "^8.1.8",
+    "lerna": "^10.0.0",
     "metro-react-native-babel-preset": "^0.68.0",
     "ncp": "^2.0.0",
     "pkg-up": "3.1.0",
@@ -122,6 +122,9 @@
     "node-fetch": "^2.6.7",
     "shell-quote": "^1.9.0",
     "thenify": "^3.3.1",
+    "minimatch@>=10": {
+      "brace-expansion": "^5.0.8"
+    },
     "tough-cookie": "5.1.1"
   },
   "workspaces": [
