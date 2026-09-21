@@ -28,11 +28,11 @@ Before do
   Maze::Api::Appium::DeviceManager.new.set_rotation(:portrait)
 end
 
-Before('@android_only') do |scenario|
+Before('@android_only') do |_scenario|
   skip_this_scenario("Skipping scenario on non-Android") unless is_android?
 end
 
-Before('@ios_only') do |scenario|
+Before('@ios_only') do |_scenario|
   skip_this_scenario("Skipping scenario on non-iOS") if is_android? || !is_ios?
 end
 

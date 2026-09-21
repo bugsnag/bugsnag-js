@@ -35,7 +35,7 @@ const getMazeRunnerAddress = async (timeout = TIMEOUT) => {
           }
         }
       } catch (err) {
-        // Continue trying remaining candidate paths
+        // Continue checking other candidate paths
       }
     }
 
