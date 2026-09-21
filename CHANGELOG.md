@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [9.0.0] - 2026-09-22
 
 ### Summary
 Major release **v9.0.0** includes React Native New Architecture compatibility updates (including Android 15 and iOS build optimization), Electron delivery resilience enhancements, critical Linux compilation fixes for GLIBC ≥ 2.28, and essential SCA/dependency upgrades.
