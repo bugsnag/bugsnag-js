@@ -6,14 +6,12 @@ import runCallbacks from './lib/callback-runner'
 import metadataDelegate from './lib/metadata-delegate'
 import runSyncCallbacks from './lib/sync-callback-runner'
 import featureFlagDelegate from './lib/feature-flag-delegate'
+
 import { BreadcrumbType, BREADCRUMB_TYPES, Config, Delivery, FeatureFlag, LoggerConfig, NotifiableError, Notifier, OnBreadcrumbCallback, OnErrorCallback, OnSessionCallback, Plugin, SessionDelegate, User } from './common'
+
 const SECONDARY_ENDPOINT_API_KEY_PREFIX = '00000'
 const SECONDARY_NOTIFY_ENDPOINT = 'https://notify.bugsnag.smartbear.com'
 const SECONDARY_SESSIONS_ENDPOINT = 'https://sessions.bugsnag.smartbear.com'
-
-const HUB_PREFIX = '00000'
-const HUB_NOTIFY = 'https://notify.insighthub.smartbear.com'
-const HUB_SESSION = 'https://sessions.insighthub.smartbear.com'
 
 const noop = () => { }
 
@@ -109,10 +107,12 @@ export default class Client<T extends Config = Config> {
     // bound to have the client as its `this` value – see below.
     this._depth = 1
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
     const notify = this.notify
     this.notify = function () {
       // @ts-expect-error arguments object is not assignable to the typed notify parameters
+      // eslint-disable-next-line prefer-rest-params
       return notify.apply(self, arguments)
     }
   }
@@ -286,7 +286,7 @@ export default class Client<T extends Config = Config> {
   }
 
   removeOnError (fn: OnErrorCallback) {
-    this._cbs.e = this._cbs.e.filter(f => f !== fn)
+    this._cbs.e = this._cbs.e.filter( f => f !== fn)
   }
 
   _addOnSessionPayload (fn: OnSessionCallback) {
@@ -298,7 +298,7 @@ export default class Client<T extends Config = Config> {
   }
 
   removeOnSession (fn: OnSessionCallback) {
-    this._cbs.s = this._cbs.s.filter(f => f !== fn)
+    this._cbs.s = this._cbs.s.filter( f => f !== fn)
   }
 
   addOnBreadcrumb (fn: OnBreadcrumbCallback, front = false) {
@@ -306,7 +306,7 @@ export default class Client<T extends Config = Config> {
   }
 
   removeOnBreadcrumb (fn: OnBreadcrumbCallback) {
-    this._cbs.b = this._cbs.b.filter(f => f !== fn)
+    this._cbs.b = this._cbs.b.filter( f => f !== fn)
   }
 
   pauseSession () {
@@ -415,7 +415,7 @@ export default class Client<T extends Config = Config> {
 
       this._delivery.sendEvent({
         apiKey: event.apiKey || this._config.apiKey,
-         
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         notifier: this._notifier!,
         events: [event]
       }, (err) => postReportCallback(err, event))

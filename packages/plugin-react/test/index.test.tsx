@@ -16,7 +16,7 @@ interface FallbackComponentProps {
 }
 type FallbackComponentType = React.ComponentType<FallbackComponentProps>;
 
- 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
 beforeAll(() => {
@@ -101,13 +101,22 @@ it('renders FallbackComponent on error', () => {
 })
 
 it('passes the props to the FallbackComponent', () => {
-  const FallbackComponent = jest.fn(() => 'fallback') as unknown as FallbackComponentType
-  create(<ErrorBoundary FallbackComponent={FallbackComponent}><BadComponent /></ErrorBoundary>)
-  expect(FallbackComponent).toHaveBeenCalledWith({
-    error: expect.any(Error),
-    info: { componentStack: expect.any(String) },
-    clearError: expect.any(Function)
-  }, {})
+  const FallbackComponent = (jest.fn(
+    () => 'fallback'
+  ) as unknown) as FallbackComponentType
+  create(
+    <ErrorBoundary FallbackComponent={FallbackComponent}>
+      <BadComponent />
+    </ErrorBoundary>
+  )
+  expect(FallbackComponent).toBeCalledWith(
+    {
+      error: expect.any(Error),
+      info: { componentStack: expect.any(String) },
+      clearError: expect.any(Function)
+    },
+    {}
+  )
 })
 
 it('resets the error boundary when the FallbackComponent calls the passed clearError prop', () => {
@@ -168,14 +177,14 @@ it('a bad FallbackComponent implementation does not trigger stack overflow', () 
   }).toThrow()
 })
 
-it('passes the onError function to the Bugsnag notify call', () => {
+it('it passes the onError function to the Bugsnag notify call', () => {
   const onError = () => {}
-  create(<ErrorBoundary onError={onError}><BadComponent /></ErrorBoundary>)
-    .toJSON()
-  expect(client._notify).toHaveBeenCalledWith(
-    expect.any(client.Event),
-    onError
-  )
+  create(
+    <ErrorBoundary onError={onError}>
+      <BadComponent />
+    </ErrorBoundary>
+  ).toJSON()
+  expect(client._notify).toBeCalledWith(expect.any(client.Event), onError)
 })
 
 it('supports passing reference to React when the error boundary is created', () => {
@@ -183,7 +192,7 @@ it('supports passing reference to React when the error boundary is created', () 
     { apiKey: '123', plugins: [new BugsnagPluginReact()] },
     undefined
   )
-   
+  // eslint-disable-next-line
   const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
   expect(ErrorBoundary).toBeTruthy()
 })
@@ -207,7 +216,7 @@ describe('global React', () => {
       plugins: [new BugsnagPluginReact()]
     })
 
-     
+    // eslint-disable-next-line
     const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary()
 
     expect(ErrorBoundary).toBeTruthy()
@@ -222,7 +231,7 @@ describe('global React', () => {
       plugins: [new BugsnagPluginReact()]
     })
 
-     
+    // eslint-disable-next-line
     const ErrorBoundary = client.getPlugin('react')!.createErrorBoundary(React)
 
     expect(ErrorBoundary).toBeTruthy()

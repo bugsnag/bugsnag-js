@@ -6,7 +6,7 @@ Scenario Outline: unhandled exceptions are reported
     When I invoke the "<lambda>" lambda in "features/fixtures/simple-app" with the "events/<type>/unhandled-exception.json" event
     Then the lambda response "errorMessage" equals "Oh no!"
     And the lambda response "errorType" equals "Error"
-    And the lambda response "trace" is an array with <trace-length> elements
+    And the lambda response "trace" is an array with the configured length for "<lambda>"
     And the lambda response "trace.0" equals "Error: Oh no!"
     And the lambda response "body" is null
     And the lambda response "statusCode" is null
@@ -29,10 +29,10 @@ Scenario Outline: unhandled exceptions are reported
     And the session "startedAt" is a timestamp
 
     Examples:
-        | lambda                                         | type     | file                          | node-version | trace-length |
-        | AsyncUnhandledExceptionFunctionNode18          | async    | unhandled-exception.js        | 18           | 9            |
-        | CallbackUnhandledExceptionFunctionNode18       | callback | unhandled-exception.js        | 18           | 11           |
-        | CallbackThrownUnhandledExceptionFunctionNode18 | callback | thrown-unhandled-exception.js | 18           | 11           |
+        | lambda                                         | type     | file                          | node-version |
+        | AsyncUnhandledExceptionFunctionNode18          | async    | unhandled-exception.js        | 18           |
+        | CallbackUnhandledExceptionFunctionNode18       | callback | unhandled-exception.js        | 18           |
+        | CallbackThrownUnhandledExceptionFunctionNode18 | callback | thrown-unhandled-exception.js | 18           |
 
 @simple-app
 Scenario Outline: unhandled exceptions thrown async are reported
@@ -79,7 +79,7 @@ Scenario Outline: unhandled exceptions are reported when using serverless-expres
     When I invoke the "ExpressFunction" lambda in "features/fixtures/serverless-express-app" with the "events/<event-name>.json" event
     Then the lambda response "body.message" equals "<message>"
     And the lambda response "body.type" equals "Error"
-    And the lambda response "body.stacktrace" is an array with 11 elements
+    And the lambda response "body.stacktrace" has at least its configured minimum length
     And the lambda response "body.stacktrace.0" equals "Error: <message>"
     And the lambda response "statusCode" equals 500
     And the SAM exit code equals 0

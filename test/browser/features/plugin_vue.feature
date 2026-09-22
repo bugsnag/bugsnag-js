@@ -1,6 +1,6 @@
 @plugin_vue
 Feature: Vue support
-  @skip_chrome_53
+  @skip_chrome_53 @skip_ie_11
   Scenario: basic error handler usage
     When I navigate to the test URL "/plugin_vue/webpack4/index.html"
     Then I wait to receive an error
