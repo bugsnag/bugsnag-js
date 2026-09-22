@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-node-surrounding-code",
-  "version": "8.9.0",
+  "version": "9.0.0",
   "type": "module",
   "main": "./dist/cjs/surrounding-code.js",
   "module": "./dist/esm/surrounding-code.js",
@@ -38,7 +38,7 @@
     "pump": "^3.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.9.0"
+    "@bugsnag/core": "^9.0.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.0.0"

@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/json-payload",
-  "version": "8.4.0",
+  "version": "9.0.0",
   "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,6 +41,6 @@
     "@bugsnag/safe-json-stringify": "^6.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.4.0"
+    "@bugsnag/core": "^9.0.0"
   }
 }
