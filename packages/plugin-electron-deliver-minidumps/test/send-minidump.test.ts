@@ -34,7 +34,7 @@ describe('electron-minidump-delivery: sendMinidump', () => {
     const { sendMinidump } = sendMinidumpFactory(net, client)
     await sendMinidump(minidumpFile, null)
 
-    expect(net.request).toBeCalledTimes(1)
+    expect(net.request).toHaveBeenCalledTimes(1)
 
     const { url, method, headers } = net.request.mock.calls[0][0]
     const parsedUrl = new URL(url)
@@ -92,7 +92,7 @@ describe('electron-minidump-delivery: sendMinidump', () => {
         apiKey: 'c0ffeec0ffeec0ffeec0ffeec0ffeec0'
       })
 
-      expect(net.request).toBeCalledTimes(1)
+      expect(net.request).toHaveBeenCalledTimes(1)
 
       const { url } = net.request.mock.calls[0][0]
       const parsedUrl = new URL(url)

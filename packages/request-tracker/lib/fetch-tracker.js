@@ -42,7 +42,6 @@ function createFetchTracker (global, options = {}) {
 
       let requestHeaders = {}
       if (options && options.headers) {
-        // eslint-disable-next-line no-undef
         if (options.headers instanceof Headers) {
           requestHeaders = headersToObject(options.headers)
         } else if (typeof options.headers === 'object') {

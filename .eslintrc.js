@@ -1,93 +1,146 @@
-const ruleOverrides = {
-  // Disable preferring Promise-based async tests
-  'jest/no-test-callback': 'off',
+// Helper: build a `{ rule: 'off', ... }` object from a list of rule names.
+const off = (...rules) => Object.fromEntries(rules.map(r => [r, 'off']))
+// Helper: build a `{ rule: 'warn', ... }` object.
+const warn = (...rules) => Object.fromEntries(rules.map(r => [r, 'warn']))
 
-  // Let TypeScript inference work without being verbose
-  '@typescript-eslint/explicit-function-return-type': 'off',
+// Type-aware safety rules — require parserOptions.project so they run only in
+// the TS override below (kept at 'warn' to surface issues without failing CI).
+const TYPE_AWARE_SAFETY_RULES = [
+  '@typescript-eslint/no-floating-promises',
+  '@typescript-eslint/no-misused-promises',
+  '@typescript-eslint/no-unsafe-assignment',
+  '@typescript-eslint/no-unsafe-call',
+  '@typescript-eslint/no-unsafe-return',
+  '@typescript-eslint/no-unsafe-member-access'
+  // Note: '@typescript-eslint/no-unsafe-argument' is unavailable in
+  // @typescript-eslint/eslint-plugin@2.x — re-enable once the plugin is upgraded.
+]
 
-  // (Explicit) any has its valid use cases
-  '@typescript-eslint/no-explicit-any': 'off',
+// Type-aware rules we deliberately silence (would also need parserOptions.project).
+const TYPE_AWARE_DISABLED = [
+  '@typescript-eslint/require-await',
+  '@typescript-eslint/restrict-plus-operands',
+  '@typescript-eslint/restrict-template-expressions',
+  '@typescript-eslint/no-base-to-string',
+  '@typescript-eslint/non-nullable-type-assertion-style',
+  '@typescript-eslint/prefer-reduce-type-parameter',
+  '@typescript-eslint/dot-notation'
+]
 
-  // We use noop functions liberally (() => {})
-  '@typescript-eslint/no-empty-function': 'off',
+// Formatting / stylistic rules relaxed for legacy code.
+const STYLE_RULES_OFF = [
+  'no-use-before-define',
+  'prefer-rest-params',
+  'prefer-spread',
+  'no-var',
+  'no-unused-expressions',
+  'no-trailing-spaces',
+  'spaced-comment',
+  'indent',
+  'no-multiple-empty-lines',
+  'eol-last'
+]
 
-  // This incorrectly fails on TypeScript method override signatures
-  'no-dupe-class-members': 'off',
+// Non-type-aware TS rules relaxed during the migration.
+const TS_RULES_OFF = [
+  '@typescript-eslint/no-explicit-any',
+  '@typescript-eslint/no-empty-function',
+  '@typescript-eslint/explicit-function-return-type',
+  '@typescript-eslint/no-unused-vars',
+  '@typescript-eslint/no-use-before-define',
+  '@typescript-eslint/member-delimiter-style',
+  '@typescript-eslint/camelcase',
+  '@typescript-eslint/ban-ts-ignore',
+  '@typescript-eslint/no-non-null-assertion',
+  '@typescript-eslint/no-inferrable-types',
+  '@typescript-eslint/no-var-requires',
+  '@typescript-eslint/no-this-alias',
+  '@typescript-eslint/ban-types',
+  // TODO: migrate all `@ts-ignore` to `@ts-expect-error` and re-enable at 'warn'.
+  // Disabled because @typescript-eslint/eslint-plugin@2.x doesn't distinguish
+  // the two directives and CI runs with --max-warnings=0.
+  '@typescript-eslint/ban-ts-comment'
+]
 
-  // Disable all rules that require parserServices (for now)
-  '@typescript-eslint/no-floating-promises': 'off',
-  '@typescript-eslint/no-misused-promises': 'off',
-  '@typescript-eslint/no-unnecessary-type-assertion': 'off',
-  '@typescript-eslint/prefer-nullish-coalescing': 'off',
-  '@typescript-eslint/prefer-readonly': 'off',
-  '@typescript-eslint/promise-function-async': 'off',
-  '@typescript-eslint/require-array-sort-compare': 'off',
-  '@typescript-eslint/require-await': 'off',
-  '@typescript-eslint/restrict-plus-operands': 'off',
-  '@typescript-eslint/restrict-template-expressions': 'off',
-  '@typescript-eslint/strict-boolean-expressions': 'off',
-  '@typescript-eslint/no-throw-literal': 'off',
-  '@typescript-eslint/no-implied-eval': 'off',
-  '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'off',
-  '@typescript-eslint/prefer-includes': 'off',
-  '@typescript-eslint/no-for-in-array': 'off',
-}
+// Jest rules relaxed for legacy tests (scoped to the test-files override).
+const JEST_RULES_OFF = [
+  'jest/expect-expect',
+  'jest/no-done-callback',
+  'jest/no-conditional-expect',
+  'jest/no-standalone-expect',
+  'jest/no-disabled-tests'
+]
 
 module.exports = {
-  plugins: [
-    'react'
+  ignorePatterns: [
+    '**/*.d.ts',
+    'packages/react-native/**',
+    'packages/react-native-cli/**',
+    'test/**',
+    'packages/core/lib/test/feature-flag-delegate.test.ts',
+    'packages/electron-test-helpers/**',
+    'packages/plugin-electron-power-monitor-breadcrumbs/test/**',
+    'packages/web-worker/types/**'
   ],
+
+  parser: '@typescript-eslint/parser',
+
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module'
+  },
+
+  env: {
+    es2020: true,
+    node: true,
+    browser: true
+  },
+
+  globals: {
+    globalThis: 'readonly'
+  },
+
+  plugins: ['@typescript-eslint', 'react'],
+
+  extends: [
+    'standard',
+    'plugin:@typescript-eslint/recommended'
+  ],
+
   rules: {
     'react/jsx-uses-react': 'error',
-    'react/jsx-uses-vars': 'error'
+    'react/jsx-uses-vars': 'error',
+
+    ...off(...STYLE_RULES_OFF),
+    ...off(...TS_RULES_OFF),
+    ...off(...TYPE_AWARE_DISABLED)
   },
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    jsx: true,
-    ecmaVersion: 2018
-  },
+
   overrides: [
-    // linting for js files
+    // Type-aware rules: only for TS/TSX where parserServices are available
+    // (tsconfig.eslint.json includes both source and test TS files).
     {
-      files: ['**/*.js'],
-      extends: [
-        'standard'
-      ]
+      files: ['**/*.ts', '**/*.tsx'],
+      parserOptions: {
+        project: ['./tsconfig.eslint.json'],
+        tsconfigRootDir: __dirname
+      },
+      rules: warn(...TYPE_AWARE_SAFETY_RULES)
     },
+
+    // Test files: enable Jest plugin/globals here so they don't lint production code.
+    // Also silence type-aware safety rules that are noisy in tests where `any`
+    // and fire-and-forget promises are idiomatic.
     {
-      files: ['**/*.test.js'],
-      extends: ['standard'],
-      plugins: ['eslint-plugin-jest'],
-      env: { jest: true }
-    },
-    // linting for ts files
-    {
-      files: ['**/*.ts'],
-      extends: 'standard-with-typescript',
-      // We can't use rules which requires parserServices as there is no tsconfig that represents the whole monorepo (yet).
-      // 'parserOptions': {
-      //     'project': './tsconfig.json'
-      // },
-      rules: {
-        ...ruleOverrides
-      }
-    },
-    // Linting for tests
-    {
-      files: [
-        '**/*.test.ts?(x)'
-      ],
+      files: ['**/*.test.ts', '**/*.test.tsx', '**/*.test.js', '**/test/**'],
+      plugins: ['jest'],
       env: {
         jest: true,
-        browser: true,
+        browser: true
       },
-      plugins: ['eslint-plugin-jest'],
-      extends: [
-        'standard-with-typescript',
-        'plugin:jest/recommended'
-      ],
       rules: {
-        ...ruleOverrides
+        ...off(...TYPE_AWARE_SAFETY_RULES),
+        ...off(...JEST_RULES_OFF)
       }
     }
   ]

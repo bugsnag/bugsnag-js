@@ -29,16 +29,16 @@ describe('plugin: react navigation', () => {
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
     TestRenderer.create(<App/>)
 
-    expect(MockedNavigationContainerRender).toBeCalledTimes(1)
+    expect(MockedNavigationContainerRender).toHaveBeenCalledTimes(1)
 
     const navigationProps = MockedNavigationContainerRender.mock.calls[0][0]
     const navigationRef = MockedNavigationContainerRender.mock.calls[0][1]
 
     navigationProps.onReady()
-    expect(onReady).toBeCalledTimes(1)
+    expect(onReady).toHaveBeenCalledTimes(1)
 
     navigationProps.onStateChange()
-    expect(onStateChange).toBeCalledTimes(1)
+    expect(onStateChange).toHaveBeenCalledTimes(1)
 
     expect(navigationRef).toBe(ref)
 
@@ -67,7 +67,7 @@ describe('plugin: react navigation', () => {
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
     TestRenderer.create(<App/>)
 
-    expect(MockedNavigationContainerRender).toBeCalledTimes(1)
+    expect(MockedNavigationContainerRender).toHaveBeenCalledTimes(1)
 
     expect(c.getContext()).toBeUndefined()
 
@@ -106,7 +106,7 @@ describe('plugin: react navigation', () => {
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
     TestRenderer.create(<App/>)
 
-    expect(MockedNavigationContainerRender).toBeCalledTimes(1)
+    expect(MockedNavigationContainerRender).toHaveBeenCalledTimes(1)
 
     expect(c._breadcrumbs.length).toBe(0)
 
@@ -160,7 +160,7 @@ describe('plugin: react navigation', () => {
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
     TestRenderer.create(<App/>)
 
-    expect(MockedNavigationContainerRender).toBeCalledTimes(1)
+    expect(MockedNavigationContainerRender).toHaveBeenCalledTimes(1)
 
     expect(c._breadcrumbs).toHaveLength(0)
 
@@ -199,7 +199,7 @@ describe('plugin: react navigation', () => {
     const MockedNavigationContainerRender = (NavigationContainer as any).render as jest.MockedFunction<React.ForwardRefRenderFunction<any, any>>
     TestRenderer.create(<App/>)
 
-    expect(MockedNavigationContainerRender).toBeCalledTimes(1)
+    expect(MockedNavigationContainerRender).toHaveBeenCalledTimes(1)
 
     expect(c._breadcrumbs.length).toBe(0)
 

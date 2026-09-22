@@ -8,6 +8,10 @@ import BugsnagErrorHandler from './bugsnag-error-handler'
 // detection multiple times. This causes a potential performance problem, so we
 // need to run `notify` outside of the current zone if zones are being used
 // see https://angular.io/guide/zone
+//
+// `Zone` is an optional runtime global from `zone.js`; there is no static type
+// for it here, so property access is intentionally against `any`.
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
 declare const Zone: any
 
 // zones are optional, so we need to detect if they are being used

@@ -1,17 +1,19 @@
 module.exports = api => {
-  // NB: This function can be called without an api argument, e.g. by bin/bundle
-
   const presets = []
   const plugins = []
   const overrides = []
 
   if (api && api.env('test')) {
     presets.push('@babel/preset-typescript')
-    plugins.push(['@babel/plugin-proposal-class-properties', { loose: true }])
+    plugins.push(['@babel/plugin-transform-class-properties', { loose: true }])
     plugins.push('@babel/plugin-transform-modules-commonjs')
-    plugins.push('@babel/plugin-proposal-optional-chaining')
+    plugins.push('@babel/plugin-transform-optional-chaining')
     overrides.push({
-      test: 'node_modules/react-native/**/*',
+      test: /node_modules[\\/]react-native[\\/]/,
+      presets: ['module:metro-react-native-babel-preset']
+    })
+    overrides.push({
+      test: /node_modules[\\/]@react-native[\\/]/,
       presets: ['module:metro-react-native-babel-preset']
     })
     overrides.push({
@@ -36,8 +38,7 @@ module.exports = api => {
     ['@babel/plugin-transform-shorthand-properties'],
     ['@babel/plugin-transform-spread', { loose: true }],
     ['@babel/plugin-transform-template-literals', { loose: true }],
-    ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
-    ['@babel/syntax-object-rest-spread']
+    ['@babel/plugin-transform-object-rest-spread', { loose: true }]
   )
 
   if (api && !api.env('test')) {

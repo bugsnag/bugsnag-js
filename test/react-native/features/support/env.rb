@@ -8,17 +8,32 @@ BeforeAll do
   end
 end
 
+def is_android?
+  return true if Maze.config.os&.downcase == 'android'
+  return true if Maze.config.device&.downcase&.include?('android')
+  return true if Maze::Helper.get_current_platform&.downcase == 'android'
+  return true if Maze.driver && Maze.driver.capabilities['platformName']&.downcase == 'android'
+  false
+end
+
+def is_ios?
+  return true if Maze.config.os&.downcase == 'ios'
+  return true if Maze.config.device&.downcase&.include?('ios')
+  return true if Maze::Helper.get_current_platform&.downcase == 'ios'
+  return true if Maze.driver && Maze.driver.capabilities['platformName']&.downcase == 'ios'
+  false
+end
+
 Before do
-  # See https://www.browserstack.com/docs/app-automate/appium/troubleshooting/app-orientation-issues
   Maze::Api::Appium::DeviceManager.new.set_rotation(:portrait)
 end
 
 Before('@android_only') do |_scenario|
-  skip_this_scenario("Skipping scenario") unless Maze::Helper.get_current_platform == 'android'
+  skip_this_scenario("Skipping scenario on non-Android") unless is_android?
 end
 
 Before('@ios_only') do |_scenario|
-  skip_this_scenario("Skipping scenario") unless Maze::Helper.get_current_platform == 'ios'
+  skip_this_scenario("Skipping scenario on non-iOS") if is_android? || !is_ios?
 end
 
 Before('@navigation') do |scenario|
@@ -33,7 +48,6 @@ Before('@react-native-navigation') do |scenario|
   skip_this_scenario("Skipping scenario") unless ENV['REACT_NATIVE_NAVIGATION'].eql?('true')
 end
 
-# Require until PLAT-8236 is implemented
 Before('@skip_hermes') do |_scenario|
   skip_this_scenario("Skipping scenario") if ENV['HERMES'].eql?('true')
 end

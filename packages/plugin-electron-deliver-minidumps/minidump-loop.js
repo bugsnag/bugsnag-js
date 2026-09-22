@@ -2,12 +2,29 @@ const { readFile } = require('fs').promises
 const runSyncCallbacks = require('@bugsnag/core/lib/sync-callback-runner')
 const { serialiseEvent, deserialiseEvent } = require('./event-serialisation')
 
+// Backoff configuration
+const BACKOFF_BASE_MS = 1000 // 1 second initial delay
+const BACKOFF_MAX_MS = 60000 // 60 second cap
+const BACKOFF_FACTOR = 2 // doubles each failure
+
+/**
+ * Exponential backoff with full jitter.
+ * Returns a random value in [0, min(BACKOFF_MAX_MS, BACKOFF_BASE_MS * BACKOFF_FACTOR^failureCount)]
+ */
+const calculateBackoff = (failureCount) => {
+  const exponential = BACKOFF_BASE_MS * Math.pow(BACKOFF_FACTOR, failureCount)
+  const capped = Math.min(exponential, BACKOFF_MAX_MS)
+  return Math.floor(Math.random() * capped)
+}
+
 module.exports = class MinidumpDeliveryLoop {
   constructor (sendMinidump, onSendError, minidumpQueue, logger) {
     this._sendMinidump = sendMinidump
     this._minidumpQueue = minidumpQueue
     this._logger = logger
     this._running = false
+    this._failureCount = 0
+    this._nextDelay = 0
 
     // onSendError can be a function or an array of functions
     this._onSendError = typeof onSendError === 'function'
@@ -19,7 +36,15 @@ module.exports = class MinidumpDeliveryLoop {
     this._logger.error('minidump failed to send…\n', (err && err.stack) ? err.stack : err)
 
     if (err.isRetryable === false) {
+      // Non-retryable (e.g. 400 Bad Request) — discard and move on immediately
       this._minidumpQueue.remove(minidump)
+      this._failureCount = 0
+      this._nextDelay = 0
+    } else {
+      // Retryable (network error, 5xx, etc.) — back off before retrying
+      this._failureCount++
+      this._nextDelay = calculateBackoff(this._failureCount)
+      this._logger.info(`Minidump delivery failed (attempt ${this._failureCount}), retrying in ${this._nextDelay}ms`)
     }
   }
 
@@ -55,16 +80,25 @@ module.exports = class MinidumpDeliveryLoop {
       try {
         await this._sendMinidump(minidump.minidumpPath, eventJson)
 
-        // if we had a successful delivery - remove the minidump from the queue
+        // Successful delivery — remove from queue and reset failure state
         this._minidumpQueue.remove(minidump)
+        this._failureCount = 0
+        this._nextDelay = 0
       } catch (e) {
+        // _onerror sets this._nextDelay appropriately
+        // 0 for non-retryable, backoff for retryable
         this._onerror(e, minidump)
       }
     } else {
       this._minidumpQueue.remove(minidump)
+      this._failureCount = 0
+      this._nextDelay = 0
     }
 
-    this._scheduleSelf()
+    // Schedule next attempt using the delay set above.
+    // On success or non-retryable: _nextDelay=0 (immediate).
+    // On retryable failure: _nextDelay=backoff (throttled).
+    this._scheduleSelf(this._nextDelay)
   }
 
   async _deliverNextMinidump () {
@@ -94,6 +128,8 @@ module.exports = class MinidumpDeliveryLoop {
     }
 
     this._running = true
+    this._failureCount = 0
+    this._nextDelay = 0
     this._scheduleSelf()
   }
 
@@ -109,3 +145,9 @@ module.exports = class MinidumpDeliveryLoop {
     })
   }
 }
+
+// Export for unit testing
+module.exports.calculateBackoff = calculateBackoff
+module.exports.BACKOFF_BASE_MS = BACKOFF_BASE_MS
+module.exports.BACKOFF_MAX_MS = BACKOFF_MAX_MS
+module.exports.BACKOFF_FACTOR = BACKOFF_FACTOR

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from 'fs'
 import plugin from '../'
 import { join } from 'path'

@@ -1,7 +1,10 @@
 source 'https://rubygems.org'
 
-gem 'cocoapods', '~> 1.14.3'
+gem 'cocoapods', '1.15.2'
 gem 'xcodeproj', '< 1.26.0'
+gem 'json', '< 2.7'
+
+gem 'bugsnag-maze-runner', '~>11.3'
 
 # Only install bumpsnag if we're using Github actions
 unless ENV['GITHUB_ACTIONS'].nil?

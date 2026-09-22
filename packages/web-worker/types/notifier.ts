@@ -14,4 +14,4 @@ declare const Bugsnag: WorkerBugsnagStatic
 
 export default Bugsnag
 export * from '@bugsnag/core'
-export { WorkerConfig }
+export type { WorkerConfig }

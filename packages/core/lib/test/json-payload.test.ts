@@ -1,8 +1,8 @@
 import jsonPayload from '../json-payload'
 
 function makeBigObject () {
-  var big: Record<string, string> = {}
-  var i = 0
+  const big: Record<string, string> = {}
+  let i = 0
   while (JSON.stringify(big).length < 2 * 10e5) {
     big['entry' + i] = 'long repetitive string'.repeat(1000)
     i++

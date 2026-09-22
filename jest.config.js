@@ -10,6 +10,9 @@ const project = (displayName, packageNames, config = {}) => ({
 const extensions = 'js,jsx,ts,tsx'
 
 module.exports = {
+  modulePathIgnorePatterns: [
+    '<rootDir>/packages/[^/]+/dist/'
+  ],
   collectCoverageFrom: [
     `**/packages/*/**/*.{${extensions}}`,
     `!**/*.test.{${extensions}}`,
@@ -74,6 +77,9 @@ module.exports = {
       preset: 'react-native',
       setupFiles: [
         '<rootDir>/packages/react-native/src/test/setup.js'
+      ],
+      transformIgnorePatterns: [
+        'node_modules/(?!(react-native|@react-native|jest-react-native|@react-native-community)/)'
       ]
     }),
     project('node plugins', [

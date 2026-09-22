@@ -100,7 +100,7 @@ test('updateXcodeProject(): can\'t find project', async () => {
   expect(readFileSyncMock).not.toHaveBeenCalled()
   expect(writeFileMock).not.toHaveBeenCalled()
 
-  expect(logger.warn).toBeCalledWith(expect.stringContaining(
+  expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining(
     'The Xcode project was not in the expected location and so couldn\'t be updated automatically'
   ))
 })

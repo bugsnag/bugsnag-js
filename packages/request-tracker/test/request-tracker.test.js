@@ -172,7 +172,6 @@ describe('@bugsnag/request-tracker', () => {
 
       callback.mockClear()
 
-      // eslint-disable-next-line no-undef
       const headersObj = new Headers()
       headersObj.set('x-token', 'super-secret-token')
       await mockGlobal.fetch('https://example.com', { method: 'POST', headers: headersObj })

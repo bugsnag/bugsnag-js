@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-commented-out-tests */
 
 import plugin from '../'
 
@@ -97,7 +96,6 @@ describe('plugin: window onerror', () => {
     //   }
     // })
 
-    // eslint-disable-next-line jest/expect-expect
     it('calls any previously registered window.onerror callback', done => {
       window.onerror = () => done()
 

@@ -198,7 +198,6 @@ describe('@bugsnag/core/client', () => {
       })
     })
 
-    // eslint-disable-next-line jest/expect-expect
     it('supports preventing send by returning false in onError callback', done => {
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
@@ -218,7 +217,6 @@ describe('@bugsnag/core/client', () => {
       process.nextTick(() => done())
     })
 
-    // eslint-disable-next-line jest/expect-expect
     it('supports preventing send by returning a Promise that resolves to false in onError callback', done => {
       const client = new Client({
         apiKey: 'API_KEY_YEAH',
@@ -238,7 +236,6 @@ describe('@bugsnag/core/client', () => {
       })
     })
 
-    // eslint-disable-next-line jest/expect-expect
     it('supports preventing send by returning false in notify callback', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
 
@@ -280,7 +277,6 @@ describe('@bugsnag/core/client', () => {
       client.notify(new Error('oh no!'))
     })
 
-    // eslint-disable-next-line jest/expect-expect
     it('supports preventing send with enabledReleaseStages', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', enabledReleaseStages: ['qa'] })
       client._setDelivery(client => ({
@@ -296,7 +292,6 @@ describe('@bugsnag/core/client', () => {
       process.nextTick(() => done())
     })
 
-    // eslint-disable-next-line jest/expect-expect
     it('supports setting releaseStage via config.releaseStage', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH', releaseStage: 'staging', enabledReleaseStages: ['production'] })
       client._setDelivery(client => ({
