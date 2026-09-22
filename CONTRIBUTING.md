@@ -87,7 +87,7 @@ You are now ready to make the release. Releases are done using Docker and Docker
 
 Build the release container:
 
-`docker-compose build release`
+`docker compose build release`
 
 Then make the release:
 
@@ -100,7 +100,7 @@ NPM_TOKEN=<generate a personal granular access token> \
 RELEASE_BRANCH=main \
 VERSION=patch \
 DIST_TAG=latest \
-  docker-compose run release
+  docker compose run release
 ```
 
 This process is interactive and will require you to confirm that you want to publish the changed packages.
@@ -147,7 +147,7 @@ NPM_TOKEN=<generate a personal granular access token> \
 RELEASE_BRANCH=main \
 VERSION=preminor \
 DIST_TAG=next \
-  docker-compose run release
+  docker compose run release
 ```
 
 Prereleases will automatically be published to npm with the dist tag `next` and browser bundles are automatically uploaded to the CDN.
@@ -174,5 +174,5 @@ VERSION=patch \
 DIST_TAG=latest \
 RETRY_PUBLISH=1 \
 FORCE_CDN_UPLOAD=1 \
-  docker-compose run release
+  docker compose run release
 ```
