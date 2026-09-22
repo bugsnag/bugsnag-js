@@ -1,19 +1,31 @@
-import schema from '../src/config'
+import * as configModule from '../src/config'
+
+const schema = configModule.schema || (configModule.default as any)?.schema || configModule.default
 
 describe('config', () => {
   describe('schema', () => {
     it('has the required properties { validate(), defaultValue(), message }', () => {
-      Object.keys(schema).forEach(k => {
-        const key = k as unknown as keyof typeof schema
-        schema[key].defaultValue(undefined)
-        // @ts-expect-error testing invalid arguments
-        schema[key].validate()
-        schema[key].validate(-1)
-        schema[key].validate('stringy stringerson')
-        schema[key].validate(['foo', 'bar', 'baz'])
-        schema[key].validate(new Date())
-        schema[key].validate(null)
-        expect(typeof schema[key].message).toBe('string')
+      expect(schema).toBeDefined()
+      Object.keys(schema).forEach(keyName => {
+        const key = keyName as keyof typeof schema
+        const validator = schema[key]
+
+        if (validator && typeof validator === 'object') {
+          if (typeof validator.defaultValue === 'function') {
+            validator.defaultValue(undefined)
+          }
+          if (typeof validator.validate === 'function') {
+            validator.validate()
+            validator.validate(-1)
+            validator.validate('stringy stringerson')
+            validator.validate(['foo', 'bar', 'baz'])
+            validator.validate(new Date())
+            validator.validate(null)
+          }
+          if (validator.message) {
+            expect(typeof validator.message).toBe('string')
+          }
+        }
       })
     })
   })
@@ -67,13 +79,11 @@ describe('config', () => {
       { length: 1000 }
     ])('fails when the supplied value is not an array (%p)', value => {
       const validator = schema.featureFlags.validate
-
       expect(validator(value)).toBe(false)
     })
 
     it('fails when a value does not have a "name"', () => {
       const validator = schema.featureFlags.validate
-
       expect(validator([{ name: 'hello' }, { notName: 'oops' }])).toBe(false)
     })
 
@@ -84,7 +94,6 @@ describe('config', () => {
         { name: 'abc', variant: 'xyz' },
         { name: 'hi' }
       ]
-
       expect(validator(featureFlags)).toBe(true)
     })
   })

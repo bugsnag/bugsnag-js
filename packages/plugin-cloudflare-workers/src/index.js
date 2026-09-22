@@ -1,7 +1,6 @@
 const bugsnagInFlight = require('@bugsnag/in-flight')
 const BugsnagPluginBrowserSession = require('@bugsnag/plugin-browser-session')
 const { cloneClient } = require('@bugsnag/core')
-
 const SERVER_PLUGIN_NAMES = ['express', 'koa', 'restify', 'hono']
 const isServerPluginLoaded = client => SERVER_PLUGIN_NAMES.some(name => client.getPlugin(name))
 

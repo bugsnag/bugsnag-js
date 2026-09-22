@@ -29,7 +29,13 @@ const BugsnagPluginReact = require('@bugsnag/plugin-react')
 
 const { schema, load, loadAsync } = require('./config')
 
-const internalPlugins = [
+// FIX: Lazily build internalPlugins inside a getter function instead of at
+// module load time. The original top-level array was evaluated the instant
+// notifier.js was require()'d — before any jest.mock() call could intercept
+// the plugin requires, causing "TypeError: require(...) is not a function".
+// Calling getInternalPlugins() inside start() ensures all mocks are registered
+// before the plugins are required.
+const getInternalPlugins = () => [
   require('@bugsnag/plugin-react-native-session')(NativeClient),
   require('@bugsnag/plugin-react-native-event-sync')(NativeClient),
   require('@bugsnag/plugin-react-native-client-sync')(NativeClient),
@@ -59,7 +65,7 @@ const _createClient = (opts, jsOpts) => {
     Object.keys(jsOpts).forEach(k => { opts[k] = jsOpts[k] })
   }
 
-  const bugsnag = new Client(opts, schema, internalPlugins, { name, version, url })
+  const bugsnag = new Client(opts, schema, getInternalPlugins(), { name, version, url })
 
   // if we let JS keep error breadcrumbs, it results in an error containing itself as a breadcrumb
   if (bugsnag._config.enabledBreadcrumbTypes !== null) {
@@ -121,7 +127,7 @@ const Bugsnag = {
       autoTrackSessions: false,
       autoDetectErrors: false,
       enabledBreadcrumbTypes: []
-    }, stubSchema, internalPlugins, { name, version, url })
+    }, stubSchema, getInternalPlugins(), { name, version, url })
 
     CLIENT_METHODS.forEach((m) => {
       if (/^_/.test(m)) return

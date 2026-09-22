@@ -7,7 +7,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
   describe('clone', () => {
     it('clones a client', () => {
       const original = new Client({ apiKey })
-      const cloned = cloneClient(original);
+      const cloned = cloneClient(original)
 
       expect(cloned._config.apiKey).toEqual(apiKey)
       expect(cloned).not.toBe(original)
@@ -17,7 +17,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       const original = new Client({ apiKey })
       original.leaveBreadcrumb('abc', { a: 1 }, 'navigation')
 
-      const cloned = cloneClient(original);
+      const cloned = cloneClient(original)
 
       expect(cloned._breadcrumbs).not.toBe(original._breadcrumbs)
       expect(cloned._breadcrumbs).toHaveLength(1)
@@ -41,7 +41,7 @@ describe('@bugsnag/core/lib/clone-client', () => {
       original.addMetadata('abc', { a: 1, b: 2, c: 3 })
       original.addMetadata('xyz', { x: 9, y: 8, z: 7 })
 
-      const cloned = cloneClient(original);
+      const cloned = cloneClient(original)
       expect(cloned._metadata).not.toBe(original._metadata)
       expect(cloned._metadata).toEqual({
         abc: { a: 1, b: 2, c: 3 },

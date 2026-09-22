@@ -263,7 +263,8 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports the app.duration and app.durationInForeground', async () => {
-    jest.useFakeTimers()
+    // FIX: use string form 'modern' — Jest 27 does not support { legacyFakeTimers: false }
+    jest.useFakeTimers('modern' as any)
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -297,7 +298,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports the app.duration and app.durationInForeground when process.getCreationTime returns null', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -329,7 +330,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports the app.durationInForeground after backgrounding', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -381,7 +382,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports the app.durationInForeground after backgrounding when process.getCreationTime returns null', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -431,7 +432,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('reports durationInForeground correctly across multiple browser windows', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -625,7 +626,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('automatically marks the app as not launching after the default "launchDurationMillis" elapses', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -646,7 +647,7 @@ describe('plugin: electron app info', () => {
     expect(event2.app).toEqual(makeExpectedEventApp({ isLaunching: true }))
     expect(event2.getMetadata('app')).toEqual(makeExpectedMetadataApp())
 
-    // advance the remaining 4 seconds to cover the 5 second default 'launcDurationMillis'
+    // advance the remaining 4 seconds to cover the 5 second default 'launchDurationMillis'
     jest.advanceTimersByTime(4000)
 
     const event3 = await sendEvent()
@@ -655,7 +656,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('automatically marks the app as not launching after the configured "launchDurationMillis" elapses', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -677,7 +678,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('does not sync "markLaunchComplete" calls after "launchDurationMillis" elapses', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -715,7 +716,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('does not sync "launchDurationMillis" elapsing after "markLaunchComplete" has been called', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
 
     const now = Date.now()
     jest.setSystemTime(now)
@@ -753,7 +754,7 @@ describe('plugin: electron app info', () => {
   })
 
   it('validates "launchDurationMillis" must be >= 0', async () => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('modern' as any)
     const config = { launchDurationMillis: -1234567890 }
 
     const { client } = makeClient({ config })

@@ -8,9 +8,10 @@
     "target": "es5",
     "lib": ["es2015"],
     "types": ["jest", "react-native"],
+    "skipLibCheck": true
   },
   "include": ["."],
   "exclude": [
     "src/NativeBugsnag.ts"
-  ],
+  ]
 }

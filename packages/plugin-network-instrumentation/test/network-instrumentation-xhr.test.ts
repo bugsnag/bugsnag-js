@@ -1,7 +1,7 @@
 import { Client, Delivery, Event, Plugin } from '@bugsnag/core'
 import { createNetworkInstrumentationPlugin as createPlugin } from '../src/network-instrumentation'
 const createMockDelivery = (notifyCallbacks: Event[]) => (): Delivery => ({
-  sendEvent: (payload:any) => {
+  sendEvent: (payload: any) => {
     notifyCallbacks.push(payload.events[0])
   },
   sendSession: () => {}

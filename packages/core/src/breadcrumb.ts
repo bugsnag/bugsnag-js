@@ -1,7 +1,7 @@
-import { BreadcrumbType } from "./common"
+import { BreadcrumbType } from './common'
 
 export default class Breadcrumb {
-  constructor(
+  constructor (
     public readonly message: string,
     public readonly metadata: { [key: string]: any },
     public readonly type: BreadcrumbType,

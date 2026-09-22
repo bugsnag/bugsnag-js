@@ -1,6 +1,10 @@
-import delivery from '../src/delivery'
 import http from 'http'
-import type { Client, EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
+import delivery from '../src/delivery'
+import type {
+  Client,
+  EventDeliveryPayload,
+  SessionDeliveryPayload
+} from '@bugsnag/core'
 import type { AddressInfo } from 'net'
 
 interface Request {
@@ -10,204 +14,382 @@ interface Request {
   body: string
 }
 
+interface TestLogger {
+  error: jest.Mock
+  warn: jest.Mock
+  info: jest.Mock
+}
+
+const createLogger = (): TestLogger => ({
+  error: jest.fn(),
+  warn: jest.fn(),
+  info: jest.fn()
+})
+
+const createClient = (config: any, logger = createLogger()): Client =>
+  ({
+    _logger: logger,
+    _config: config
+  } as unknown as Client)
+
+const listen = (server: http.Server): Promise<void> =>
+  new Promise((resolve, reject) => {
+    const onError = (error: Error) => {
+      server.off('listening', onListening)
+      reject(error)
+    }
+
+    const onListening = () => {
+      server.off('error', onError)
+      resolve()
+    }
+
+    server.once('error', onError)
+    server.once('listening', onListening)
+    server.listen(0, '127.0.0.1')
+  })
+
+const close = (server: http.Server): Promise<void> =>
+  new Promise((resolve, reject) => {
+    if (!server.listening) {
+      resolve()
+      return
+    }
+
+    server.close(error => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
+      }
+    })
+  })
+
+const getServerUrl = (server: http.Server, path: string): string => {
+  const address = server.address() as AddressInfo
+  return `http://127.0.0.1:${address.port}${path}`
+}
+
+const sendEvent = (
+  client: Client,
+  payload: EventDeliveryPayload
+): Promise<Error | null> =>
+  new Promise(resolve => {
+    delivery(client).sendEvent(payload, error => {
+      resolve(error)
+    })
+  })
+
+const sendSession = (
+  client: Client,
+  payload: SessionDeliveryPayload
+): Promise<Error | null> =>
+  new Promise(resolve => {
+    delivery(client).sendSession(payload, error => {
+      resolve(error)
+    })
+  })
+
 const mockServer = (successCode = 200) => {
   const requests: Request[] = []
+
+  const server = http.createServer((req, res) => {
+    let body = ''
+
+    req.on('data', chunk => {
+      body += chunk
+    })
+
+    req.on('end', () => {
+      requests.push({
+        url: req.url,
+        method: req.method,
+        headers: req.headers,
+        body
+      })
+
+      res.statusCode = successCode
+      res.end('OK')
+    })
+  })
+
   return {
     requests,
-    server: http.createServer((req, res) => {
-      let body = ''
-      req.on('data', b => { body += b })
-      req.on('end', () => {
-        requests.push({
-          url: req.url,
-          method: req.method,
-          headers: req.headers,
-          body
-        })
-        res.statusCode = successCode
-        res.end('OK')
-      })
-    })
+    server
   }
 }
 
 describe('delivery:node', () => {
-  it('sends events successfully', done => {
-    const { requests, server } = mockServer()
-    server.listen((err: Error) => {
-      expect(err).toBeUndefined()
-
-      const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
-      const config = {
-        apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
-        redactedKeys: []
-      }
-      delivery({ _logger: {}, _config: config } as unknown as Client).sendEvent(payload, (err) => {
-        expect(err).toBe(null)
-        expect(requests.length).toBe(1)
-        expect(requests[0].method).toBe('POST')
-        expect(requests[0].url).toMatch('/notify/')
-        expect(requests[0].headers['content-type']).toEqual('application/json')
-        expect(requests[0].headers['bugsnag-api-key']).toEqual('aaaaaaaa')
-        expect(requests[0].headers['bugsnag-payload-version']).toEqual('4')
-        expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
-        expect(requests[0].body).toBe(JSON.stringify(payload))
-
-        server.close()
-        done()
-      })
-    })
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
-  it('prevents event delivery with incomplete config', done => {
+  it('sends events successfully', async () => {
     const { requests, server } = mockServer()
-    server.listen((err: Error) => {
-      expect(err).toBeUndefined()
 
-      const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+    await listen(server)
+
+    try {
+      const payload = {
+        sample: 'payload'
+      } as unknown as EventDeliveryPayload
+
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: null, sessions: null },
+        endpoints: {
+          notify: getServerUrl(server, '/notify/'),
+          sessions: null
+        },
         redactedKeys: []
       }
 
-      delivery({ _logger: { error: jest.fn() }, _config: config } as unknown as Client).sendEvent(payload, (err) => {
-        expect(err).toStrictEqual(new Error('Event not sent due to incomplete endpoint configuration'))
-        expect(requests.length).toBe(0)
+      const error = await sendEvent(
+        createClient(config),
+        payload
+      )
 
-        server.close()
-        done()
-      })
-    })
+      expect(error).toBeNull()
+      expect(requests).toHaveLength(1)
+      expect(requests[0].method).toBe('POST')
+      expect(requests[0].url).toMatch('/notify/')
+      expect(requests[0].headers['content-type']).toEqual('application/json')
+      expect(requests[0].headers['bugsnag-api-key']).toEqual('aaaaaaaa')
+      expect(requests[0].headers['bugsnag-payload-version']).toEqual('4')
+      expect(requests[0].headers['bugsnag-sent-at']).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+      )
+      expect(requests[0].body).toBe(JSON.stringify(payload))
+    } finally {
+      await close(server)
+    }
   })
 
-  it('logs failures and large payloads', done => {
+  it('prevents event delivery with incomplete config', async () => {
+    const { requests, server } = mockServer()
+
+    await listen(server)
+
+    try {
+      const payload = {
+        sample: 'payload'
+      } as unknown as EventDeliveryPayload
+
+      const config = {
+        apiKey: 'aaaaaaaa',
+        endpoints: {
+          notify: null,
+          sessions: null
+        },
+        redactedKeys: []
+      }
+
+      const error = await sendEvent(
+        createClient(config),
+        payload
+      )
+
+      expect(error).toStrictEqual(
+        new Error(
+          'Event not sent due to incomplete endpoint configuration'
+        )
+      )
+      expect(requests).toHaveLength(0)
+    } finally {
+      await close(server)
+    }
+  })
+
+  it('logs failures and large payloads', async () => {
     const { server } = mockServer(400)
-    server.listen((err: Error) => {
-      expect(err).toBeUndefined()
 
+    await listen(server)
+
+    try {
       const lotsOfEvents: any[] = []
+
       while (JSON.stringify(lotsOfEvents).length < 10e5) {
-        lotsOfEvents.push({ errors: [{ errorClass: 'Error', errorMessage: 'long repetitive string'.repeat(1000) }] })
+        lotsOfEvents.push({
+          errors: [
+            {
+              errorClass: 'Error',
+              errorMessage: 'long repetitive string'.repeat(1000)
+            }
+          ]
+        })
       }
+
       const payload = {
         events: lotsOfEvents
       } as unknown as EventDeliveryPayload
 
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
+        endpoints: {
+          notify: getServerUrl(server, '/notify/'),
+          sessions: null
+        },
         redactedKeys: []
       }
 
-      const logger = { error: jest.fn(), warn: jest.fn() }
+      const logger = createLogger()
 
-      delivery({ _logger: logger, _config: config } as unknown as Client).sendEvent(payload, (err) => {
-        expect(err).toStrictEqual(new Error('Bad statusCode from API: 400\nOK'))
-        expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Event failed to send…'), expect.any(Error))
-        expect(logger.warn).toHaveBeenCalledWith('Event oversized (1.01 MB)')
+      const error = await sendEvent(
+        createClient(config, logger),
+        payload
+      )
 
-        server.close()
-        done()
-      })
-    })
+      expect(error).toStrictEqual(
+        new Error('Bad statusCode from API: 400\nOK')
+      )
+
+      expect(logger.error).toHaveBeenCalledWith(
+        expect.stringContaining('Event failed to send…'),
+        expect.any(Error)
+      )
+
+      expect(logger.warn).toHaveBeenCalledWith(
+        'Event oversized (1.01 MB)'
+      )
+    } finally {
+      await close(server)
+    }
   })
 
-  it('sends sessions successfully', done => {
+  it('sends sessions successfully', async () => {
     const { requests, server } = mockServer(202)
-    server.listen((err: Error) => {
-      expect(err).toBeUndefined()
 
-      const payload = { sample: 'payload' } as unknown as SessionDeliveryPayload
+    await listen(server)
+
+    try {
+      const payload = {
+        sample: 'payload'
+      } as unknown as SessionDeliveryPayload
+
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: 'blah', sessions: `http://0.0.0.0:${(server.address() as AddressInfo).port}/sessions/` },
+        endpoints: {
+          notify: null,
+          sessions: getServerUrl(server, '/sessions/')
+        },
         redactedKeys: []
       }
-      delivery({ _logger: {}, _config: config } as unknown as Client).sendSession(payload, (err) => {
-        expect(err).toBe(null)
-        expect(requests.length).toBe(1)
-        expect(requests[0].method).toBe('POST')
-        expect(requests[0].url).toMatch('/sessions/')
-        expect(requests[0].headers['content-type']).toEqual('application/json')
-        expect(requests[0].headers['bugsnag-api-key']).toEqual('aaaaaaaa')
-        expect(requests[0].headers['bugsnag-payload-version']).toEqual('1')
-        expect(requests[0].headers['bugsnag-sent-at']).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
-        expect(requests[0].body).toBe(JSON.stringify(payload))
 
-        server.close()
-        done()
-      })
-    })
+      const error = await sendSession(
+        createClient(config),
+        payload
+      )
+
+      expect(error).toBeNull()
+      expect(requests).toHaveLength(1)
+      expect(requests[0].method).toBe('POST')
+      expect(requests[0].url).toMatch('/sessions/')
+      expect(requests[0].headers['content-type']).toEqual('application/json')
+      expect(requests[0].headers['bugsnag-api-key']).toEqual('aaaaaaaa')
+      expect(requests[0].headers['bugsnag-payload-version']).toEqual('1')
+      expect(requests[0].headers['bugsnag-sent-at']).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+      )
+      expect(requests[0].body).toBe(JSON.stringify(payload))
+    } finally {
+      await close(server)
+    }
   })
 
-  it('handles errors gracefully (ECONNREFUSED)', done => {
-    const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+  it('handles errors gracefully (ECONNREFUSED)', async () => {
+    const payload = {
+      sample: 'payload'
+    } as unknown as EventDeliveryPayload
+
     const config = {
       apiKey: 'aaaaaaaa',
-      endpoints: { notify: 'http://0.0.0.0:9999/notify/' },
+      endpoints: {
+        notify: 'http://127.0.0.1:1/notify/',
+        sessions: null
+      },
       redactedKeys: []
     }
-    let didLog = false
-    const log = () => { didLog = true }
-    delivery({ _config: config, _logger: { error: log } } as unknown as Client).sendEvent(payload, (err: any) => {
-      expect(didLog).toBe(true)
-      expect(err).toBeTruthy()
-      expect(err.code).toBe('ECONNREFUSED')
-      done()
-    })
+
+    const logger = createLogger()
+
+    const error = await sendEvent(
+      createClient(config, logger),
+      payload
+    ) as NodeJS.ErrnoException
+
+    expect(logger.error).toHaveBeenCalled()
+    expect(error).toBeTruthy()
+    expect(error.code).toBe('ECONNREFUSED')
   })
 
-  it('handles errors gracefully (socket hang up)', done => {
-    const server = http.createServer((req, res) => {
-      req.connection.destroy()
+  it('handles errors gracefully (socket hang up)', async () => {
+    const server = http.createServer(req => {
+      req.destroy()
     })
 
-    server.listen((err: Error) => {
-      expect(err).toBeFalsy()
-      const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+    await listen(server)
+
+    try {
+      const payload = {
+        sample: 'payload'
+      } as unknown as EventDeliveryPayload
+
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
+        endpoints: {
+          notify: getServerUrl(server, '/notify/'),
+          sessions: null
+        },
         redactedKeys: []
       }
-      let didLog = false
-      const log = () => { didLog = true }
-      delivery({ _config: config, _logger: { error: log } } as unknown as Client).sendEvent(payload, (err: any) => {
-        expect(didLog).toBe(true)
-        expect(err).toBeTruthy()
-        expect(err.code).toBe('ECONNRESET')
 
-        server.close()
-        done()
-      })
-    })
+      const logger = createLogger()
+
+      const error = await sendEvent(
+        createClient(config, logger),
+        payload
+      ) as NodeJS.ErrnoException
+
+      expect(logger.error).toHaveBeenCalled()
+      expect(error).toBeTruthy()
+      expect(error.code).toBe('ECONNRESET')
+    } finally {
+      await close(server)
+    }
   })
 
-  it('handles errors gracefully (HTTP 503)', done => {
+  it('handles errors gracefully (HTTP 503)', async () => {
     const server = http.createServer((req, res) => {
       res.statusCode = 503
       res.end('NOT OK')
     })
 
-    server.listen((err: Error) => {
-      expect(err).toBeFalsy()
-      const payload = { sample: 'payload' } as unknown as EventDeliveryPayload
+    await listen(server)
+
+    try {
+      const payload = {
+        sample: 'payload'
+      } as unknown as EventDeliveryPayload
+
       const config = {
         apiKey: 'aaaaaaaa',
-        endpoints: { notify: `http://0.0.0.0:${(server.address() as AddressInfo).port}/notify/` },
+        endpoints: {
+          notify: getServerUrl(server, '/notify/'),
+          sessions: null
+        },
         redactedKeys: []
       }
-      let didLog = false
-      const log = () => { didLog = true }
-      delivery({ _config: config, _logger: { error: log } } as unknown as Client).sendEvent(payload, (err) => {
-        expect(didLog).toBe(true)
-        expect(err).toBeTruthy()
 
-        server.close()
-        done()
-      })
-    })
+      const logger = createLogger()
+
+      const error = await sendEvent(
+        createClient(config, logger),
+        payload
+      )
+
+      expect(logger.error).toHaveBeenCalled()
+      expect(error).toBeTruthy()
+    } finally {
+      await close(server)
+    }
   })
 })

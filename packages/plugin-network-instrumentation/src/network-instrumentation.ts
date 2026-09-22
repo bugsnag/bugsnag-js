@@ -30,7 +30,7 @@ export interface NetworkInstrumentationConfig {
   onHttpError?: (args: { request: any, response: any }) => boolean | void
 }
 
-export function createNetworkInstrumentationPlugin(
+export function createNetworkInstrumentationPlugin (
   config: NetworkInstrumentationConfig = {},
   global: any = (typeof window !== 'undefined' ? window : undefined)
 ): any {
@@ -92,7 +92,7 @@ export function createNetworkInstrumentationPlugin(
         }
       }
 
-      function handleHttpError(startContext: any, endContext: any) {
+      function handleHttpError (startContext: any, endContext: any) {
         // Check if we should capture this status code
         if (!shouldCaptureStatusCode(normalizedStatusCodes, endContext.status)) return
 

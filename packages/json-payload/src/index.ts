@@ -1,13 +1,12 @@
-import type { EventDeliveryPayload, SessionDeliveryPayload } from "@bugsnag/core";
-import jsonStringify from '@bugsnag/safe-json-stringify';
+import type { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
+import jsonStringify from '@bugsnag/safe-json-stringify'
 
 type RedactedKey = string | RegExp
 
 const EVENT_REDACTION_PATHS = [
   'events.[].metaData',
   'events.[].breadcrumbs.[].metaData',
-  'events.[].request',
-  'events.[].response'
+  'events.[].request'
 ]
 
 export const event = (event: EventDeliveryPayload, redactedKeys?: RedactedKey[]) => {

@@ -17,7 +17,7 @@ describe('metadata delegate', () => {
       }
     ])('should not add $key keys', ({ key, expected }) => {
       const state = {}
-      metadataDelegate.add(state, key, "foo", "bar");
+      metadataDelegate.add(state, key, 'foo', 'bar')
       expect(state).toEqual(expected)
     })
   })
@@ -51,7 +51,7 @@ describe('metadata delegate', () => {
         }
       }
     ])('should not overwrite $key keys', ({ key, state, expected }) => {
-      metadataDelegate.clear(state, key, "foo");
+      metadataDelegate.clear(state, key, 'foo')
       expect(state).toEqual(expected)
     })
   })

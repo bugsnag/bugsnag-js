@@ -1,12 +1,13 @@
 import { ErrorHandler, VERSION } from '@angular/core'
-import Bugsnag, { Client } from '@bugsnag/js'
+import { Client } from '@bugsnag/core'
+import Bugsnag from '@bugsnag/js'
 
 type BugsnagWithInternals = typeof Bugsnag & {
   _client: Client | null
 }
 
 class BugsnagErrorHandler implements ErrorHandler {
-  public bugsnagClient: Client | null;
+  public bugsnagClient: Client | null
 
   constructor (client?: Client) {
     if (client) {

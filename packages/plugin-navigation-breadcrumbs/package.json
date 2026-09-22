@@ -1,5 +1,6 @@
 {
   "name": "@bugsnag/plugin-navigation-breadcrumbs",
+  "version": "8.9.0",
   "type": "module",
   "main": "./dist/cjs/navigation-breadcrumbs.js",
   "module": "./dist/esm/navigation-breadcrumbs.js",
@@ -16,7 +17,6 @@
       }
     }
   },
-  "version": "8.9.0",
   "description": "@bugsnag/js plugin to record browser navigation as breadcrumbs",
   "homepage": "https://www.bugsnag.com/",
   "repository": {

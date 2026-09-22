@@ -1,5 +1,6 @@
 {
   "name": "@bugsnag/plugin-aws-lambda",
+  "version": "8.9.0",
   "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -16,7 +17,6 @@
       }
     }
   },
-  "version": "8.9.0",
   "description": "AWS Lambda support for @bugsnag/node",
   "homepage": "https://www.bugsnag.com/",
   "repository": {

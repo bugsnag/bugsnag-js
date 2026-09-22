@@ -101,20 +101,35 @@ class CodeRange extends Writable {
     this._code = {}
   }
 
-  _write (chunk: string, enc: BufferEncoding | undefined, cb: (err?: Error | null) => void): void {
-    this._n++
-    if (this._n < this._start) return cb(null)
-    if (this._n <= this._end) {
-      this._code[String(this._n)] = chunk.length <= MAX_LINE_LENGTH ? chunk : chunk.substr(0, MAX_LINE_LENGTH)
-      return cb(null)
-    }
-    this.emit('done')
-    return cb(null)
+  override _write (
+  chunk: any,
+  encoding: string,
+  callback: (error?: Error | null) => void
+): void {
+  const line = String(chunk)
+
+  this._n++
+
+  if (this._n < this._start) {
+    return callback(null)
   }
 
-  getCode () {
-    return this._code
+  if (this._n <= this._end) {
+    this._code[String(this._n)] =
+      line.length <= MAX_LINE_LENGTH
+        ? line
+        : line.substring(0, MAX_LINE_LENGTH)
+
+    return callback(null)
   }
+
+  this.emit('done')
+  return callback(null)
+}
+
+getCode () {
+  return this._code
+}
 }
 
 const pMapSeries = (ps: Array<() => Promise<Stackframe>>) => {

@@ -1,11 +1,11 @@
-import Breadcrumb from "./breadcrumb";
-import Client from "./client";
-import Session from "./session";
-import Event from "./event";
+import Breadcrumb from './breadcrumb'
+import Client from './client'
+import Session from './session'
+import Event from './event'
 
 export type BreadcrumbType = 'error' | 'log' | 'manual' | 'navigation' | 'process' | 'request' | 'state' | 'user';
 
-export const BREADCRUMB_TYPES = ['navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual'] as const;
+export const BREADCRUMB_TYPES = ['navigation', 'request', 'process', 'log', 'user', 'state', 'error', 'manual'] as const
 
 export interface Config {
   apiKey: string

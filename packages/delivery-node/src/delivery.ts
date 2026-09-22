@@ -7,7 +7,7 @@ interface PluginConfig extends Config {
   agent?: http.Agent
 }
 
-interface InternalClient extends Client<PluginConfig> {}
+type InternalClient = Client<PluginConfig>
 
 const delivery = (client: Client<PluginConfig>): Delivery => ({
   sendEvent: (event, cb = () => {}) => {

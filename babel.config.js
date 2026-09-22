@@ -1,16 +1,21 @@
 module.exports = api => {
-  // NB: This function can be called without an api argument
-
   const presets = []
   const plugins = []
   const overrides = []
 
   if (api && api.env('test')) {
-    presets.push(['@babel/preset-env', {targets: {node: 'current'}}])
+    presets.push(['@babel/preset-env', { targets: { node: 'current' } }])
     presets.push('@babel/preset-typescript')
+    plugins.push(['@babel/plugin-transform-class-properties', { loose: true }])
+    plugins.push('@babel/plugin-transform-modules-commonjs')
+    plugins.push('@babel/plugin-transform-optional-chaining')
     overrides.push({
-      test: ['node_modules/react-native/**/*', 'node_modules/@react-native/**/*'],
-      presets: ['module:metro-react-native-babel-preset', '@babel/preset-typescript']
+      test: /node_modules[\\/]react-native[\\/]/,
+      presets: ['module:metro-react-native-babel-preset']
+    })
+    overrides.push({
+      test: /node_modules[\\/]@react-native[\\/]/,
+      presets: ['module:metro-react-native-babel-preset']
     })
     overrides.push({
       test: './packages/plugin-react/**/*',
@@ -34,7 +39,7 @@ module.exports = api => {
       ['@babel/plugin-transform-spread', { loose: true }],
       ['@babel/plugin-transform-template-literals', { loose: true }],
       ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
-      ['@babel/syntax-object-rest-spread']
+      ['@babel/plugin-transform-object-rest-spread', { loose: true }]
     )
   }
 

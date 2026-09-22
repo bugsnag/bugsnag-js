@@ -1,5 +1,5 @@
 import { ErrorHandler } from '@angular/core'
-import { Client, Event, Plugin } from '@bugsnag/js'
+import { Client, Event, Plugin } from '@bugsnag/core'
 import BugsnagErrorHandler from './bugsnag-error-handler'
 
 // angular uses zones to watch for changes in asynchronous tasks so it can
@@ -8,6 +8,10 @@ import BugsnagErrorHandler from './bugsnag-error-handler'
 // detection multiple times. This causes a potential performance problem, so we
 // need to run `notify` outside of the current zone if zones are being used
 // see https://angular.io/guide/zone
+//
+// `Zone` is an optional runtime global from `zone.js`; there is no static type
+// for it here, so property access is intentionally against `any`.
+ 
 declare const Zone: any
 
 // zones are optional, so we need to detect if they are being used

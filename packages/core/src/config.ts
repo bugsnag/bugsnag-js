@@ -33,18 +33,19 @@ export interface Schema {
     allowPartialObject: boolean
     validate: (value: unknown) => boolean
   }
+  // empty tuple/array literal return types crash @typescript-eslint/parser here, use any[] instead
   onError: {
-    defaultValue: () => []
+    defaultValue: () => any[]
     message: string
     validate: (value: unknown) => boolean
   }
   onSession: {
-    defaultValue: () => []
+    defaultValue: () => any[]
     message: string
     validate: (value: unknown) => boolean
   }
   onBreadcrumb: {
-    defaultValue: () => []
+    defaultValue: () => any[]
     message: string
     validate: (value: unknown) => boolean
   }
@@ -84,12 +85,12 @@ export interface Schema {
     validate: (value: unknown) => boolean
   }
   user: {
-    defaultValue: () => {}
+    defaultValue: () => Record<string, unknown>
     message: string
     validate: (value: unknown) => boolean
   }
   metadata: {
-    defaultValue: () => {}
+    defaultValue: () => Record<string, unknown>
     message: string
     validate: (value: unknown) => boolean
   }
@@ -99,17 +100,17 @@ export interface Schema {
     validate: (value: unknown) => boolean
   }
   redactedKeys: {
-    defaultValue: () => ['password']
+    defaultValue: () => string[]
     message: string
     validate: (value: unknown) => boolean
   }
   plugins: {
-    defaultValue: () => []
+    defaultValue: () => any[]
     message: string
     validate: (value: unknown) => boolean
   }
   featureFlags: {
-    defaultValue: () => []
+    defaultValue: () => any[]
     message: string
     validate: (value: unknown) => boolean
   }
@@ -156,7 +157,7 @@ const schema: Schema = {
       const providedKeys = Object.keys(value)
       const defaultKeys = Object.keys(defaultErrorTypes())
       // ensure it only has a subset of the allowed keys
-      if (providedKeys.filter( k => defaultKeys.indexOf(k) !== -1).length < providedKeys.length) return false
+      if (providedKeys.filter(k => defaultKeys.indexOf(k) !== -1).length < providedKeys.length) return false
       // ensure all of the values are boolean
       if (providedKeys.filter(k => typeof value[k as keyof typeof value] !== 'boolean').length > 0) return false
       return true
@@ -201,7 +202,7 @@ const schema: Schema = {
       Object.keys(val).filter(k => ['notify', 'sessions'].indexOf(k) === -1).length === 0
   },
   autoTrackSessions: {
-    defaultValue: ()  => true,
+    defaultValue: () => true,
     message: 'should be true|false',
     validate: (val: unknown) => val === true || val === false
   },

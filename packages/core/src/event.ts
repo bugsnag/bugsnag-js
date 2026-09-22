@@ -1,4 +1,4 @@
-import { App, Device, FeatureFlag, Logger, Request, Response, Stackframe, Thread, User, BugsnagError, NotifiableError } from "./common"
+import { App, Device, FeatureFlag, Logger, Request, Response, Stackframe, Thread, User, BugsnagError, NotifiableError } from './common'
 
 import ErrorStackParser from 'error-stack-parser'
 import StackGenerator from 'stack-generator'
@@ -7,8 +7,8 @@ import hasStack from './lib/has-stack'
 import metadataDelegate from './lib/metadata-delegate'
 import featureFlagDelegate from './lib/feature-flag-delegate'
 import isError from './lib/iserror'
-import Breadcrumb from "./breadcrumb"
-import Session from "./session"
+import Breadcrumb from './breadcrumb'
+import Session from './session'
 
 interface HandledState {
   unhandled: boolean
@@ -174,56 +174,56 @@ export default class Event {
     }
   }
 
-  // Helpers
-static getStacktrace = function (error: Error, errorFramesToSkip: number, backtraceFramesToSkip: number): any[] {
-  if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
-  // error wasn't provided or didn't have a stacktrace so try to walk the callstack
-  try {
-    return StackGenerator.backtrace({ maxStackSize: 10 }).filter((frame) =>
-      (frame.functionName || '').indexOf('StackGenerator$$') === -1
-    ).slice(1 + backtraceFramesToSkip)
-  } catch (e) {
-    return []
-  }
-}
-
-static create = function (maybeError: NotifiableError, tolerateNonErrors: boolean, handledState: HandledState | undefined, component: string, errorFramesToSkip = 0, logger?: Logger) {
-  const [error, internalFrames] = normaliseError(maybeError, tolerateNonErrors, component, logger)
-  let event: Event
-  try {
-    const stacktrace = Event.getStacktrace(
-      error,
-      // if an error was created/throw in the normaliseError() function, we need to
-      // tell the getStacktrace() function to skip the number of frames we know will
-      // be from our own functions. This is added to the number of frames deep we
-      // were told about
-      internalFrames > 0 ? 1 + internalFrames + errorFramesToSkip : 0,
-      // if there's no stacktrace, the callstack may be walked to generated one.
-      // this is how many frames should be removed because they come from our library
-      1 + errorFramesToSkip
-    )
-    event = new Event(error.name, error.message, stacktrace, handledState, maybeError)
-  } catch (e) {
-    event = new Event(error.name, error.message, [], handledState, maybeError)
-  }
-  if (error.name === 'InvalidError') {
-    event.addMetadata(`${component}`, 'non-error parameter', makeSerialisable(maybeError))
-  }
-  if (error.cause) {
-    const causes = getCauseStack(error).slice(1)
-    const normalisedCauses = causes.map((cause) => {
-      // Only get stacktrace for error causes that are a valid JS Error and already have a stack
-      const stacktrace = (isError(cause) && hasStack(cause)) ? ErrorStackParser.parse(cause) : []
-      const [error] = normaliseError(cause, true, 'error cause')
-      if (error.name === 'InvalidError') event.addMetadata('error cause', makeSerialisable(cause))
-      return createBugsnagError(error.name, error.message, Event.__type, stacktrace)
-    })
-
-    event.errors.push(...normalisedCauses)
+  // static class field assignment crashes @typescript-eslint/parser here, use a static method instead
+  static getStacktrace (error: Error, errorFramesToSkip: number, backtraceFramesToSkip: number): any[] {
+    if (hasStack(error)) return ErrorStackParser.parse(error).slice(errorFramesToSkip)
+    // error wasn't provided or didn't have a stacktrace so try to walk the callstack
+    try {
+      return StackGenerator.backtrace({ maxStackSize: 10 }).filter((frame) =>
+        (frame.functionName || '').indexOf('StackGenerator$$') === -1
+      ).slice(1 + backtraceFramesToSkip)
+    } catch (e) {
+      return []
+    }
   }
 
-  return event
-}
+  static create (maybeError: NotifiableError, tolerateNonErrors: boolean, handledState: HandledState | undefined, component: string, errorFramesToSkip = 0, logger?: Logger): Event {
+    const [error, internalFrames] = normaliseError(maybeError, tolerateNonErrors, component, logger)
+    let event: Event
+    try {
+      const stacktrace = Event.getStacktrace(
+        error,
+        // if an error was created/throw in the normaliseError() function, we need to
+        // tell the getStacktrace() function to skip the number of frames we know will
+        // be from our own functions. This is added to the number of frames deep we
+        // were told about
+        internalFrames > 0 ? 1 + internalFrames + errorFramesToSkip : 0,
+        // if there's no stacktrace, the callstack may be walked to generated one.
+        // this is how many frames should be removed because they come from our library
+        1 + errorFramesToSkip
+      )
+      event = new Event(error.name, error.message, stacktrace, handledState, maybeError)
+    } catch (e) {
+      event = new Event(error.name, error.message, [], handledState, maybeError)
+    }
+    if (error.name === 'InvalidError') {
+      event.addMetadata(`${component}`, 'non-error parameter', makeSerialisable(maybeError))
+    }
+    if (error.cause) {
+      const causes = getCauseStack(error).slice(1)
+      const normalisedCauses = causes.map((cause) => {
+        // Only get stacktrace for error causes that are a valid JS Error and already have a stack
+        const stacktrace = (isError(cause) && hasStack(cause)) ? ErrorStackParser.parse(cause) : []
+        const [error] = normaliseError(cause, true, 'error cause')
+        if (error.name === 'InvalidError') event.addMetadata('error cause', makeSerialisable(cause))
+        return createBugsnagError(error.name, error.message, Event.__type, stacktrace)
+      })
+
+      event.errors.push(...normalisedCauses)
+    }
+
+    return event
+  }
 }
 
 interface StackTraceJsStyleStackframe {
@@ -300,7 +300,7 @@ const makeSerialisable = (err?: any) => {
   return err
 }
 
-const normaliseError = (maybeError: unknown, tolerateNonErrors: boolean, component: string, logger?: Logger): [Error, number] => {
+const normaliseError = (maybeError: unknown, tolerateNonErrors: boolean, component: string, logger?: Logger): any => {
   let error
   let internalFrames = 0
 
@@ -380,4 +380,3 @@ const hasNecessaryFields = (error: unknown): error is { name?: string; errorClas
   (typeof error.name === 'string' || typeof error.errorClass === 'string') &&
   // @ts-expect-error accessing properties on unknown type before type guard narrows it
   (typeof error.message === 'string' || typeof error.errorMessage === 'string')
-

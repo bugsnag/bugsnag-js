@@ -102,7 +102,6 @@ export default (doc = document, win = window) => ({
       __proxy(win, fn, original =>
         __traceOriginalScript(original, (args: any) => ({
           get: () => args[0],
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
           replace: (fn: Function) => { args[0] = fn }
         }))
       )
@@ -113,11 +112,10 @@ export default (doc = document, win = window) => ({
       'IDBRequest', 'IDBTransaction', 'KeyOperation', 'MediaController', 'MessagePort', 'ModalWindow',
       'Notification', 'SVGElementInstance', 'Screen', 'TextTrack', 'TextTrackCue', 'TextTrackList',
       'WebSocket', 'WebSocketWorker', 'Worker', 'XMLHttpRequest', 'XMLHttpRequestEventTarget', 'XMLHttpRequestUpload',
-	  'MediaSource', 'MediaRecorder', 'MediaStream', 'ServiceWorker', 'ServiceWorkerContainer',
+      'MediaSource', 'MediaRecorder', 'MediaStream', 'ServiceWorker', 'ServiceWorkerContainer',
       'ServiceWorkerRegistration', 'BroadcastChannel', 'RTCPeerConnection', 'RTCDataChannel', 'AbortSignal',
       'MediaQueryList', 'ShadowRoot', 'FontFaceSet', 'Animation', 'PermissionStatus', 'PaymentRequest', 'VideoTrackList'
     ]
-
     eventListeners.map(o => {
       // @ts-expect-error indexing Window with a string to access global constructors dynamically
       if (!win[o] || !win[o].prototype || !Object.prototype.hasOwnProperty.call(win[o].prototype, 'addEventListener')) return
@@ -131,12 +129,8 @@ export default (doc = document, win = window) => ({
       )
     })
 
-    function __traceOriginalScript<T extends (...args: any[]) => any> (
-      fn: T,
-      callbackAccessor: (args: Parameters<T>) => { get: () => any, replace: (fn: any) => void },
-      alsoCallOriginal = false
-    ) {
-      return function (...args: Parameters<T>) {
+    function __traceOriginalScript (fn: any, callbackAccessor: any, alsoCallOriginal = false) {
+      return function (...args: any[]) {
         // this is required for removeEventListener to remove anything added with
         // addEventListener before the functions started being wrapped by Bugsnag
         try {
