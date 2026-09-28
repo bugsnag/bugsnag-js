@@ -1,6 +1,6 @@
 import Bugsnag from '../src/notifier'
 
-/* eslint-disable @typescript-eslint/no-var-requires */
+ 
 const BrowserContextPlugin = require('@bugsnag/plugin-browser-context')
 const InteractionBreadcrumbsPlugin = require('@bugsnag/plugin-interaction-breadcrumbs')
 const NetworkBreadcrumbsPlugin = require('@bugsnag/plugin-network-breadcrumbs')

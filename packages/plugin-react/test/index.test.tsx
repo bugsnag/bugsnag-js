@@ -109,7 +109,7 @@ it('passes the props to the FallbackComponent', () => {
       <BadComponent />
     </ErrorBoundary>
   )
-  expect(FallbackComponent).toBeCalledWith(
+  expect(FallbackComponent).toHaveBeenCalledWith(
     {
       error: expect.any(Error),
       info: { componentStack: expect.any(String) },
@@ -177,14 +177,14 @@ it('a bad FallbackComponent implementation does not trigger stack overflow', () 
   }).toThrow()
 })
 
-it('it passes the onError function to the Bugsnag notify call', () => {
+it('passes the onError function to the Bugsnag notify call', () => {
   const onError = () => {}
   create(
     <ErrorBoundary onError={onError}>
       <BadComponent />
     </ErrorBoundary>
   ).toJSON()
-  expect(client._notify).toBeCalledWith(expect.any(client.Event), onError)
+  expect(client._notify).toHaveBeenCalledWith(expect.any(client.Event), onError)
 })
 
 it('supports passing reference to React when the error boundary is created', () => {
