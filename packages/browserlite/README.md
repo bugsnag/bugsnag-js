@@ -21,6 +21,7 @@ const pluginNetworkBreadcrumbs = require('@bugsnag/plugin-network-breadcrumbs')
 
 Bugsnag.start({
   apiKey: 'YOUR_API_KEY',
+  autoTrackSessions: true,
   plugins: [pluginBrowserSession, pluginNetworkBreadcrumbs()]
 })
 ```

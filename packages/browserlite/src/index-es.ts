@@ -1,5 +1,5 @@
 export { default } from './notifier'
-//export type { BrowserBugsnagStatic, BrowserConfig } from './bugsnag'
+export type { BrowserLiteBugsnagStatic, BrowserLiteConfig } from './notifier'
 
 // Export only the essential parts from core to reduce bundle size
 export { 

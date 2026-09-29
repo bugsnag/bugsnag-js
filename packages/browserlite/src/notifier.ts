@@ -14,7 +14,7 @@ import pluginUnhandledRejection from '@bugsnag/plugin-window-unhandled-rejection
 import dXMLHttpRequest from '@bugsnag/delivery-xml-http-request'
 
 const name = 'Bugsnag JavaScript (lite)'
-const version = '__VERSION__'
+const version = '__BUGSNAG_NOTIFIER_VERSION__'
 const url = 'https://github.com/bugsnag/bugsnag-js'
 
 const schema = { ...baseConfig, ...browserConfig }
@@ -58,7 +58,7 @@ const notifier: BrowserLiteClient = {
     bugsnag._logger.debug('Loaded!')
     bugsnag.leaveBreadcrumb('Bugsnag loaded', {}, 'state')
 
-    return bugsnag._config.autoTrackSessions
+    return bugsnag._config.autoTrackSessions && bugsnag._sessionDelegate
       ? bugsnag.startSession()
       : bugsnag
   },
