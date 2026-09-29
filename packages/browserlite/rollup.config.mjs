@@ -68,7 +68,8 @@ const external = [
   '@bugsnag/core',
   '@bugsnag/plugin-window-onerror',
   '@bugsnag/plugin-window-unhandled-rejection',
-  '@bugsnag/delivery-xml-http-request'
+  '@bugsnag/delivery-xml-http-request',
+  '@bugsnag/delivery-x-domain-request'
 ]
 
 export default [
