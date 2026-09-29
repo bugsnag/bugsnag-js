@@ -35,6 +35,8 @@ Once the app is running, open http://localhost:65532/ in a browser to interact w
 
 ### With docker
 
+The project includes a `Dockerfile`. If you're familiar with docker, this is the easiest way to start the example. Otherwise, skip ahead to the [without docker](#without-docker) section.
+
 ```
 docker build -t bugsnag-js-example-browserlite . && \
 docker run -it -p 65532:65532 bugsnag-js-example-browserlite

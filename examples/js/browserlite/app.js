@@ -14,7 +14,7 @@ var pluginNetworkBreadcrumbs = require('@bugsnag/plugin-network-breadcrumbs')
 // the "lite" client: only window.onerror + unhandled rejection capture are
 // bundled, so this stays as small as possible.
 Bugsnag.start({
-  apiKey: '<VALID_KEY>',
+  apiKey: '<YOUR_API_KEY>',
   releaseStage: 'development',
   onError: function (event) {
     event.addMetadata('demo', { plugins: 'none (lite defaults only)' })
@@ -42,7 +42,7 @@ document.getElementById('liteUnhandled').addEventListener('click', function () {
 // tracking and network breadcrumbs are *not* bundled by default in
 // @bugsnag/browserlite, so we add them explicitly here.
 var pluginClient = Bugsnag.createClient({
-  apiKey: '<VALID_KEY>',
+  apiKey: '<YOUR_API_KEY>',
   releaseStage: 'development',
   autoTrackSessions: true, // required for plugin-browser-session
   plugins: [pluginBrowserSession, pluginNetworkBreadcrumbs()],
