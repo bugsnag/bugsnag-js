@@ -3,7 +3,12 @@
 ## [Unreleased]
 
 ### Fixed
+
 - (plugin-electron-client-state-persistence) Fix Linux build failure by removing unused POSIX `once_flag` and `call_once` definitions from vendored tinycthread, resolving conflicts with glibc ≥ 2.28 during `node-gyp rebuild` [#2769]<https://github.com/bugsnag/bugsnag-js/pull/2769>
+
+### Dependencies
+
+Update bugsnag-cocoa to [v6.37.0](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.37.0) [#2807](https://github.com/bugsnag/bugsnag-js/pull/2807)
 
 ## [8.10.0] - 2026-07-10
 
@@ -14,10 +19,10 @@
 - (react-native) Fix issue related to uploading source map [#2773](https://github.com/bugsnag/bugsnag-js/pull/2773)
 
 ### Added
+
 - (react-native-navigation) Add support for react-native-navigation v8 [#2741](https://github.com/bugsnag/bugsnag-js/pull/2741)
 - Requires React Native 0.78+ (New Architecture only)
 - Peer dependency range updated: react-native-navigation 2.0.0 - 8.x
-
 
 ## [8.9.0] - 2026-04-08
 
@@ -25,7 +30,7 @@
 
 - (plugin-inline-script-content) Fix strict mode compatibility by replacing `arguments` usage with rest parameters [#2711](https://github.com/bugsnag/bugsnag-js/pull/2711)
 
-### Added 
+### Added
 
 - (delivery-react-native) Handle request and response parameters [#2667](https://github.com/bugsnag/bugsnag-js/pull/2667)
 
