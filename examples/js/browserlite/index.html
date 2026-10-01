@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>@bugsnag/browserlite: minimal bundle example</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <img width="200" src="bugsnag.png"/>
+    <h1>@bugsnag/browserlite example</h1>
+    <p>
+      This page demonstrates <code>@bugsnag/browserlite</code>, a minimal build of the
+      Bugsnag browser notifier. By default it only bundles error/rejection capture -
+      everything else (breadcrumbs, sessions, device metadata, etc.) is opt-in via the
+      <code>plugins</code> config option, so you only ship the code you actually use.
+    </p>
+    <div id="buttons">
+      <h3>Default (lite) client - no extra plugins:</h3>
+      <button type="button" id="liteHandled">Send handled error</button>
+      <button type="button" id="liteUnhandled">Send unhandled error</button>
+
+      <h3>Opt-in demo - session tracking + network breadcrumbs plugins added:</h3>
+      <button type="button" id="pluginHandled">Send handled error (with plugins)</button>
+    </div>
+    <!-- built with browserify - see package.json's "build" script -->
+    <script src="dist/bundle.js"></script>
+  </body>
+</html>
