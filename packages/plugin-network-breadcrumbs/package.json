@@ -23,6 +23,6 @@
     "@bugsnag/request-tracker": "^9.0.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^8.0.0"
+    "@bugsnag/core": "^9.0.0"
   }
 }
