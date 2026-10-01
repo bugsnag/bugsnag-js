@@ -1,0 +1,38 @@
+{
+  "name": "@bugsnag/browserlite",
+  "version": "8.10.0",
+  "main": "dist/index-cjs.js",
+  "module": "dist/index-es.js",
+  "types": "dist/types/index-es.d.ts",
+  "browser": "./dist/bugsnag.js",
+  "description": "A lightweight build of the Bugsnag error reporter for browser JavaScript, with only core error reporting enabled by default. Additional functionality (breadcrumbs, device/context metadata, sessions, etc.) can be opted into via the `plugins` config option.",
+  "homepage": "https://www.bugsnag.com/",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bugsnag/bugsnag-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "size": "../../bin/size dist/bugsnag.min.js",
+    "clean": "rm -fr dist && mkdir dist",
+    "prebuild": "npm run clean",
+    "build": "rollup --config rollup.config.mjs"
+  },
+  "author": "Bugsnag",
+  "license": "MIT",
+  "devDependencies": {
+    "@bugsnag/delivery-x-domain-request": "^8.9.0",
+    "@bugsnag/delivery-xml-http-request": "^8.9.0",
+    "@bugsnag/plugin-window-onerror": "^8.9.0",
+    "@bugsnag/plugin-window-unhandled-rejection": "^8.9.0"
+  },
+  "dependencies": {
+    "@bugsnag/core": "^8.9.0"
+  }
+}
