@@ -348,6 +348,19 @@ describe('@bugsnag/core/event', () => {
   })
 
   describe('Event.create()', () => {
+    it('reports an anonymous async V8 frame with an async method and the bare file', () => {
+      const err = new Error('async failure')
+      err.stack = 'Error: async failure\n    at async https://cdn.example.test/assets/app.js:1:123'
+      // @ts-ignore
+      const event = Event.create(err, true, undefined, 'notify()', 0)
+      expect(event.errors[0].stacktrace).toEqual([{
+        file: 'https://cdn.example.test/assets/app.js',
+        method: 'async',
+        lineNumber: 1,
+        columnNumber: 123
+      }])
+    })
+
     it('includes causes in the exceptions array', () => {
       const err = new Error('I am the error')
       // @ts-ignore

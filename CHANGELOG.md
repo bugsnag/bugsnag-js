@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- (core) Fix anonymous async V8 stack frames being reported with an `async ` prefix in the file name and no method [#2831](https://github.com/bugsnag/bugsnag-js/pull/2831)
 - (plugin-electron-client-state-persistence) Fix Linux build failure by removing unused POSIX `once_flag` and `call_once` definitions from vendored tinycthread, resolving conflicts with glibc ≥ 2.28 during `node-gyp rebuild` [#2769]<https://github.com/bugsnag/bugsnag-js/pull/2769>
 
 ## [8.10.0] - 2026-07-10
