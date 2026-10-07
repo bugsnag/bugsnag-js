@@ -53,9 +53,13 @@ describe('@bugsnag/core/lib/error-stack-parser', () => {
     const expected = upstream.parse({ name: 'Error', message: 'probe', stack })
     const frames = ErrorStackParser.parse({ stack })
 
-    for (const index of [0, 6, 9]) {
-      expected[index].fileName = '/app.js'
-      expected[index].functionName = 'async'
+    for (const source of [cases[0].source, cases[8].source, cases[11].source]) {
+      const frame = expected.find(expectedFrame => expectedFrame.source === source)
+      expect(frame).toBeDefined()
+      if (frame) {
+        frame.fileName = '/app.js'
+        frame.functionName = 'async'
+      }
     }
     expect(frames).toEqual(expected)
   })
