@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- (core) Restore parsing of anonymous async V8 stack frames so the "async" prefix is reported as the method rather than part of the file name [#2830](https://github.com/bugsnag/bugsnag-js/issues/2830)
+
 ## [9.0.0] - 2026-09-22
 
 ### Summary

@@ -24,7 +24,6 @@ Feature: Vue support
 
   @requires_let
   @requires_proxy
-  @skip_safari_10
   Scenario: vue2 + typescript usage
     When I navigate to the test URL "/plugin_vue/typescript_vue2/index.html"
     Then I wait to receive an error
