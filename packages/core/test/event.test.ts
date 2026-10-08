@@ -6,6 +6,24 @@ jest.mock('stack-generator', () => ({
 }))
 
 describe('Event', () => {
+  it('restores the anonymous async V8 stacktrace through Event.create()', () => {
+    const error = new Error('probe')
+    error.stack = 'Error: probe\n    at async /app.js:1:123'
+    const event = Event.create(error, false, {
+      unhandled: false,
+      severity: 'warning',
+      severityReason: { type: 'handledException' }
+    }, 'notify()', 0)
+
+    expect(event.errors[0].stacktrace).toEqual([{
+      file: '/app.js',
+      method: 'async',
+      lineNumber: 1,
+      columnNumber: 123
+    }])
+    expect(JSON.parse(JSON.stringify(event)).exceptions[0].stacktrace).toEqual(event.errors[0].stacktrace)
+  })
+
   describe('constructor', () => {
     it('sets default handledState', () => {
       const err = new Error('noooooo')

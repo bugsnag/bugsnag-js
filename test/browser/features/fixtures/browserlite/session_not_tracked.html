@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="/docs/node_modules/@bugsnag/browserlite/dist/bugsnag.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var NOTIFY = decodeURIComponent(window.location.search.match(/NOTIFY=([^&]+)/)[1])
+      var SESSIONS = decodeURIComponent(window.location.search.match(/SESSIONS=([^&]+)/)[1])
+      var API_KEY = decodeURIComponent(window.location.search.match(/API_KEY=([^&]+)/)[1])
+      // browserlite does not bundle @bugsnag/plugin-browser-session, and
+      // autoTrackSessions defaults to false, so no session request is sent
+      Bugsnag.start({
+        apiKey: API_KEY,
+        endpoints: { notify: NOTIFY, sessions: SESSIONS }
+      })
+    </script>
+  </body>
+</html>

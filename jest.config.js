@@ -64,6 +64,7 @@ module.exports = {
     project('shared plugins', ['plugin-app-duration', 'plugin-stackframe-path-normaliser']),
     project('browser', [
       'browser',
+      'browserlite',
       'delivery-xml-http-request',
       'delivery-fetch',
       'plugin-react',
