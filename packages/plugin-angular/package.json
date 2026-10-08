@@ -23,7 +23,7 @@
     "@angular/common": ">= 12",
     "@angular/compiler": ">= 12",
     "@angular/core": ">= 12",
-    "@bugsnag/js": "^8.0.0"
+    "@bugsnag/js": "^9.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "20.3.27",
