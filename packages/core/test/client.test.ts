@@ -130,6 +130,25 @@ describe('@bugsnag/core/client', () => {
   })
 
   describe('notify()', () => {
+    it('delivers the corrected anonymous async V8 stacktrace', done => {
+      const client = new Client({ apiKey: '0'.repeat(32), logger: null })
+      const error = new Error('probe')
+      error.stack = 'Error: probe\n    at async /app.js:1:123'
+      client._setDelivery(() => ({
+        sendEvent: payload => {
+          expect(payload.events[0].errors[0].stacktrace).toEqual([{
+            file: '/app.js',
+            method: 'async',
+            lineNumber: 1,
+            columnNumber: 123
+          }])
+          done()
+        },
+        sendSession: () => {}
+      }))
+      client.notify(error)
+    })
+
     it('delivers an error event', done => {
       const client = new Client({ apiKey: 'API_KEY_YEAH' })
       client._setDelivery(client => ({
