@@ -1,10 +1,11 @@
 # Changelog
 
-## Unreleased
+## [9.1.0] - 2026-10-08
 
 ### Fixed
 
-- (core) Restore parsing of anonymous async V8 stack frames so the "async" prefix is reported as the method rather than part of the file name [#2830](https://github.com/bugsnag/bugsnag-js/issues/2830)
+- (core) Restore parsing of anonymous async V8 stack frames so the "async" prefix is reported as the method rather than part of the file name [#2829](https://github.com/bugsnag/bugsnag-js/pull/2829)
+- Update internal `@bugsnag/*` peer dependency ranges from `^8.0.0` to `^9.0.0`, fixing peer dependency conflicts when installing v9 packages together [#2829](https://github.com/bugsnag/bugsnag-js/pull/2829)
 
 ## [9.0.0] - 2026-09-22
 
