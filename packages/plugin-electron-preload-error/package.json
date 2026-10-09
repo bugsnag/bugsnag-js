@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-electron-preload-error",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "main": "preload-error.js",
   "description": "@bugsnag/electron plugin to handle errors in preload scripts",
   "repository": {
@@ -15,8 +15,8 @@
     "preload-error.js"
   ],
   "devDependencies": {
-    "@bugsnag/core": "^9.0.0",
-    "@bugsnag/electron-test-helpers": "^9.0.0"
+    "@bugsnag/core": "^9.1.0",
+    "@bugsnag/electron-test-helpers": "^9.1.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^9.0.0"
