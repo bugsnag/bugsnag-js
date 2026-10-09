@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-angular",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "description": "Angular integration for bugsnag-js",
   "homepage": "https://www.bugsnag.com/",
   "repository": {
@@ -33,7 +33,7 @@
     "@angular/compiler": "20.3.27",
     "@angular/compiler-cli": "20.3.27",
     "@angular/core": "20.3.27",
-    "@bugsnag/js": "^9.0.0",
+    "@bugsnag/js": "^9.1.0",
     "esbuild": "^0.21.5",
     "estree-walker": "^2.0.2",
     "injection-js": "^2.6.1",
