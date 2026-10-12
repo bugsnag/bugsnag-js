@@ -113,6 +113,8 @@
     "@angular/build": "20.3.27",
     "@angular-devkit/build-angular": "20.3.27",
     "postcss": "^8.5.23",
+    "smol-toml": "^1.7.1",
+    "http-cache-semantics": "^4.3.0",
     "ng-packagr": "^20.0.0",
     "@inquirer/figures": "1.0.13",
     "brace-expansion": "2.1.4",

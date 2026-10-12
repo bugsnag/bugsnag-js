@@ -29,5 +29,8 @@
   },
   "config": {
     "forge": "./forge.config.js"
+  },
+  "overrides": {
+    "http-cache-semantics": "^4.3.0"
   }
 }
