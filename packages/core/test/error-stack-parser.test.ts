@@ -81,6 +81,22 @@ describe('@bugsnag/core/lib/error-stack-parser', () => {
     expect(ErrorStackParser.parse(error)).toEqual(upstream.parse(error))
   })
 
+  it.each([
+    'http://localhost:8080/file.js',
+    'https://example.com/app/(shop)/page.js',
+    '/app/(shop)/file.js)'
+  ])('preserves locations in nested eval frames for %p', fileName => {
+    const stack = `    at baz (eval at foo (eval at speak (${fileName}:21:17)), <anonymous>:1:30)`
+    const frames = ErrorStackParser.parse({ stack })
+    expect(frames).toHaveLength(1)
+    expect(frames[0]).toMatchObject({
+      fileName,
+      functionName: 'baz',
+      lineNumber: 21,
+      columnNumber: 17
+    })
+  })
+
   it('corrects only anonymous async frames in a mixed stack', () => {
     const stack = 'Error: probe\n' + cases.map(testCase => testCase.source).join('\n')
     const expected = upstream.parse({ name: 'Error', message: 'probe', stack })

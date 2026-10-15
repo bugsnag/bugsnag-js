@@ -7,7 +7,8 @@ module.exports = assign({}, ErrorStackParser, {
 
     // Remove the frame's enclosing parentheses, keeping those in the filename.
     if (urlLike.charAt(0) === '(' && urlLike.charAt(urlLike.length - 1) === ')') {
-      urlLike = urlLike.slice(1, -1)
+      // Nested evals can leave extra wrappers after the line and column.
+      urlLike = urlLike.slice(1, -1).replace(/(:\d+(?::\d+)?)\)+$/, '$1')
     }
     var parts = /(.+?)(?::(\d+))?(?::(\d+))?$/.exec(urlLike)
     return [parts[1], parts[2] || undefined, parts[3] || undefined]
