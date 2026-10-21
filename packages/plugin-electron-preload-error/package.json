@@ -19,7 +19,7 @@
     "@bugsnag/electron-test-helpers": "^9.0.0"
   },
   "dependencies": {
-    "@bugsnag/path-normalizer": "^8.4.0"
+    "@bugsnag/path-normalizer": "^9.0.0"
   },
   "author": "Bugsnag",
   "license": "MIT"

@@ -17,13 +17,14 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/derecursify": "^8.4.0"
+    "@bugsnag/derecursify": "^9.0.0"
   },
   "devDependencies": {
     "@bugsnag/core": "^9.0.0"
   },
   "peerDependencies": {
-    "react-native": "*"
+    "react-native": "*",
+    "@bugsnag/core": "^9.0.0"
   },
   "scripts": {
     "test:types": "tsc -p tsconfig.json"

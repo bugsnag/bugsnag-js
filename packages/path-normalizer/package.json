@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/path-normalizer",
-  "version": "8.4.0",
+  "version": "9.0.0",
   "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",

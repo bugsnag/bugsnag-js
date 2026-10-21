@@ -40,5 +40,8 @@
   },
   "dependencies": {
     "@bugsnag/json-payload": "^9.0.0"
+   },
+  "peerDependencies": {
+    "@bugsnag/core": "^9.0.0"
   }
 }

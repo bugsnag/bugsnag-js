@@ -25,6 +25,7 @@
     "@bugsnag/json-payload": "^9.0.0"
   },
   "peerDependencies": {
-    "@bugsnag/electron-network-status": "^8.0.0"
+    "@bugsnag/core": "^9.0.0",
+    "@bugsnag/electron-network-status": "^9.0.0"
   }
 }
