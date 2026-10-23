@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-server-session",
-  "version": "8.9.0",
+  "version": "9.0.0",
   "type": "module",
   "main": "./dist/cjs/session.js",
   "module": "./dist/esm/session.js",
@@ -35,10 +35,10 @@
     "backo": "^1.1.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.9.0"
+    "@bugsnag/core": "^9.0.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^8.0.0"
+    "@bugsnag/core": "^9.0.0"
   },
   "scripts": {
     "clean": "rm -fr dist",

@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-strip-project-root",
-  "version": "8.9.0",
+  "version": "9.0.0",
   "type": "module",
   "main": "./dist/cjs/strip-project-root.js",
   "module": "./dist/esm/strip-project-root.js",
@@ -32,13 +32,13 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/path-normalizer": "^8.4.0"
+    "@bugsnag/path-normalizer": "^9.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.9.0"
+    "@bugsnag/core": "^9.0.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^8.6.0"
+    "@bugsnag/core": "^9.0.0"
   },
    "scripts": {
     "clean": "rm -fr dist",

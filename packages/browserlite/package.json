@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/browserlite",
-  "version": "8.10.0",
+  "version": "9.0.0",
   "main": "dist/index-cjs.js",
   "module": "dist/index-es.js",
   "types": "dist/types/index-es.d.ts",
@@ -27,12 +27,12 @@
   "author": "Bugsnag",
   "license": "MIT",
   "devDependencies": {
-    "@bugsnag/delivery-x-domain-request": "^8.9.0",
-    "@bugsnag/delivery-xml-http-request": "^8.9.0",
-    "@bugsnag/plugin-window-onerror": "^8.9.0",
-    "@bugsnag/plugin-window-unhandled-rejection": "^8.9.0"
+    "@bugsnag/delivery-x-domain-request": "^9.0.0",
+    "@bugsnag/delivery-xml-http-request": "^9.0.0",
+    "@bugsnag/plugin-window-onerror": "^9.0.0",
+    "@bugsnag/plugin-window-unhandled-rejection": "^9.0.0"
   },
   "dependencies": {
-    "@bugsnag/core": "^8.9.0"
+    "@bugsnag/core": "^9.0.0"
   }
 }

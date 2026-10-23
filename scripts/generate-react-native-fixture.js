@@ -177,6 +177,8 @@ switch (true) {
     reactNavigationVersion = '^6.0.0'
 
     reactNavigationNativeStackVersion = '^6.0.0'
+    
+    reactNavigationNativeSafeContextVersion = '4.14.0'
 
     reactNativeScreensVersion = '~3.32.0'
 

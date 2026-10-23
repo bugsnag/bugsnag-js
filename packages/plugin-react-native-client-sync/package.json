@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/plugin-react-native-client-sync",
-  "version": "8.9.0",
+  "version": "9.0.0",
   "main": "client-sync.js",
   "description": "@bugsnag/react-native plugin to sync information between JS and native layer",
   "homepage": "https://www.bugsnag.com/",
@@ -17,13 +17,14 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/derecursify": "^8.4.0"
+    "@bugsnag/derecursify": "^9.0.0"
   },
   "devDependencies": {
-    "@bugsnag/core": "^8.9.0"
+    "@bugsnag/core": "^9.0.0"
   },
   "peerDependencies": {
-    "react-native": "*"
+    "react-native": "*",
+    "@bugsnag/core": "^9.0.0"
   },
   "scripts": {
     "test:types": "tsc -p tsconfig.json"

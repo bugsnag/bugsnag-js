@@ -1,4 +1,4 @@
-import type { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
+import { EventDeliveryPayload, SessionDeliveryPayload } from '@bugsnag/core'
 import { Event, Session } from '@bugsnag/core'
 import jsonPayload from '../'
 

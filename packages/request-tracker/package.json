@@ -1,6 +1,6 @@
 {
   "name": "@bugsnag/request-tracker",
-  "version": "8.9.0",
+  "version": "9.0.0",
   "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -32,7 +32,7 @@
   "author": "Bugsnag",
   "license": "MIT",
   "dependencies": {
-    "@bugsnag/core": "^8.9.0"
+    "@bugsnag/core": "^9.0.0"
   },
   "peerDependencies": {
     "@bugsnag/core": "^8.9.0"
