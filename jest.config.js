@@ -79,7 +79,7 @@ module.exports = {
         '<rootDir>/packages/react-native/src/test/setup.js'
       ],
       transformIgnorePatterns: [
-        'node_modules/(?!(react-native|@react-native|jest-react-native|@react-native-community|decode-uri-component)/)'
+        'node_modules/(?!(react-native|@react-native|jest-react-native|@react-native-community)/)'
       ]
     }),
     project('node plugins', [

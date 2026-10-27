@@ -118,7 +118,6 @@
     "ng-packagr": "^20.0.0",
     "@inquirer/figures": "1.0.13",
     "brace-expansion": "2.1.6",
-    "decode-uri-component": "^0.5.0",
     "handlebars": "4.7.10",
     "request": "npm:@cypress/request@^3.0.10",
     "@jest-runner/electron": {
