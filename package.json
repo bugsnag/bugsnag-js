@@ -1,8 +1,8 @@
 {
   "devDependencies": {
-    "@angular/cli": "20.3.27",
-    "@angular/compiler": "20.3.27",
-    "@angular/compiler-cli": "20.3.27",
+    "@angular/cli": "^20.3.42",
+    "@angular/compiler": "^20.3.34",
+    "@angular/compiler-cli": "^20.3.34",
     "@babel/core": "^7.24.5",
     "@babel/plugin-transform-arrow-functions": "^7.23.3",
     "@babel/plugin-transform-block-scoping": "^7.23.4",
@@ -49,7 +49,7 @@
     "browserify-versionify": "^1.0.6",
     "coverage-diff": "^1.6.0",
     "cross-env": "^7.0.3",
-    "electron": "*",
+    "electron": "^44.9.1",
     "envify": "^4.1.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
@@ -105,19 +105,24 @@
   },
   "overrides": {
     "typescript": "~5.8.0",
-    "@angular/cli": "20.3.27",
-    "@angular/compiler": "20.3.27",
-    "@angular/compiler-cli": "20.3.27",
-    "@angular/common": "20.3.27",
-    "@angular/core": "20.3.27",
-    "@angular/build": "20.3.27",
-    "@angular-devkit/build-angular": "20.3.27",
+    "@angular/cli": "^20.3.42",
+    "@angular/compiler": "^20.3.34",
+    "@angular/compiler-cli": "^20.3.34",
+    "@angular/common": "^20.3.34",
+    "@angular/core": "^20.3.34",
+    "@angular/build": "^20.3.42",
+    "@angular-devkit/build-angular": "^20.3.42",
     "postcss": "^8.5.23",
     "smol-toml": "^1.7.1",
     "http-cache-semantics": "^4.3.0",
     "ng-packagr": "^20.0.0",
     "@inquirer/figures": "1.0.13",
-    "brace-expansion": "2.1.6",
+    "minimatch@<10": {
+      "brace-expansion": "^2.1.7"
+    },
+    "nx": {
+      "brace-expansion": "^5.0.12"
+    },
     "handlebars": "4.7.10",
     "request": "npm:@cypress/request@^3.0.10",
     "@jest-runner/electron": {
@@ -139,16 +144,16 @@
     "shell-quote": "^1.11.0",
     "thenify": "^3.3.1",
     "tough-cookie": "5.1.1",
-    "vite": "^6.4.2",
+    "vite": "^7.3.7",
     "@babel/plugin-transform-modules-systemjs": "^7.29.4",
-    "fast-uri": "3.1.5",
+    "fast-uri": "^3.1.9",
     "ip": "2.0.1",
     "flatted": "^3.4.2",
     "lodash": "^4.18.0",
     "rollup": "^4.59.9",
     "serialize-javascript": "7.0.5",
     "tmp": "^0.2.6",
-    "hono": "^4.12.4",
+    "hono": "^4.13.11",
     "react-native": {
       "react": "^16.13.1"
     },
@@ -165,7 +170,11 @@
     "sigstore": "^4.1.1",
     "tar": "^7.5.16",
     "minimatch@>=10": {
-      "brace-expansion": "^5.0.8"
+      "brace-expansion": "^5.0.12"
+    },
+    "follow-redirects": "^1.16.1",
+    "@verdaccio/config": {
+      "js-yaml": "^5.4.1"
     }
   },
   "workspaces": [
