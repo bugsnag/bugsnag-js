@@ -48,6 +48,55 @@ describe('@bugsnag/core/lib/error-stack-parser', () => {
     })
   })
 
+  const pathCases: typeof cases = [
+    { name: 'named V8 with a route group', source: '    at render (https://example.com/app/(shop)/page.js:10:20)', fileName: 'https://example.com/app/(shop)/page.js', functionName: 'render', lineNumber: 10, columnNumber: 20 },
+    { name: 'anonymous V8 with a route group', source: '    at https://example.com/app/(shop)/page.js:11:21', fileName: 'https://example.com/app/(shop)/page.js', lineNumber: 11, columnNumber: 21 },
+    { name: 'named async V8 with a route group', source: '    at async render (https://example.com/app/(shop)/page.js:12:22)', fileName: 'https://example.com/app/(shop)/page.js', functionName: 'async render', lineNumber: 12, columnNumber: 22 },
+    { name: 'anonymous async V8 with a route group', source: '    at async https://example.com/app/(shop)/page.js:13:23', fileName: 'https://example.com/app/(shop)/page.js', functionName: 'async', lineNumber: 13, columnNumber: 23 },
+    { name: 'Firefox with a route group', source: 'render@webpack-internal:///(app-pages-browser)/./app/(shop)/page.js:14:24', fileName: 'webpack-internal:///(app-pages-browser)/./app/(shop)/page.js', functionName: 'render', lineNumber: 14, columnNumber: 24 },
+    { name: 'anonymous Safari with a route group', source: '@https://example.com/app/(shop)/page.js:15:25', fileName: 'https://example.com/app/(shop)/page.js', lineNumber: 15, columnNumber: 25 },
+    { name: 'V8 with nested route groups', source: '    at render (https://example.com/app/(shop)/(account)/page.js:16:26)', fileName: 'https://example.com/app/(shop)/(account)/page.js', functionName: 'render', lineNumber: 16, columnNumber: 26 },
+    { name: 'V8 with nested parentheses', source: '    at render (/app/(group(nested))/page.js:17:27)', fileName: '/app/(group(nested))/page.js', functionName: 'render', lineNumber: 17, columnNumber: 27 },
+    { name: 'named V8 with spaces in the path', source: '    at render (/my app/(shop)/page.js:18:28)', fileName: '/my app/(shop)/page.js', functionName: 'render', lineNumber: 18, columnNumber: 28 },
+    { name: 'anonymous V8 with spaces in the path', source: '    at /my app/(shop)/page.js:19:29', fileName: '/my app/(shop)/page.js', lineNumber: 19, columnNumber: 29 },
+    { name: 'named V8 with a Windows path', source: '    at render (C:\\Program Files (x86)\\app\\page.js:20:30)', fileName: 'C:\\Program Files (x86)\\app\\page.js', functionName: 'render', lineNumber: 20, columnNumber: 30 },
+    { name: 'anonymous V8 with a Windows path', source: '    at C:\\Program Files (x86)\\app\\page.js:21:31', fileName: 'C:\\Program Files (x86)\\app\\page.js', lineNumber: 21, columnNumber: 31 }
+  ]
+
+  it.each(pathCases)('preserves parentheses in $name frames', ({ source, fileName, functionName, lineNumber, columnNumber }) => {
+    const frames = ErrorStackParser.parse({ stack: source })
+    expect(frames).toHaveLength(1)
+    expect(frames[0].fileName).toBe(fileName)
+    expect(frames[0].functionName).toBe(functionName)
+    expect(frames[0].lineNumber).toBe(lineNumber)
+    expect(frames[0].columnNumber).toBe(columnNumber)
+    expect(frames[0].source).toBe(source)
+  })
+
+  it.each([
+    '    at Array.forEach (native)',
+    '    at eval (eval at render (/app.js:1:2), <anonymous>:3:4)'
+  ])('preserves upstream native and eval parsing for %p', stack => {
+    const error = { name: 'Error', message: 'probe', stack }
+    expect(ErrorStackParser.parse(error)).toEqual(upstream.parse(error))
+  })
+
+  it.each([
+    'http://localhost:8080/file.js',
+    'https://example.com/app/(shop)/page.js',
+    '/app/(shop)/file.js)'
+  ])('preserves locations in nested eval frames for %p', fileName => {
+    const stack = `    at baz (eval at foo (eval at speak (${fileName}:21:17)), <anonymous>:1:30)`
+    const frames = ErrorStackParser.parse({ stack })
+    expect(frames).toHaveLength(1)
+    expect(frames[0]).toMatchObject({
+      fileName,
+      functionName: 'baz',
+      lineNumber: 21,
+      columnNumber: 17
+    })
+  })
+
   it('corrects only anonymous async frames in a mixed stack', () => {
     const stack = 'Error: probe\n' + cases.map(testCase => testCase.source).join('\n')
     const expected = upstream.parse({ name: 'Error', message: 'probe', stack })
@@ -72,7 +121,7 @@ describe('@bugsnag/core/lib/error-stack-parser', () => {
   it('preserves the upstream API without modifying it', () => {
     expect(ErrorStackParser).not.toBe(upstream)
     expect(Object.keys(ErrorStackParser).sort()).toEqual(Object.keys(upstream).sort())
-    Object.keys(upstream).filter(key => key !== 'parse').forEach(key => {
+    Object.keys(upstream).filter(key => key !== 'parse' && key !== 'extractLocation').forEach(key => {
       expect(ErrorStackParser[key]).toBe(upstream[key as keyof typeof upstream])
     })
     expect(upstream.parse({ name: 'Error', message: 'probe', stack: cases[0].source })[0].fileName).toBe('async /app.js')
