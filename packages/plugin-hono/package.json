@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@bugsnag/core": "^9.0.0",
-    "hono": "^4.12.4",
+    "hono": "^4.13.11",
     "typescript": "^5.2.2"
   },
   "scripts": {
