@@ -59,12 +59,6 @@ async function rewriteBoostPodspecSource (fixtureDir) {
     function (_, prefix, suffix) { return prefix + boostSignedUrl + suffix }
   )
 
-  // Ensure checksum matches the internal GCS archive
-  podspecContents = podspecContents.replace(
-    /71c32f4085e3adef4fffc90674a01079665d281d1de2aea6c6955db8567deae1/g,
-    'f0397ba6e982c4450f27bf32a2a83292aba035b827a5623a14636ea583318c41'
-  )
-
   fs.writeFileSync(podspecPath, podspecContents)
 }
 

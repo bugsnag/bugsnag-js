@@ -42,11 +42,11 @@ steps:
             - with:
                 reactnative: "0.68"
                 java: "11"
-                node: "18"
+                node: "22"
             - with:
                 reactnative: "0.69"
                 java: "11"
-                node: "18"
+                node: "22"
         retry:
           automatic:
             - exit_status: "*"
