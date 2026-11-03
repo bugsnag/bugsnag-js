@@ -36,7 +36,7 @@ end
 
 When('I export the iOS archive') do
   script_path = "#{__dir__}/../../../../scripts/react-native/ios-utils.js"
-  $logger.info `node -e 'require("#{script_path}").buildIPA("#{fixture_dir}")'`
+  $logger.info `node -e 'require("#{script_path}").buildIPA("#{fixture_dir}").catch((err) => { console.error(err); process.exit(1) })'`
 end
 
 When('the APK file exists') do

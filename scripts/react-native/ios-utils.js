@@ -2,6 +2,72 @@ const { execFileSync } = require('child_process')
 const fs = require('fs')
 const { resolve } = require('path')
 
+const BOOST_PODSPEC_PATH = ['node_modules', 'react-native', 'third-party-podspecs', 'boost.podspec']
+const BOOST_GCS_BUCKET = 'bugsnag-platforms-dependencies'
+const BOOST_GCS_OBJECT = 'boost/1.76.0/source/boost_1_76_0.tar.bz2'
+const BOOST_SIGNED_URL_TTL_MS = 15 * 60 * 1000
+
+async function getBoostSignedUrl () {
+  if (process.env.BOOST_SIGNED_URL) {
+    return process.env.BOOST_SIGNED_URL
+  }
+
+  if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    return null
+  }
+
+  // Lazy-load @google-cloud/storage after npm ci has executed
+  const { Storage } = require('@google-cloud/storage')
+  const storage = new Storage()
+  const bucketName = process.env.BOOST_GCS_BUCKET || BOOST_GCS_BUCKET
+  const objectName = process.env.BOOST_GCS_OBJECT || BOOST_GCS_OBJECT
+  const [signedUrl] = await storage.bucket(bucketName).file(objectName).getSignedUrl({
+    version: 'v4',
+    action: 'read',
+    expires: Date.now() + BOOST_SIGNED_URL_TTL_MS
+  })
+
+  return signedUrl
+}
+
+async function rewriteBoostPodspecSource (fixtureDir) {
+  const podspecPath = resolve(fixtureDir, ...BOOST_PODSPEC_PATH)
+
+  if (!fs.existsSync(podspecPath)) {
+    return
+  }
+
+  let podspecContents = fs.readFileSync(podspecPath, 'utf8')
+
+  // Only rewrite if this fixture uses Boost 1.76.0 (RN <= 0.72)
+  if (!podspecContents.includes('1.76.0')) {
+    return
+  }
+
+  const boostSignedUrl = await getBoostSignedUrl()
+
+  if (!boostSignedUrl) {
+    throw new Error(
+      'Boost 1.76.0 requires GCS credentials to download from internal storage. ' +
+      'Please ensure GOOGLE_APPLICATION_CREDENTIALS or BOOST_SIGNED_URL is set.'
+    )
+  }
+
+  // Replace the existing source HTTP URL strictly with the GCS signed URL
+  podspecContents = podspecContents.replace(
+    /(:\s*http\s*=>\s*['"])[^'"]+(['"])/g,
+    function (_, prefix, suffix) { return prefix + boostSignedUrl + suffix }
+  )
+
+  // Ensure checksum matches the internal GCS archive
+  podspecContents = podspecContents.replace(
+    /71c32f4085e3adef4fffc90674a01079665d281d1de2aea6c6955db8567deae1/g,
+    'f0397ba6e982c4450f27bf32a2a83292aba035b827a5623a14636ea583318c41'
+  )
+
+  fs.writeFileSync(podspecPath, podspecContents)
+}
+
 module.exports = {
   configureIOSProject: function configureIOSProject (fixtureDir, reactNativeVersion) {
     // update the bundle identifier in pbxproj
@@ -86,7 +152,8 @@ module.exports = {
       fs.writeFileSync(`${fixtureDir}/ios/Podfile`, podfileContents)
     }
   },
-  buildIPA: function buildIPA (fixtureDir, exportArchive = true) {
+  buildIPA: async function buildIPA (fixtureDir, exportArchive = true) {
+    await rewriteBoostPodspecSource(fixtureDir)
     fs.rmSync(`${fixtureDir}/reactnative.xcarchive`, { recursive: true, force: true })
 
     // install pods
