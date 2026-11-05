@@ -1,6 +1,6 @@
 # @bugsnag/delivery-node
 
-This delivery mechanism uses [request](https://github.com/request/request) to send events and sessions to Bugsnag's API. It is included in the node notifier.
+This delivery mechanism uses Node HTTP and HTTPS to send events and sessions to Bugsnag's API. It is included in the Node notifier. See the [Node delivery limits](../node/README.md#node-delivery-limits) for optional concurrency, deadline, byte limits and delivery outcomes.
 
 ## License
 

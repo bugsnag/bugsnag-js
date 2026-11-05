@@ -100,3 +100,39 @@ describe('jsonPayload.session', () => {
     }, ['api_key'])).toBe('{"api_key":"d145b8e5afb56516423bc4d605e45442","events":[{"errorMessage":"Failed load tickets","errorClass":"CheckoutError","user":{"name":"Jim Bug","email":"jim@bugsnag.com"},"request":{"api_key":"245b39ebd3cd3992e85bffc81c045924"}}]}')
   })
 })
+
+describe('bounded jsonPayload', () => {
+  it('rejects byte limits when the serializer cannot enforce them', () => {
+    const stringify = require('@bugsnag/safe-json-stringify')
+    const supported = stringify.supportsMaxBytes
+    stringify.supportsMaxBytes = false
+    try {
+      expect(() => jsonPayload.event({}, [], 100)).toThrow('require safe-json-stringify maxBytes support')
+      expect(() => jsonPayload.session({}, [], 100)).toThrow('require safe-json-stringify maxBytes support')
+    } finally {
+      stringify.supportsMaxBytes = supported
+    }
+  })
+
+  it('passes byte limits and existing redaction paths to the bounded serializer', () => {
+    jest.resetModules()
+    try {
+      const stringify = jest.fn().mockReturnValue('{}')
+      Object.assign(stringify, { supportsMaxBytes: true })
+      jest.doMock('@bugsnag/safe-json-stringify', () => stringify)
+      const bounded = require('../json-payload')
+      const event = { events: [] }
+      expect(bounded.event(event, ['secret'], 100)).toBe('{}')
+      expect(stringify).toHaveBeenCalledWith(event, null, null, {
+        maxBytes: 100,
+        redactedKeys: ['secret'],
+        redactedPaths: ['events.[].metaData', 'events.[].breadcrumbs.[].metaData', 'events.[].request', 'events.[].response']
+      })
+      expect(bounded.session({}, [], 50)).toBe('{}')
+      expect(stringify).toHaveBeenLastCalledWith({}, null, null, { maxBytes: 50 })
+    } finally {
+      jest.dontMock('@bugsnag/safe-json-stringify')
+      jest.resetModules()
+    }
+  })
+})

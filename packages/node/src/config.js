@@ -31,6 +31,16 @@ module.exports = {
     message: 'should be an HTTP(s) agent',
     validate: value => value === undefined || isAgent(value)
   },
+  deliveryOptions: {
+    defaultValue: () => undefined,
+    message: 'should contain positive safe integer delivery limits (timeoutMs must be at most 2147483647)',
+    validate: value => value === undefined || isDeliveryOptions(value)
+  },
+  onDelivery: {
+    defaultValue: () => undefined,
+    message: 'should be a function',
+    validate: value => value === undefined || typeof value === 'function'
+  },
   onUncaughtException: {
     defaultValue: () => (err, event, logger) => {
       logger.error(`Uncaught exception${getContext(event)}, the process will now terminate…\n${printError(err)}`)
@@ -64,3 +74,14 @@ const getContext = event =>
     : ''
 
 const isAgent = value => (typeof value === 'object' && value !== null) || typeof value === 'boolean'
+
+const isDeliveryOptions = value => {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return false
+  const limits = ['maxInFlight', 'timeoutMs', 'maxRequestBytes', 'maxResponseBytes']
+  return Object.keys(value).every(key => {
+    if (!limits.includes(key)) return false
+    const limit = value[key]
+    if (limit === undefined) return true
+    return Number.isSafeInteger(limit) && limit > 0 && (key !== 'timeoutMs' || limit <= 2147483647)
+  })
+}

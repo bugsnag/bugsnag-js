@@ -6,7 +6,17 @@ const EVENT_REDACTION_PATHS = [
   'events.[].response'
 ]
 
-module.exports.event = (event, redactedKeys) => {
+const boundedOptions = maxBytes => {
+  if (!jsonStringify.supportsMaxBytes) {
+    throw Object.assign(new Error('Configured delivery byte limits require safe-json-stringify maxBytes support'), { code: 'ERR_DELIVERY_SERIALIZER' })
+  }
+  return { maxBytes }
+}
+
+module.exports.event = (event, redactedKeys, maxBytes) => {
+  if (maxBytes !== undefined) {
+    return jsonStringify(event, null, null, { ...boundedOptions(maxBytes), redactedPaths: EVENT_REDACTION_PATHS, redactedKeys })
+  }
   let payload = jsonStringify(event, null, null, { redactedPaths: EVENT_REDACTION_PATHS, redactedKeys })
   if (payload.length > 10e5) {
     event.events[0]._metadata = {
@@ -20,7 +30,8 @@ metadata was removed`
   return payload
 }
 
-module.exports.session = (session, redactedKeys) => {
+module.exports.session = (session, redactedKeys, maxBytes) => {
+  if (maxBytes !== undefined) return jsonStringify(session, null, null, boundedOptions(maxBytes))
   const payload = jsonStringify(session, null, null)
   return payload
 }
