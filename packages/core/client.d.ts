@@ -28,6 +28,7 @@ interface SessionDeliveryPayload {
 }
 
 interface Delivery {
+  isObserving?(): boolean
   sendEvent(payload: EventDeliveryPayload, cb: (err?: Error | null) => void): void
   sendSession(session: SessionDeliveryPayload, cb: (err?: Error | null) => void): void
 }

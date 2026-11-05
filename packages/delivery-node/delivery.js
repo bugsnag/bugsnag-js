@@ -21,7 +21,10 @@ module.exports = client => {
     if (observing || typeof client._config.onDelivery !== 'function') return
     observing = true
     try {
-      client._config.onDelivery(result)
+      const returned = client._config.onDelivery(result)
+      if (returned && typeof returned.then === 'function') {
+        Promise.resolve(returned).catch(() => {})
+      }
     } catch (_) {
       // Delivery diagnostics must not interfere with completion or report themselves.
     } finally {
@@ -110,6 +113,7 @@ module.exports = client => {
   }
 
   return {
+    isObserving: () => observing,
     sendEvent: (event, cb) => send('event', event, cb),
     sendSession: (session, cb) => send('session', session, cb)
   }

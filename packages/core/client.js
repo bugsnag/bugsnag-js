@@ -316,6 +316,11 @@ class Client {
   }
 
   _notify (event, onError, postReportCallback = noop) {
+    // Source enrichment can defer delivery until after the observer has returned.
+    if (this._delivery.isObserving && this._delivery.isObserving()) {
+      return postReportCallback(Object.assign(new Error('Notification cannot be started inside onDelivery'), { code: 'ERR_DELIVERY_OBSERVER' }), event)
+    }
+
     event.app = assign({}, event.app, {
       releaseStage: this._config.releaseStage,
       version: this._config.appVersion,

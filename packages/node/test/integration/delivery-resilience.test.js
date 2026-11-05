@@ -13,7 +13,7 @@ const childScript = `
   const client = Bugsnag.createClient({
     apiKey: 'a'.repeat(32),
     endpoints: { notify: process.env.BUGSNAG_TEST_ENDPOINT, sessions: process.env.BUGSNAG_TEST_ENDPOINT },
-    sendCode: false,
+    ...(scenario === 'observer-notify' ? {} : { sendCode: false }),
     autoTrackSessions: false,
     autoDetectErrors: scenario !== 'clones',
     enabledBreadcrumbTypes: [],
@@ -22,6 +22,16 @@ const childScript = `
     deliveryOptions: { maxInFlight: 1, timeoutMs: 80 },
     onDelivery: result => {
       process.stdout.write(JSON.stringify(result) + '\\n')
+      if (scenario === 'observer-notify') {
+        const completed = err => process.stdout.write('reentrant:' + err.code + '\\n')
+        client.notify(new Error('observer notification'), () => {}, completed)
+        client.getPlugin('contextualize')(() => {
+          client.notify(new Error('context observer notification'), () => {}, completed)
+        })
+        client._notify(new client.Event('Error', 'automatic observer notification', []), () => {}, completed)
+        return
+      }
+      if (scenario === 'async-observer') return Promise.reject(new Error('async observer failed'))
       if (scenario !== 'clones') throw new Error('observer failed')
     }
   })
@@ -30,6 +40,10 @@ const childScript = `
     Promise.all(Array.from({ length: 20 }, () => contextualize(() =>
       new Promise(resolve => client.notify(new Error('context error'), () => {}, resolve))
     ))).then(() => process.stdout.write('completed\\n'))
+  } else if (scenario === 'observer-notify' || scenario === 'async-observer') {
+    client.notify(new Error('initial notification'), () => {}, () => {
+      setTimeout(() => process.stdout.write('completed\\n'), 150)
+    })
   } else {
     if (scenario === 'capacity') client.notify(new Error('pending event'))
     setImmediate(() => { throw new Error('fatal error') })
@@ -100,6 +114,30 @@ describe('Node notifier delivery resilience', () => {
     const outcomes = lines.map(line => JSON.parse(line))
     expect(outcomes.filter(result => result.reason === 'capacity')).toHaveLength(19)
     expect(outcomes.filter(result => result.reason === 'timeout')).toHaveLength(1)
+    expect(received).toBe(1)
+    expect(sockets.size).toBe(0)
+  })
+
+  it('rejects observer notifications before asynchronous source enrichment, including contextual and automatic paths', async () => {
+    const result = await run('observer-notify')
+    expect(result.code).toBe(0)
+    expect(result.stderr).toBe('')
+    const lines = result.stdout.trim().split('\n')
+    expect(lines.pop()).toBe('completed')
+    expect(lines.filter(line => line === 'reentrant:ERR_DELIVERY_OBSERVER')).toHaveLength(3)
+    const outcomes = lines.filter(line => line[0] === '{').map(line => JSON.parse(line))
+    expect(outcomes).toEqual([{ kind: 'event', status: 'failed', reason: 'timeout' }])
+    expect(received).toBe(1)
+    expect(sockets.size).toBe(0)
+  })
+
+  it('contains rejected observer promises with automatic error detection enabled', async () => {
+    const result = await run('async-observer')
+    expect(result.code).toBe(0)
+    expect(result.stderr).toBe('')
+    const lines = result.stdout.trim().split('\n')
+    expect(lines.pop()).toBe('completed')
+    expect(lines.map(line => JSON.parse(line))).toEqual([{ kind: 'event', status: 'failed', reason: 'timeout' }])
     expect(received).toBe(1)
     expect(sockets.size).toBe(0)
   })
