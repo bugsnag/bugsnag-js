@@ -38,8 +38,10 @@
     },
     "author": "Bugsnag",
     "license": "MIT",
+    "dependencies": {
+        "@bugsnag/core": "^9.0.0"
+    },
     "devDependencies": {
-        "@bugsnag/core": "^9.0.0",
         "@bugsnag/delivery-fetch": "^9.0.0",
         "@bugsnag/plugin-browser-device": "^9.0.0",
         "@bugsnag/plugin-browser-session": "^9.0.0",
