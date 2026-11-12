@@ -4,6 +4,8 @@
 
 ### Fixed
 
+- (plugin-react|plugin-vue|plugin-react-navigation|plugin-react-native-navigation) Add `@bugsnag/core` as a dependency to fix TypeScript error TS2741 (`Property 'load' is missing`)
+- (web-worker) Add `@bugsnag/core` as a dependency to fix TypeScript error TS2307 (`Cannot find module '@bugsnag/core'`)
 - (core) Restore parsing of anonymous async V8 stack frames so the "async" prefix is reported as the method rather than part of the file name [#2830](https://github.com/bugsnag/bugsnag-js/issues/2830)
 
 ## [9.0.0] - 2026-09-22

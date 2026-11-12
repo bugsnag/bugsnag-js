@@ -18,18 +18,14 @@
   ],
   "author": "Bugsnag",
   "license": "MIT",
+  "dependencies": {
+    "@bugsnag/core": "^9.0.0"
+  },
   "devDependencies": {
-    "@bugsnag/core": "^9.0.0",
     "react-native-navigation": "^7.0.0"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^9.0.0",
     "react-native-navigation": "2 - 8"
-  },
-  "peerDependenciesMeta": {
-    "@bugsnag/core": {
-      "optional": true
-    }
   },
   "scripts": {
     "test:types": "tsc -p tsconfig.json"

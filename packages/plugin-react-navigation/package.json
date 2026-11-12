@@ -21,8 +21,10 @@
   "types": "types/bugsnag-plugin-react-navigation.d.ts",
   "author": "Bugsnag",
   "license": "MIT",
+  "dependencies": {
+    "@bugsnag/core": "^9.0.0"
+  },
   "devDependencies": {
-    "@bugsnag/core": "^9.0.0",
     "@react-navigation/native": "^5.7.3",
     "@types/react": "^16.9.49",
     "@types/react-test-renderer": "^16.9.3",
@@ -30,12 +32,6 @@
     "react-test-renderer": "^16.13.1"
   },
   "peerDependencies": {
-    "@bugsnag/core": "^9.0.0",
     "@react-navigation/native": "^5.0 || ^6.0 || ^7.0"
-  },
-  "peerDependenciesMeta": {
-    "@bugsnag/core": {
-      "optional": true
-    }
   }
 }
