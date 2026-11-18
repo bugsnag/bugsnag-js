@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.2.0] - 2026-11-19
+
+### Fixed
+
+- (plugin-react|plugin-vue|plugin-react-navigation|plugin-react-native-navigation) Add `@bugsnag/core` as a dependency to fix TypeScript error TS2741 (`Property 'load' is missing`)
+- (web-worker) Add `@bugsnag/core` as a dependency to fix TypeScript error TS2307 (`Cannot find module '@bugsnag/core'`)
+
 ## [9.1.0] - 2026-10-09
 
 ### Fixed

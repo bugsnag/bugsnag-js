@@ -23,15 +23,7 @@
   },
   "author": "Bugsnag",
   "license": "MIT",
-  "devDependencies": {
-    "@bugsnag/core": "^9.1.0"
-  },
-  "peerDependencies": {
+  "dependencies": {
     "@bugsnag/core": "^9.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@bugsnag/core": {
-      "optional": true
-    }
   }
 }
