@@ -6,5 +6,8 @@
   "dependencies": {
     "webpack": "^4.47.0",
     "webpack-cli": "^3.3.12"
+  },
+  "overrides": {
+    "minimatch": "^3.1.4"
   }
 }
