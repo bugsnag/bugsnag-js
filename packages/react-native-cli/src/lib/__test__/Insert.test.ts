@@ -142,6 +142,30 @@ test('insertIos(): success (swift 0.79+)', async () => {
   )
 })
 
+test('insertIos(): success (swift 0.88+ with SceneDelegate)', async () => {
+  type readdir = (path: string) => Promise<string[]>
+  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
+
+  readdirMock
+    .mockResolvedValueOnce(['BugsnagReactNativeCliTest.xcodeproj'])
+    .mockResolvedValueOnce(['a', 'b', 'AppDelegate.swift', 'SceneDelegate.swift', 'c', 'd'])
+
+  const appDelegate = await loadFixture(path.join(__dirname, 'fixtures', 'AppDelegate-before-088.swift'))
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValue(appDelegate)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+  writeFileMock.mockResolvedValue()
+
+  await insertIos('/random/path', logger)
+  expect(readFileMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest/AppDelegate.swift', 'utf8')
+  expect(writeFileMock).toHaveBeenCalledWith(
+    '/random/path/ios/BugsnagReactNativeCliTest/AppDelegate.swift',
+    await loadFixture(path.join(__dirname, 'fixtures', 'AppDelegate-after-088.swift')),
+    'utf8'
+  )
+})
+
 test('insertIos(): already present', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
@@ -195,6 +219,28 @@ test('insertIos(): already present (swift 0.79+)', async () => {
     .mockResolvedValueOnce(['a', 'b', 'AppDelegate.swift', 'c', 'd'])
 
   const appDelegate = await loadFixture(path.join(__dirname, 'fixtures', 'AppDelegate-after-079.swift'))
+  const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+  readFileMock.mockResolvedValue(appDelegate)
+
+  const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+  writeFileMock.mockResolvedValue()
+
+  await insertIos('/random/path', logger)
+  expect(readFileMock).toHaveBeenCalledWith('/random/path/ios/BugsnagReactNativeCliTest/AppDelegate.swift', 'utf8')
+  expect(writeFileMock).not.toHaveBeenCalled()
+
+  expect(logger.warn).toHaveBeenCalledWith('Bugsnag is already included, skipping')
+})
+
+test('insertIos(): already present (swift 0.88+ with SceneDelegate)', async () => {
+  type readdir = (path: string) => Promise<string[]>
+  const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
+
+  readdirMock
+    .mockResolvedValueOnce(['BugsnagReactNativeCliTest.xcodeproj'])
+    .mockResolvedValueOnce(['a', 'b', 'AppDelegate.swift', 'SceneDelegate.swift', 'c', 'd'])
+
+  const appDelegate = await loadFixture(path.join(__dirname, 'fixtures', 'AppDelegate-after-088.swift'))
   const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
   readFileMock.mockResolvedValue(appDelegate)
 
