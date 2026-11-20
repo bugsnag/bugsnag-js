@@ -166,6 +166,48 @@ test('insertIos(): success (swift 0.88+ with SceneDelegate)', async () => {
   )
 })
 
+describe('insertIos(): swift launch bodies that must not get an extra return', () => {
+  const header = `import UIKit
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
+`
+  const footer = `
+  }
+}
+`
+
+  test.each([
+    ['multiple statements on one line', '    let ready = true; return ready'],
+    ['explicit return', '    return true'],
+    ['declaration followed by return', '    let ready = true\n    return ready']
+  ])('%s', async (_name, body) => {
+    type readdir = (path: string) => Promise<string[]>
+    const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>
+
+    readdirMock
+      .mockResolvedValueOnce(['BugsnagReactNativeCliTest.xcodeproj'])
+      .mockResolvedValueOnce(['AppDelegate.swift', 'SceneDelegate.swift'])
+
+    const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>
+    readFileMock.mockResolvedValue(`${header}${body}${footer}`)
+
+    const writeFileMock = fs.writeFile as jest.MockedFunction<typeof fs.writeFile>
+    writeFileMock.mockResolvedValue()
+
+    await insertIos('/random/path', logger)
+    expect(writeFileMock).toHaveBeenCalledWith(
+      '/random/path/ios/BugsnagReactNativeCliTest/AppDelegate.swift',
+      `import Bugsnag\n${header}    Bugsnag.start()\n\n${body}${footer}`,
+      'utf8'
+    )
+  })
+})
+
 test('insertIos(): already present', async () => {
   type readdir = (path: string) => Promise<string[]>
   const readdirMock = fs.readdir as unknown as jest.MockedFunction<readdir>

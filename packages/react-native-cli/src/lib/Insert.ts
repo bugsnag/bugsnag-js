@@ -17,8 +17,10 @@ const COCOA_OBJ_C_APP_LAUNCH_REGEX = /(-\s*\(BOOL\)\s*application:\s*\(UIApplica
 const BUGSNAG_COCOA_SWIFT_IMPORT = 'import Bugsnag'
 const BUGSNAG_COCOA_SWIFT_INIT = 'Bugsnag.start()'
 const COCOA_SWIFT_APP_LAUNCH_REGEX = /((?:override )?func application\s*\(\s*_\s+application:\s*UIApplication,\s*didFinishLaunchingWithOptions\s+launchOptions:\s*\[UIApplication\.LaunchOptionsKey\s*:?\s*Any\]\?\s*(?:=\s*nil)?\s*\)\s*->\s*Bool\s*\{\s)/
-// matches a function body consisting of a single expression with no `return` keyword, e.g. `  true\n  }`
-const SWIFT_IMPLICIT_RETURN_BODY_REGEX = /^([ \t]*)(?!return\b)([^\s{}][^\n{}]*\n\s*\})/
+// matches a function body that is only an implicit-return Bool literal (optionally followed by a line comment),
+// e.g. `    true\n  }` from the RN 0.88+ template. Deliberately limited to the literal so that statement bodies
+// such as `let ready = true; return ready` are never rewritten
+const SWIFT_IMPLICIT_RETURN_BODY_REGEX = /^(\s*)((?:true|false)[ \t]*(?:\/\/[^\r\n]*)?\r?\n\s*\})/
 
 const BUGSNAG_JAVA_IMPORT = 'import com.bugsnag.android.Bugsnag;'
 const BUGSNAG_JAVA_INIT = 'Bugsnag.start(this);'
@@ -109,7 +111,7 @@ export async function insertIos (projectRoot: string, logger: Logger): Promise<v
 
     // RN 0.88+ templates moved React Native setup into SceneDelegate.swift, leaving the body of
     // didFinishLaunchingWithOptions as a single implicit-return expression (`true`). Once we add a
-    // statement before it, Swift requires an explicit `return`
+    // statement before it, Swift requires an explicit `return`. Any other body is left untouched
     if (isSwift) {
       launchBody = launchBody.replace(SWIFT_IMPLICIT_RETURN_BODY_REGEX, '$1return $2')
     }
