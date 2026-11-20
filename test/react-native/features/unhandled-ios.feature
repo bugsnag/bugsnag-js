@@ -46,6 +46,7 @@ Scenario: Reporting an Unhandled error in an asynchronous native method
   And the event "unhandled" is true
   And the event "exceptions.0.message" equals the version-dependent string:
   | arch | version | value                                                                                                                     |
+  | new  | 0.88    | BugsnagTestInterface.runScenario raised an exception: UnhandledNativeErrorScenario                                        |
   | new  | 0.79    | UnhandledNativeErrorScenario                                                                                              |
   | new  | 0.78    | UnhandledNativeErrorScenario                                                                                              |
   | new  | 0.77    | UnhandledNativeErrorScenario                                                                                              |
