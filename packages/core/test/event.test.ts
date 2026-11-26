@@ -366,6 +366,30 @@ describe('@bugsnag/core/event', () => {
   })
 
   describe('Event.create()', () => {
+    it('preserves route groups in serialized error and cause stacktraces', () => {
+      const err = new Error('probe')
+      err.stack = 'Error: probe\n    at render (https://example.com/app/(shop)/(account)/page.js:12:34)\n    at async https://example.com/app/(shop)/page.js:23:45'
+      const cause = new Error('cause')
+      cause.stack = 'load@https://example.com/app/(shop)/data.js:56:78'
+      // @ts-ignore
+      err.cause = cause
+      const event = Event.create(err, false, {
+        unhandled: false,
+        severity: 'warning',
+        severityReason: { type: 'handledException' }
+      }, 'notify()', 0)
+      const exceptions = JSON.parse(JSON.stringify(event)).exceptions
+
+      expect(exceptions).toHaveLength(2)
+      expect(exceptions[0].stacktrace).toEqual([
+        { file: 'https://example.com/app/(shop)/(account)/page.js', method: 'render', lineNumber: 12, columnNumber: 34 },
+        { file: 'https://example.com/app/(shop)/page.js', method: 'async', lineNumber: 23, columnNumber: 45 }
+      ])
+      expect(exceptions[1].stacktrace).toEqual([
+        { file: 'https://example.com/app/(shop)/data.js', method: 'load', lineNumber: 56, columnNumber: 78 }
+      ])
+    })
+
     it('includes causes in the exceptions array', () => {
       const err = new Error('I am the error')
       // @ts-ignore
