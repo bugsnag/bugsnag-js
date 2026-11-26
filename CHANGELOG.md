@@ -1,5 +1,18 @@
 # Changelog
 
+## [9.2.0]
+
+### Added
+
+- (react-native) Add support for React Native 0.85, 0.86, 0.87 and 0.88 [#2857] (https://github.com/bugsnag/bugsnag-js/pull/2857)
+
+### Fixed
+
+- (react-native) Add the missing consumer `proguard-rules.pro` file referenced by the Android build, which caused builds to fail with Android Gradle Plugin 9 (React Native 0.87+) [#2857] (https://github.com/bugsnag/bugsnag-js/pull/2857)
+- (react-native-cli) Fix `init`/`insert` producing an AppDelegate that fails to compile on React Native 0.88+, where `didFinishLaunchingWithOptions` uses an implicit return [#2857] (https://github.com/bugsnag/bugsnag-js/pull/2857)
+- (plugin-react|plugin-vue|plugin-react-navigation|plugin-react-native-navigation) Add `@bugsnag/core` as a dependency to fix TypeScript error TS2741 (`Property 'load' is missing`)
+- (web-worker) Add `@bugsnag/core` as a dependency to fix TypeScript error TS2307 (`Cannot find module '@bugsnag/core'`)
+
 ## [9.1.0] - 2026-10-09
 
 ### Fixed

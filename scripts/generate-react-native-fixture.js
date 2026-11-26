@@ -57,8 +57,15 @@ let reactNativeSafeAreaContextVersion = '^5.0.0'
 let reactNativeScreensVersion = '~4.19.0'
 
 // Adjust versions based on React Native version
+// react-native-screens new-arch support:
+// library version   react-native version
+// 4.26.0+           0.84.0+
+// 4.19.0+           0.81.0+
 const rnVersion = parseFloat(reactNativeVersion)
 switch (true) {
+  case rnVersion >= 0.85:
+    reactNativeScreensVersion = '~4.30.0'
+    break
   case rnVersion >= 0.81:
     reactNativeScreensVersion = '~4.19.0'
     break
