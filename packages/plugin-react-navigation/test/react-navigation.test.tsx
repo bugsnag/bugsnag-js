@@ -4,7 +4,12 @@ import TestRenderer from 'react-test-renderer'
 import * as React from 'react'
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native'
 
-jest.mock('@react-navigation/native')
+// React Navigation 7 ships ES modules only, which this jest version cannot load, so the module
+// is replaced with the same shape that automocking used to give (a forwardRef around a mock render function)
+jest.mock('@react-navigation/native', () => {
+  const React = jest.requireActual('react')
+  return { NavigationContainer: React.forwardRef(jest.fn(() => null)) }
+})
 
 afterEach(() => jest.clearAllMocks())
 

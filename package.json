@@ -171,7 +171,8 @@
     "follow-redirects": "^1.16.1",
     "@verdaccio/config": {
       "js-yaml": "^5.4.1"
-    }
+    },
+    "image-size": "^2.0.3"
   },
   "workspaces": [
     "packages/*"
