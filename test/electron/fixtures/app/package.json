@@ -31,6 +31,7 @@
     "forge": "./forge.config.js"
   },
   "overrides": {
-    "http-cache-semantics": "^4.3.0"
+    "http-cache-semantics": "^4.3.0",
+    "minimatch@^9": "^11.0.1"
   }
 }
